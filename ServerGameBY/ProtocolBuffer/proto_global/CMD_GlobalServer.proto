@@ -1,0 +1,464 @@
+// To use the "libprotobuf-lite.lib" library for C++ code.
+option optimize_for = LITE_RUNTIME;
+
+
+// Namespace: MESSAGE
+package CMD_GLOBAL;
+
+// 协议返回结果
+enum ReplyResult
+{
+	Successful = 0;	// 成功
+	Failed = 1;		// 失败
+/*******聊天相关********/
+	NotFoundUser = 2;	// 没有搜到用户
+	ApplyRepeatedly = 3;	// 重复申请
+	ApplyUpperLimit = 4;	// 申请次数达到上限
+	FriendUpperLimit = 5;	// 好友数量达到上限
+	FriendExisted = 6;		// 已经是好友了
+	ContainConfineChar = 7;	// 包含限制字符
+	OtherFriendFull = 8;    // 对方好友已满
+}
+
+/*********** 世界BOSS活动相关 ************/
+
+// boss行动
+enum WorldBossAction
+{
+	Come = 1; // 进场
+	Comeback = 2;	// 返场
+	Leave = 3;	// 离场
+}
+
+// 世界boss倒计时
+message CMD_S_WORLD_BOSS_COUNTDOWN
+{
+	optional WorldBossAction action = 1;			// boss行动
+	optional uint32 countdown = 2;		// 倒计时
+	optional uint64 timeStamp = 3;		// 时间戳
+	optional uint32 bossId = 4;			// bossId
+}
+
+// 世界boss预警
+message CMD_S_WORLD_BOSS_WARNING
+{
+	optional WorldBossAction action = 1;	// boss行动
+	optional uint32 bossId = 2;	//	boss id
+}
+
+// 世界boss出现（进场/返场）
+message CMD_S_WORLD_BOSS_APPEAR
+{
+	optional uint64 curBlood = 1;	// 当前血量
+	optional uint64 maxBlood = 2;	// 最大血量
+}
+
+// 世界boss进入击杀阶段
+message CMD_S_WORLD_BOSS_KILLING
+{
+	optional uint32 bossId = 1;			// bossId
+}
+
+// 同步血量
+message CMD_S_SYNC_WORLD_BOSS_BLOOD
+{
+	optional uint64 curBlood = 1;	// 当前血量
+	optional uint64 maxBlood = 2;	// 最大血量
+}
+
+// 用户排名
+message WorldBossUserRank
+{
+	optional uint32 rank = 1;	// 排名
+	optional uint32 userId = 2;	// 用户ID
+	optional bytes nick = 3;	// 昵称
+	optional uint32 reward = 4; // 金币奖励
+	optional uint32 faceId = 5;	// 头像ID
+	optional uint32 vipLev = 6;	// vip等级
+}
+
+// 活动结束
+message CMD_S_WORLD_BOSS_ACTIVITY_CLOSE
+{
+	optional bool bKilled = 1;	// boss是否被杀死
+	repeated WorldBossUserRank rank = 2;	// 击杀排名
+	optional uint32 bossId = 3;			// bossId
+	optional uint32 open_time = 4;	// 当前活动的开放时间
+	optional uint32 killer_user_id = 5;	// 击杀BOSS的玩家
+	optional uint64 killer_get_score = 6;	// 击杀BOSS的玩家获得的金币
+	optional bytes killer_nick = 7; //击杀玩家的昵称
+}
+
+
+/*********** 经典大奖池相关 ************/
+
+// 轮盘中奖人信息
+message LuckyGuyInfo
+{
+	optional uint32 user_id = 1;	// 用户ID
+	optional bytes nick = 2;	// 昵称
+	optional uint32 reward = 3; // 中奖金额
+	optional uint32 face_id = 4;	// 头像ID
+	optional uint32 vip_lev = 5;	// vip等级
+}
+
+// 大奖池类型
+enum PoolType
+{
+	Classic = 0;		// 经典场
+	Monster = 1;		// 妖怪场
+}
+
+// 获取奖池信息
+message CMD_C_GET_CLASSIC_PRIZE_POOL
+{
+	// 获取奖池信息类型
+	enum GetPrizePoolType
+	{
+		OnlyStock = 0;		// 只有奖池金额
+		ContainExtend = 1;	// 包含扩展信息
+	}
+	optional GetPrizePoolType type = 1;	// 获取奖池信息类型
+	optional PoolType pool_type = 2;	// 大奖池类型
+}
+
+// 获取奖池信息
+message CMD_S_GET_CLASSIC_PRIZE_POOL
+{
+	optional CMD_C_GET_CLASSIC_PRIZE_POOL.GetPrizePoolType type = 1;	// 获取奖池信息类型
+	optional uint64 stock = 2;			// 奖池金额
+	optional LuckyGuyInfo lucky_guy = 3;	// 最近轮盘中奖人信息
+	optional PoolType pool_type = 4;	// 大奖池类型
+}
+
+// 奖池轮盘抽奖
+message CMD_C_CLASSIC_PRIZE_POOL_DRAW_TURN
+{
+	optional uint32 star = 1;			// 幸运星数量
+	optional LuckyGuyInfo player = 2;	// 抽奖人信息
+}
+
+// 奖池轮盘抽奖
+message CMD_S_CLASSIC_PRIZE_POOL_DRAW_TURN
+{
+	enum Result
+	{
+		Successful = 0;		// 成功
+		Failed = 1;			// 失败
+	}
+	// 轮盘项信息
+	message TurnplateIndex
+	{
+		optional int32 index = 1;	// 索引
+		optional int32 ratio = 2;	// 奖金
+		optional int32 type = 3;	// 奖金类型	
+		optional int32 sub_type = 4;	// 奖金子类型
+	}
+	optional uint32 result = 1;	// 结果
+	optional uint32 user_id = 2;// 中奖人ID
+	repeated TurnplateIndex turnplate = 3;	// 轮盘信息
+	optional uint32 uindex = 4;	// 中奖索引
+	optional uint32 reward = 5;	// 中奖金额
+}
+
+// 奖池轮盘抽奖排行
+message CMD_C_CLASSIC_PRIZE_POOL_TURN_RANK
+{
+}
+// 奖池轮盘抽奖排行玩家
+message ClassicsPrizePoolRanking
+{
+	optional uint32 rank = 1; 			// 排名
+	optional LuckyGuyInfo player = 2;	// 玩家信息
+	optional uint32 reward_id = 3;		// 奖励ID
+	optional uint32 reward = 4;			// 奖励数量
+}
+// 奖池轮盘抽奖排行
+message CMD_S_CLASSIC_PRIZE_POOL_TURN_RANK
+{
+	repeated ClassicsPrizePoolRanking player = 1;	// 抽奖人信息
+}
+
+/************* 聊天相关 *****************/
+
+//心跳
+message CMD_C_HEART_BEAT_CHAT
+{
+	optional uint32	user_id = 1;	// 用户ID
+};
+
+message CMD_S_HEART_BEAT_CHAT
+{
+	optional uint32	user_id = 1;	// 用户ID
+	optional int64 time_stamp = 2;	// 时间戳
+};
+
+// 登录
+message CMD_C_LOGIN
+{
+	optional string token = 1;		// token 
+	optional uint32 user_id = 2;	// 用户ID
+	optional uint32 game_id = 3;	// 游戏ID
+	optional uint32 rand = 4;		// 随机数
+	optional uint64 rand2 = 5;		// 随机数
+}
+
+// 登录结果
+message CMD_S_LOGIN
+{
+	optional ReplyResult result = 1;		// 结果 
+}
+
+// 玩家信息
+message FriendUserInfo
+{
+	optional uint32 user_id = 1;		// 用户ID
+	optional uint32 game_id = 2;		// 游戏ID
+	optional uint32 face_id = 3;		// 头像ID
+	optional uint32 vip_lev = 4;		// vip等级
+	optional bytes nick = 5;		// 昵称
+	optional uint32 guild_id = 6;	// 公会ID
+	optional bytes guild_name = 7;	// 公会名称
+	extensions 50 to 100;			// 50-100用作扩展
+}
+
+// 好友信息
+message FriendInfo
+{
+	optional FriendUserInfo user_info = 1;	// 玩家信息
+	optional uint32 unread_count = 2;		// 未读消息数量
+	optional int64 message_time = 3;		// 最近未读消息时间
+}
+
+// 好友列表
+message CMD_C_FRIEND_LIST
+{
+	optional uint32 user_id = 1;	// 用户ID
+}
+
+// 好友列表
+message CMD_S_FRIEND_LIST
+{
+	repeated FriendUserInfo apply_list = 1;			// 申请列表
+	repeated FriendUserInfo be_applied_list = 2;	// 被申请列表
+	repeated FriendInfo friend_list = 3;			// 好友列表
+}
+
+// 搜索玩家
+message CMD_C_SEARCH_FRIEND
+{
+	optional bytes key = 1;		// 搜索关键字
+}
+
+// 搜索玩家结果
+message CMD_S_SEARCH_FRIEND
+{
+	repeated FriendUserInfo user_list = 1;		// 玩家列表
+	optional ReplyResult result = 2;			// 结果
+}
+
+// 申请好友操作类型
+enum ApplyOpt
+{
+	Apply = 1;		// 申请
+	Cancel = 2;		// 取消
+	Agree = 3;		// 同意
+	refuse = 4;		// 拒绝
+}
+
+// 申请好友
+message ApplyFiend
+{
+	optional uint32 apply_id = 1;			// 申请用户ID
+	optional uint32 be_applied_id = 2;		// 被申请用户ID
+	optional ApplyOpt opt = 3;				// 操作
+}
+
+// 申请好友
+message CMD_C_APPLY_FRIEND
+{
+	optional ApplyFiend apply = 1;
+}
+
+// 申请好友结果
+message CMD_S_APPLY_FRIEND_RESULT
+{
+	optional ApplyFiend apply = 1;
+	optional ReplyResult result = 2;		// 操作结果
+	optional FriendUserInfo apply_info = 3;	// 申请者玩家信息（下发申请时填写）
+}
+
+// 删除好友
+message CMD_C_DELETE_FRIEND
+{
+	optional uint32 req_user_id = 1;		// 请求方用户ID
+	optional uint32 friend_user_id = 2;		// 好友用户ID
+}
+
+// 删除好友
+message CMD_S_DELETE_FRIEND
+{
+	optional uint32 req_user_id = 1;		// 请求方用户ID
+	optional uint32 friend_user_id = 2;		// 好友用户ID
+	optional ReplyResult result = 3;		// 操作结果
+}
+
+// 获取聊天信息
+message CMD_C_GET_CHAT_MESSAGE
+{
+	optional uint32 friend_user_id = 1;		// 好友用户ID
+	optional uint32 msg_id = 2;				// 消息ID
+}
+
+// 聊天内容包
+message ChatPacket
+{
+	optional uint32 id = 1;					// 消息ID
+	optional bytes msg = 2;					// 消息内容
+	optional uint32 emotion = 3;			// 表情ID
+	optional int64 time_stamp = 4;			// 时间戳
+}
+
+// 获取聊天信息
+message CMD_S_GET_CHAT_MESSAGE
+{
+	optional uint32 friend_user_id = 1;		// 好友用户ID
+	repeated ChatPacket msg_list = 2;		// 消息列表
+}
+
+// 聊天
+message CMD_C_CHAT_MESSAGE
+{
+	optional uint32 speaker_user_id = 1;	// 发起消息用户ID
+	optional uint32 friend_user_id = 2;		// 好友用户ID
+	optional bytes msg = 3;					// 聊天内容
+	optional uint32 emotion = 4;			// 表情ID
+}
+
+// 聊天
+message CMD_S_CHAT_MESSAGE
+{
+	optional uint32 speaker_user_id = 1;	// 发起消息用户ID
+	optional uint32 friend_user_id = 2;		// 好友用户ID
+	optional ChatPacket msg = 3;			// 聊天内容
+	optional ReplyResult result = 4;		// 聊天结果
+}
+
+// 有新的聊天信息
+message CMD_S_NOTIFY_NEW_CHAT_MESSAGE
+{
+	optional uint32 friend_user_id = 1;		// 好友用户ID
+	optional bool is_pull = 2;				// 是否拉取消息
+	optional uint32 unread_count = 3;		// 未读消息数量
+}
+
+
+/************* 梦幻展览活动相关 *****************/
+// 梦幻展览活动
+enum FantasyExhibitionState
+{
+    Wait  = 0;      // 等待
+	Start = 1;      // 开始
+	InPlay = 2;	    // 活动中
+	Over = 3;	    // 结束
+}
+
+// 梦幻展览活动状态
+message CMD_S_FANTASY_EXHIBITION_STATE
+{
+	optional FantasyExhibitionState action = 1;	 // 活动状态
+	optional uint32 curNum = 2;		             // 当前展品数量
+	optional uint32 maxNum = 3;	                 // 最大展品数量
+	optional uint64 actionId = 4;                // 当前活动ID
+	optional uint32 dropNum = 5;                 // 玩家掉落最大数量
+	optional uint32 rewardType = 6;              // 头名奖励类型(0金币1奖券2钻石100道具ID)
+	optional uint64 rewardValue = 7;             // 头名奖励数量
+	optional uint32 rankuserId = 8;              // 排名第一的玩家ID
+	optional uint32 contribute = 9;              // 排名第一的玩家扣除的充值贡献值
+	repeated uint32 number = 10;                 // 排名第一的玩家中奖编号
+	optional bytes nick = 11;	                 // 排名第一的玩家昵称
+	optional uint32 faceId = 12;	             // 排名第一的玩家头像ID
+	optional uint32 vipLev = 13;	             // 排名第一的玩家vip等级
+	optional uint32 rewardRankType = 14;         // 排名第一的玩家奖励类型
+	optional uint64 rewardRankValue = 15;        // 排名第一的玩家奖励数量
+}
+
+// 梦幻展览展品掉落
+message CMD_S_DROP_FANTASY_LOTTERY
+{
+    optional uint32 userId = 1;	                 // 用户ID
+    optional uint32 indexId  = 2;                // 序列号ID
+    repeated uint32 number = 3;                  // 中奖编号
+	optional uint32 reward = 4;	                 // 中奖金额
+	optional uint32 lifttimes = 5;               // 抬分倍数
+	optional uint64 costcontribute =6;           // 扣除的贡献值
+	optional uint32 attendnum = 7;               // 参与次数
+}
+
+// 用户排名
+message FantasyExhibitionUserRank
+{
+	optional uint32 rank = 1;	// 排名
+	optional uint32 userId = 2;	// 用户ID
+	optional bytes nick = 3;	// 昵称
+	optional uint32 faceId = 4;	// 头像ID
+	optional uint32 vipLev = 5;	// vip等级
+	repeated uint32 number = 6; // 中奖编号
+}
+
+// 获取梦幻展览排名
+message CMD_C_GET_FANTASY_EXHIBITION_RANK
+{
+   
+}
+
+// 获取梦幻展览排名
+message CMD_S_GET_FANTASY_EXHIBITION_RANK
+{
+	repeated FantasyExhibitionUserRank rank = 1;	
+}
+
+// 获取梦幻展览展品信息
+message CMD_C_GET_FANTASY_EXHIBITION_LOTTERY
+{
+   optional uint32 cur_lottery_num = 1;   //当前客户端数量
+}
+
+// 获取梦幻展览展品
+message CMD_S_GET_FANTASY_EXHIBITION_LOTTERY
+{
+	repeated CMD_S_DROP_FANTASY_LOTTERY info = 1;	
+}
+
+/*********** 房间随机任务相关 ************/
+
+// 房间任务鱼
+message PlayerRoomTaskFish
+{
+	optional uint32 fish_id = 1;	// 鱼ID
+	optional uint32 fish_num = 2;	// 鱼数量
+	optional uint32 killed_num = 3;	// 已杀死数量
+}
+
+// 房间任务进度
+message CMD_S_ROOM_TASK_PROCESS
+{
+	optional uint32 count_dwon = 1;	// 倒计时
+	repeated PlayerRoomTaskFish fish = 2;	// 任务鱼
+	optional bool is_start = 3;	// 是否启动任务
+}
+
+// 更新房间任务排名
+message CMD_S_UPDATE_ROOM_TASK_RANK
+{
+	repeated uint32 seat_id = 1;	// 玩家排名（1->4）座位号
+}
+
+// 关闭任务
+message CMD_S_CLOSE_ROOM_TASK
+{
+	optional uint32 winner_id = 1;	// 获胜者ID	
+	optional uint32 seat_id = 2;	// 座位号
+	optional bytes nick = 3;		// 昵称
+	optional uint32 reward = 4;		// 奖励
+}

@@ -1,0 +1,1 @@
+rsrc -manifest UILayout.manifest -o rsrc.syso

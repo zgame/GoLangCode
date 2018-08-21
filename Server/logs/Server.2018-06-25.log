@@ -1,0 +1,8 @@
+2018-06-25 16:26:00 [WRN] [logs.go:14] [main.Warnln] ffffff%d[44]
+2018-06-25 16:29:03 [WRN] [logs.go:15] [main.Warnln] 10
+2018-06-25 16:29:53 [WRN] [logs.go:18] [main.Warnln] 10
+2018-06-25 16:31:03 [WRN] [logs.go:22] [main.Warnln] 10
+2018-06-25 16:32:06 [WRN] [logs.go:22] [main.Warnln] ffffff[44]
+2018-06-25 16:32:23 [WRN] [logs.go:14] [main.Warnln] ffffff[44]
+2018-06-25 16:33:16 [WRN] [logs.go:14] [main.Warnln] ffffff[44 44556]--%!d(MISSING)
+2018-06-25 16:33:47 [WRN] [logs.go:14] [main.Warnln] ffffff44--44556

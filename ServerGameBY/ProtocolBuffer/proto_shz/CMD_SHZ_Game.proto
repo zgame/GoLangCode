@@ -1,0 +1,100 @@
+﻿// To use the "libprotobuf-lite.lib" library for C++ code.
+option optimize_for = LITE_RUNTIME;
+
+
+// Namespace: MESSAGE
+package CMD_SHZ;
+
+message CMD_S_ERROR
+{
+	optional int32 err = 1; // 通用错误提示消息
+};
+
+
+message CMD_C_MainGameStart
+{
+	optional int64 bet_score = 1; // 单条线押注分数
+	optional uint32 line_count = 2; // 押注线条数目，目前固定为9
+};
+
+message tagLineInfo
+{
+	optional int32 line_id = 1;
+	repeated int32 icon_index = 2; // 连接索引
+	optional int32 multiple = 3;
+};
+
+
+message CMD_S_MainGameResult
+{
+	optional int64 bet_score = 1; // 单线押注分数
+	optional uint32 line_count = 2; // 押注线条数目，目前固定为9
+	optional int64 win_score = 3; // 得分
+	optional int32 result_type = 4; // 结果类型,普通类型再看线条
+	optional uint32 bonus_game_count = 5; // 小玛丽游戏次数，0 没得， 否则请求切换小玛丽游戏
+	repeated int32 result_icon = 6; // 15个图标
+	repeated tagLineInfo result_line = 7; // 中了哪几条线
+	optional int64 personal_prize_pool = 8;	    // 玩家当前游戏个人奖池
+};
+
+message CMD_C_DiceGameStart
+{
+	optional int64 bet_score = 1; // 总押注分数
+	optional uint32 bet_type = 2; // 0 小， 1 平， 2 大
+};
+
+message CMD_S_DiceGameResult
+{
+	optional int64 bet_score = 1; // 总押注分数,范围  (0，主游戏上一把赢的分数]
+	optional int32 bet_type = 2; // 0 小， 1 平， 2 大
+	optional int32 dice_point = 3; // 开奖点数
+	optional int64 win_score = 4;
+};
+
+message CMD_C_MaryGameStart
+{
+
+};
+
+message tagMaryGameResult
+{
+	optional int64 win_score = 1; // 本次赢的分
+	optional uint32 curr_game_count = 2; // 当前游戏次数
+	repeated int32 center_icon = 3; // 中间 4个图标
+	optional int32 result_icon = 4; // 外圈中奖图标, 水浒传图标就是退出
+};
+
+message CMD_S_MaryGameResult
+{
+	repeated tagMaryGameResult mary_result = 1;
+};
+
+
+// 请求切换游戏场景
+message CMD_C_SwitchGame
+{
+	optional int32 switch_game = 1; // 0 主游戏， 1 买大小， 2 小玛丽
+};
+
+message CMD_S_UpdateGameScene
+{
+	optional int32 curr_game = 1; // 0 主游戏， 1 买大小，2 玛丽
+	optional int64 user_score = 2;
+	
+  // 主游戏用
+	optional int64 bet_per_line = 3; // 单条线 押注分数
+	optional int32 line_count = 4; // 押几条线，（目前固定9条）
+	optional int64 main_win_score = 5;
+	repeated uint32 bet_list = 6; //下注筹码列表
+	// 比大小用
+	optional int64 bet_dice = 7;  // 比大小游戏 下注值
+	optional int64 dice_win_score = 8;
+	// 小玛丽用,
+	optional int64 bet_mary = 9;
+	optional int64 personal_prize_pool = 10;	    // 玩家当前游戏个人奖池
+	optional int64 personal_prize_pool_limit = 11;	// 玩家当前游戏个人奖池上限
+};
+
+
+
+//////////////////////////////////////////////////////////////////////////////

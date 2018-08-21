@@ -1,0 +1,87 @@
+// To use the "libprotobuf-lite.lib" library for C++ code.
+//option optimize_for = LITE_RUNTIME;
+syntax = "proto3";
+
+// Namespace: MESSAGE
+package CMD;
+
+
+message CMD_MONITOR_CLIENT_REG
+{
+};
+
+message CMD_MONITOR_SERVER_REG
+{
+	int32	server_id = 1;						//服务器ID
+	bytes	server_name = 2;					//服务器名称
+	int32  start_time = 3;						//服务器启动时间
+	int32	room_state = 4;						//房间的状态，正常是0，维护是1
+};
+
+
+message tagMonitorItem
+{
+	int32	server_id = 1;						//服务器ID
+	bytes	server_name = 2;					//服务器名称
+	int32  start_time = 3;						//服务器启动时间
+	int32	room_state = 4;						//房间的状态，正常是0，维护是1
+	bytes 	ipaddr = 5;							//服务器ip地址
+	int32	ssh_port =6;						// port
+	bytes	ssh_user = 7;						// user
+	bytes	ssh_passwd = 8;						// psw
+	bytes	short_name = 9;						// server name
+};
+
+
+message CMD_MONITOR_ITEM_LST			// 监控服务器列表
+{
+	repeated tagMonitorItem items = 1;					//服务器列表
+};
+
+
+message CMD_MONITOR_NEW_ITEM			// 服务器
+{
+	 tagMonitorItem item = 1;					//服务器
+};
+
+message CMD_MONITOR_DEL_ITEM
+{
+	 int32	server_id = 1;						//服务器ID
+};
+
+
+message CMD_MONITOR_ITEM_STATE				// 更新运行状态信息
+{
+	 int32	server_id = 1;						//服务器ID
+	 int64	memory = 2;							//运行内存
+	 int32	cpu = 3;							//cpu占比
+	 int64	io_read = 4;						//io读字节数
+	 int64	io_write = 5;						//io写字节数
+	 int32  online = 6;							//在线人数
+	 int32	room_state = 7;						//房间的状态，正常是0，维护是1
+};
+
+
+message CMD_MONITOR_LOG				// 日志输出
+{
+	 int32	server_id = 1;						//服务器ID
+	 int32	log_level = 2;						//日志等级
+	 int64	log_time = 3;						//日志时间
+	 bytes	log_text = 4;						//日志内容
+};
+
+
+message CMD_MONITOR_CMD			// 控制指令
+{
+	 int32	server_id = 1;						//服务器ID
+	 int32  client_id = 2;						//监控客户端id
+	 bytes	cmd = 3;							//指令内容
+};
+
+
+message CMD_MONITOR_CMD_RESP			// 控制指令
+{
+	 int32	server_id = 1;						//服务器ID
+	 int32  client_id = 2;						//监控客户端id
+	 bytes	result = 3;							//指令执行结果
+};

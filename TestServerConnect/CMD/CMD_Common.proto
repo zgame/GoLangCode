@@ -1,0 +1,534 @@
+// To use the "libprotobuf-lite.lib" library for C++ code.
+option optimize_for = LITE_RUNTIME;
+
+
+// Namespace: MESSAGE
+package CMD;
+
+//银行记录结构体
+message tagMBInsureRecordData
+{
+	optional int32	record_id = 1;						//记录索引
+	optional int32	kind_id = 2;						//类型
+	optional int32	game_id = 3;						//游戏ID
+	optional uint32	source_user_id = 4;					//发起的玩家ID
+	optional uint32	target_user_id = 5;					//目标ID
+	optional int64	swap_score = 6;						//交易的金钱数
+	optional int64	source_bank = 7;					//交易前的银行金钱树
+	optional int64	target_bank = 8;					//交易前目标的银行金钱数
+	optional int64	revenue = 9;						//税收
+	optional int32	is_game_plaza = 10;					//操作的场所 0为大厅 1为网页
+	optional int32	trade_type = 11;					//操作的类型 1为存 2为取 3为转
+	//optional SYSTEMTIME			time = 12;							//操作时间
+	optional bytes	source_nick_name = 13;				//发起的玩家昵称
+	optional bytes	target_nick_name = 14;				//目标的玩家昵称
+	optional uint32	source_game_id = 15;				//发起的玩家游戏ID
+	optional uint32	target_game_id = 16;				//目标的玩家游戏ID
+	optional bytes	collect_note = 17;					//操作备注
+};
+
+// 增加奖励的通用消息
+message CMD_MB_C2S_ADD_REWARD
+{
+		optional uint32			user_id = 1;
+		optional uint32			client_type = 2;		// 3-IOS,4-Android
+		optional uint32			channel_id = 3;			// 渠道号
+		optional uint32			game_id = 4;			// 游戏ID
+		optional uint32			reason_type = 5;		// 奖励缘由：0 - 分享；1 - 视频广告；
+		
+		repeated int32			extend_infos = 100;		// 备用字段，每个reason都可能不同
+};
+
+message CMD_MB_S2C_ADD_REWARD
+{
+		optional uint32			user_id = 1;
+		optional uint32			reason_type = 2;		// 奖励缘由：0 - 分享；1 - 视频广告；
+		optional uint32			status = 3;				// 状态
+		optional bytes			msg = 4;				// 消息内容
+
+		repeated int32			extend_infos = 100;		// 备用字段，每个reason都可能不同
+};
+
+message CMD_MB_C2S_PURCHASE_TRADE_VIEW_STATUS
+{
+	optional uint32				user_id = 1;
+	optional bytes 				local_language = 2;
+	optional uint32             recharge_type = 3;      //充值类型0无1金币2钻石3礼包
+	optional uint32             recharge_value = 4;     //充值选项（类型1-2）为具体数目,类型3为礼包ID
+};
+
+message CMD_MB_S2C_PURCHASE_TRADE_VIEW_STATUS
+{
+	optional uint32				visibility = 1;
+	optional uint32				payability = 2;
+};
+
+//用户技能
+message tagUserSkill
+{
+    optional uint32 item_id = 1;			//道具ID
+	optional uint32 skill_id = 2;			//技能ID
+	optional int32	used = 3;				//已经使用
+	optional int32  total = 4;				//总数量
+	optional int64  used_time = 5;			//最后一次使用时间
+}
+
+//快速赛，锦标赛邀请挑战
+message CMD_GR_C_INVITE_MATCH
+{
+	optional uint32		user_id = 1;		//用户ID
+	optional bool     is_invite_guild = 2;
+}
+
+//快速赛，锦标赛邀请挑战
+message CMD_GR_S_INVITE_MATCH
+{
+	optional uint32		inviter_user_id = 1;		//邀请者用户ID
+	optional bytes		inviter_name = 2;			//邀请者玩家名字
+	optional uint32		inviter_vip_level = 3;		//邀请者玩家VIP等级
+	optional uint32		inviter_match_kind_id = 4;	//邀请者所在比赛类型
+	optional uint32		inviter_match_cell_score =5;//邀请者所在比赛底分
+	optional bool     is_invite_guild = 6;  //
+}
+
+//小喇叭
+message CMD_Speaker_S_UserChat
+{
+	optional uint32							chat_color = 1;					//信息颜色
+	optional uint32							send_user_game_id = 2;			//发送用户
+	optional uint32							target_user_id = 3;				//目标用户
+	optional bytes							source_nick_name = 4;			//发送者昵称
+	optional bytes							chat = 5;						//聊天信息
+	optional int32							times = 6;						//剩余次数
+	optional int64							cost_value = 7;					//消耗数量
+	optional int32							cost_type = 8;					//消耗类型
+	optional int32							send_user_vip_lv = 9;			//发送用户VIP信息
+	optional uint32							send_user_face_id = 10;			//发送者头像ID
+};
+//小喇叭
+message CMD_Speaker_C_UserChat
+{
+	optional uint32							chat_color = 1;					//信息颜色
+	optional uint32							target_user_id = 2;				//目标用户
+	optional bytes							chat = 3;						//聊天信息
+}
+
+//小喇叭
+message CMD_Speaker_S_UserChat_Fail
+{
+	optional uint32							result_code = 1;				//失败信息，1，钱不够，2名字没找到，3禁言，4CD，5VIP等级不足,6有非法字符
+	optional uint32							frobid_time = 2;				//禁言时间
+}
+
+message CMD_C_QueryPurchaseUndealedTrade
+{
+}
+//奖励道具
+message tagRewardItem
+{
+	optional uint32							item_id = 1;			//道具ID
+	optional int32							item_num = 2;			//道具数量
+}
+//加载任务
+message CMD_MB_C_LOAD_MISSION
+{
+	
+}
+//每日任务
+message tagEveryDayMission
+{
+	optional int32 mission_id = 1;			//任务ID
+	optional int32 progress = 2;			//进度
+	optional int32 status = 3;				//状态0未完成 1完成,2已领取
+}
+
+//每日任务
+message tagEveryDayExtMission
+{
+    optional int32	everymission_finishnum = 1;  //完成的每日任务数量;					
+	optional int32	everymission_maxnum = 2; 	 //完成的每日任务最大数量;
+	optional int32	everymission_basediamond = 3;//刷新每日任务消耗的基本钻石数;
+    optional int32  everymission_starnum = 4;    //完成的每日星星数		
+};
+
+//每周任务(藏宝阁图纸奖励)
+message tagWeekDayExtReward
+{
+	optional int32	puzzles_id = 1;           //藏宝阁图纸id;					
+	optional bytes	puzzles_reward = 2; 	  //藏宝阁图纸奖励;	
+	optional int32  puzzles_state = 3;        //藏宝阁图纸状态0未领取1已领取
+};
+
+//每周任务(藏宝阁)
+message tagWeekDayExtMission
+{
+	optional bytes	weekmission_haspuzzles = 1;    //拥的藏宝阁碎片
+	optional int32	weekmission_resetnum = 2;      //刷新周常任务的次数;					
+	optional int32	weekmission_basediamond = 3;   //刷新周常任务消耗的钻石数;	
+	optional int32	weekmission_puzzlesnumber = 4; //藏宝阁图纸;
+	optional int32	weekmission_puzzleschip = 5;   //藏宝阁碎片;	
+};
+
+//加载任务
+message CMD_MB_S_LOAD_MISSION
+{
+	repeated tagEveryDayMission everyday_missions = 1;	//每日任务
+	repeated tagEveryDayMission week_missions = 2;		//每周任务
+	repeated uint32 liveness_reward = 3;				//活跃度奖励ID
+	repeated tagEveryDayMission gropup_missions = 4;	//成长任务
+	optional tagEveryDayExtMission everyday_ext_missions = 5;//每日任务扩展
+	optional tagWeekDayExtMission weekday_ext_missions = 6;   //每周任务扩展
+	repeated tagWeekDayExtReward week_ext_rewards = 7;//藏宝阁图纸奖励列表
+}
+
+//领取任务奖励
+message CMD_MB_C_GET_MISSION_REWARD
+{
+	optional uint32 mission_type = 1;		//任务类型0 日常任务,1周任务,2成长任务
+	optional int32 mission_id = 2;			//任务ID
+}
+
+//领取任务奖励
+message CMD_MB_S_GET_MISSION_REWARD
+{
+	optional uint32 mission_type = 1;		//任务类型0 日常任务,1周任务,2成长任务
+	optional int32 mission_id = 2;			//任务ID
+	optional int32 return_value = 3;		//状态0领取成功,1没找到任务,2任务未完成
+	repeated tagRewardItem reward_list = 4;	//奖励列表
+	optional int32 puzzleschip_id = 5;      //周任务奖励的藏宝阁碎片id
+}
+
+//领取活跃度奖励
+message CMD_MB_C_GET_LIVENESS_REWARD
+{
+	optional int32 reward_id = 1;			//奖励ID
+}
+
+//领取活跃度奖励
+message CMD_MB_S_GET_LIVENESS_REWARD
+{
+	optional int32 result = 1;						//结果0为成功,1为活跃度不够,2为已经领取
+	repeated tagRewardItem reward_list = 2;			//奖励列表
+}
+
+//重置任务
+message CMD_MB_C_RESET_MISSION
+{
+	optional uint32 mission_type = 1;		//任务类型0 日常任务,1周任务,2成长任务
+}
+
+//重置任务
+message CMD_MB_S_RESET_MISSION
+{
+   optional uint32 mission_type = 1;
+   optional int32 result = 2;						    //结果0为成功,1为花费不足
+   repeated tagEveryDayMission everyday_missions = 3;	//每日任务
+   repeated tagEveryDayMission week_missions = 4;		//每周任务
+}
+
+//领取周常藏宝阁奖励
+message CMD_MB_C_GET_WEEK_REWARD
+{
+	optional int32 puzzles_id = 1;			        //藏宝阁图纸ID
+}
+
+//领取周常藏宝阁奖励
+message CMD_MB_S_GET_WEEK_REWARD
+{
+	optional int32 result = 1;						//结果0为成功,1为碎片不够,2为已经领取
+	optional int32 puzzles_id = 2;			        //藏宝阁图纸ID
+}
+
+//请求玩家称号
+message CMD_MB_C2S_ACHIEVEMENT_TITLE
+{
+}
+//玩家称号
+message CMD_MB_S2C_ACHIEVEMENT_TITLE
+{
+	optional uint32 		title_id			  = 1;				// 当前佩戴称号
+	repeated uint32			arr_achievement_title = 2;				// 玩家称号
+}
+//玩家佩戴称号
+message CMD_MB_C2S_PUT_ON_ACHIEVEMENT_TITLE
+{
+	optional uint32			achievement_title = 1;					// 称号ID
+}
+//玩家佩戴称号
+message CMD_MB_S2C_PUT_ON_ACHIEVEMENT_TITLE
+{
+	optional uint32			result_code 	  = 1;					// 佩戴结果
+	optional uint32			achievement_title = 2;					// 称号ID
+}
+
+message CMD_MB_C_SDK_BIND
+{
+	optional uint32 user_id = 1;
+	optional bytes sdk_id = 2;
+	optional uint32	login_type = 3;
+}
+
+message CMD_MB_S_SDK_BIND
+{
+	optional uint32 result_code = 1;
+}
+//排行奖励
+message tagRankReward
+{
+	optional int32 rank = 1;				//排名
+	optional uint32 item_type = 2;			//道具类型1为道具,2为实物
+	optional uint32 item_id = 3;			//奖励道具ID
+	optional uint32 item_num = 4;			//奖励道具数量
+	optional int32 end_rank = 5;			//排名区间[rank，end_rank]
+}
+//竞技场排行
+message tagArenaRank
+{
+	optional int32 rank = 1;				//排名
+	optional bytes nick_name = 2;			//昵称
+	optional int32 score = 3;				//分数
+}
+
+message CMD_GM_CMD
+{
+	optional bytes cmd = 1;					//指令
+}
+
+message CMD_GM_CMD_RESP
+{
+	optional bytes text = 1;				//指令执行结果
+}
+
+// 聊天服信息
+message CMD_C_CHAT_SERVER_INFO
+{
+}
+
+// 聊天服信息
+message CMD_S_CHAT_SERVER_INFO
+{
+	optional uint32 port = 1;				// 端口
+	optional string addr = 2;				// 地址
+	optional string token = 3;				// 令牌
+	optional uint32 rand = 4;				// 随机数
+	optional uint64 rand2 = 5;				// 随机数
+}
+
+/********************* 幸运数字 ************************/
+// 请求幸运数字活动信息
+message CMD_C_LUCKY_NUMBER_INFO
+{
+}
+
+// 请求幸运数字活动信息
+message CMD_S_LUCKY_NUMBER_INFO
+{
+	optional int64 start_time = 1;			// 活动开启时间
+	optional bool is_got = 2;				// 是否领取奖励
+	optional uint32 cur_day = 3;			// 当前第几天
+}
+
+// 获取任务进度
+message CMD_C_GET_LUCKY_NUMBER_TASK_PROGRESS
+{
+	optional uint32 day = 1;				// 天数
+}
+
+// 任务
+message LuckyNumberTask
+{
+	enum Status
+	{
+		Undone = 0;			// 未完成
+		Done = 1;			// 已完成
+		GetReward = 2;		// 已领奖
+	}
+	optional uint32 id = 1;					// ID
+	optional uint32 progress = 2;			// 进度
+	optional Status status = 3;				// 状态
+	optional uint32 lucky_num = 4;			// 幸运数字
+}
+
+// 获取任务进度
+message CMD_S_GET_LUCKY_NUMBER_TASK_PROGRESS
+{
+	optional uint32 day = 1;				// 天数
+	repeated LuckyNumberTask tasks = 2;		// 任务列表
+}
+
+// 领取任务奖励
+message CMD_C_GET_LUCKY_NUMBER_TASK_REWARD
+{
+	optional uint32 task_id = 1;			// 任务ID
+}
+
+// 领取任务奖励
+message CMD_S_GET_LUCKY_NUMBER_TASK_REWARD
+{
+	enum Result
+	{
+		Success = 0;	// 成功
+		Failed = 1;		// 失败
+	}
+	optional uint32 task_id = 1;			// 任务ID
+	optional Result result = 2;				// 结果
+	optional uint32 item_type = 3;			// 道具类型1为道具,2为实物
+	optional uint32 item_id = 4;			// 奖励ID
+	optional uint32 item_num = 5;			// 奖励数量
+	optional uint32 lucky_num = 6;			// 幸运数字
+}
+
+// 查看中奖数字
+message CMD_C_LOOKUP_LUCKY_NUMBER
+{
+}
+
+// 查看中奖数字
+message CMD_S_LOOKUP_LUCKY_NUMBER
+{
+	repeated int32 nums = 1;				// 数字列表，没有获得时用-1标记，记录到当天
+	optional uint32 lucky_num = 2;			// 幸运数字
+	optional uint32 count = 3;				// 幸运数字个数
+}
+
+// 领取活动奖励
+message CMD_C_GET_LUCKY_NUMBER_REWARD
+{
+}
+
+// 领取活动奖励
+message CMD_S_GET_LUCKY_NUMBER_REWARD
+{
+	enum Result
+	{
+		Success = 0;	// 成功
+		Failed = 1;		// 失败
+		Not7Day = 2;	// 不是第7天
+		NoReward = 3;	// 未中奖
+		Got = 4;		// 已领取
+	}
+	optional Result result = 1;				// 结果
+	optional uint32 item_id = 2;			// 奖励ID（金币，钻石，奖券）
+	optional uint32 item_num = 3;			// 奖励数量
+}
+
+// 通过幸运数字任务充值
+message CMD_C_RECHARGE_IN_LUCKY_NUMBER
+{
+	optional uint32 task_id = 1;	// 任务ID
+	optional uint32 recharge = 2;	// 充值金额
+}
+
+message CMD_C_NEWPLAYER_INFO
+{
+    optional uint32    user_id = 1;
+}
+
+message CMD_S_NEWPLAYER_INFO
+{
+	optional int32		login_days = 1;				//连续登陆天数
+	optional bool 		is_give_login_reward = 2;	//是否领取连续登陆奖励	
+	optional int32 		left_login_days = 3;	    //剩余连续登陆天数	
+	optional int32      bonus_mission_id = 4;       //当前新手奖金任务ID
+	optional int32      bonus_mission_progress = 5; //当前新手奖金任务进度
+	optional bool       is_give_bonus = 6;          //是否结束当前奖金任务
+	optional int32      left_mission_days = 7;      //剩余的新手奖金任务天数
+}
+
+message CMD_C_USER_LOGINDAY_REWARD
+{
+    optional uint32    user_id = 1;
+}
+
+message CMD_S_USER_LOGINDAY_REWARD
+{
+    optional int32     result = 1;			//结果0成功
+	optional int32     vip_level = 2;       //当前VIP等级
+	optional int32     reward_type = 3;     //奖励类型
+	optional int32     reward_subtype = 4;  //奖励子类型
+	optional int32     reward_value = 5;    //额外的值
+}
+
+message CMD_C_CARNIVAL_WELFARE_INFO
+{
+    optional uint32    user_id = 1;
+}
+
+message CMD_S_CARNIVAL_WELFARE_INFO
+{
+    optional int64      reg_time = 1;	            //玩家注册时间
+	optional int32      reset_mum = 2;              //玩家今日剩余次数
+	optional int32      cur_days = 3;               //当前天数
+	optional bool       is_give_reward = 4;         //是否领取当前阶段奖励
+	optional int32      reward_type = 5;            //奖励类型0金币1奖券2钻石
+	optional int32      nums = 6;                   //玩家狂欢福利数字列表
+}
+
+message CMD_C_CARNIVAL_WELFARE_DRAW
+{
+    optional uint32    user_id = 1;
+}
+
+message CMD_S_CARNIVAL_WELFARE_DRAW
+{
+    optional int32     result = 1;			       //结果0成功1次数不足2奖励已领
+	optional int32     reset_mum = 2;              //玩家今日剩余次数
+	optional int32     new_num = 3;                //玩家抽出的狂欢福利数字
+	optional int32     cur_days = 4;               //当前天数     
+}
+
+message CMD_C_CARNIVAL_WELFARE_REWARD
+{
+    optional uint32    user_id = 1;
+}
+
+message CMD_S_CARNIVAL_WELFARE_REWARD
+{
+    optional int32     result = 1;			       //结果0成功1未到领取时间2当天未抽取
+	optional int32     reward_type = 2;            //奖励类型
+	optional int32     reward_value = 3;           //奖励数量
+}
+
+message CMD_C_SEAGOD_GIFT_GET
+{
+    optional uint32    user_id = 1;   
+	optional uint32    gift_id = 2;      
+}
+
+message CMD_S_SEAGOD_GIFT_GET
+{
+    optional int32     result = 1;			       //结果0成功   
+	optional uint32    user_id = 2;    
+	optional uint32    gift_id = 3;     
+	optional uint32    add_score = 4;
+	optional uint32    add_diamond = 5;
+}
+
+message CMD_S_ANTIADDICTION
+{
+	optional uint32	online_time = 1;		//在线时间
+	optional uint32	addiction_state = 2;	//沉迷状态0无1健康状态2非健康状态3疲劳状态
+}
+
+message CMD_S_SMT_POP_UP
+{
+	optional bytes	text = 1;				//消息内容
+}
+
+message CMD_C_GuestRegisterAccount
+{
+	optional uint32	  user_id = 1;			//用户 ID
+	optional bytes	  accounts = 2;			//账号
+	optional bytes	  logon_pass = 3;		//登录密码
+	optional bytes	  machine_id = 4;	    //序列号
+	optional bytes	  passport = 5;			//身份证号
+	optional bytes	  name = 6;				//玩家真实名字
+}
+
+message CMD_S_GuestRegisterAccount_Result
+{
+	optional int32	  result_code = 1;	    //错误代码0成功，1用户不存在，2账号已注册,3机器码不对，4已经验证过了,5身份证不对，6名字不对
+	optional bytes	  nick_name = 2;		//昵称
+	optional bytes	  describe = 3;			//描述消息
+	optional bool     IsAdult = 4;          //是否成年
+}

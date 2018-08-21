@@ -1,0 +1,1 @@
+rsrc -manifest gmTools.manifest -o rsrc.syso
