@@ -416,7 +416,7 @@ func (this *Client)GameAI()  {
 
 	if OnlyUseSkill == false {
 		if time.Now().After(this.Last_fire_tick) {
-			this.Last_fire_tick = time.Now().Add(time.Microsecond * 200)
+			this.Last_fire_tick = time.Now().Add(time.Microsecond * 500)
 			this.do_fire()
 		}
 	}
