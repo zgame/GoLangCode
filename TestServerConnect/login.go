@@ -41,7 +41,7 @@ func (this *Client)build_mac_addr(index int)string{
 //---------------------------------------游客登录--------------------------------
 func (this *Client)LoginSend() {
 	dit := int32(9)
-	clik := int32(3)
+	clik := int32(4)
 	gamek := uint32(8)
 	plaza := uint32(0)
 	sendCmd := &CMD.CMD_MB_GuestLogin{
@@ -194,7 +194,7 @@ func (this *Client)loginGS() {
 	plaza_version := uint32(0)
 	frame_version := uint32(101056515)
 	process_version := uint32(101056515)
-	client_type := int32(3)
+	client_type := int32(4)
 	kind_id:= int32(3)
 	ditch_number:= int32(9)
 	packet_index:= uint32(1)

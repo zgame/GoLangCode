@@ -66,8 +66,15 @@ func startTcp() {
 	address := ip+":"+port
 	fmt.Println("address:"+address)
 	var err error
-	var timer int
+	var timer uint64
 	timer = 0
+
+
+	defer func() {
+		if e := recover(); e != nil {
+			logerDump()
+		}
+	}()
 
 	for {
 		if connectServer == nil {
@@ -84,6 +91,9 @@ func startTcp() {
 		}else{
 			handlerReceiveBuf(connectServer)
 			timer++
+			if timer > 99999 {
+				timer = 0
+			}
 			if timer > 10 {
 				// 10秒一个心跳包
 				_,err = connectServer.Write(getSendTcpHeaderData(MAIN_CMD_ID, SUB_C_MONITOR_KEEPLIVE, 0)) //发送心跳包
@@ -99,8 +109,6 @@ func startTcp() {
 				mwGlobal.model.PublishRowChanged(0)
 				ShowAllServerNum()
 			}
-
-
 		}
 		time.Sleep(1000 * time.Millisecond)
 	}
@@ -159,7 +167,7 @@ func handlerRead(buf []byte) int{
 		checkError(err)
 		//dataJ, _ := json.MarshalIndent(serverL, "", " ")
 		//fmt.Printf("%s", dataJ)
-		fmt.Println("----------------返回服务器列表--------------")
+		//fmt.Println("----------------返回服务器列表--------------")
 
 		// 保存到ServerListAll中
 		ServerListAll = make([]ServerState, 0)
@@ -217,7 +225,7 @@ func handlerRead(buf []byte) int{
 		checkError(err)
 		//dataJ, _ := json.MarshalIndent(newServer, "", " ")
 		//fmt.Printf("%s", dataJ)
-		fmt.Println("----------新增服务器-----------")
+		//fmt.Println("----------新增服务器-----------")
 		output := convertStringCode(string(newServer.Item.ServerName))
 
 
@@ -244,13 +252,13 @@ func handlerRead(buf []byte) int{
 		checkError(err)
 		//dataJ, _ := json.MarshalIndent(redServer, "", " ")
 		//fmt.Printf("%s", dataJ)
-		fmt.Println("----------删除服务器-----------")
+		//fmt.Println("----------删除服务器-----------")
 
 		for _, v := range mwGlobal.model.items {
 			if v.ServerId == int(redServer.ServerId) {
 				//mwGlobal.model.DeleteRows(i)
 				v.ServerState = 1     // 改变状态为关机
-				fmt.Printf("---------------%d 已关机---------------------",v.ServerId)
+				//fmt.Printf("---------------%d 已关机---------------------",v.ServerId)
 			}
 		}
 	} else if subCmd == SUB_S_MONITOR_CMD {

@@ -5,9 +5,17 @@ import (
 	"time"
 	"github.com/go-ini/ini"
 	"strconv"
+	"github.com/mahonia"
+
 )
 
 func watchGameServer()  {
+
+	defer func() {
+		if e := recover(); e != nil {
+			logerDump()
+		}
+	}()
 
 	f, _ := ini.Load("Setting.ini")
 	watch,_ := f.Section("Daemon").Key("switch").Bool()
@@ -61,6 +69,10 @@ func watchGameServer()  {
 
 									cmd := "cmd.exe /c \"start " + gameDir + " /ServerID:" + strconv.Itoa(serverId) + " /ServerName:" + serverName
 
+									//转换一下到gb2312
+									enc := mahonia.NewEncoder("gb2312")
+									cmd = enc.ConvertString(cmd)
+
 									fmt.Println("cmd: ", cmd)
 									zswSSH(user, psw, host, port, cmd)
 								}
@@ -71,10 +83,10 @@ func watchGameServer()  {
 								fmt.Println("cmd: ", cmd)
 								zswSSH(centerUser, centerPwd, centerIp, centerPort, cmd)
 							}
-
+							loger("守护进程重启:" + strconv.Itoa(v.ServerId))
 
 						} else {
-							fmt.Println("没关机，不用重启", v.ServerId)
+							//fmt.Println("没关机，不用重启", v.ServerId)
 						}
 					}
 				}

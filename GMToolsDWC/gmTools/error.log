@@ -1,0 +1,1 @@
+2018/09/25 15:00:31 C:/Users/Administrator/Documents/GitHub/GoLangCode/GMToolsDWC/gmTools/socket.go:343: ...error:... dial tcp 192.168.0.181:6330: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.

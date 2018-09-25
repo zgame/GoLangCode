@@ -72,9 +72,22 @@ func main() {
 	//}
 	startUI()
 
+	defer func() {
+		if e := recover(); e != nil {
+			logerDump()
+		}
+	}()
+
 }
 
 func startUI() {
+	defer func() {
+		if e := recover(); e != nil {
+			logerDump()
+		}
+	}()
+
+
 	// 创建UI
 	mw := &MyMainWindow{}
 	mwGlobal = mw
@@ -353,7 +366,7 @@ func ShowAllServerNum() int {
 	num = len(mwGlobal.model.items)
 
 	if outTE !=nil {
-		outTE.SetText(fmt.Sprintf("版本号：V1.14  (增加中心服守护)    服务器总数：%d", num))
+		outTE.SetText(fmt.Sprintf("版本号：V1.16  (增加中心服守护)    服务器总数：%d", num))
 	}
 	return 0
 }

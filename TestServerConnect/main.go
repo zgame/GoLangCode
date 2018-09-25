@@ -68,7 +68,7 @@ func main() {
 
 
 	for i := ClientStart; i < ClientEnd; i++ {
-		time.Sleep(time.Millisecond * 500)			//申请登录的时候给一个延迟
+		time.Sleep(time.Millisecond * 50)			//申请登录的时候给一个延迟
 		w.Add(1)
 		go func(i int) {
 			defer w.Done()
