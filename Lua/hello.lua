@@ -1,36 +1,45 @@
 local hello2 = require("hello2")
 require("class_test")
+require("user")
+
+--print("-----------Lua-----------")
 
 
-print("-----------Lua-----------")
-
-
+-- go 调用lua---------------------------------------------------------------
 function Zsw2(inss,ss)
     if (ss == nil) then
         ss = 0
     end
+    --print("go call lua:  ",inss*100 + ss, ss)
+
+    --print(hello2.zsw())
 
     return inss*100 + ss,ss
 end
 
 
 
-num,sss = double(20,2,"zsw")
-print(num)
-print(sss)
-print("lua call go:  ",num,sss)
 
-print('---------------------')
-print("go call lua:  ",Zsw2(9))
-print("call require file")
-hello2.zsw()
-print(hello2.ss)
+-- lua调用go---------------------------------------------------------------
+--num,sss = double(20,2,"zsw")
+--print("lua call go:  ",num,sss)
 
 
 
-print('---------------------')
-counter = Counter:new(100)
-for i=1,10 do
-    print(counter:incr(i))
-end
+
+
+-- 其他lua文件module调用---------------------------------------------------------------
+--print("call require file")
+--hello2.zsw()
+--print(hello2.ss)
+
+
+
+-- 类的调用方法---------------------------------------------------------------
+
+print('--------自增-------------')
+counter = Counter:new(1)
+
+
+helloNum = counter:incr(helloNum)
 print(counter:get())

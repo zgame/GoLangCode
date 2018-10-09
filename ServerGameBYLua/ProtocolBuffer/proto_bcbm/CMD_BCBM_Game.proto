@@ -1,0 +1,289 @@
+﻿// To use the "libprotobuf-lite.lib" library for C++ code.
+option optimize_for = LITE_RUNTIME;
+
+
+// Namespace: MESSAGE
+package CMD_BCBM;
+
+//请求上庄
+message CMD_SUB_C_REQ_BANKER
+{
+	optional int32 req_type = 1;	//当庄1   下庄0
+};
+
+message CMD_SUB_S_REQ_BANKER
+{
+	optional bytes req_result_info = 1;					//服务器返回的提示信息
+};
+
+message CMD_Userinfo_S
+{
+	optional int64	user_score = 1;				//玩家分数
+	optional bytes	nick_name = 2;		//玩家名字
+	repeated uint32 chip_value = 3;     //下注筹码金额列表
+	optional int64	banker_score_request = 4;				//上庄分数要求
+	optional int32	chip_up_limit = 5;	// 单局下注上限
+};
+
+message CMD_UserChip_ST
+{
+	repeated int64	 user_chip = 1;	
+};
+
+message CMD_Sence_Free
+{
+	optional uint32 game_status = 1;					//游戏状态
+	optional int64	user_score = 2;				//玩家分数
+	optional CMD_UserChip_ST user_chip = 3;						//玩家下注信息
+	optional CMD_UserChip_ST all_user_chip = 4;						//进入场景时所有玩家下注信息
+};
+
+message CMD_GameStart_S
+{
+	optional uint32 dst_type = 1;				//目标类型	
+	optional uint32 dst_index = 2;				//中的目标
+	optional uint32 last_pos = 3;				//上次位置
+	optional uint32 dst_pos = 4;				//中的位置
+};
+
+message CMD_GameEnd_Info_S
+{
+	optional uint32	banker_userid=1;					//庄家
+	optional bytes  banker_name=2;						//庄家
+	optional int64 banker_win=3;					//庄家赢取分数
+	optional uint32	user_count=4;						//赢取数量
+	repeated bytes nick_name=5;
+	repeated int64 user_win=6;					//玩家赢取
+};
+
+message CMD_UpdataChip_S
+{
+	optional CMD_UserChip_ST user_chip=1;				//玩家下注信息
+	optional CMD_UserChip_ST all_server_chip=2;	    //全服下注信息
+};
+
+message CMD_SysMessage_S
+{
+	optional uint32 sys_type = 1;				//消息类型 （ 0-普通消息 ）
+	optional bytes sys_message=2;		//消息内容
+};
+
+//游戏的数据
+message CMD_Gameinfo_S
+{
+	optional uint32	gmae_status = 1;			//游戏状态
+	optional uint32	timer_value = 2;			//timer的值
+	optional int64 pond = 3;					//奖池
+};
+
+message CMD_GameOpenLog_S
+{
+	optional uint32 arr_count = 1;
+	repeated uint32	arr_open_log = 2;
+};
+
+message CMD_Control_UserLeave_S
+{
+	optional uint32 user_id = 1;
+}; 
+
+message CMD_Control_DealRet_S
+{
+	optional uint32 ret = 1;
+	optional bytes result_des = 2;		//处理结果
+};
+
+//游戏的结算信息
+message CMD_GameResultinfo_S
+{
+	optional int64 win_score_change = 1;		//中得分数
+	optional int64 chip_value = 2;			//下注值
+	optional int64 new_score = 3;				//现有分数
+};
+
+message CMD_Control_Update_S
+{
+	optional CMD_UserChip_ST real_user_chip = 1;							//真实玩家下注
+	optional CMD_UserChip_ST dst_user_chip = 2;							//目标玩家下注
+};
+
+message CMD_ChipSucc_S
+{
+	optional bool   continue_chip = 1;			//续投模式
+	optional uint32 chip_index = 2;				//下注索引
+	optional int64 chip_value = 3;			//下注值
+	optional int64 show_score = 4;			//玩家拥有的分数
+	optional bool android_cheat = 5;      //机器人作弊下注标志
+}; 
+
+//游戏的结算信息
+message CMD_ClearUserChip_S
+{
+	optional uint32 result = 1;				//0为成功，1失败
+	optional int64 chip_value = 2;			//清理的下注值
+};
+
+message CMD_ContinueChipResult_S
+{
+	optional uint32 result = 1;				//0为成，1当前不能下注 为失败
+};
+
+//游戏的结算信息
+message CMD_SelfResult_S
+{
+	optional int64 win_score_change = 1;		//中得分数
+	optional int64 chip_value = 2;			//下注值
+	optional int64 new_score = 3;				//现有分数
+};
+
+message CMD_UpdateSelfScore_S
+{
+	optional int64 self_score_show = 1;
+};
+
+message CMD_Control_UserInfo_S
+{
+	optional uint32 user_id = 1;								//
+	optional uint32 game_id = 2;								//GAMEID
+	optional bytes nick_name = 3;				//昵称
+	optional int64 score = 4;								//身上分数
+	optional int32 kill_probability = 5;						//杀分率
+	optional uint32 vip_lev = 6;            //vip
+};
+
+message CMD_Control_StockInfo_S
+{
+	optional int64 stock_score = 1;							//库存分数
+	optional int64 down_line = 2;								//下限分数
+	optional int64 put_money_max = 3;							//最大吐钱
+	optional uint32 per_revenue = 4;							//税率
+};
+
+message CMD_Control_UserChip_S
+{
+	optional uint32 user_id = 1;								//获取某玩家下注信息
+	optional CMD_UserChip_ST user_chip = 2;								//下注信息
+	optional int64 score = 3;								//钱包
+	optional int64 insure = 4;								//银行分数
+	repeated int64 red_name_user_down = 5;		//红名玩家押注
+};
+
+message CMD_UserChipNotify_S
+{
+	optional uint32 user_id = 1;
+	optional uint32 chip_index = 2;
+	optional int64 chip_value = 3;
+}
+
+message CMD_UserContinue_ChipNotify_S
+{
+	optional uint32 user_id = 1;
+	optional CMD_UserChip_ST continue_chip_index = 2;
+}
+
+message CMD_ReqBanker_Result
+{
+	optional bytes result=1;			//结果文字
+};
+
+message CMD_WaitBankerUserInfo
+{
+	optional uint32 user_id = 1;			//等待坐庄玩家ID
+	optional bytes user_name = 2;			//等待坐庄玩家昵称
+	optional uint32 face_id = 3;			//等待坐庄玩家头像
+	optional int64 user_score = 4;			//等待坐庄玩家分数
+	optional bytes	face_url = 5;			//等待坐庄玩家头像url
+};
+
+message CMD_BankerUserInfo
+{
+	optional uint32 banker_user_id					  = 1;		//庄家ID
+	optional bytes banker_name						  = 2;		//庄家昵称
+	optional uint32 sit_game_num					  = 3;		//坐庄局数
+	optional int64 banker_score						  = 4;		//庄家分数
+	optional uint32	self_slot						  = 5;		//本人排位
+	optional uint32 req_user_count					  = 6;		//申请数量
+	repeated CMD_WaitBankerUserInfo req_arr_user_info = 7;		//申请玩家
+	optional uint32 banker_face_id					  = 8;		//头像ID
+	optional int32	banker_login_type				  = 9;		//登陆方式
+	optional bytes	banker_face_url					  = 10;		//头像
+	optional bool	frob_user						  = 11;		//首位是否是抢庄玩家
+	optional int32					monetaryt         = 12;	    //货币类型
+	optional int64					monetaryv		  = 13;		//货币值
+	optional uint32					user_id  	 = 14;			//玩家ID
+	optional bool					irob_act     = 15;			//同步发起是否因为抢庄
+
+};
+
+message CMD_BankerResult_S
+{
+	optional uint32 banker_user_id = 1;					//庄家
+	optional bytes banker_name = 2;		//庄家
+	optional int64	banker_win = 3;					//庄家赢取分数
+	optional uint32 user_count = 4;						//赢取数量
+	repeated bytes nick_name = 5;
+	repeated int64 user_win = 6;					//玩家赢取
+};
+
+message CMD_EMPTY_MESSAGE_S
+{
+};
+
+
+message CMD_Control_SelectDst_C
+{
+	optional uint32 user_id = 1;				//目标玩家
+};
+
+message CMD_UserChip_C
+{
+	optional uint32 chip_index = 1;				//下注索引
+	optional int64 chip_value = 2;			//下注值
+	optional bool android_cheat = 3;      //机器人作弊下注标志
+};
+
+message CMD_UserContinueChip_C
+{
+	optional CMD_UserChip_ST st_user_chip = 1;				//下注信息
+};
+
+message CMD_Control_SetDst_C
+{
+	optional bool control = 1;				//是否控制
+	optional uint32 dst_index = 2;				//目标索引
+};
+
+message CMD_ReqBanker_C
+{
+	optional bool request = 1;						//当庄1   下庄0
+};
+
+message CMD_Control_UserTotalChipInfo_S
+{
+	optional CMD_UserChip_ST real_user_chip = 1;								//真实用户下注信息
+	optional CMD_UserChip_ST ai_user_chip = 2;								//机器人下注信息
+	optional CMD_UserChip_ST for_win_user_chip = 3;								//抬分用户下注信息
+	optional CMD_UserChip_ST for_lost_user_chip = 4;								//杀分用户下注信息
+};
+
+message CMD_SUB_C_ONLINE_TOTAL
+{
+	optional uint32 server_kind = 1;                   //服务器的kindID
+};
+
+message CMD_SUB_S_ONLINE_TOTAL
+{
+	optional uint32 server_kind = 1;                   //服务器的kindID
+	optional uint32 online_total = 2;                  //在线总人数
+};
+
+message CMD_SUB_C_ROBBANK
+{
+};
+
+
+message CMD_SUB_S_AndroidUpdateChip
+{
+	optional bool cheat_mode = 1;                  //控制机器人下注模式，1作弊，0普通随机
+	optional uint32 chip_index = 2;                //作弊模式下有效
+};

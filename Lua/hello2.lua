@@ -9,7 +9,7 @@ module = {}
 module.ss = "fff"
 
 function module.zsw()
-    local num = math.abs(1212)
+    local num = math.abs(666)
     print(num)
 end
 
