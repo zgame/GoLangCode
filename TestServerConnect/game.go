@@ -414,21 +414,23 @@ func (this *Client)GameAI()  {
 	}
 	//fmt.Println("AI-----")
 
-	if OnlyUseSkill == false {
+	if UseFire == true {
 		if time.Now().After(this.Last_fire_tick) {
-			this.Last_fire_tick = time.Now().Add(time.Microsecond * 500)
+			this.Last_fire_tick = time.Now().Add(time.Microsecond * time.Duration(FireCD))
 			this.do_fire()
 		}
 	}
 
 
-	if time.Now().After(this.Last_skill_tick)   {
-		this.Last_skill_tick = time.Now().Add( time.Second * 2)
-		for _,v:= range this.Gameinfo.fish_pool{
-			if GoldFishMap[v.kind_id] !=0 {
-				//fmt.Println("开始使用技能", this.User.user_id)
-				this.do_start_skill()
-				return
+	if UseSkill == true {
+		if time.Now().After(this.Last_skill_tick) {
+			this.Last_skill_tick = time.Now().Add(time.Second * 2)
+			for _, v := range this.Gameinfo.fish_pool {
+				if GoldFishMap[v.kind_id] != 0 {
+					//fmt.Println("开始使用技能", this.User.user_id)
+					this.do_start_skill()
+					return
+				}
 			}
 		}
 	}

@@ -194,11 +194,11 @@ func (this *Client)loginGS() {
 	plaza_version := uint32(0)
 	frame_version := uint32(101056515)
 	process_version := uint32(101056515)
-	client_type := int32(4)
-	kind_id:= int32(3)
+	client_type := int32(3)
+	kind_id:= int32(GameKindID)
 	ditch_number:= int32(9)
 	packet_index:= uint32(1)
-	is_android:= false
+	is_android:= true
 	cannon_mulriple:= uint32(0)
 
 	sendCmd := &CMD.CMD_GR_LogonUserID{

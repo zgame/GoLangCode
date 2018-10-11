@@ -5,15 +5,27 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"os"
+	"bufio"
+	"github.com/yuin/gopher-lua/parse"
 )
 
-
+var num = 0
+var codeToShare *lua.FunctionProto
 func main() {
+
+	//defer luaPool.Shutdown()
+	var err error
+	codeToShare,err = CompileLua("main.lua")
+	if err!=nil{
+		fmt.Println("加载main.lua文件出错了！")
+	}
 
 	go start(1)
 	go start(2)
-	//goCallLua(L)
 
+
+	//goCallLua(L)
 
 	for{
 		select {
@@ -25,19 +37,28 @@ func main() {
 }
 
 func start(timer time.Duration) {
+
+
 	L := lua.NewState()
+	DoCompiledFile(L, codeToShare)
+
+	//L := lua.NewState()
 	defer L.Close()
+
+
+	//L := luaPool.Get()
+	//defer luaPool.Put(L)
 
 	// Lua调用go函数声明
 	// 声明double函数为Lua的全局函数，绑定go函数Double
 	L.SetGlobal("double", L.NewFunction(Double))
 
 
-	// 执行lua文件
-	if err := L.DoFile("main.lua"); err != nil {
-		fmt.Println("加载main.lua文件出错了！")
-		fmt.Println(err.Error())
-	}
+	//// 执行lua文件
+	//if err := L.DoFile("main.lua"); err != nil {
+	//	fmt.Println("加载main.lua文件出错了！")
+	//	fmt.Println(err.Error())
+	//}
 
 
 	tickerCheckUpdateData := time.NewTicker(time.Second * timer)
@@ -47,10 +68,95 @@ func start(timer time.Duration) {
 		select {
 		case <-tickerCheckUpdateData.C:
 			timerFunc(L,timer)
+
 		}
 	}
 
 }
+
+
+
+//------------------编译lua文件------------------------------
+
+// CompileLua reads the passed lua file from disk and compiles it.
+func CompileLua(filePath string) (*lua.FunctionProto, error) {
+	file, err := os.Open(filePath)
+	defer file.Close()
+	if err != nil {
+		return nil, err
+	}
+	reader := bufio.NewReader(file)
+	chunk, err := parse.Parse(reader, filePath)
+	if err != nil {
+		return nil, err
+	}
+	proto, err := lua.Compile(chunk, filePath)
+	if err != nil {
+		return nil, err
+	}
+	return proto, nil
+}
+
+// DoCompiledFile takes a FunctionProto, as returned by CompileLua, and runs it in the LState. It is equivalent
+// to calling DoFile on the LState with the original source file.
+func DoCompiledFile(L *lua.LState, proto *lua.FunctionProto) error {
+	lfunc := L.NewFunctionFromProto(proto)
+	L.Push(lfunc)
+	return L.PCall(0, lua.MultRet, nil)
+}
+
+
+//// ---------------------lua 文件池-------------------------------------------
+//type lStatePool struct {
+//	m     sync.Mutex
+//	saved []*lua.LState
+//}
+//
+//func (pl *lStatePool) Get() *lua.LState {
+//	pl.m.Lock()
+//	defer pl.m.Unlock()
+//	n := len(pl.saved)
+//	if n == 0 {
+//		return pl.New()
+//	}
+//	x := pl.saved[n-1]
+//	pl.saved = pl.saved[0 : n-1]
+//	return x
+//}
+//
+//func (pl *lStatePool) New() *lua.LState {
+//	L := lua.NewState()
+//
+//	// 执行lua文件
+//	if err := L.DoFile("main.lua"); err != nil {
+//		fmt.Println("加载main.lua文件出错了！")
+//		fmt.Println(err.Error())
+//	}
+//	// setting the L up here.
+//	// load scripts, set global variables, share channels, etc...
+//	return L
+//}
+//
+//func (pl *lStatePool) Put(L *lua.LState) {
+//	pl.m.Lock()
+//	defer pl.m.Unlock()
+//	pl.saved = append(pl.saved, L)
+//}
+//
+//func (pl *lStatePool) Shutdown() {
+//	for _, L := range pl.saved {
+//		L.Close()
+//	}
+//}
+//
+//// Global LState pool
+//var luaPool = &lStatePool{
+//	saved: make([]*lua.LState, 0, 4),
+//}
+//
+
+
+
 
 
 //-------------计时器------------------------
@@ -58,6 +164,8 @@ func timerFunc(L *lua.LState,timer time.Duration)  {
 	//fmt.Println("timer--------")
 	goCallLuaReload(L)
 	goCallLua(L,int(timer))
+
+	num++
 	//goCallLua(L)
 }
 

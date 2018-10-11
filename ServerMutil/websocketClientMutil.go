@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-const w_max_num = 20
+const w_max_num = 2
 
 type CWclients struct {
 	conn  *websocket.Conn
@@ -18,7 +18,7 @@ func main() {
 	//u := url.URL{Scheme: "ws", Host: *addr, Path: "/echo"}
 	//log.Printf("connecting to %s", u.String())
 	for i := 0; i < w_max_num; i++ {
-		c, _, err := websocket.DefaultDialer.Dial("ws://localhost:8080/echo", nil)
+		c, _, err := websocket.DefaultDialer.Dial("ws://localhost:8089/", nil)
 		if err != nil {
 			log.Fatal("dial:", err)
 		}

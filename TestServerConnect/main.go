@@ -30,10 +30,13 @@ func checkPanic(e error) {
 var GameServer string
 var ShowLog int
 var SkillID int
+var FireCD int
 //var SkillCD int
 var GoldFishMap map[int]int		//key : fishid   value: fishtype
-var OnlyUseSkill bool
-
+//var OnlyUseSkill bool
+var UseSkill bool
+var UseFire bool
+var GameKindID int
 // 程序入口
 func main() {
 	f, err := ini.Load("Setting.ini")
@@ -47,8 +50,12 @@ func main() {
 	ClientEnd ,err   := f.Section("Server").Key("ClientEnd").Int()
 	ShowLog ,err   = f.Section("Server").Key("ShowLog").Int()
 	SkillID ,err   = f.Section("Server").Key("SkillID").Int()
+	FireCD ,err   = f.Section("Server").Key("FireCD").Int()
+	GameKindID ,err   = f.Section("Server").Key("GameKindID").Int()
 	//SkillCD ,err   = f.Section("Server").Key("SkillCD").Int()
-	OnlyUseSkill ,err   = f.Section("Server").Key("SkillCD").Bool()
+	//OnlyUseSkill ,err   = f.Section("Server").Key("OnlyUseSkill").Bool()
+	UseFire ,err   = f.Section("Server").Key("UseFire").Bool()
+	UseSkill ,err   = f.Section("Server").Key("UseSkill").Bool()
 
 	GetEngine()
 	getGoldFishMap()
