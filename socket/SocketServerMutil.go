@@ -19,7 +19,7 @@ func main() {
 
 	clientMsg := Clients{make([]net.Conn,0),0}
 
-	service := "127.0.0.1:8301"
+	service := "127.0.0.1:8081"
 	listener, err := net.Listen("tcp", service)
 	checkError(err)
 	for {

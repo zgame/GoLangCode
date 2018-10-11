@@ -11,10 +11,11 @@ import (
 )
 
 func main() {
-	service := "127.0.0.1:8081"
+	service := "127.0.0.1:8089"
 	conn, err := net.Dial("tcp", service)
 	checkError(err)
 
+	fmt.Println("连接开始")
 	Sendmsg(conn,"我是客户端!")
 
 	for{

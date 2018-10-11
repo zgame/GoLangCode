@@ -223,7 +223,6 @@ func Double(L *lua.LState) int {
 	lv2 :=  L.ToInt(2)			 //第一个参数
 	str := L.ToString(3)
 
-
 	L.Push(lua.LString(str+"  call "+strconv.Itoa(lv * lv2))) /* push result */
 
 	return 1                     /* number of results */

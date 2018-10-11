@@ -13,8 +13,8 @@ import (
 var RRedis redis.Conn
 
 // Redis数据库初始化
-func InitRedis() {
-	re, err := redis.Dial("tcp", "127.0.0.1:6379")
+func InitRedis(address string) {
+	re, err := redis.Dial("tcp", address)
 	if err != nil {
 		fmt.Println("connect to redis err", err.Error())
 		return

@@ -84,7 +84,7 @@ func (handler *WSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	delete(handler.conns, conn)			// 去掉当前连接列表中这个连接
 	handler.mutexConns.Unlock()
 	agent.OnClose()						// 关闭代理
-	fmt.Println("当前websocket连接数量为：",len(handler.conns))
+	fmt.Println("当前连接数量为：",len(handler.conns))
 
 }
 

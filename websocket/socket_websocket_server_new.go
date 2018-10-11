@@ -1,76 +1,80 @@
 package main
 
 import (
-	"./netWork"
+	"./NetWork"
 	"reflect"
 	"net"
 	"fmt"
+	"math"
 	"time"
 )
-var wsServer *network.WSServer
-var server  *network.TCPServer
+
+var wsServer *NetWork.WSServer
+var server *NetWork.TCPServer
+var IsWebSocket bool
+
 func main() {
 
-	// websocket 服务器开启
-	wsServer = new(network.WSServer)
-	wsServer.Addr = "localhost:8089"
-	wsServer.MaxConnNum = 2
-	wsServer.PendingWriteNum = 100
-	wsServer.MaxMsgLen = 4096
-	wsServer.HTTPTimeout = 10 * time.Second
-	wsServer.CertFile = ""
-	wsServer.KeyFile = ""
-	wsServer.NewAgent = func(conn *network.WSConn) network.Agent {
-		a := &agentServer{conn: conn}
-		return a
-	}
-	wsServer.Start()
-
-	// socket 服务器开启
-	//server = new(network.TCPServer)
-	//server.Addr = "127.0.0.1:8089"
-	//server.MaxConnNum = int(math.MaxInt32)
-	//server.PendingWriteNum = 100
-	//server.LenMsgLen = 4
-	//server.MaxMsgLen = math.MaxUint32
-	//server.NewAgent = func(conn *network.TCPConn) network.Agent  {
-	//		a := &agentServer{conn: conn}
-	//		return a
-	//	}
-	//server.Start()
+	IsWebSocket = true // webscoket
 
 
-
-	for{
-		select {
-
+	if IsWebSocket {
+		// websocket 服务器开启---------------------------------
+		wsServer = new(NetWork.WSServer)
+		wsServer.Addr = "localhost:8089"
+		wsServer.MaxConnNum = 2
+		wsServer.PendingWriteNum = 100
+		wsServer.MaxMsgLen = 4096
+		wsServer.HTTPTimeout = 10 * time.Second
+		wsServer.CertFile = ""
+		wsServer.KeyFile = ""
+		wsServer.NewAgent = func(conn *NetWork.WSConn) NetWork.Agent {
+			a := &agentServer{conn: conn}
+			return a
 		}
+		wsServer.Start()
+	}
+	if IsWebSocket{
+
+		// socket 服务器开启----------------------------------
+		server = new(NetWork.TCPServer)
+		server.Addr = "127.0.0.1:8088"
+		server.MaxConnNum = int(math.MaxInt32)
+		server.PendingWriteNum = 100
+		server.LenMsgLen = 4
+		server.MaxMsgLen = math.MaxUint32
+		server.NewAgent = func(conn *NetWork.TCPConn) NetWork.Agent {
+			a := &agentServer{conn: conn}
+			return a
+		}
+		server.Start()
+
+	}
+
+	for {
+		select {}
 	}
 }
 
-
-
-
-
-
-type Agent interface {
-	WriteMsg(msg... []byte)
-	LocalAddr() net.Addr
-	RemoteAddr() net.Addr
-	Close()
-	Destroy()
-	UserData() interface{}
-	SetUserData(data interface{})
-}
+//type Agent interface {
+//	WriteMsg(msg ... []byte)
+//	LocalAddr() net.Addr
+//	RemoteAddr() net.Addr
+//	Close()
+//	Destroy()
+//	UserData() interface{}
+//	SetUserData(data interface{})
+//}
 
 // wsServer.NewAgent 服务器连接的代理
 type agentServer struct {
-	conn     network.Conn
+	conn NetWork.Conn
 	//gate     *Gate
 	userData interface{}
 }
 
 func (a *agentServer) Run() {
+	//fmt.Println("run")
 	for {
 		data, err := a.conn.ReadMsg()
 		if err != nil {
@@ -78,10 +82,9 @@ func (a *agentServer) Run() {
 			break
 		}
 		fmt.Println("收到消息------------")
-		fmt.Println("消息:  ",string(data))
+		fmt.Println("消息:  ", string(data))
 
-
-		//a.WriteMsg([]byte("服务器收到你的消息-------"+ string(data)))
+		a.WriteMsg([]byte("服务器收到你的消息-------" + string(data)))
 
 		//if a.gate.Processor != nil {
 		//	msg, err := a.gate.Processor.Unmarshal(data)
@@ -107,17 +110,17 @@ func (a *agentServer) OnClose() {
 	//}
 }
 
-func (a *agentServer) WriteMsg(msg... []byte) {
+func (a *agentServer) WriteMsg(msg ... []byte) {
 	//if a.gate.Processor != nil {
 	//	data, err := a.gate.Processor.Marshal(msg)
 	//	if err != nil {
 	//		fmt.Printf("marshal message %v error: %v", reflect.TypeOf(msg), err)
 	//		return
 	//	}
-		err := a.conn.WriteMsg(msg...)
-		if err != nil {
-			fmt.Printf("write message %v error: %v", reflect.TypeOf(msg), err)
-		}
+	err := a.conn.WriteMsg(msg...)
+	if err != nil {
+		fmt.Printf("write message %v error: %v", reflect.TypeOf(msg), err)
+	}
 	//}
 }
 

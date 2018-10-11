@@ -70,7 +70,7 @@ func (server *TCPServer) run() {
 
 	var tempDelay time.Duration
 	for {
-		conn, err := server.ln.Accept()
+		conn, err := server.ln.Accept()				// 一直在监听，如果有新的连接进来了， 那么就一直走到后面建立新的连接
 		if err != nil {
 			if ne, ok := err.(net.Error); ok && ne.Temporary() {
 				if tempDelay == 0 {
@@ -101,7 +101,7 @@ func (server *TCPServer) run() {
 
 		server.wgConns.Add(1)
 
-		tcpConn := newTCPConn(conn, server.PendingWriteNum, server.msgParser)
+		tcpConn := newTCPConn(conn, server.PendingWriteNum, nil)		// 建立新连接
 		agent := server.NewAgent(tcpConn)
 		go func() {
 			agent.Run()
@@ -114,7 +114,7 @@ func (server *TCPServer) run() {
 			agent.OnClose()
 
 			server.wgConns.Done()
-			fmt.Println("当前socket连接数量为：",len(server.conns))
+			fmt.Println("当前连接数量为：",len(server.conns))
 		}()
 	}
 }

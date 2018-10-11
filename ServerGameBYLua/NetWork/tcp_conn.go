@@ -25,7 +25,7 @@ func newTCPConn(conn net.Conn, pendingWriteNum int, msgParser *MsgParser) *TCPCo
 	tcpConn := new(TCPConn)
 	tcpConn.conn = conn
 	tcpConn.writeChan = make(chan []byte, pendingWriteNum)
-	tcpConn.msgParser = msgParser
+	tcpConn.msgParser = nil
 
 	go func() {
 		for b := range tcpConn.writeChan {

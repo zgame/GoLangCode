@@ -15,6 +15,11 @@ import (
 	"./Games"
 	"./Logic/Player"
 	"./CSV"
+	"time"
+	"math"
+	"./NetWork"
+	"github.com/yuin/gopher-lua"
+
 )
 
 
@@ -26,7 +31,16 @@ import (
 //var ServerOpen bool		//服务器开启完毕
 
 // ---------------------------程序入口-----------------------------------
+var wsServer *NetWork.WSServer
+var server *NetWork.TCPServer
+var codeToShare *lua.FunctionProto
+
 func main() {
+	WebSocketServer := false
+	SocketServer := false
+	var WebSockewtPort int
+	var SockewtPort int
+
 	//ServerOpen = false
 	fmt.Println("-------------------读取配置文件---------------------------")
 	f, err := ini.Load("Setting.ini")
@@ -34,14 +48,23 @@ func main() {
 		fmt.Println("配置文件出错")
 		return
 	}
-	Port ,err   := f.Section("Server").Key("Port").Int()
+	WebSockewtPort ,err  = f.Section("Server").Key("WebSockewtPort").Int()
+	SockewtPort ,err   = f.Section("Server").Key("SockewtPort").Int()
 	log.ShowLog,err  = f.Section("Server").Key("ShowLog").Bool()
+	WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
+	SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
+	RedisAddress := f.Section("Server").Key("SocketServer").String()
 
-	service := "127.0.0.1:"+strconv.Itoa(Port)
-	listener, err := net.Listen("tcp", service)
 	log.CheckError(err)
+
 	fmt.Println("-------------------数据库连接---------------------------")
-	zRedis.InitRedis()
+	codeToShare,err = CompileLua("main.lua")
+	if err!=nil{
+		fmt.Println("加载main.lua文件出错了！")
+	}
+
+	fmt.Println("-------------------数据库连接---------------------------")
+	zRedis.InitRedis(RedisAddress)
 
 	fmt.Println("-------------------读取CVS数据文件---------------------------")
 	CSV.LoadFishServerExcel()
@@ -69,8 +92,47 @@ func main() {
 	//})
 
 
-	fmt.Println("-------------------游戏服务器开始运行---------------------------")
-	//---------------------------------监听网络接口---------------------------------------
+	fmt.Println("-------------------游戏服务器开始建立连接---------------------------")
+	if WebSocketServer {
+		// websocket 服务器开启---------------------------------
+		wsServer = new(NetWork.WSServer)
+		wsServer.Addr = "localhost:"+strconv.Itoa(WebSockewtPort)
+		wsServer.MaxConnNum = 2000
+		wsServer.PendingWriteNum = 100
+		wsServer.MaxMsgLen = 4096
+		wsServer.HTTPTimeout = 10 * time.Second
+		wsServer.CertFile = ""
+		wsServer.KeyFile = ""
+		wsServer.NewAgent = func(conn *NetWork.WSConn) NetWork.Agent {
+			a := &myServer{conn: conn}
+			return a
+		}
+		wsServer.Start()
+	}
+	if SocketServer{
+		// socket 服务器开启----------------------------------
+		server = new(NetWork.TCPServer)
+		server.Addr = "127.0.0.1:"+strconv.Itoa(SockewtPort)
+		server.MaxConnNum = int(math.MaxInt32)
+		server.PendingWriteNum = 100
+		server.LenMsgLen = 4
+		server.MaxMsgLen = math.MaxUint32
+		server.NewAgent = func(conn *NetWork.TCPConn) NetWork.Agent {
+			a := &myServer{conn: conn}
+			return a
+		}
+		server.Start()
+
+	}
+
+
+
+
+
+
+	service := "127.0.0.1:"+strconv.Itoa(SockewtPort)
+	listener, err := net.Listen("tcp", service)
+	log.CheckError(err)
 	for {
 		conn, err := listener.Accept()
 		if log.CheckError(err){
@@ -87,6 +149,8 @@ func main() {
 	// --------------------------------------------------------------
 }
 
+
+//-------------------------------------------------------------------------------------
 //  这里是每一个连接新建一个协程，有接收和发送的时候，内部会通知，其他时候自动阻塞
 func startClient(client *Client.Client) {
 	for {
@@ -99,4 +163,8 @@ func startClient(client *Client.Client) {
 	}
 }
 
-// --------------------------------------------------------------
+
+
+
+
+//----------------------------------------------------------------------------------
