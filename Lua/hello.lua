@@ -21,8 +21,8 @@ end
 
 
 -- lua调用go---------------------------------------------------------------
---num,sss = double(20,2,"zsw")
---print("lua call go:  ",num,sss)
+num,sss = double(20,2,"zsw")
+print("lua call go:  ",num,sss)
 
 
 

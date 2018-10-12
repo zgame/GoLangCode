@@ -40,7 +40,7 @@ func start(timer time.Duration) {
 
 
 	L := lua.NewState()
-	DoCompiledFile(L, codeToShare)
+
 
 	//L := lua.NewState()
 	defer L.Close()
@@ -52,7 +52,7 @@ func start(timer time.Duration) {
 	// Lua调用go函数声明
 	// 声明double函数为Lua的全局函数，绑定go函数Double
 	L.SetGlobal("double", L.NewFunction(Double))
-
+	DoCompiledFile(L, codeToShare)
 
 	//// 执行lua文件
 	//if err := L.DoFile("main.lua"); err != nil {
@@ -224,22 +224,8 @@ func Double(L *lua.LState) int {
 	str := L.ToString(3)
 
 	L.Push(lua.LString(str+"  call "+strconv.Itoa(lv * lv2))) /* push result */
+	L.Push(lua.LString(str+"  call "+strconv.Itoa(lv * lv2))) /* push result */
 
-	return 1                     /* number of results */
+	return 2                    /* number of results */
 }
 
-
-// 计时器，用来定期检查配置的更新，包括后台控制的活动，开关，配置文件更新，用数据版本号来控制
-func TimerCheckUpdate(f func())  {
-	go func() {
-		tickerCheckUpdateData := time.NewTicker(time.Second * 2)
-		defer tickerCheckUpdateData.Stop()
-
-		for {
-			select {
-			case <-tickerCheckUpdateData.C:
-				f()
-			}
-		}
-	}()
-}

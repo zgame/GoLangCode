@@ -1,6 +1,6 @@
-local hello2 = require("hello2")
-require("class_test")
-require("user")
+local hello2 = require("Script/hello2")
+require("Script/class_test")
+require("Script/user")
 
 --print("-----------Lua-----------")
 

@@ -4,16 +4,16 @@
 --- DateTime: 2018/10/9 14:12
 ---
 
-require("hello")
-require("hello2")
-require("class_test")
+require("Script/hello")
+require("Script/hello2")
+require("Script/class_test")
 
 -- 热更新全部的逻辑代码，需要自己控制， 切记玩家数据部分不要加进去，不然会重置玩家数据，如果你是保存型代码，容易导致玩家清档
 function ReloadAll()
 
-    reloadFile("hello")
-    reloadFile("hello2")
-    reloadFile("class_test")
+    reloadFile("Script/hello")
+    reloadFile("Script/hello2")
+    reloadFile("Script/class_test")
 
 
 end
@@ -24,3 +24,23 @@ function reloadFile(module_name)
 end
 
 
+print("ddddddddddd")
+
+--公共逻辑循环处理
+function GoCallLuaCommonLogicRun()
+    print("公共逻辑循环处理")
+end
+
+
+--夜里12点触发公共逻辑变动，因为新的一天开始了
+function GoCallLuaCommonLogic12clock()
+    print("夜里12点触发公共逻辑变动，因为新的一天开始了")
+end
+
+
+-- 网络发送函数
+function LuaCallGoNetWorkSend()
+
+end
+
+-- 网络接收函数

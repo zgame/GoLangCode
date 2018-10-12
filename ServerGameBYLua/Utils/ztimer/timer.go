@@ -5,9 +5,9 @@ import (
 )
 
 // 计时器，用来定期检查配置的更新，包括后台控制的活动，开关，配置文件更新，用数据版本号来控制
-func TimerCheckUpdate(f func())  {
+func TimerCheckUpdate(f func(), timer time.Duration)  {
 	go func() {
-		tickerCheckUpdateData := time.NewTicker(time.Second * 5)
+		tickerCheckUpdateData := time.NewTicker(time.Second * timer)
 		defer tickerCheckUpdateData.Stop()
 
 		for {
