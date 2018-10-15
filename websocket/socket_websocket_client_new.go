@@ -16,7 +16,7 @@ import (
 func main() {
 	IsWebSocket := true
 
-	if IsWebSocket {
+	if false {
 		// socket client----------------------------------------------------------
 		var clients []*NetWork.TCPClient
 

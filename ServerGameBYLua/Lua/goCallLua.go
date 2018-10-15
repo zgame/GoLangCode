@@ -5,8 +5,12 @@ import (
 	"fmt"
 )
 
-// go调用lua函数--------------------------------------------------
-func GoCallLua(L *lua.LState, num int)  {
+//--------------------------------------------------------------------------------
+// go 调用 lua的函数
+//--------------------------------------------------------------------------------
+
+// ----------------test----------------------------------
+func GoCallLuaTest(L *lua.LState, num int)  {
 	// 这里是go调用lua的函数
 	if err := L.CallByParam(lua.P{
 		Fn: L.GetGlobal("Zsw2"),		// lua的函数名字
@@ -26,14 +30,24 @@ func GoCallLua(L *lua.LState, num int)  {
 	L.Pop(1)  // remove received value
 }
 
-// go触发lua函数，不带参数和返回值
-func GoCallLuaCommonLogic(L *lua.LState, funcName string)  {
-	if err := L.CallByParam(lua.P{
-		Fn: L.GetGlobal(funcName),		// lua的函数名字
+// -------------------go触发lua函数，不带参数和返回值-------------------
+func (m *MyLua)GoCallLuaCommonLogic(funcName string) {
+	if err := m.L.CallByParam(lua.P{
+		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
 		NRet: 0,
 		Protect: true,
 	}); err != nil {		// 参数
-		fmt.Println("",err.Error())
+		fmt.Println("GoCallLuaCommonLogic error :",err.Error())
 	}
 }
 
+// -------------------go传递接收到的网络数据包给lua-------------------
+func (m *MyLua)GoCallLuaNetWorkReceive(data string) {
+	if err := m.L.CallByParam(lua.P{
+		Fn: m.L.GetGlobal("GoCallLuaNetWorkReceive"),		// lua的函数名字
+		NRet: 0,
+		Protect: true,
+	},lua.LString(data)); err != nil {		// 参数
+		fmt.Println("GoCallLuaNetWorkReceive  error :",err.Error())
+	}
+}

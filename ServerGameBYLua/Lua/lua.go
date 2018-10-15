@@ -6,20 +6,41 @@ import (
 	"bufio"
 	"github.com/yuin/gopher-lua/parse"
 	"fmt"
+	"../GlobalVar"
 )
+//--------------------------------------------------------------------------------
+// lua的接口，包含热更新
+//--------------------------------------------------------------------------------
 
-func Init(codeToShare *lua.FunctionProto)  *lua.LState {
-	L := lua.NewState()
 
-	//defer L.Close()
+var LuaConnectMyServer map[*lua.LState]*MyServer	// 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
 
+type MyLua struct {
+	L *lua.LState
+}
+
+
+func NewMyLua() *MyLua {
+	l := lua.NewState()
+	return &MyLua{L:l}
+}
+
+// --------------------全局变量初始化--------------------------
+func InitGlobalVar()  {
+	LuaConnectMyServer = make(map[* lua.LState]*MyServer)
+}
+
+
+
+//----------------------对象个体初始化-----------------------
+func (m *MyLua)Init()   {
 	//L := luaPool.Get()		// 这是用池的方式， 但是玩家数据需要清理重置，以后再考虑吧
 	//defer luaPool.Put(L)
 
-	InitResister(L) // 这里是统一的lua函数注册入口
+	m.InitResister() // 这里是统一的lua函数注册入口
 
-	DoCompiledFile(L, codeToShare)
-	return L
+	DoCompiledFile(m.L, GlobalVar.LuaCodeToShare)
+	//return m.L
 }
 
 
@@ -52,12 +73,12 @@ func DoCompiledFile(L *lua.LState, proto *lua.FunctionProto) error {
 }
 
 
-// Lua重新加载，Lua的热更新按钮----------------------------------------
-func GoCallLuaReload(L *lua.LState) error {
+// ----------------------Lua重新加载，Lua的热更新按钮----------------------------------------
+func (m *MyLua)GoCallLuaReload() error {
 	//fmt.Println("----------lua reload--------------")
 	var err error
-	err = L.CallByParam(lua.P{
-		Fn: L.GetGlobal("ReloadAll"), //reloadUp  ReloadAll
+	err = m.L.CallByParam(lua.P{
+		Fn: m.L.GetGlobal("ReloadAll"), //reloadUp  ReloadAll
 		NRet: 0,
 		Protect: true,
 	})
