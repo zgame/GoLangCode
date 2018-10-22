@@ -65,11 +65,11 @@ extern "C" {
 #endif
 
 
-extern void hello(GoString p0);
+extern GoInt hello(GoInt p0, GoString p1);
 
-extern void Hello();
+extern GoInt Hello(GoString p0);
 
-extern GoInt Sum(GoInt p0, GoInt p1);
+extern GoInt Sum(GoInt p0, GoInt p1, GoString p2);
 
 #ifdef __cplusplus
 }

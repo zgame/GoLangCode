@@ -8,6 +8,8 @@ import (
 	"os"
 	"bufio"
 	"github.com/yuin/gopher-lua/parse"
+	"syscall"
+	"unsafe"
 )
 
 var num = 0
@@ -22,7 +24,7 @@ func main() {
 	}
 
 	go start(1)
-	go start(2)
+	//go start(2)
 
 
 	//goCallLua(L)
@@ -36,6 +38,10 @@ func main() {
 
 }
 
+// 把指针传递过去给dll
+func IntPtr(L *lua.LState) uintptr {
+	return uintptr(unsafe.Pointer(L))
+}
 func start(timer time.Duration) {
 
 
@@ -51,14 +57,24 @@ func start(timer time.Duration) {
 
 	// Lua调用go函数声明
 	// 声明double函数为Lua的全局函数，绑定go函数Double
-	L.SetGlobal("double", L.NewFunction(Double))
-	DoCompiledFile(L, codeToShare)
+	////L.SetGlobal("double", L.NewFunction(Double))
+	//L.Register("double", Double)
+	//DoCompiledFile(L, codeToShare)
 
 	//// 执行lua文件
-	//if err := L.DoFile("main.lua"); err != nil {
-	//	fmt.Println("加载main.lua文件出错了！")
-	//	fmt.Println(err.Error())
-	//}
+	if err := L.DoFile("main.lua"); err != nil {
+		fmt.Println("加载main.lua文件出错了！")
+		fmt.Println(err.Error())
+	}
+
+	DllTestDef := syscall.MustLoadDLL("libpb.dll")
+	add := DllTestDef.MustFindProc("luaopen_pb")
+	ret, _, err := add.Call(IntPtr(L))
+	if err!=nil{
+		fmt.Println("返回",ret)
+	}
+
+
 
 
 	tickerCheckUpdateData := time.NewTicker(time.Second * timer)
@@ -162,8 +178,8 @@ func DoCompiledFile(L *lua.LState, proto *lua.FunctionProto) error {
 //-------------计时器------------------------
 func timerFunc(L *lua.LState,timer time.Duration)  {
 	//fmt.Println("timer--------")
-	goCallLuaReload(L)
-	goCallLua(L,int(timer))
+	//goCallLuaReload(L)
+	//goCallLua(L,int(timer))
 
 	num++
 	//goCallLua(L)

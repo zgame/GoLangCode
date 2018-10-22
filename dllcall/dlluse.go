@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"unsafe"
 	"syscall"
+	"unsafe"
 )
 
 //-------------------------------------------------------------------
@@ -11,19 +11,31 @@ import (
 func IntPtr(n int) uintptr {
 	return uintptr(n)
 }
+//func StrPtr(s string) uintptr {
+//
+//	ss,_:=syscall.UTF16PtrFromString(s)
+//	p:=unsafe.Pointer(ss)
+//	return uintptr(p)
+//}
+
 func StrPtr(s string) uintptr {
-	return uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(s)))
+	//ss:=syscall.StringToUTF16Ptr(s)
+	//ss:="sdfsdfsdf"
+	p:=unsafe.Pointer(&s)
+	return uintptr(p)
 }
+
 
 
 //-------------------------------------------------------------------
 
 func Lib_add() {
-	lib := syscall.NewLazyDLL("exportgo.dll")//exportgo  libcppmakedll
+	lib := syscall.NewLazyDLL("exportgo.dll")//exportgo  libcppmakedll  libcmakedll
 	add := lib.NewProc("hello")
-	ret, _, err := add.Call( StrPtr("ssssssss"))
+
+	_, _, err := add.Call(2,StrPtr("sdf"))
 	if err != nil {
-		fmt.Println("lib.dll运算结果为:", ret)
+		//fmt.Println("lib.dll运算结果为:", ret)
 	}
 }
 
@@ -32,10 +44,10 @@ func DllTestDef_add() {
 	defer syscall.FreeLibrary(DllTestDef)
 	add, err := syscall.GetProcAddress(DllTestDef, "Sum")
 	ret, _, err := syscall.Syscall(add,
-		2,
-		IntPtr(1),
-		IntPtr(27),
-		0)
+		3,
+		4,
+		6,
+		StrPtr("sum"))
 	if err != nil {
 		fmt.Println("DllTestDef.dll运算结果为:", ret)
 	}
@@ -45,7 +57,7 @@ func DllTestDef_add() {
 func DllTestDef_add2() {
 	DllTestDef := syscall.MustLoadDLL("exportgo.dll")
 	add := DllTestDef.MustFindProc("Hello")
-	ret, _, err := add.Call()
+	ret, _, err := add.Call(StrPtr("sdf"))
 	if err != nil {
 		fmt.Println("DllTestDef.dll运算结果为:", ret)
 	}
@@ -61,8 +73,8 @@ func DllTestDef_add2() {
 func main() {
 	fmt.Println("start ")
 
-	//Lib_add()
-	DllTestDef_add()
+	Lib_add()
+	//DllTestDef_add()
 	//DllTestDef_add2()
 
 }
