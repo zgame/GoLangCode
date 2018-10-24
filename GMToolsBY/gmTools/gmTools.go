@@ -362,7 +362,7 @@ func ShowAllServerNum() int {
 	num = len(mwGlobal.model.items)
 
 	if outTE !=nil {
-		outTE.SetText(fmt.Sprintf("版本号：V1.22      服务器总数：%d", num))
+		outTE.SetText(fmt.Sprintf("版本号：V1.25      服务器总数：%d", num))
 	}
 	return 0
 }
@@ -381,6 +381,7 @@ func (m *TableViewModel) ResetRows() {
 	m.items = make([]*ServerState, len(ServerListAll))
 
 	//now := time.Now()
+	// 从全局的列表中，创建显示的items
 
 	for i,v := range ServerListAll {
 		m.items[i] = &ServerState{

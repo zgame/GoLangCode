@@ -21,6 +21,9 @@ type Client struct {
 	Failed_cnt int			// 锁定鱼打了几炮
 
 	ShowLog uint64 			//打鱼的记录
+
+	ReloginTime time.Time	// 志勇要模拟玩家玩1分钟再退出重新进入的测试
+	Quit  bool
 }
 
 

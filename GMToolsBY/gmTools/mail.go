@@ -4,7 +4,7 @@ import (
 	"gopkg.in/gomail.v2"
 	"fmt"
 	"github.com/go-ini/ini"
-	"log"
+	log "github.com/jeanphorn/log4go"
 )
 
 //var mFrom  = "zhushw@soonyo.com"
@@ -19,7 +19,6 @@ func sendMail(msg string)  {
 	f, err := ini.Load("Setting.ini")
 	if err != nil {
 		fmt.Println("ini配置文件出错！", err)
-		log.Fatal(err)
 		return
 	}
 
@@ -48,7 +47,7 @@ func sendMail(msg string)  {
 	//m.SetAddressHeader("Cc", mTo, "Dan")
 
 	// -----------邮件内容-----------
-	m.SetHeader("Subject", "GameServer Error")
+	m.SetHeader("Subject", "GameServer Error---游戏服务器GM工具监控发现问题报警邮件")
 	m.SetBody("text/html", msg)
 	//m.Attach("/home/Alex/lolcat.jpg")
 
@@ -56,7 +55,7 @@ func sendMail(msg string)  {
 	d := gomail.NewDialer(host, port, username, pwd)
 
 	if err := d.DialAndSend(m); err != nil {
-		panic(err)
+		log.LOGGER("Mail error").Info("发送邮件失败！")
 	}
 
 	fmt.Println("send ok!")

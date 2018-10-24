@@ -28,6 +28,7 @@ func checkPanic(e error) {
 }
 
 var GameServer string
+var LoginServer string
 var ShowLog int
 var SkillID int
 var FireCD int
@@ -37,6 +38,8 @@ var GoldFishMap map[int]int		//key : fishid   value: fishtype
 var UseSkill bool
 var UseFire bool
 var GameKindID int
+var ReLoginTime int
+
 // 程序入口
 func main() {
 	f, err := ini.Load("Setting.ini")
@@ -44,7 +47,7 @@ func main() {
 		fmt.Println("配置文件出错")
 		return
 	}
-	LoginServer := f.Section("Server").Key("LoginServer").Value()
+	LoginServer = f.Section("Server").Key("LoginServer").Value()
 	GameServer  = f.Section("Server").Key("GameServer").Value()
 	ClientStart,err   := f.Section("Server").Key("ClientStart").Int()
 	ClientEnd ,err   := f.Section("Server").Key("ClientEnd").Int()
@@ -52,6 +55,7 @@ func main() {
 	SkillID ,err   = f.Section("Server").Key("SkillID").Int()
 	FireCD ,err   = f.Section("Server").Key("FireCD").Int()
 	GameKindID ,err   = f.Section("Server").Key("GameKindID").Int()
+	ReLoginTime ,err   = f.Section("Server").Key("ReLoginTime").Int()
 	//SkillCD ,err   = f.Section("Server").Key("SkillCD").Int()
 	//OnlyUseSkill ,err   = f.Section("Server").Key("OnlyUseSkill").Bool()
 	UseFire ,err   = f.Section("Server").Key("UseFire").Bool()
@@ -89,11 +93,15 @@ func main() {
 			defer conn.Close()
 
 
-			clients := &Client{conn, i, nil,nil , nil, 0, false, time.Now(), time.Now(),time.Now(),  time.Now(),0 ,0,0}
+
+			clients := &Client{conn, i, nil, nil, nil, 0, false,
+			time.Now(), time.Now(), time.Now(), time.Now(), 0, 0, 0,
+				time.Now().Add(time.Second * time.Duration(ReLoginTime)),false}
+
 			clients.Gameinfo = clients.Gameinfo.New()
 
 			//fmt.Println("发送登录请求",i)
-			clients.LoginSend()		//开始登录请求
+			clients.LoginSend() //开始登录请求
 			//fmt.Println("发送登录完成")
 			startClient(clients)
 
@@ -125,6 +133,10 @@ func startClient(c *Client) {
 
 		//c.Conn.SetDeadline(time.Now().Add(1e10))
 		//fmt.Println(" receive ")
+		if c.Quit == true{
+			fmt.Println("连接结束",c.Index)
+			return
+		}
 
 		if c.Receive() == false{
 			// 连接关闭， 那么退出吧
@@ -132,7 +144,7 @@ func startClient(c *Client) {
 			return
 		}
 
-		c.GameAI()
+		c.GameAI(ReLoginTime)
 
 
 	}
@@ -160,6 +172,35 @@ func (c *Client) ConnectGameServer(addr string)  {
 
 	//fmt.Println("发送登录游戏服务器请求",c.Index)
 	c.loginGS()
+	//fmt.Println("发送登录游戏服务器完成")
+	startClient(c)
+}
+
+
+func (c *Client) ConnectLoginServer()  {
+	c.Conn.Close()
+
+	addr := LoginServer
+
+	tcpAddr, _ := net.ResolveTCPAddr("tcp", addr)
+	//fmt.Println("connection:", c.Index,  "------",  addr)
+	conn, e := net.DialTCP("tcp", nil, tcpAddr)
+	if e != nil {
+		fmt.Println(c.Index, e)
+		return
+	}
+	defer conn.Close()
+	c.Conn = conn
+	c.SendTokenID = 0
+	c.ReloginTime = time.Now().Add(time.Second * time.Duration(ReLoginTime))
+	c.Gameinfo = nil
+	c.Gameinfo = c.Gameinfo.New()
+
+	//clients := &Client{conn, i, nil,nil , nil}
+	//clients.Gameinfo = clients.Gameinfo.New()
+
+	//fmt.Println("发送登录游戏服务器请求",c.Index)
+	c.LoginSend()
 	//fmt.Println("发送登录游戏服务器完成")
 	startClient(c)
 }

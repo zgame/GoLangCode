@@ -408,10 +408,20 @@ func (this *Client)handleDrawAlm(buf []byte, bufferSize int){
 
 
 // game AI
-func (this *Client)GameAI()  {
+func (this *Client)GameAI(ReLoginTime int)  {
 	if !this.StartAI{
 		return
 	}
+
+	if ReLoginTime >0 && time.Now().After(this.ReloginTime){
+		// 在client初始化的时候创建了时间， 1分钟左右， 这里到期之后， 就断线重连
+		fmt.Println(".......到时间了..........")
+		this.logoutGS()
+		this.StartAI = false
+		return
+	}
+
+
 	//fmt.Println("AI-----")
 
 	if UseFire == true {

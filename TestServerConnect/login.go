@@ -187,6 +187,42 @@ func (this *Client)handleServerList(buf []byte, bufferSize int){
 
 // -------------------------------------游戏服务器登录-------------------------------------------
 
+func (this *Client) logoutGS()  {
+	TableId:=int32(0)
+	ChairId:=int32(2)
+	ForceLeave:=int32(0)
+	sendCmd := &CMD.CMD_GR_UserStandUp{
+		TableId:&TableId,
+		ChairId:&ChairId,
+		ForceLeave:&ForceLeave,
+
+	}
+	data, _ := proto.Marshal(sendCmd)
+	size := len(data)
+	bufferT := getSendTcpHeaderData(MDM_GR_USER, SUB_GR_USER_STANDUP, uint16(size))
+
+	this.Send(bufferT, data)
+
+}
+// gs 登录out
+func (this *Client)handleLoginOutGs(buf []byte, bufferSize int){
+	protocolBuffer := buf
+	msg := &CMD.CMD_GR_S_UserStandUp{}
+	err := proto.Unmarshal(protocolBuffer, msg)
+	checkError(err)
+	//dataJ, _ := json.MarshalIndent(msg, "", " ")
+	//fmt.Printf("%s", dataJ)
+	//fmt.Println("GetDescribe", string(msg.GetDescribe()))
+	//fmt.Println("GetErrorCode", int(msg.GetErrorCode()))
+
+	log.Println("----------------登出游戏服务器-------------------", this.Index)
+
+
+	this.ConnectLoginServer()	// 重新登录登录服务器
+
+
+}
+
 
 
 func (this *Client)loginGS() {

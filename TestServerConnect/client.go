@@ -28,6 +28,7 @@ func (this *Client) Receive()  bool{
 	bufLen,err := this.Conn.Read(buf)
 	if err != nil && err != io.EOF {  //io.EOF在网络编程中表示对端把链接关闭了。
 		fmt.Println("接收时候对方服务器链接关闭了！")
+		this.Quit = true
 		//log.Println(err)
 		this.Conn.Close()
 		return false
@@ -35,12 +36,16 @@ func (this *Client) Receive()  bool{
 	if bufLen <= 0{
 		this.Conn.Close()        // 关闭连接
 		fmt.Println("收到的数据为空！", bufLen)
+		this.Quit = true
 		return false
 	}
 	bufHead := 0
 	num:=0
 	for {
 		//fmt.Println(" buf ",buf)
+		if this.Quit {
+			return false
+		}
 
 		bufTemp := buf[bufHead:bufLen]   //要处理的buffer
 		bufHead += this.handlerRead(bufTemp)   //处理结束之后返回，接下来要开始的范围

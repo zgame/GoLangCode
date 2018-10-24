@@ -58,6 +58,7 @@ func (this *Client)handlerRead(buf []byte) int {
 	} else if msg_id == MAIN_CHAT_CMD {
 		if sub_msg_id == SUB_S_LOGIN {
 			this.handleLoginCS(finalBuffer,int(bufferSize))
+
 		}
 	} else if msg_id == MDM_MB_VIP {
 		if sub_msg_id == SUB_MB_S_VIP_INFO {
@@ -105,6 +106,11 @@ func (this *Client)handlerRead(buf []byte) int {
 
 		}
 
+	}else if msg_id == MDM_GR_USER {
+		if sub_msg_id == SUB_GR_S_USER_STANDUP {
+			this.handleLoginOutGs(finalBuffer,int(bufferSize))
+			//fmt.Println("玩家离开桌子 ------")
+		}
 		//# -----------------游戏场景 msg -----------------
 	}else if msg_id == MDM_GF_FRAME {
 		if sub_msg_id == SUB_GF_GAME_STATUS {

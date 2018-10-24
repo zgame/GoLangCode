@@ -5,14 +5,15 @@ import (
 	"fmt"
 )
 
-var mFrom  = "***"
-var mTo  = "****"
-var mCc  = "19665944@qq.com"
+var mFrom  = "1966q.com"
+var mTo  = "zm"
+var mCc  = "z.com"
 var mTitle  = "Hello15!"
 var mText  = "Hello <b>Bob</b> and <i>Cora</i>!"
 
 
 func main()  {
+	fmt.Println("-----------")
 	m := gomail.NewMessage()
 	m.SetHeader("From", mFrom)
 	m.SetHeader("To", mTo, mCc)
@@ -23,7 +24,7 @@ func main()  {
 	m.SetBody("text/html", mText)
 	//m.Attach("/home/Alex/lolcat.jpg")
 
-	d := gomail.NewDialer("***", ***, "***", "****")
+	d := gomail.NewDialer("smtp.qq.com", 465, "196.com", "lzbhdd")
 
 	// Send the email to Bob, Cora and Dan.
 	if err := d.DialAndSend(m); err != nil {

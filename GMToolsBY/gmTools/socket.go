@@ -200,23 +200,21 @@ func handlerRead(buf []byte) int{
 		checkError(err)
 		//dataJ, _ := json.MarshalIndent(serverState, "", " ")
 		//fmt.Printf("%s", dataJ)
-		//fmt.Println("----------刷新服务器状态-----------", serverState.ServerId,"---RoomState--" ,serverState.RoomState, "---Online--" ,serverState.Online)
+		//fmt.Println("----------刷新服务器状态-----------", serverState.ServerId, "---RoomState--", serverState.RoomState, "---Online--", serverState.Online)
 
-		if err!= nil {
-			// 保存更新到ServerListAll中
-			for i, v := range mwGlobal.model.items {
-				if v.ServerId == int(serverState.ServerId) {
-					//如果id相同，那么更新一下数据
-					v.ServerState = int(serverState.RoomState)
-					v.Online = int(serverState.Online)
-					v.Cpu = int(serverState.Cpu)
-					v.Memory = int(serverState.Memory)
-					v.IoRead = int(serverState.IoRead)
-					v.IoWrite = int(serverState.IoWrite)
-					// 刷新listbox
-					mwGlobal.model.UpdateRows(v.ServerState, v.Online, v.Cpu, v.Memory, v.IoRead, v.IoWrite, i)
+		// 保存更新到ServerListAll中
+		for i, v := range mwGlobal.model.items {
+			if v.ServerId == int(serverState.ServerId) {
+				//如果id相同，那么更新一下数据
+				v.ServerState = int(serverState.RoomState)
+				v.Online = int(serverState.Online)
+				v.Cpu = int(serverState.Cpu)
+				v.Memory = int(serverState.Memory)
+				v.IoRead = int(serverState.IoRead)
+				v.IoWrite = int(serverState.IoWrite)
+				// 刷新listbox
+				mwGlobal.model.UpdateRows(v.ServerState, v.Online, v.Cpu, v.Memory, v.IoRead, v.IoWrite, i)
 
-				}
 			}
 		}
 
