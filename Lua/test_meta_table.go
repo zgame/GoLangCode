@@ -11,16 +11,16 @@ var fileMethods = map[string]lua.LGFunction{
 }
 
 
-func main() {
+func main1() {
 
 	L := lua.NewState()
 	defer L.Close()
 
 
 	//mod := L.RegisterModule("zmodule", map[string]lua.LGFunction{}).(*lua.LTable)
-	mt:= L.NewTypeMetatable("zsw")
-	L.SetGlobal("ZZ", mt)							// 设定全局mudule
-	L.SetField(mt, "new", L.NewFunction(zprint))		// 绑定new函数
+	mt:= L.NewTypeMetatable("protobuf.IOString")
+	L.SetGlobal("pb", mt)							// 设定全局mudule
+	//L.SetField(mt, "new", L.NewFunction(zprint))		// 绑定new函数
 
 
 

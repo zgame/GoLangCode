@@ -8,7 +8,6 @@ import (
 	"os"
 	"bufio"
 	"github.com/yuin/gopher-lua/parse"
-	"syscall"
 	"unsafe"
 )
 
@@ -55,6 +54,10 @@ func start(timer time.Duration) {
 	//L := luaPool.Get()
 	//defer luaPool.Put(L)
 
+
+	// 直接调用luaopen_pb
+	luaopen_pb(L)
+
 	// Lua调用go函数声明
 	// 声明double函数为Lua的全局函数，绑定go函数Double
 	////L.SetGlobal("double", L.NewFunction(Double))
@@ -67,12 +70,14 @@ func start(timer time.Duration) {
 		fmt.Println(err.Error())
 	}
 
-	DllTestDef := syscall.MustLoadDLL("libpb.dll")
-	add := DllTestDef.MustFindProc("luaopen_pb")
-	ret, _, err := add.Call(IntPtr(L))
-	if err!=nil{
-		fmt.Println("返回",ret)
-	}
+	// 通过dll加载luaopen_pb
+	//DllTestDef := syscall.MustLoadDLL("libpb.dll")
+	//add := DllTestDef.MustFindProc("luaopen_pb")
+	//ret, _, err := add.Call(IntPtr(L))
+	//if err!=nil{
+	//	fmt.Println("返回",ret)
+	//}
+
 
 
 

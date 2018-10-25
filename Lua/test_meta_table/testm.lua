@@ -7,9 +7,9 @@
 
 print("sdfsfd")
 
-ZZ:new()
-ZZ.zprint()
-ZZ.zprint2()
+--pb:new()
+pb.zprint()
+pb.zprint2()
 
 
 

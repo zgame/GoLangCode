@@ -5,18 +5,20 @@ import (
 	"strconv"
 )
 
+const LuaInt64Max  = 18446744073709551615
+
 func luaopen_pb(L *lua.LState) int {
-	mt:=L.NewTypeMetatable("protobuf.IOString")
+	//mt:=L.NewTypeMetatable("zzz")
 
 	//L.Push(lua.LNumber(-1))
 	//L.SetField(mt, "__index", L.Get(lua.GlobalsIndex))
+	//L.SetField(mt, "__index", L.SetFuncs(L.NewTable(), personMethods))
 
 	L.Register("__tostring", iostring_str)
 	L.Register("__len", iostring_len)
 	L.Register("write", iostring_write)
 	L.Register("sub", iostring_sub)
 	L.Register("clear", iostring_clear)
-
 
 	//lua_setfield(L, -2, "__index");
 	//luaL_register(L, NULL, _c_iostring_m);
@@ -27,17 +29,27 @@ func luaopen_pb(L *lua.LState) int {
 
 
 	//mt:= L.NewTypeMetatable("zsw")
-	L.SetGlobal("pb", mt)							// 设定全局mudule
-	//L.SetField(mt, "new", L.NewFunction(zprint))		// 绑定new函数
+	//L.SetGlobal("pb", mt)							// 设定全局mudule
+	////L.SetField(mt, "new", L.NewFunction(zprint))		// 绑定new函数
+	//
+	////mt.RawSetString("__index",mt)						// 设定__index
+	//L.SetFuncs(mt, _pb)								// 设定metaTable的函数列表
 
-
-
-	//mt.RawSetString("__index",mt)						// 设定__index
-	L.SetFuncs(mt, _pb)								// 设定metaTable的函数列表
-
-
+	L.PreloadModule("pb", pbLoader)
 	return 1
 }
+
+// 加载自己的module pb
+func pbLoader(L *lua.LState) int {
+	// register functions to the table
+	mod := L.SetFuncs(L.NewTable(), _pb)
+	// register other stuff
+	L.SetField(mod, "name", lua.LString("value"))
+	// returns the module
+	L.Push(mod)
+	return 1
+}
+
 
 var _pb = map[string]lua.LGFunction{
 	//static const struct luaL_Reg _pb[] = {
@@ -82,7 +94,7 @@ func luaL_addchar(b string, c uint64)  string{
 }
 
 
-func pack_varint(b string, value uint64) string{
+func pack_varint(b string, value uint64 ) string{
 	if value >= 0x80 {
 		b = luaL_addchar(b, value|0x80)
 		value >>= 7
@@ -124,41 +136,71 @@ func pack_varint(b string, value uint64) string{
 }
 
 func varint_encoder(L *lua.LState) int {
-	lua_Number 	l_value = luaL_checknumber(L, 2);
-	uint64_t 	value = (uint64_t)	l_value
-	luaL_Buffer b;
-	luaL_buffinit(L, &b);
-	pack_varint(b, value);
-	lua_settop(L, 1);
-	luaL_pushresult(&b);
-	lua_call(L, 1, 0);
+	//lua_Number 	l_value = luaL_checknumber(L, 2);
+	//uint64_t 	value = (uint64_t)	l_value
+	//luaL_Buffer b;
+	//luaL_buffinit(L, &b);
+	//pack_varint(b, value);
+	//lua_settop(L, 1);
+	//luaL_pushresult(&b);
+	//lua_call(L, 1, 0);
 
 
 	println("pb.go   ------------       varint_encoder:")
 	l_value := L.ToNumber(2)
 	value := uint64(l_value)
+	b := pack_varint("", value)			// 把数字变成string
 
-	b := pack_varint("", value)
-
-
-
+	//L.Push(lua.LString(b))
+	//L.Call(1,0)			// string作为参数，调用参数1作为函数名
+	l_func := L.ToFunction(1)
+	if err := L.CallByParam(lua.P{
+		Fn:      l_func,
+		NRet:    0,
+		Protect: true,
+	}, lua.LString(b)); err != nil {
+		println("signed_varint_encoder error:", err.Error())
+	}
 	return 0
 }
 
 func signed_varint_encoder(L *lua.LState) int {
-	lua_Number	l_value = luaL_checknumber(L, 2);
-	int64_t	value = (int64_t)	l_value;
-	luaL_Buffer	b;
-	luaL_buffinit(L, &b);
-	if (value < 0) {
-		pack_varint(&b, *(uint64_t *)&value);
-	} else {
-	pack_varint(&b, value);
+	//lua_Number	l_value = luaL_checknumber(L, 2);
+	//int64_t	value = (int64_t)	l_value;
+	//luaL_Buffer	b;
+	//luaL_buffinit(L, &b);
+	//if (value < 0) {
+	//	pack_varint(&b, *(uint64_t *)&value);
+	//} else {
+	//pack_varint(&b, value);
+	//}
+	//
+	//lua_settop(L, 1);
+	//luaL_pushresult(&b);
+	//lua_call(L, 1, 0);
+
+	l_value := L.ToNumber(2)
+	println("pb.go   ------------       signed_varint_encoder:", int64(l_value))
+
+	l_func := L.ToFunction(1)
+	value := int64(l_value)
+	var b string
+	if value < 0{
+		b = pack_varint("", uint64(value))			// 把数字变成string
+	}else{
+		b = pack_varint("", uint64(value))			// 把数字变成string
 	}
 
-	lua_settop(L, 1);
-	luaL_pushresult(&b);
-	lua_call(L, 1, 0);
+	//L.Push(lua.LString(b))
+	//fmt.Println("-------------------------",b,":",l_func.String())
+	//L.Call(1,0)			// string作为参数，调用参数1作为函数名
+	if err := L.CallByParam(lua.P{
+		Fn:      l_func,
+		NRet:    0,
+		Protect: true,
+	}, lua.LString(b)); err != nil {
+		println("signed_varint_encoder error:", err.Error())
+	}
 	return 0
 }
 
@@ -198,7 +240,7 @@ func struct_pack(L *lua.LState) int {
 	//L.Push(lua.LString(str)) /* push result */
 	//buf:=buffer[pos:]
 
-
+	var ii lua.LNumber
 
 	//uint8_t	format = luaL_checkinteger(L, 2);
 	//lua_Number	value = luaL_checknumber(L, 3);
@@ -206,55 +248,63 @@ func struct_pack(L *lua.LState) int {
 	switch format {
 	case 'i':
 		{
-			ii := int(value)
-			pack_fixed32(L, lua.LNumber(ii))
+			ii = lua.LNumber(int(value))
+			//pack_fixed32(L, lua.LNumber(ii))
 			break
 		}
 	case 'q':
 		{
 			//int64_t			v = (int64_t)			value;
 			//pack_fixed64(L, (uint8_t*)&v);
-			ii := int64(value)
-			pack_fixed64(L, lua.LNumber(ii))
+			ii = lua.LNumber(int64(value))
+			//pack_fixed64(L, lua.LNumber(ii))
 			break
 		}
 	case 'f':
 		{
 			//float			v = (float)			value;
 			//pack_fixed32(L, (uint8_t*)&v);
-			ii := float32(value)
-			pack_fixed32(L, lua.LNumber(ii))
+			ii = lua.LNumber(float32(value))
+			//pack_fixed32(L, lua.LNumber(ii))
 			break
 		}
 	case 'd':
 		{
 			//double			v = (double)			value;
 			//pack_fixed64(L, (uint8_t*)&v);
-			ii := float64(value)
-			pack_fixed64(L, lua.LNumber(ii))
+			ii = lua.LNumber(float64(value))
+			//pack_fixed64(L, lua.LNumber(ii))
 			break
 		}
 	case 'I':
 		{
 			//uint32_t			v = (uint32_t)			value;
 			//pack_fixed32(L, (uint8_t*)&v);
-			ii := uint32(value)
-			pack_fixed32(L, lua.LNumber(ii))
+			ii = lua.LNumber(uint32(value))
+			//pack_fixed32(L, lua.LNumber(ii))
 			break
 		}
 	case 'Q':
 		{
 			//uint64_t			v = (uint64_t)			value;
 			//pack_fixed64(L, (uint8_t*)&v);
-			ii := uint64(value)
-			pack_fixed64(L, lua.LNumber(ii))
+			ii = lua.LNumber(uint64(value))
+			//pack_fixed64(L, lua.LNumber(ii))
 			break
 		}
-	//default:
-	//	luaL_error(L, "Unknown, format");
+	default:
+		ii = lua.LNumber(0)
 	}
 	//lua_call(L, 1, 0);
-	L.Call(1,0)
+	//L.Call(1,0)
+	l_func := L.ToFunction(1)			// lua 部分是 write(value)
+	if err := L.CallByParam(lua.P{
+		Fn:      l_func,
+		NRet:    0,
+		Protect: true,
+	}, ii); err != nil {
+		println("signed_varint_encoder error:", err.Error())
+	}
 	return 0
 }
 //----------------------------------------int decode---------------------------------------------------------
@@ -267,7 +317,7 @@ func size_varint(buffer string, len int) uint64{
 		}
 		pos++
 		if pos > len {
-			return -1
+			return LuaInt64Max
 		}
 	}
 	return uint64(pos + 1)
@@ -315,7 +365,7 @@ func varint_decoder(L *lua.LState) int {
 	buf:= buffer[pos:]
 
 	tLen := size_varint(buf, len(buffer))
-	if tLen == -1{
+	if tLen == LuaInt64Max{
 		println("error varint_decoder data %s, tLen:%d", buffer, tLen)
 	} else {
 		ii := unpack_varint(buffer, tLen)
@@ -344,7 +394,7 @@ func signed_varint_decoder(L *lua.LState) int {
 	buf:= buffer[pos:]
 
 	tLen := size_varint(buf, len(buffer))
-	if tLen == -1{
+	if tLen == LuaInt64Max{
 		println("error signed_varint_decoder data %s, tLen:%d", buffer, tLen)
 	} else {
 		ii := int64(unpack_varint(buffer, tLen))
@@ -362,7 +412,7 @@ func zig_zag_encode32(L *lua.LState) int {
 
 	println("pb.go   ------------       zig_zag_encode32:")
 	n := L.ToInt(1)             /* get argument */
-	value := (n << 1) ^ (n >> 31)
+	value := uint32((n << 1) ^ (n >> 31))
 	L.Push(lua.LNumber(value)) /* push result */
 
 	return 1
@@ -390,7 +440,7 @@ func zig_zag_encode64(L *lua.LState) int {
 
 	println("pb.go   ------------       zig_zag_encode64:")
 	n := L.ToInt64(1)             /* get argument */
-	value := (n << 1) ^ (n >> 63)
+	value := uint64((n << 1) ^ (n >> 63))
 	L.Push(lua.LNumber(value)) /* push result */
 
 
@@ -428,7 +478,7 @@ func read_tag(L *lua.LState) int {
 	pos := uint64(L.ToInt64(2))
 	buf:=buffer[pos:]
 	tLen := size_varint(buf, len(buffer))
-	if tLen == -1 {
+	if tLen == LuaInt64Max {
 		println("error data %s, tLen:%d", buffer, tLen)
 	} else {
 		str:= buffer[:tLen]
@@ -540,7 +590,7 @@ func iostring_new(L *lua.LState) int {
 	//io- > size = 0;
 	//luaL_getmetatable(L, IOSTRING_META);
 	//lua_setmetatable(L, -2);
-	return 1
+	return 0
 }
 
 
@@ -584,8 +634,8 @@ func iostring_write(L *lua.LState) int {
 func iostring_sub(L *lua.LState) int {
 	println("pb.go   ------------       iostring_sub:")
 	str := L.ToString(1)             /* get argument */
-	begin := L.ToInt(2)             /* get argument */
-	end := L.ToInt(3)             /* get argument */
+	begin := L.ToInt64(2)             /* get argument */
+	end := L.ToInt64(3)             /* get argument */
 
 	re:=str[begin:end]
 	L.Push(lua.LString(re)) /* push result */
