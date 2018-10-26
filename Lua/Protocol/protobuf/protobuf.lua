@@ -16,6 +16,8 @@
 --------------------------------------------------------------------------------
 --
 
+local print = print
+
 local setmetatable = setmetatable
 local rawset = rawset
 local rawget = rawget

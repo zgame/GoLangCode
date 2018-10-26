@@ -35,7 +35,10 @@ local _DecodeSignedVarint32 = pb.signed_varint_decoder
 
 ReadTag = pb.read_tag
 
+print("decoder")
+
 local function _SimpleDecoder(wire_type, decode_value)
+    print("---------------_SimpleDecoder")
     return function(field_number, is_repeated, is_packed, key, new_default)
         if is_packed then
             local DecodeVarint = _DecodeVarint

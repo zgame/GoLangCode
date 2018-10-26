@@ -7,15 +7,19 @@
 
 
 local user_pb = require('user_pb')
-
 print("protocol")
 
 local person= user_pb.Friend()
-person.name = "zsw"
-person.adress = "zsw adress"
 
+print("-------------1--------: ", person)
+person.name = true
+person.adress = false
+
+print("-------------2--------")
 local data = person:SerializeToString()
-
+print("-------------3--------")
 local msg = user_pb.Friend()
+print("-------------4--------")
 msg:ParseFromString(data)
+print("-------------5--------")
 print(msg)

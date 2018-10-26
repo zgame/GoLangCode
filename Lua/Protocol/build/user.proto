@@ -3,7 +3,8 @@ package tutorial;
 //import "google/protobuf/timestamp.proto";
 
 message Friend {
-    string name = 1;
-    string address = 2;
-  
+    bool nameb = 1;
+    //bool address = 2;
+    //bool ad = 3;
+
   }

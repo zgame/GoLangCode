@@ -15,6 +15,9 @@
 --  CREATED:  2010年07月29日 19时30分46秒 CST
 --------------------------------------------------------------------------------
 --
+local print = print     -- module 调用系统函数
+
+
 local string = string
 local table = table
 local ipairs = ipairs
@@ -45,7 +48,13 @@ function _TagSize(field_number)
   return _VarintSize(wire_format.PackTag(field_number, 0))
 end
 
+
+print("encoder")
+
+
+
 function _SimpleSizer(compute_value_size)
+    print("---------------_SimpleSizer")
     return function(field_number, is_repeated, is_packed)
         local tag_size = _TagSize(field_number)
         if is_packed then
@@ -229,7 +238,12 @@ function TagBytes(field_number, wire_type)
   return _VarintBytes(wire_format.PackTag(field_number, wire_type))
 end
 
+
+
+
 function _SimpleEncoder(wire_type, encode_value, compute_value_size)
+    print("---------------_SimpleEncoder",wire_type)
+
     return function(field_number, is_repeated, is_packed)
         if is_packed then
             local tag_bytes = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
