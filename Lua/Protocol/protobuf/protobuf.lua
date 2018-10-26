@@ -16,7 +16,7 @@
 --------------------------------------------------------------------------------
 --
 
-local print = print
+--local print = print
 
 local setmetatable = setmetatable
 local rawset = rawset
@@ -298,6 +298,7 @@ local function _DefaultValueConstructorForField(field)
 end
 
 local function _AttachFieldHelpers(message_meta, field_descriptor)
+--    print("--------_AttachFieldHelpers",field_descriptor.name)
     local is_repeated = (field_descriptor.label == FieldDescriptor.LABEL_REPEATED)
     local is_packed = (field_descriptor.has_options and field_descriptor.GetOptions().packed)
 
@@ -317,6 +318,7 @@ local function _AttachFieldHelpers(message_meta, field_descriptor)
 end
 
 local function _AddEnumValues(descriptor, message_meta)
+
     for _, enum_type in ipairs(descriptor.enum_types) do
         for _, enum_value in ipairs(enum_type.values) do
             message_meta._member[enum_value.name] = enum_value.number
@@ -338,6 +340,7 @@ local function _InitMethod(message_meta)
 end
 
 local function _AddPropertiesForRepeatedField(field, message_meta)
+--    print("_AddPropertiesForRepeatedField",field.name)
     local property_name = field.name
 
     message_meta._getter[property_name] = function(self)
@@ -356,6 +359,7 @@ local function _AddPropertiesForRepeatedField(field, message_meta)
 end
 
 local function _AddPropertiesForNonRepeatedCompositeField(field, message_meta)
+--    print("_AddPropertiesForNonRepeatedCompositeField",field.name)
     local property_name = field.name
     local message_type = field.message_type
 
@@ -375,6 +379,7 @@ local function _AddPropertiesForNonRepeatedCompositeField(field, message_meta)
 end
 
 local function _AddPropertiesForNonRepeatedScalarField(field, message)
+--    print("_AddPropertiesForNonRepeatedScalarField",field.name)
     local property_name = field.name
     local type_checker = GetTypeChecker(field.cpp_type, field.type)
     local default_value = field.default_value
@@ -391,13 +396,17 @@ local function _AddPropertiesForNonRepeatedScalarField(field, message)
     message._setter[property_name] = function(self, new_value)
         type_checker(new_value)
         self._fields[field] = new_value
+
         if not self._cached_byte_size_dirty then
             message._member._Modified(self)
         end
     end
+
+--    print("message._setter[nameb]",message._setter[property_name])
 end
 
 local function _AddPropertiesForField(field, message_meta)
+--    print("_AddPropertiesForField", field.name)
     constant_name = field.name:upper() .. "_FIELD_NUMBER"
     message_meta._member[constant_name] = field.number
 

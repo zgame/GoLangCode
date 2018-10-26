@@ -12,11 +12,11 @@ package.path = "./Protocol/build/?.lua;"..package.path
 package.path = "./Protocol/protobuf/?.lua;"..package.path
 --print(package.path);
 
-
+require("dumpTable")
 --require("hello")
 --require("hello2")
 --require("class_test")
-print("main")
+
 require("protocol_test")
 
 
@@ -36,7 +36,7 @@ function reloadFile(module_name)
 end
 
 
-xpcall(main, function(err)
-    print(err)
-    print(debug.traceback())
-end)
+--xpcall(main, function(err)
+--    print(err)
+--    print(debug.traceback())
+--end)

@@ -9,11 +9,13 @@ import (
 	"bufio"
 	"github.com/yuin/gopher-lua/parse"
 	"unsafe"
+	"runtime"
 )
 
 var num = 0
 var codeToShare *lua.FunctionProto
 func main() {
+	runtime.GOMAXPROCS(1)
 
 	//defer luaPool.Shutdown()
 	var err error

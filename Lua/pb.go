@@ -332,16 +332,19 @@ func unpack_varint(buffer string, len uint64) uint64{
 	//value |= ((uint64_t)(buffer[pos] & 0x7f)) << shift;
 	//shift += 7;
 	//}
-	println("pb.go   ------------       unpack_varint:")
+
 
 	value := uint64(buffer[0] & 0x7f)
 	shift := uint64(7)
 	pos := uint64(0)
+
+	println("pb.go   -----read-------unpack_varint    " , buffer , "   " , len)
+
 	for pos=1;pos< len; pos++{
 		value |= ((uint64)(buffer[pos] & 0x7f)) << shift
 		shift += 7
 	}
-
+	println("pb.go   -----read-------   unpack_varint  out      ",value)
 	return value
 }
 
@@ -388,11 +391,11 @@ func signed_varint_decoder(L *lua.LState) int {
 	//	lua_pushinteger(L, len+pos);
 	//}
 
-	println("pb.go   ------------       signed_varint_decoder:")
+
 	buffer := L.ToString(1)             /* get argument */
 	pos := L.ToInt64(2)             /* get argument */
 	buf:= buffer[pos:]
-
+	println("pb.go   ------read------       signed_varint_decoder:    ",buffer,"       ",pos)
 	tLen := size_varint(buf, len(buffer))
 	if tLen == LuaInt64Max{
 		println("error signed_varint_decoder data %s, tLen:%d", buffer, tLen)
@@ -400,7 +403,10 @@ func signed_varint_decoder(L *lua.LState) int {
 		ii := int64(unpack_varint(buffer, tLen))
 		L.Push(lua.LNumber(ii))
 		L.Push(lua.LNumber(tLen +uint64(pos)))
+
+		println("pb.go   ------read------       signed_varint_decoder   out        ",ii)
 	}
+
 
 	return 2
 }
@@ -473,17 +479,22 @@ func read_tag(L *lua.LState) int {
 	//	lua_pushinteger(L, tLen+pos);
 	//}
 
-	println("pb.go   ------------       read_tag:")
+
 	buffer := L.ToString(1)
 	pos := uint64(L.ToInt64(2))
 	buf:=buffer[pos:]
 	tLen := size_varint(buf, len(buffer))
+
+	println("pb.go   ----read--------       read_tag:",buffer, "      ", pos)
+
 	if tLen == LuaInt64Max {
 		println("error data %s, tLen:%d", buffer, tLen)
 	} else {
 		str:= buffer[:tLen]
 		L.Push(lua.LString(str))
 		L.Push(lua.LNumber(tLen +pos))
+
+		println("pb.go   ----read--------       read_tag   out  ",str)
 	}
 	return 2
 }

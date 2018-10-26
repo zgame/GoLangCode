@@ -5,21 +5,23 @@
 ---
 
 
-
 local user_pb = require('user_pb')
-print("protocol")
 
 local person= user_pb.Friend()
+person.zswnameb = 1
+--person.address = false
+--person.ad = true
 
-print("-------------1--------: ", person)
-person.name = true
-person.adress = false
-
-print("-------------2--------")
 local data = person:SerializeToString()
-print("-------------3--------")
+print("---------data----",data)
+
+
+
 local msg = user_pb.Friend()
-print("-------------4--------")
 msg:ParseFromString(data)
-print("-------------5--------")
-print(msg)
+print("msg.zswnameb",msg.zswnameb)
+
+
+--print(msg.address)
+--print(msg.ad)
+

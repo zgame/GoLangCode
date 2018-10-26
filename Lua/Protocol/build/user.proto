@@ -3,7 +3,7 @@ package tutorial;
 //import "google/protobuf/timestamp.proto";
 
 message Friend {
-    bool nameb = 1;
+    int32 zswnameb = 1;
     //bool address = 2;
     //bool ad = 3;
 

@@ -54,7 +54,7 @@ print("encoder")
 
 
 function _SimpleSizer(compute_value_size)
-    print("---------------_SimpleSizer")
+--    print("---------------_SimpleSizer")
     return function(field_number, is_repeated, is_packed)
         local tag_size = _TagSize(field_number)
         if is_packed then
@@ -226,6 +226,7 @@ local _EncodeSignedVarint = pb.signed_varint_encoder
 
 
 function _VarintBytes(value)
+    print("_VarintBytes---------",value)
     local out = {}
     local write = function(value)
         out[#out + 1 ] = value
@@ -242,7 +243,7 @@ end
 
 
 function _SimpleEncoder(wire_type, encode_value, compute_value_size)
-    print("---------------_SimpleEncoder",wire_type)
+--    print("---------------_SimpleEncoder",wire_type)
 
     return function(field_number, is_repeated, is_packed)
         if is_packed then
