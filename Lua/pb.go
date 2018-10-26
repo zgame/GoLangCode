@@ -320,7 +320,9 @@ func size_varint(buffer string, len int) uint64{
 			return LuaInt64Max
 		}
 	}
-	return uint64(pos + 1)
+	re:=uint64(pos + 1)
+	//println("---------size_varint--------",re)
+	return re
 }
 
 func unpack_varint(buffer string, len uint64) uint64{
@@ -478,7 +480,6 @@ func read_tag(L *lua.LState) int {
 	//	lua_pushlstring(L, buffer, tLen);
 	//	lua_pushinteger(L, tLen+pos);
 	//}
-
 
 	buffer := L.ToString(1)
 	pos := uint64(L.ToInt64(2))
