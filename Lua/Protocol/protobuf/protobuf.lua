@@ -298,17 +298,17 @@ local function _DefaultValueConstructorForField(field)
 end
 
 local function _AttachFieldHelpers(message_meta, field_descriptor)
-    print("-----1-----_AttachFieldHelpers",field_descriptor.name, "type",field_descriptor.type)
+--    print("-----1-----_AttachFieldHelpers",field_descriptor.name, "type",field_descriptor.type)
     local is_repeated = (field_descriptor.label == FieldDescriptor.LABEL_REPEATED)
     local is_packed = (field_descriptor.has_options and field_descriptor.GetOptions().packed)
 
-    print("********************************************************")
+--    print("********************************************************")
     rawset(field_descriptor, "_encoder", TYPE_TO_ENCODER[field_descriptor.type](field_descriptor.number, is_repeated, is_packed))
     rawset(field_descriptor, "_sizer", TYPE_TO_SIZER[field_descriptor.type](field_descriptor.number, is_repeated, is_packed))
     rawset(field_descriptor, "_default_constructor", _DefaultValueConstructorForField(field_descriptor))
 
 
-    print("********************************************************")
+--    print("********************************************************")
     local AddDecoder = function(wiretype, is_packed)
         local tag_bytes = encoder.TagBytes(field_descriptor.number, wiretype)
         message_meta._decoders_by_tag[tag_bytes] = TYPE_TO_DECODER[field_descriptor.type](field_descriptor.number, is_repeated, is_packed, field_descriptor, field_descriptor._default_constructor)
@@ -318,7 +318,7 @@ local function _AttachFieldHelpers(message_meta, field_descriptor)
     if is_repeated and IsTypePackable(field_descriptor.type) then
         AddDecoder(wire_format.WIRETYPE_LENGTH_DELIMITED, True)
     end
-    print("********************************************************")
+--    print("********************************************************")
 end
 
 local function _AddEnumValues(descriptor, message_meta)
@@ -383,7 +383,7 @@ local function _AddPropertiesForNonRepeatedCompositeField(field, message_meta)
 end
 
 local function _AddPropertiesForNonRepeatedScalarField(field, message)
-    print("_AddPropertiesForNonRepeatedScalarField",field.name)
+--    print("_AddPropertiesForNonRepeatedScalarField",field.name)
     local property_name = field.name
     local type_checker = GetTypeChecker(field.cpp_type, field.type)
     local default_value = field.default_value
@@ -410,7 +410,7 @@ local function _AddPropertiesForNonRepeatedScalarField(field, message)
 end
 
 local function _AddPropertiesForField(field, message_meta)
-    print("_AddPropertiesForField", field.name)
+--    print("_AddPropertiesForField", field.name)
     constant_name = field.name:upper() .. "_FIELD_NUMBER"
     message_meta._member[constant_name] = field.number
 
@@ -681,7 +681,7 @@ local function _AddMergeFromStringMethod(message_descriptor, message_meta)
     local SkipField = decoder.SkipField
     local decoders_by_tag = message_meta._decoders_by_tag
 
-    print("-------------_AddMergeFromStringMethod")
+--    print("-------------_AddMergeFromStringMethod")
 
     local _internal_parse = function(self, buffer, pos, pend)
         message_meta._member._Modified(self)
@@ -690,8 +690,8 @@ local function _AddMergeFromStringMethod(message_descriptor, message_meta)
         local field_decoder
         while pos ~= pend do
             tag_bytes, new_pos = ReadTag(buffer, pos)
-
-            print("********ReadTag",tag_bytes, new_pos)
+--            pb.ZswLuaShowBytesToString(tag_bytes)
+--            print("********ReadTag",tag_bytes, new_pos)
             field_decoder = decoders_by_tag[tag_bytes]
             if field_decoder == nil then
                 new_pos = SkipField(buffer, new_pos, pend, tag_bytes)

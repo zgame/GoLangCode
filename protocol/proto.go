@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 )
 
-func main() {
+func main1() {
 	test := &t.AddressBook {
 		People:[]* t.Person{
 			{

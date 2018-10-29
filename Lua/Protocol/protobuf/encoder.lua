@@ -239,7 +239,7 @@ function _VarintBytes(value)
 end
 
 function TagBytes(field_number, wire_type)
-    print("TagBytes---------field_number:",field_number," -- wire_type:", wire_type)
+--    print("TagBytes---------field_number:",field_number," -- wire_type:", wire_type)
   return _VarintBytes(wire_format.PackTag(field_number, wire_type))
 end
 
@@ -249,7 +249,7 @@ end
 function _SimpleEncoder(wire_type, encode_value, compute_value_size)
 --    print("---------------_SimpleEncoder  wire_type",wire_type)
     return function(field_number, is_repeated, is_packed)
-        print("---------------_SimpleEncoder  is_repeated:",is_repeated,"is_packed:",is_packed ,"wire_type:",wire_type)
+--        print("---------------_SimpleEncoder  is_repeated:",is_repeated,"is_packed:",is_packed ,"wire_type:",wire_type)
         if is_packed then
             local tag_bytes = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
             local EncodeVarint = _EncodeVarint
@@ -275,7 +275,7 @@ function _SimpleEncoder(wire_type, encode_value, compute_value_size)
         else
 
             local tag_bytes = TagBytes(field_number, wire_type)
-            print("-------------now _SimpleEncoder  no packed no repeated--------------------------tag_bytes",tag_bytes)
+--            print("-------------now _SimpleEncoder  no packed no repeated--------------------------tag_bytes",tag_bytes)
             return function(write, value)
                 write(tag_bytes)
                 encode_value(write, value)

@@ -4,24 +4,24 @@
 --- DateTime: 2018/10/12 15:56
 ---
 
-
+local pb = require("pb")
 local user_pb = require('user_pb')
 
 local person= user_pb.Friend()
-person.zswnameb = 1
+--person.zswnameb = -2147483648
 --person.address = false
---person.ad = true
+person.ad = 1
 
 local data = person:SerializeToString()
-print("---------data----",data)
+print("***************************************----SerializeToString-----data----")
+pb.ZswLuaShowBytesToString(data)
 
 
 
 local msg = user_pb.Friend()
 msg:ParseFromString(data)
-print("msg.zswnameb",msg.zswnameb)
+print("msg**********************************************************************",msg.ad)
 
 
---print(msg.address)
---print(msg.ad)
+
 

@@ -5,6 +5,17 @@ module('user_pb')
 
 local FRIEND = protobuf.Descriptor();
 local FRIEND_ZSWNAMEB_FIELD = protobuf.FieldDescriptor();
+local FRIEND_ADDRESS_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD1_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD2_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD3_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD4_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD5_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD6_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD7_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD8_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD9_FIELD = protobuf.FieldDescriptor();
 
 FRIEND_ZSWNAMEB_FIELD.name = "zswnameb"
 FRIEND_ZSWNAMEB_FIELD.full_name = ".tutorial.Friend.zswnameb"
@@ -12,15 +23,125 @@ FRIEND_ZSWNAMEB_FIELD.number = 1
 FRIEND_ZSWNAMEB_FIELD.index = 0
 FRIEND_ZSWNAMEB_FIELD.label = 1
 FRIEND_ZSWNAMEB_FIELD.has_default_value = false
-FRIEND_ZSWNAMEB_FIELD.default_value = 0
-FRIEND_ZSWNAMEB_FIELD.type = 5
-FRIEND_ZSWNAMEB_FIELD.cpp_type = 1
+FRIEND_ZSWNAMEB_FIELD.default_value = 0.0
+FRIEND_ZSWNAMEB_FIELD.type = 1
+FRIEND_ZSWNAMEB_FIELD.cpp_type = 5
+
+FRIEND_ADDRESS_FIELD.name = "address"
+FRIEND_ADDRESS_FIELD.full_name = ".tutorial.Friend.address"
+FRIEND_ADDRESS_FIELD.number = 2
+FRIEND_ADDRESS_FIELD.index = 1
+FRIEND_ADDRESS_FIELD.label = 1
+FRIEND_ADDRESS_FIELD.has_default_value = false
+FRIEND_ADDRESS_FIELD.default_value = false
+FRIEND_ADDRESS_FIELD.type = 8
+FRIEND_ADDRESS_FIELD.cpp_type = 7
+
+FRIEND_AD_FIELD.name = "ad"
+FRIEND_AD_FIELD.full_name = ".tutorial.Friend.ad"
+FRIEND_AD_FIELD.number = 3
+FRIEND_AD_FIELD.index = 2
+FRIEND_AD_FIELD.label = 1
+FRIEND_AD_FIELD.has_default_value = false
+FRIEND_AD_FIELD.default_value = 0.0
+FRIEND_AD_FIELD.type = 2
+FRIEND_AD_FIELD.cpp_type = 6
+
+FRIEND_AD1_FIELD.name = "ad1"
+FRIEND_AD1_FIELD.full_name = ".tutorial.Friend.ad1"
+FRIEND_AD1_FIELD.number = 4
+FRIEND_AD1_FIELD.index = 3
+FRIEND_AD1_FIELD.label = 1
+FRIEND_AD1_FIELD.has_default_value = false
+FRIEND_AD1_FIELD.default_value = 0
+FRIEND_AD1_FIELD.type = 3
+FRIEND_AD1_FIELD.cpp_type = 2
+
+FRIEND_AD2_FIELD.name = "ad2"
+FRIEND_AD2_FIELD.full_name = ".tutorial.Friend.ad2"
+FRIEND_AD2_FIELD.number = 5
+FRIEND_AD2_FIELD.index = 4
+FRIEND_AD2_FIELD.label = 1
+FRIEND_AD2_FIELD.has_default_value = false
+FRIEND_AD2_FIELD.default_value = 0
+FRIEND_AD2_FIELD.type = 4
+FRIEND_AD2_FIELD.cpp_type = 4
+
+FRIEND_AD3_FIELD.name = "ad3"
+FRIEND_AD3_FIELD.full_name = ".tutorial.Friend.ad3"
+FRIEND_AD3_FIELD.number = 6
+FRIEND_AD3_FIELD.index = 5
+FRIEND_AD3_FIELD.label = 1
+FRIEND_AD3_FIELD.has_default_value = false
+FRIEND_AD3_FIELD.default_value = 0
+FRIEND_AD3_FIELD.type = 13
+FRIEND_AD3_FIELD.cpp_type = 3
+
+FRIEND_AD4_FIELD.name = "ad4"
+FRIEND_AD4_FIELD.full_name = ".tutorial.Friend.ad4"
+FRIEND_AD4_FIELD.number = 7
+FRIEND_AD4_FIELD.index = 6
+FRIEND_AD4_FIELD.label = 1
+FRIEND_AD4_FIELD.has_default_value = false
+FRIEND_AD4_FIELD.default_value = 0
+FRIEND_AD4_FIELD.type = 5
+FRIEND_AD4_FIELD.cpp_type = 1
+
+FRIEND_AD5_FIELD.name = "ad5"
+FRIEND_AD5_FIELD.full_name = ".tutorial.Friend.ad5"
+FRIEND_AD5_FIELD.number = 8
+FRIEND_AD5_FIELD.index = 7
+FRIEND_AD5_FIELD.label = 1
+FRIEND_AD5_FIELD.has_default_value = false
+FRIEND_AD5_FIELD.default_value = ""
+FRIEND_AD5_FIELD.type = 9
+FRIEND_AD5_FIELD.cpp_type = 9
+
+FRIEND_AD6_FIELD.name = "ad6"
+FRIEND_AD6_FIELD.full_name = ".tutorial.Friend.ad6"
+FRIEND_AD6_FIELD.number = 9
+FRIEND_AD6_FIELD.index = 8
+FRIEND_AD6_FIELD.label = 1
+FRIEND_AD6_FIELD.has_default_value = false
+FRIEND_AD6_FIELD.default_value = 0
+FRIEND_AD6_FIELD.type = 17
+FRIEND_AD6_FIELD.cpp_type = 1
+
+FRIEND_AD7_FIELD.name = "ad7"
+FRIEND_AD7_FIELD.full_name = ".tutorial.Friend.ad7"
+FRIEND_AD7_FIELD.number = 10
+FRIEND_AD7_FIELD.index = 9
+FRIEND_AD7_FIELD.label = 1
+FRIEND_AD7_FIELD.has_default_value = false
+FRIEND_AD7_FIELD.default_value = 0
+FRIEND_AD7_FIELD.type = 18
+FRIEND_AD7_FIELD.cpp_type = 2
+
+FRIEND_AD8_FIELD.name = "ad8"
+FRIEND_AD8_FIELD.full_name = ".tutorial.Friend.ad8"
+FRIEND_AD8_FIELD.number = 11
+FRIEND_AD8_FIELD.index = 10
+FRIEND_AD8_FIELD.label = 1
+FRIEND_AD8_FIELD.has_default_value = false
+FRIEND_AD8_FIELD.default_value = 0
+FRIEND_AD8_FIELD.type = 7
+FRIEND_AD8_FIELD.cpp_type = 3
+
+FRIEND_AD9_FIELD.name = "ad9"
+FRIEND_AD9_FIELD.full_name = ".tutorial.Friend.ad9"
+FRIEND_AD9_FIELD.number = 12
+FRIEND_AD9_FIELD.index = 11
+FRIEND_AD9_FIELD.label = 1
+FRIEND_AD9_FIELD.has_default_value = false
+FRIEND_AD9_FIELD.default_value = 0
+FRIEND_AD9_FIELD.type = 6
+FRIEND_AD9_FIELD.cpp_type = 4
 
 FRIEND.name = "Friend"
 FRIEND.full_name = ".tutorial.Friend"
 FRIEND.nested_types = {}
 FRIEND.enum_types = {}
-FRIEND.fields = {FRIEND_ZSWNAMEB_FIELD}
+FRIEND.fields = {FRIEND_ZSWNAMEB_FIELD, FRIEND_ADDRESS_FIELD, FRIEND_AD_FIELD, FRIEND_AD1_FIELD, FRIEND_AD2_FIELD, FRIEND_AD3_FIELD, FRIEND_AD4_FIELD, FRIEND_AD5_FIELD, FRIEND_AD6_FIELD, FRIEND_AD7_FIELD, FRIEND_AD8_FIELD, FRIEND_AD9_FIELD}
 FRIEND.is_extendable = false
 FRIEND.extensions = {}
 

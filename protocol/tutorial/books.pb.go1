@@ -58,7 +58,7 @@ type Person struct {
 	Id      int32                 `protobuf:"varint,2,opt,name=id" json:"id,omitempty"`
 	Email   string                `protobuf:"bytes,3,opt,name=email" json:"email,omitempty"`
 	Phones  []*Person_PhoneNumber `protobuf:"bytes,4,rep,name=phones" json:"phones,omitempty"`
-	Friends []*Friend   `protobuf:"bytes,5,rep,name=friends" json:"friends,omitempty"`
+	Friends []*tutorial1.Friend   `protobuf:"bytes,5,rep,name=friends" json:"friends,omitempty"`
 }
 
 func (m *Person) Reset()                    { *m = Person{} }
@@ -94,7 +94,7 @@ func (m *Person) GetPhones() []*Person_PhoneNumber {
 	return nil
 }
 
-func (m *Person) GetFriends() []*Friend {
+func (m *Person) GetFriends() []*tutorial1.Friend {
 	if m != nil {
 		return m.Friends
 	}

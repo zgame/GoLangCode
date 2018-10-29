@@ -40,7 +40,7 @@ print("decoder")
 local function _SimpleDecoder(wire_type, decode_value)
 
     return function(field_number, is_repeated, is_packed, key, new_default)
-        print("---------------_SimpleDecoder   field_number:",field_number, is_repeated, is_packed, key, new_default)
+--        print("---------------_SimpleDecoder   field_number:",field_number, is_repeated, is_packed, key, new_default)
         if is_packed then
             local DecodeVarint = _DecodeVarint
             return function (buffer, pos, pend, message, field_dict)
@@ -90,7 +90,7 @@ local function _SimpleDecoder(wire_type, decode_value)
             end
         else
             return function (buffer, pos, pend, message, field_dict)
-                print("---------------now _SimpleDecoder  no packed no repeated--------------",buffer, pos, pend, message, field_dict)
+--                print("---------------now _SimpleDecoder  no packed no repeated--------------",buffer, pos, pend, message, field_dict)
                 field_dict[key], pos = decode_value(buffer, pos)
                 if pos > pend then
                     field_dict[key] = nil
