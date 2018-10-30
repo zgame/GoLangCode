@@ -10,9 +10,12 @@ import (
 
 func main() {
 	test := &t.Friend {
-		//Zswnameb:-2147483648,
-		//Address:true,
+		Zswnameb:7999932339.999867,
+		Address:false,
 		Ad:1,
+		Ad1:-9223372036854775800,
+		Ad2:9223372036854775800,
+
 	}
 
 

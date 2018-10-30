@@ -298,11 +298,11 @@ local function _DefaultValueConstructorForField(field)
 end
 
 local function _AttachFieldHelpers(message_meta, field_descriptor)
---    print("-----1-----_AttachFieldHelpers",field_descriptor.name, "type",field_descriptor.type)
+--    print("-----------------------------------------------------------------------------------_AttachFieldHelpers",field_descriptor.name, "type",field_descriptor.type)
     local is_repeated = (field_descriptor.label == FieldDescriptor.LABEL_REPEATED)
     local is_packed = (field_descriptor.has_options and field_descriptor.GetOptions().packed)
 
---    print("********************************************************")
+--    print("****************************************************field_descriptor.number****",field_descriptor.number)
     rawset(field_descriptor, "_encoder", TYPE_TO_ENCODER[field_descriptor.type](field_descriptor.number, is_repeated, is_packed))
     rawset(field_descriptor, "_sizer", TYPE_TO_SIZER[field_descriptor.type](field_descriptor.number, is_repeated, is_packed))
     rawset(field_descriptor, "_default_constructor", _DefaultValueConstructorForField(field_descriptor))
@@ -344,7 +344,7 @@ local function _InitMethod(message_meta)
 end
 
 local function _AddPropertiesForRepeatedField(field, message_meta)
-    print("_AddPropertiesForRepeatedField",field.name)
+--    print("_AddPropertiesForRepeatedField",field.name)
     local property_name = field.name
 
     message_meta._getter[property_name] = function(self)
@@ -363,7 +363,7 @@ local function _AddPropertiesForRepeatedField(field, message_meta)
 end
 
 local function _AddPropertiesForNonRepeatedCompositeField(field, message_meta)
-    print("_AddPropertiesForNonRepeatedCompositeField",field.name)
+--    print("_AddPropertiesForNonRepeatedCompositeField",field.name)
     local property_name = field.name
     local message_type = field.message_type
 
@@ -629,6 +629,8 @@ local function _AddByteSizeMethod(message_descriptor, message_meta)
 end
 
 local function _AddSerializeToStringMethod(message_descriptor, message_meta)
+--    print("_AddSerializeToStringMethod")
+
     message_meta._member.SerializeToString = function(self)
         if not message_meta._member.IsInitialized(self) then
             error('Message is missing required fields: ' .. 
@@ -646,6 +648,7 @@ local function _AddSerializeToStringMethod(message_descriptor, message_meta)
 end
 
 local function _AddSerializePartialToStringMethod(message_descriptor, message_meta)
+--    print("_AddSerializePartialToStringMethod")
     local concat = table.concat
     local _internal_serialize = function(self, write_bytes)
         for field_descriptor, field_value in message_meta._member.ListFields(self) do
@@ -663,6 +666,7 @@ local function _AddSerializePartialToStringMethod(message_descriptor, message_me
     end
 
     local _serialize_partial_to_string = function(self)
+--        print("---------------------------------SerializeToString------------------------------------------------")
         local out = {}
         local write = function(value)
             out[#out + 1] = value
@@ -827,6 +831,7 @@ local function _AddMergeFromMethod(message_meta)
 end
 
 local function _AddMessageMethods(message_descriptor, message_meta)
+--    print("*************************************************************_AddMessageMethods**********************************************************")
     _AddListFieldsMethod(message_descriptor, message_meta)
     _AddHasFieldMethod(message_descriptor, message_meta)
     _AddClearFieldMethod(message_descriptor, message_meta)
@@ -894,7 +899,7 @@ function _AddClassAttributesForNestedExtensions(descriptor, message_meta)
 end
 
 local function Message(descriptor)
-    print("-----------------Message-------------------------")
+--    print("-----------------Message-------------------------")
     local message_meta = {}
     message_meta._decoders_by_tag = {}
     rawset(descriptor, "_extensions_by_name", {})

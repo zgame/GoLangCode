@@ -4,6 +4,8 @@ import (
 	"github.com/yuin/gopher-lua"
 	"strconv"
 	"fmt"
+	"math"
+	"encoding/binary"
 )
 
 const LuaInt64Max  = 18446744073709551615
@@ -151,7 +153,7 @@ func varint_encoder(L *lua.LState) int {
 	//lua_call(L, 1, 0);
 
 
-	println("pb.go   ------------       varint_encoder:")
+	//println("pb.go   ------------       varint_encoder:")
 	l_value := L.ToNumber(2)
 	value := uint64(l_value)
 	b := pack_varint("", value)			// 把数字变成string
@@ -247,21 +249,17 @@ func struct_pack(L *lua.LState) int {
 
 
 	fmt.Printf("pb.go   ----------------------------------------------------------      struct_pack:     format %d,    value %d       \n"   ,format,value)
-	//pos:= L.ToInt(3)
-	//L.Push(lua.LString(str)) /* push result */
-	//buf:=buffer[pos:]
 
-	//var ii lua.LNumber
-	var out lua.LString
 
-	//uint8_t	format = luaL_checkinteger(L, 2);
-	//lua_Number	value = luaL_checknumber(L, 3);
-	//lua_settop(L, 1);
+	var bb []byte
+
+
 	switch format {
 	case 'i':
 		{
 			//ii := lua.LNumber(int(value))
 			//pack_fixed32(L, lua.LNumber(ii))
+			bb = Int32ToBytes(int32(value))
 			break
 		}
 	case 'q':
@@ -270,16 +268,17 @@ func struct_pack(L *lua.LState) int {
 			//pack_fixed64(L, (uint8_t*)&v);
 			//ii := lua.LNumber(int64(value))
 			//pack_fixed64(L, lua.LNumber(ii))
+			bb = Int64ToBytes(int64(value))
 			break
 		}
 	case 'f':
 		{
 			//float			v = (float)			value;
 			//pack_fixed32(L, (uint8_t*)&v);
-			fmt.Println("float")
+			//fmt.Println("float")
 			//ii = lua.LNumber(float32(value))
-			bb := byte(float32(value))
-			out = lua.LString(string(bb))
+			bb = Float32ToByte(float32(value))
+
 			//pack_fixed32(L, lua.LNumber(ii))
 			break
 		}
@@ -289,6 +288,7 @@ func struct_pack(L *lua.LState) int {
 			//pack_fixed64(L, (uint8_t*)&v);
 			//ii := lua.LNumber(float64(value))
 			//pack_fixed64(L, lua.LNumber(ii))
+			bb = Float64ToByte(float64(value))
 			break
 		}
 	case 'I':
@@ -297,14 +297,17 @@ func struct_pack(L *lua.LState) int {
 			//pack_fixed32(L, (uint8_t*)&v);
 			//ii := lua.LNumber(uint32(value))
 			//pack_fixed32(L, lua.LNumber(ii))
+			ii := uint32(value)
+			bb = Int32ToBytes(int32(ii))
 			break
 		}
 	case 'Q':
 		{
 			//uint64_t			v = (uint64_t)			value;
 			//pack_fixed64(L, (uint8_t*)&v);
-			//ii := lua.LNumber(uint64(value))
+			ii := uint64(value)
 			//pack_fixed64(L, lua.LNumber(ii))
+			bb = Int64ToBytes(int64(ii))
 			break
 		}
 	//default:
@@ -312,6 +315,9 @@ func struct_pack(L *lua.LState) int {
 	}
 	//lua_call(L, 1, 0);
 	//L.Call(1,0)
+
+	out := lua.LString(string(bb))
+
 	l_func := L.ToFunction(1)			// lua 部分是 write(value)
 	if err := L.CallByParam(lua.P{
 		Fn:      l_func,
@@ -356,13 +362,13 @@ func unpack_varint(buffer string, len uint64) uint64{
 	shift := uint64(7)
 	pos := uint64(0)
 
-	fmt.Printf("pb.go   -----read-------unpack_varint  %v %d  \n" , bb  , len)
+	//fmt.Printf("pb.go   -----read-------unpack_varint  %v %d  \n" , bb  , len)
 
 	for pos=1;pos< len; pos++{
 		value |= ((uint64)(bb[pos] & 0x7f)) << shift
 		shift += 7
 	}
-	fmt.Println("pb.go   -----read-------   unpack_varint  out      ",value)
+	//fmt.Println("pb.go   -----read-------   unpack_varint  out      ",value)
 	return value
 }
 
@@ -380,10 +386,12 @@ func varint_decoder(L *lua.LState) int {
 	//	lua_pushinteger(L, len+pos);
 	//}
 
-	fmt.Printf("pb.go   ------------       varint_decoder:")
+
 	buffer := L.ToString(1)             /* get argument */
 	pos := L.ToInt64(2)             /* get argument */
 	buf:= buffer[pos:]
+
+	fmt.Printf("pb.go   ------read------      varint_decoder:    %v      %d  \n",[]byte(buffer),pos)
 
 	tLen := size_varint(buf, len(buffer))
 	if tLen == LuaInt64Max{
@@ -392,6 +400,7 @@ func varint_decoder(L *lua.LState) int {
 		ii := unpack_varint(buf, tLen)
 		L.Push(lua.LNumber(ii))
 		L.Push(lua.LNumber(tLen +uint64(pos)))
+		fmt.Printf("pb.go   ------read------      varint_decoder:   ii %d   pos   %d  \n",ii,  tLen+uint64(pos))
 	}
 	return 2
 }
@@ -423,7 +432,7 @@ func signed_varint_decoder(L *lua.LState) int {
 		L.Push(lua.LNumber(ii))
 		L.Push(lua.LNumber(tLen +uint64(pos)))
 
-		fmt.Println("pb.go   ------read------       signed_varint_decoder   out        ",ii)
+		fmt.Printf("pb.go   ------read------      signed_varint_decoder:   ii %d   pos   %d  \n",ii,  tLen+uint64(pos))
 	}
 
 
@@ -506,20 +515,23 @@ func read_tag(L *lua.LState) int {
 	buf:=buffer[pos:]
 	tLen := size_varint(buf, len1)
 
-	fmt.Println("pb.go   ----read--------       read_tag:",buffer, "      ", pos)
+	fmt.Println("pb.go   -----       read_tag:    pos  ", pos)
 
 	if tLen == LuaInt64Max {
 		println("error data %s, tLen:%d", buffer, tLen)
 	} else {
-		str:= buffer[:tLen]
+		str:= buf[:tLen]
 		L.Push(lua.LString(str))
 		L.Push(lua.LNumber(tLen +pos))
 
-		fmt.Printf("pb.go   ----read--------       read_tag   out  %v\n",[]byte(str))
+		fmt.Printf("pb.go   ----     read_tag   out  %v\n",[]byte(str))
 	}
 	return 2
 }
 //-----------------------------------------------struct unpack--------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------
 func unpack_fixed32(buffer string,  cache uint32)int{
 //#ifdef IS_LITTLE_ENDIAN
 	iInt32, err :=strconv.Atoi(buffer)
@@ -559,7 +571,7 @@ func struct_unpack(L *lua.LState) int {
 	buf:=buffer[pos:]
 
 
-
+	bb:=[]byte(buf)
 	//uint8_t	format = luaL_checkinteger(L, 1);
 	//size_t	len;
 	//const uint8_t *buffer = (uint8_t *)luaL_checklstring(L, 2, &len);
@@ -570,41 +582,41 @@ func struct_unpack(L *lua.LState) int {
 	case 'i':
 		{
 			//lua_pushinteger(L, *(int32_t *)			unpack_fixed32(buffer, nil))
-			ii := unpack_fixed32(buf, 0)
+			ii := BytesToInt32(bb)
 			L.Push(lua.LNumber(int32(ii)))
 			break
 		}
 	case 'q':
 		{
-			ii := unpack_fixed64(buf, 0)
+			ii := BytesToInt64(bb)
 			L.Push(lua.LNumber(int64(ii)))
 			//lua_pushnumber(L, (lua_Number)*(int64_t*)			unpack_fixed64(buffer, out));
 			break
 		}
 	case 'f':
 		{
-			ii := unpack_fixed32(buf, 0)
+			ii := ByteToFloat32(bb)
 			L.Push(lua.LNumber(float32(ii)))
 			//lua_pushnumber(L, (lua_Number)*(float*)			unpack_fixed32(buffer, out));
 			break
 		}
 	case 'd':
 		{
-			ii := unpack_fixed64(buf, 0)
+			ii := ByteToFloat64(bb)
 			L.Push(lua.LNumber(float64(ii)))
 			//lua_pushnumber(L, (lua_Number)*(double*)			unpack_fixed64(buffer, out));
 			break
 		}
 	case 'I':
 		{
-			ii := unpack_fixed32(buf, 0)
+			ii := BytesToInt32(bb)
 			L.Push(lua.LNumber(uint32(ii)))
 			//lua_pushnumber(L, *(uint32_t *)			unpack_fixed32(buffer, out));
 			break
 		}
 	case 'Q':
 		{
-			ii := unpack_fixed64(buf, 0)
+			ii := BytesToInt64(bb)
 			L.Push(lua.LNumber(uint64(ii)))
 			//lua_pushnumber(L, (lua_Number)*(uint64_t*)			unpack_fixed64(buffer, out));
 			break
@@ -691,9 +703,62 @@ func iostring_clear(L *lua.LState) int {
 	return 0
 }
 
+//------------------------------------------------- zsw --------------------------------------------------
+
+
 func ZswLuaShowBytesToString(L *lua.LState) int  {
 	str := L.ToString(1)
 
 	fmt.Printf("*******************************************************************************ZswLuaShowBytesToString: %v \n", []byte(str))
 	return 0
+}
+
+
+func Int64ToBytes(i int64) []byte {
+	var buf = make([]byte, 8)
+	binary.BigEndian.PutUint64(buf, uint64(i))
+	return buf
+}
+
+func BytesToInt64(buf []byte) int64 {
+	return int64(binary.BigEndian.Uint64(buf))
+}
+
+func Int32ToBytes(i int32) []byte {
+	var buf = make([]byte, 4)
+	binary.BigEndian.PutUint32(buf, uint32(i))
+	return buf
+}
+
+func BytesToInt32(buf []byte) int32 {
+	return int32(binary.BigEndian.Uint32(buf))
+}
+
+
+func Float32ToByte(float float32) []byte {
+	bits := math.Float32bits(float)
+	bytes := make([]byte, 4)
+	binary.LittleEndian.PutUint32(bytes, bits)
+
+	return bytes
+}
+
+func ByteToFloat32(bytes []byte) float32 {
+	bits := binary.LittleEndian.Uint32(bytes)
+
+	return math.Float32frombits(bits)
+}
+
+func Float64ToByte(float float64) []byte {
+	bits := math.Float64bits(float)
+	bytes := make([]byte, 8)
+	binary.LittleEndian.PutUint64(bytes, bits)
+
+	return bytes
+}
+
+func ByteToFloat64(bytes []byte) float64 {
+	bits := binary.LittleEndian.Uint64(bytes)
+
+	return math.Float64frombits(bits)
 }

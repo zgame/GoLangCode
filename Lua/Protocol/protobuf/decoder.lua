@@ -35,7 +35,7 @@ local _DecodeSignedVarint32 = pb.signed_varint_decoder
 
 ReadTag = pb.read_tag
 
-print("decoder")
+--print("decoder")
 
 local function _SimpleDecoder(wire_type, decode_value)
 
@@ -105,7 +105,7 @@ end
 local function _ModifiedDecoder(wire_type, decode_value, modify_value)
 
     local InnerDecode = function (buffer, pos)
-        print("_ModifiedDecoder")
+--        print("_ModifiedDecoder")
         local result, new_pos = decode_value(buffer, pos)
         return modify_value(result), new_pos
     end
@@ -117,7 +117,7 @@ local function _StructPackDecoder(wire_type, value_size, format)
     local struct_unpack = pb.struct_unpack
 
     function InnerDecode(buffer, pos)
-        print("_StructPackDecoder")
+--        print("_StructPackDecoder")
         local new_pos = pos + value_size
         local result = struct_unpack(format, buffer, pos)
         return result, new_pos
@@ -152,7 +152,7 @@ BoolDecoder = _ModifiedDecoder(wire_format.WIRETYPE_VARINT, _DecodeVarint, _Bool
 
 
 function StringDecoder(field_number, is_repeated, is_packed, key, new_default)
-    print("StringDecoder")
+--    print("StringDecoder")
     local DecodeVarint = _DecodeVarint
     local sub = string.sub
     --    local unicode = unicode
@@ -195,7 +195,7 @@ function StringDecoder(field_number, is_repeated, is_packed, key, new_default)
 end
 
 function BytesDecoder(field_number, is_repeated, is_packed, key, new_default)
-    print("BytesDecoder")
+--    print("BytesDecoder")
     local DecodeVarint = _DecodeVarint
     local sub = string.sub
     assert(not is_packed)
@@ -237,7 +237,7 @@ function BytesDecoder(field_number, is_repeated, is_packed, key, new_default)
 end
 
 function MessageDecoder(field_number, is_repeated, is_packed, key, new_default)
-    print("MessageDecoder")
+--    print("MessageDecoder")
     local DecodeVarint = _DecodeVarint
     local sub = string.sub
 

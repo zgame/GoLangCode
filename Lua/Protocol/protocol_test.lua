@@ -8,9 +8,11 @@ local pb = require("pb")
 local user_pb = require('user_pb')
 
 local person= user_pb.Friend()
---person.zswnameb = -2147483648
---person.address = false
+person.zswnameb = -855.9687
+person.address = false
 person.ad = 1
+person.ad1 = -9223372036854775800
+person.ad2 = 9223372036854775800
 
 local data = person:SerializeToString()
 print("***************************************----SerializeToString-----data----")
@@ -20,7 +22,11 @@ pb.ZswLuaShowBytesToString(data)
 
 local msg = user_pb.Friend()
 msg:ParseFromString(data)
+print("msg**********************************************************************",msg.zswnameb)
+print("msg**********************************************************************",msg.address)
 print("msg**********************************************************************",msg.ad)
+print("msg**********************************************************************",msg.ad1)
+print("msg**********************************************************************",msg.ad2)
 
 
 

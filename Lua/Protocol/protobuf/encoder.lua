@@ -50,7 +50,7 @@ function _TagSize(field_number)
 end
 
 
-print("encoder")
+--print("encoder")
 
 
 
@@ -287,7 +287,7 @@ end
 function _ModifiedEncoder(wire_type, encode_value, compute_value_size, modify_value)
 
     return function (field_number, is_repeated, is_packed)
-        print("modifiedEncoder",field_number, is_repeated, is_packed)
+--        print("modifiedEncoder",field_number, is_repeated, is_packed)
         if is_packed then
             local tag_bytes = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
             local EncodeVarint = _EncodeVarint
@@ -323,7 +323,7 @@ end
 function _StructPackEncoder(wire_type, value_size, format)
 
     return function(field_number, is_repeated, is_packed)
-        print("StructPackEncoder",field_number, is_repeated, is_packed)
+--        print("StructPackEncoder",field_number, is_repeated, is_packed)
         local struct_pack = pb.struct_pack
         if is_packed then
             local tag_bytes = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
@@ -345,6 +345,7 @@ function _StructPackEncoder(wire_type, value_size, format)
             end
         else
             local tag_bytes = TagBytes(field_number, wire_type)
+--            pb.ZswLuaShowBytesToString(tag_bytes)
             return function (write, value)
                 write(tag_bytes)
                 struct_pack(write, format, value)
@@ -378,7 +379,7 @@ DoubleEncoder   = _StructPackEncoder(wire_format.WIRETYPE_FIXED64, 8, string.byt
 
 
 function BoolEncoder(field_number, is_repeated, is_packed)
-    print("BoolEncoder")
+--    print("BoolEncoder")
     local false_byte = '\0'
     local true_byte = '\1'
     if is_packed then
@@ -420,7 +421,7 @@ function BoolEncoder(field_number, is_repeated, is_packed)
 end
 
 function StringEncoder(field_number, is_repeated, is_packed)
-    print("StringEncoder")
+--    print("StringEncoder")
     local tag = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
     local EncodeVarint = _EncodeVarint
     assert(not is_packed)
@@ -444,7 +445,7 @@ function StringEncoder(field_number, is_repeated, is_packed)
 end
 
 function BytesEncoder(field_number, is_repeated, is_packed)
-    print("BytesEncoder")
+--    print("BytesEncoder")
     local tag = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
     local EncodeVarint = _EncodeVarint
     assert(not is_packed)
@@ -467,7 +468,7 @@ end
 
 
 function MessageEncoder(field_number, is_repeated, is_packed)
-    print("MessageEncoder")
+--    print("MessageEncoder")
     local tag = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
     local EncodeVarint = _EncodeVarint
     assert(not is_packed)
