@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/yuin/gopher-lua"
-	"strconv"
 	"fmt"
 	"math"
 	"encoding/binary"
@@ -93,8 +92,6 @@ var _pb = map[string]lua.LGFunction{
 
 //-----------------------------------------int encode-------------------------------------
 func luaL_addchar(b []byte, c uint64)  []byte{
-	//str := strconv.FormatInt(int64(c),10)
-	//str := string(byte(c))
 	return append(b,byte(c))
 }
 
@@ -143,23 +140,11 @@ func pack_varint(str string, value uint64 ) string{
 }
 
 func varint_encoder(L *lua.LState) int {
-	//lua_Number 	l_value = luaL_checknumber(L, 2);
-	//uint64_t 	value = (uint64_t)	l_value
-	//luaL_Buffer b;
-	//luaL_buffinit(L, &b);
-	//pack_varint(b, value);
-	//lua_settop(L, 1);
-	//luaL_pushresult(&b);
-	//lua_call(L, 1, 0);
-
-
 	//println("pb.go   ------------       varint_encoder:")
 	l_value := L.ToNumber(2)
 	value := uint64(l_value)
 	b := pack_varint("", value)			// 把数字变成string
 
-	//L.Push(lua.LString(b))
-	//L.Call(1,0)			// string作为参数，调用参数1作为函数名
 	l_func := L.ToFunction(1)
 	if err := L.CallByParam(lua.P{
 		Fn:      l_func,
@@ -172,22 +157,8 @@ func varint_encoder(L *lua.LState) int {
 }
 
 func signed_varint_encoder(L *lua.LState) int {
-	//lua_Number	l_value = luaL_checknumber(L, 2);
-	//int64_t	value = (int64_t)	l_value;
-	//luaL_Buffer	b;
-	//luaL_buffinit(L, &b);
-	//if (value < 0) {
-	//	pack_varint(&b, *(uint64_t *)&value);
-	//} else {
-	//pack_varint(&b, value);
-	//}
-	//
-	//lua_settop(L, 1);
-	//luaL_pushresult(&b);
-	//lua_call(L, 1, 0);
-
 	l_value := L.ToNumber(2)
-	fmt.Println("pb.go   ------------       signed_varint_encoder:", int64(l_value))
+	//fmt.Println("pb.go   ------------       signed_varint_encoder:", int64(l_value))
 
 	l_func := L.ToFunction(1)
 	value := int64(l_value)
@@ -197,10 +168,7 @@ func signed_varint_encoder(L *lua.LState) int {
 	}else{
 		b = pack_varint("", uint64(value))			// 把数字变成string
 	}
-	fmt.Printf("pb.go   ------------       signed_varint_encoder     out :  %v \n", []byte(b))
-	//L.Push(lua.LString(b))
-	//fmt.Println("-------------------------",b,":",l_func.String())
-	//L.Call(1,0)			// string作为参数，调用参数1作为函数名
+	//fmt.Printf("pb.go   ------------       signed_varint_encoder     out :  %v \n", []byte(b))
 	if err := L.CallByParam(lua.P{
 		Fn:      l_func,
 		NRet:    0,
@@ -213,108 +181,51 @@ func signed_varint_encoder(L *lua.LState) int {
 
 //------------------------------------------struct_pack------------------------------------------------------
 
-func pack_fixed32(L *lua.LState, value lua.LNumber) int{
-	//#ifdef	IS_LITTLE_ENDIAN
-	//lua_pushlstring(L, (char *)	value, 4);
-
-	fmt.Println("pack_fixed32----",value)
-	str:= strconv.Itoa(int(value))
-	L.Push(lua.LString(str))
-	//# else
-	//uint32_t	v = htole32(*(uint32_t *)	value);
-	//lua_pushlstring(L, (char*)&v, 4);
-	//#endif
-	return 0
-}
-
-func pack_fixed64(L *lua.LState, value lua.LNumber) int {
-	//#ifdef	IS_LITTLE_ENDIAN
-	//lua_pushlstring(L, (char *)	value, 8);
-	fmt.Println("pack_fixed64----",value)
-
-	str:= strconv.FormatInt(int64(value),10)
-	L.Push(lua.LString(str))
-	//# else
-	//uint64_t	v = htole64(*(uint64_t *)	value);
-	//lua_pushlstring(L, (char*)&v, 8);
-	//#endif
-	return 0
-}
-
 func struct_pack(L *lua.LState) int {
 
-	//function := L.ToFunction(1)             /* get argument */
 	format := L.ToInt(2)             /* get argument */
 	value := L.ToNumber(3)             /* get argument */
 
-
-	fmt.Printf("pb.go   ----------------------------------------------------------      struct_pack:     format %d,    value %d       \n"   ,format,value)
-
+	//fmt.Printf("pb.go   ----------------------------------------------------------      struct_pack:     format %d,    value %d       \n"   ,format,value)
 
 	var bb []byte
-
-
 	switch format {
 	case 'i':
 		{
-			//ii := lua.LNumber(int(value))
-			//pack_fixed32(L, lua.LNumber(ii))
 			bb = Int32ToBytes(int32(value))
 			break
 		}
 	case 'q':
 		{
-			//int64_t			v = (int64_t)			value;
-			//pack_fixed64(L, (uint8_t*)&v);
-			//ii := lua.LNumber(int64(value))
-			//pack_fixed64(L, lua.LNumber(ii))
 			bb = Int64ToBytes(int64(value))
 			break
 		}
 	case 'f':
 		{
-			//float			v = (float)			value;
-			//pack_fixed32(L, (uint8_t*)&v);
-			//fmt.Println("float")
-			//ii = lua.LNumber(float32(value))
 			bb = Float32ToByte(float32(value))
-
-			//pack_fixed32(L, lua.LNumber(ii))
 			break
 		}
 	case 'd':
 		{
-			//double			v = (double)			value;
-			//pack_fixed64(L, (uint8_t*)&v);
-			//ii := lua.LNumber(float64(value))
-			//pack_fixed64(L, lua.LNumber(ii))
 			bb = Float64ToByte(float64(value))
 			break
 		}
 	case 'I':
 		{
-			//uint32_t			v = (uint32_t)			value;
-			//pack_fixed32(L, (uint8_t*)&v);
-			//ii := lua.LNumber(uint32(value))
-			//pack_fixed32(L, lua.LNumber(ii))
 			ii := uint32(value)
 			bb = Int32ToBytes(int32(ii))
 			break
 		}
 	case 'Q':
 		{
-			//uint64_t			v = (uint64_t)			value;
-			//pack_fixed64(L, (uint8_t*)&v);
 			ii := uint64(value)
-			//pack_fixed64(L, lua.LNumber(ii))
 			bb = Int64ToBytes(int64(ii))
 			break
 		}
 	//default:
 	//	ii := lua.LNumber(0)
 	}
-	//lua_call(L, 1, 0);
-	//L.Call(1,0)
+
 
 	out := lua.LString(string(bb))
 
@@ -347,15 +258,6 @@ func size_varint(buffer string, len int) uint64{
 }
 
 func unpack_varint(buffer string, len uint64) uint64{
-	//uint64_t	value = buffer[0] & 0x7f
-	//size_t	shift = 7;
-	//size_t	pos = 0;
-	//for (pos = 1; pos < len; ++pos)
-	//{
-	//value |= ((uint64_t)(buffer[pos] & 0x7f)) << shift;
-	//shift += 7;
-	//}
-	//bb,_:= strconv.Atoi(buffer[0:1])
 	bb:= []byte(buffer)
 
 	value := uint64(bb[0] & 0x7f)
@@ -373,25 +275,12 @@ func unpack_varint(buffer string, len uint64) uint64{
 }
 
 func varint_decoder(L *lua.LState) int {
-	//size_t	len;
-	//const char *buffer = luaL_checklstring(L, 1, &len);
-	//size_t	pos = luaL_checkinteger(L, 2);
-	//buffer += pos;
-	//len = size_varint(buffer, len);
-	//if (len == -1) {
-	//	luaL_error(L, "error data %s, len:%d", buffer, len);
-	//} else {
-	//	lua_pushnumber(L, (lua_Number)
-	//	unpack_varint(buffer, len));
-	//	lua_pushinteger(L, len+pos);
-	//}
-
 
 	buffer := L.ToString(1)             /* get argument */
 	pos := L.ToInt64(2)             /* get argument */
 	buf:= buffer[pos:]
 
-	fmt.Printf("pb.go   ------read------      varint_decoder:    %v      %d  \n",[]byte(buffer),pos)
+	//fmt.Printf("pb.go   ------read------      varint_decoder:    %v      %d  \n",[]byte(buffer),pos)
 
 	tLen := size_varint(buf, len(buffer))
 	if tLen == LuaInt64Max{
@@ -400,30 +289,18 @@ func varint_decoder(L *lua.LState) int {
 		ii := unpack_varint(buf, tLen)
 		L.Push(lua.LNumber(ii))
 		L.Push(lua.LNumber(tLen +uint64(pos)))
-		fmt.Printf("pb.go   ------read------      varint_decoder:   ii %d   pos   %d  \n",ii,  tLen+uint64(pos))
+		//fmt.Printf("pb.go   ------read------      varint_decoder:   ii %d   pos   %d  \n",ii,  tLen+uint64(pos))
 	}
 	return 2
 }
 
 func signed_varint_decoder(L *lua.LState) int {
-	//size_t	len;
-	//const char *buffer = luaL_checklstring(L, 1, &len);
-	//size_t	pos = luaL_checkinteger(L, 2);
-	//buffer += pos;
-	//len = size_varint(buffer, len);
-	//if (len == -1) {
-	//	luaL_error(L, "error data %s, len:%d", buffer, len);
-	//} else {
-	//	lua_pushnumber(L, (lua_Number)(int64_t)		unpack_varint(buffer, len));
-	//	lua_pushinteger(L, len+pos);
-	//}
-
 
 	buffer := L.ToString(1)             /* get argument */
 	pos := L.ToInt64(2)             /* get argument */
 	buf:= buffer[pos:]
 
-	fmt.Printf("pb.go   ------read------       signed_varint_decoder:    %v      %d  \n",[]byte(buffer),pos)
+	//fmt.Printf("pb.go   ------read------       signed_varint_decoder:    %v      %d  \n",[]byte(buffer),pos)
 	tLen := size_varint(buf, len(buffer))
 	if tLen == LuaInt64Max{
 		println("error signed_varint_decoder data %s, tLen:%d", buffer, tLen)
@@ -432,7 +309,7 @@ func signed_varint_decoder(L *lua.LState) int {
 		L.Push(lua.LNumber(ii))
 		L.Push(lua.LNumber(tLen +uint64(pos)))
 
-		fmt.Printf("pb.go   ------read------      signed_varint_decoder:   ii %d   pos   %d  \n",ii,  tLen+uint64(pos))
+		//fmt.Printf("pb.go   ------read------      signed_varint_decoder:   ii %d   pos   %d  \n",ii,  tLen+uint64(pos))
 	}
 
 
@@ -440,11 +317,7 @@ func signed_varint_decoder(L *lua.LState) int {
 }
 //-------------------------------------------------------------------------------------------------
 func zig_zag_encode32(L *lua.LState) int {
-	//int32_t	n = luaL_checkinteger(L, 1);
-	//uint32_t	value = (n << 1) ^ (n >> 31);
-	//lua_pushinteger(L, value);
-
-	println("pb.go   ------------       zig_zag_encode32:")
+	//println("pb.go   ------------       zig_zag_encode32:")
 	n := L.ToInt(1)             /* get argument */
 	value := uint32((n << 1) ^ (n >> 31))
 	L.Push(lua.LNumber(value)) /* push result */
@@ -453,11 +326,7 @@ func zig_zag_encode32(L *lua.LState) int {
 }
 
 func zig_zag_decode32(L *lua.LState) int {
-	//uint32_t	n = (uint32_t)	luaL_checkinteger(L, 1);
-	//int32_t	value = (n >> 1) ^ - (int32_t)(n & 1);
-	//lua_pushinteger(L, value);
-
-	println("pb.go   ------------       zig_zag_decode32:")
+	//println("pb.go   ------------       zig_zag_decode32:")
 	n := uint32(L.ToInt(1))             /* get argument */
 
 	value := (int)(n >> 1) ^ - (int)(n & 1)
@@ -468,11 +337,7 @@ func zig_zag_decode32(L *lua.LState) int {
 }
 
 func zig_zag_encode64(L *lua.LState) int {
-	//int64_t	n = (int64_t)	luaL_checknumber(L, 1);
-	//uint64_t	value = (n << 1) ^ (n >> 63);
-	//lua_pushinteger(L, value);
-
-	println("pb.go   ------------       zig_zag_encode64:")
+	//println("pb.go   ------------       zig_zag_encode64:")
 	n := L.ToInt64(1)             /* get argument */
 	value := uint64((n << 1) ^ (n >> 63))
 	L.Push(lua.LNumber(value)) /* push result */
@@ -482,11 +347,7 @@ func zig_zag_encode64(L *lua.LState) int {
 }
 
 func zig_zag_decode64(L *lua.LState) int {
-	//uint64_t	n = (uint64_t)	luaL_checknumber(L, 1);
-	//int64_t	value = (n >> 1) ^ - (int64_t)(n & 1);
-	//lua_pushinteger(L, value);
-
-	println("pb.go   ------------       zig_zag_decode64:")
+	//println("pb.go   ------------       zig_zag_decode64:")
 	n := uint64(L.ToInt64(1))
 	value :=  (int64)(n >> 1) ^ - (int64)(n & 1)
 	L.Push(lua.LNumber(value)) /* push result */
@@ -495,27 +356,15 @@ func zig_zag_decode64(L *lua.LState) int {
 
 
 func read_tag(L *lua.LState) int {
-	//size_t	tLen;
-	//const char *buffer = luaL_checklstring(L, 1, &tLen);
-	//size_t	pos = luaL_checkinteger(L, 2);
-	//buffer += pos;
-	//tLen = size_varint(buffer, tLen);
-	//if (tLen == -1) {
-	//	luaL_error(L, "error data %s, tLen:%d", buffer, tLen);
-	//} else {
-	//	lua_pushlstring(L, buffer, tLen);
-	//	lua_pushinteger(L, tLen+pos);
-	//}
 
 	buffer := L.ToString(1)
 	pos := uint64(L.ToInt64(2))
 	len1:= len(buffer)
 
-	//bb:= []byte(buffer)
 	buf:=buffer[pos:]
 	tLen := size_varint(buf, len1)
 
-	fmt.Println("pb.go   -----       read_tag:    pos  ", pos)
+	//fmt.Println("pb.go   -----       read_tag:    pos  ", pos)
 
 	if tLen == LuaInt64Max {
 		println("error data %s, tLen:%d", buffer, tLen)
@@ -524,64 +373,27 @@ func read_tag(L *lua.LState) int {
 		L.Push(lua.LString(str))
 		L.Push(lua.LNumber(tLen +pos))
 
-		fmt.Printf("pb.go   ----     read_tag   out  %v\n",[]byte(str))
+		//fmt.Printf("pb.go   ----     read_tag   out  %v\n",[]byte(str))
 	}
 	return 2
 }
 //-----------------------------------------------struct unpack--------------------------------------------------
 
 
-//-------------------------------------------------------------------------------------------
-func unpack_fixed32(buffer string,  cache uint32)int{
-//#ifdef IS_LITTLE_ENDIAN
-	iInt32, err :=strconv.Atoi(buffer)
-	if err != nil {
-		println("unpack_fixed32  error!", err.Error())
-	}
-return iInt32
-//#else
-//*(uint32_t*)cache = le32toh(*(uint32_t*)buffer);
-//return cache;
-//#endif
-}
-
-func unpack_fixed64(buffer string, cache uint64) int64 {
-	//#ifdef IS_LITTLE_ENDIAN
-
-	iInt64, err := strconv.ParseInt(buffer, 10, 64)
-	if err != nil {
-		println("unpack_fixed64  error!", err.Error())
-	}
-	return iInt64
-	//#else
-	//*(uint64_t*)cache = le64toh(*(uint64_t*)buffer);
-	//return cache;
-	//#endif
-}
-
-
 func struct_unpack(L *lua.LState) int {
 
-	fmt.Printf("pb.go   ------------      struct_unpack:  \n")
+	//fmt.Printf("pb.go   ------------      struct_unpack:  \n")
 	format := L.ToInt(1)             /* get argument */
 	buffer := L.ToString(2)             /* get argument */
 
 	pos:= L.ToInt(3)
-	//L.Push(lua.LString(str)) /* push result */
 	buf:=buffer[pos:]
 
 
 	bb:=[]byte(buf)
-	//uint8_t	format = luaL_checkinteger(L, 1);
-	//size_t	len;
-	//const uint8_t *buffer = (uint8_t *)luaL_checklstring(L, 2, &len);
-	//size_t	pos = luaL_checkinteger(L, 3);
-	//buffer += pos;
-	//uint8_t	out[8];
 	switch format {
 	case 'i':
 		{
-			//lua_pushinteger(L, *(int32_t *)			unpack_fixed32(buffer, nil))
 			ii := BytesToInt32(bb)
 			L.Push(lua.LNumber(int32(ii)))
 			break
@@ -590,50 +402,40 @@ func struct_unpack(L *lua.LState) int {
 		{
 			ii := BytesToInt64(bb)
 			L.Push(lua.LNumber(int64(ii)))
-			//lua_pushnumber(L, (lua_Number)*(int64_t*)			unpack_fixed64(buffer, out));
 			break
 		}
 	case 'f':
 		{
 			ii := ByteToFloat32(bb)
 			L.Push(lua.LNumber(float32(ii)))
-			//lua_pushnumber(L, (lua_Number)*(float*)			unpack_fixed32(buffer, out));
 			break
 		}
 	case 'd':
 		{
 			ii := ByteToFloat64(bb)
 			L.Push(lua.LNumber(float64(ii)))
-			//lua_pushnumber(L, (lua_Number)*(double*)			unpack_fixed64(buffer, out));
 			break
 		}
 	case 'I':
 		{
 			ii := BytesToInt32(bb)
 			L.Push(lua.LNumber(uint32(ii)))
-			//lua_pushnumber(L, *(uint32_t *)			unpack_fixed32(buffer, out));
 			break
 		}
 	case 'Q':
 		{
 			ii := BytesToInt64(bb)
 			L.Push(lua.LNumber(uint64(ii)))
-			//lua_pushnumber(L, (lua_Number)*(uint64_t*)			unpack_fixed64(buffer, out));
 			break
 		}
-		//default:
-		//	luaL_error(L, "Unknown, format");
+		default:
+			println("error ------struct_unpack   Unknown, format")
 	}
 	return 1
 }
 
 func iostring_new(L *lua.LState) int {
 	println("pb.go   ------------       iostring_new:")
-	//IOString * io = (IOString *)
-	//lua_newuserdata(L, sizeof(IOString));
-	//io- > size = 0;
-	//luaL_getmetatable(L, IOSTRING_META);
-	//lua_setmetatable(L, -2);
 	return 0
 }
 
@@ -663,15 +465,6 @@ func iostring_write(L *lua.LState) int {
 	str := L.ToString(1)             /* get argument */
 	str2 := L.ToString(2)             /* get argument */
 	println("pb.go   ------------       iostring_write:", str,"+",str2)
-	//IOString * io = checkiostring(L);
-	//size_t
-	//size;
-	//const char *str = luaL_checklstring(L, 2, &size);
-	//if (io- > size+size > IOSTRING_BUF_LEN) {
-	//	luaL_error(L, "Out of range");
-	//}
-	//memcpy(io- > buf+io- > size, str, size);
-	//io- > size += size;
 	return 0
 }
 
@@ -683,23 +476,12 @@ func iostring_sub(L *lua.LState) int {
 
 	re:=str[begin:end]
 	L.Push(lua.LString(re)) /* push result */
-	//IOString * io = checkiostring(L);
-	//size_t
-	//begin = luaL_checkinteger(L, 2);
-	//size_t
-	//end = luaL_checkinteger(L, 3);
-	//if (begin > end || end > io- > size) {
-	//	luaL_error(L, "Out of range");
-	//}
-	//lua_pushlstring(L, io- > buf+begin-1, end-begin+1);
 	return 1
 }
 
 func iostring_clear(L *lua.LState) int {
 	str := L.ToString(1)             /* get argument */
 	println("pb.go   ------------        iostring_clear:", str)
-	//IOString * io = checkiostring(L);
-	//io- > size = 0;
 	return 0
 }
 
@@ -708,8 +490,7 @@ func iostring_clear(L *lua.LState) int {
 
 func ZswLuaShowBytesToString(L *lua.LState) int  {
 	str := L.ToString(1)
-
-	fmt.Printf("*******************************************************************************ZswLuaShowBytesToString: %v \n", []byte(str))
+	fmt.Printf("********************************ZswLuaShowBytesToString: %v \n", []byte(str))
 	return 0
 }
 

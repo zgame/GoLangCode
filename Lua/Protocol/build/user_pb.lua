@@ -16,6 +16,7 @@ local FRIEND_AD6_FIELD = protobuf.FieldDescriptor();
 local FRIEND_AD7_FIELD = protobuf.FieldDescriptor();
 local FRIEND_AD8_FIELD = protobuf.FieldDescriptor();
 local FRIEND_AD9_FIELD = protobuf.FieldDescriptor();
+local FRIEND_AD10_FIELD = protobuf.FieldDescriptor();
 
 FRIEND_ZSWNAMEB_FIELD.name = "zswnameb"
 FRIEND_ZSWNAMEB_FIELD.full_name = ".tutorial.Friend.zswnameb"
@@ -137,11 +138,21 @@ FRIEND_AD9_FIELD.default_value = 0
 FRIEND_AD9_FIELD.type = 6
 FRIEND_AD9_FIELD.cpp_type = 4
 
+FRIEND_AD10_FIELD.name = "ad10"
+FRIEND_AD10_FIELD.full_name = ".tutorial.Friend.ad10"
+FRIEND_AD10_FIELD.number = 13
+FRIEND_AD10_FIELD.index = 12
+FRIEND_AD10_FIELD.label = 1
+FRIEND_AD10_FIELD.has_default_value = false
+FRIEND_AD10_FIELD.default_value = ""
+FRIEND_AD10_FIELD.type = 12
+FRIEND_AD10_FIELD.cpp_type = 9
+
 FRIEND.name = "Friend"
 FRIEND.full_name = ".tutorial.Friend"
 FRIEND.nested_types = {}
 FRIEND.enum_types = {}
-FRIEND.fields = {FRIEND_ZSWNAMEB_FIELD, FRIEND_ADDRESS_FIELD, FRIEND_AD_FIELD, FRIEND_AD1_FIELD, FRIEND_AD2_FIELD, FRIEND_AD3_FIELD, FRIEND_AD4_FIELD, FRIEND_AD5_FIELD, FRIEND_AD6_FIELD, FRIEND_AD7_FIELD, FRIEND_AD8_FIELD, FRIEND_AD9_FIELD}
+FRIEND.fields = {FRIEND_ZSWNAMEB_FIELD, FRIEND_ADDRESS_FIELD, FRIEND_AD_FIELD, FRIEND_AD1_FIELD, FRIEND_AD2_FIELD, FRIEND_AD3_FIELD, FRIEND_AD4_FIELD, FRIEND_AD5_FIELD, FRIEND_AD6_FIELD, FRIEND_AD7_FIELD, FRIEND_AD8_FIELD, FRIEND_AD9_FIELD, FRIEND_AD10_FIELD}
 FRIEND.is_extendable = false
 FRIEND.extensions = {}
 
