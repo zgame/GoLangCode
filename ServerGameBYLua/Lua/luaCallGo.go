@@ -2,7 +2,6 @@ package Lua
 
 import (
 	"github.com/yuin/gopher-lua"
-	"strconv"
 	"fmt"
 )
 
@@ -15,8 +14,11 @@ import (
 // 统一的go给lua调用的函数注册点
 func (m *MyLua)InitResister() {
 	// Lua调用go函数声明
-	m.L.SetGlobal("double", m.L.NewFunction(Double))
+	//m.L.SetGlobal("double", m.L.NewFunction(Double))
 	m.L.SetGlobal("LuaCallGoNetWorkSend", m.L.NewFunction(NetWorkSend))		//注册到lua网络发送函数
+
+	//加载protobuf
+	luaopen_pb(m.L)
 }
 
 // 通过lua堆栈找到对应的是哪个myServer
@@ -24,16 +26,16 @@ func GetMyServerByLSate(L *lua.LState) *MyServer {
 	return LuaConnectMyServer[L]
 }
 
-// test
-func Double(L *lua.LState) int {
-	lv := L.ToInt(1)             //第一个参数
-	lv2 :=  L.ToInt(2)			 //第二个参数
-	str := L.ToString(3)
-
-	L.Push(lua.LString(str+"  call "+strconv.Itoa(lv * lv2))) /* push result */
-
-	return 1                     /* number of results */
-}
+//// test
+//func Double(L *lua.LState) int {
+//	lv := L.ToInt(1)             //第一个参数
+//	lv2 :=  L.ToInt(2)			 //第二个参数
+//	str := L.ToString(3)
+//
+//	L.Push(lua.LString(str+"  call "+strconv.Itoa(lv * lv2))) /* push result */
+//
+//	return 1                     /* number of results */
+//}
 
 // lua发送网络数据
 func NetWorkSend(L *lua.LState) int {

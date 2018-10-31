@@ -251,7 +251,6 @@ func CommonLogicLuaReloadCheck() {
 }
 
 func CommonLogicStart() {
-
 	// 创建计时器，定期去run公共逻辑
 	ztimer.TimerCheckUpdate(func() {
 		CommonLua.GoCallLuaCommonLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环

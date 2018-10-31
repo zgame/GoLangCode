@@ -4,15 +4,27 @@
 --- DateTime: 2018/10/9 14:12
 ---
 
---require("Script/hello")
---require("Script/hello2")
---require("Script/class_test")
-
-require("Script/NetWork/network")
-require("Script/GameCommonLogic/commonLogic")
-require("Script/HotReload/hotReload")
---
---
-require("Script/Protocol/protocol_test")
-
 --print("start lua")
+
+
+package.path = "Script/?.lua;"..package.path
+package.path = "Script/NetWork/?.lua;"..package.path
+package.path = "Script/GameCommonLogic/?.lua;"..package.path
+package.path = "Script/HotReload/?.lua;"..package.path
+require("network")
+require("commonLogic")
+require("hotReload")
+
+
+
+--package.path = "Script/Protocol/?.lua;"..package.path
+package.path = "Script/Protocol/build/?.lua;"..package.path
+package.path = "Script/Protocol/protobuf/?.lua;"..package.path
+
+require("protocol_test")
+
+
+data_csv1 = require("data_csv")
+
+print(data_csv1[1].w1)
+print(data_csv1[1].ty)

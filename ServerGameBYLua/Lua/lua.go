@@ -6,7 +6,6 @@ import (
 	"bufio"
 	"github.com/yuin/gopher-lua/parse"
 	"fmt"
-	"../GlobalVar"
 )
 //--------------------------------------------------------------------------------
 // lua的接口，包含热更新
@@ -26,7 +25,7 @@ func NewMyLua() *MyLua {
 }
 
 // --------------------全局变量初始化--------------------------
-func InitGlobalVar()  {
+func InitGlobalVar() {
 	LuaConnectMyServer = make(map[* lua.LState]*MyServer)
 }
 
@@ -39,8 +38,14 @@ func (m *MyLua)Init()   {
 
 	m.InitResister() // 这里是统一的lua函数注册入口
 
-	DoCompiledFile(m.L, GlobalVar.LuaCodeToShare)
+
+	if err := m.L.DoFile("Script/main.lua"); err != nil {
+		fmt.Println("加载main.lua文件出错了！")
+		fmt.Println(err.Error())
+	}
+	//DoCompiledFile(m.L, GlobalVar.LuaCodeToShare)
 	//return m.L
+	fmt.Println("--------lua 脚本 加载完成！---------------")
 }
 
 

@@ -3,23 +3,20 @@
 --- Created by Administrator.
 --- DateTime: 2018/10/12 15:56
 ---
-print("fffffffffffffffffffffffffffffffffffff")
 
 
---local user_pb = require('Script/Protocol/build/user_pb')
-local user_pb = require('build/user_pb')
---local user_pb = require('user_pb')
 
+local user_pb = require('user_pb')
 
-print("fffffffffffffffffffffffffffffffffffff")
 
 
 local person= user_pb.Friend()
 person.name = "zsw"
-person.adress = "zsw adress"
+person.address = "zsw adress"
 
 local data = person:SerializeToString()
 
 local msg = user_pb.Friend()
 msg:ParseFromString(data)
-print(msg)
+print(msg.name)
+print(msg.address)

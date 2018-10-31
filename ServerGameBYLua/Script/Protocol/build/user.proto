@@ -1,9 +1,7 @@
 syntax = "proto3";
 package tutorial;
-//import "google/protobuf/timestamp.proto";
 
 message Friend {
     string name = 1;
     string address = 2;
-  
   }

@@ -5,11 +5,11 @@
 ---
 
 
-package.path = package.path .. ';../protobuf/?.lua'
-package.cpath = package.cpath .. ';../protobuf/?.so'
-package.path = "./Protocol/?.lua;"..package.path
-package.path = "./Protocol/build/?.lua;"..package.path
-package.path = "./Protocol/protobuf/?.lua;"..package.path
+--package.path = package.path .. '../protobuf/?.lua'
+--package.cpath = package.cpath .. ';../protobuf/?.so'
+package.path = "Protocol/?.lua;"..package.path
+package.path = "Protocol/build/?.lua;"..package.path
+package.path = "Protocol/protobuf/?.lua;"..package.path
 --print(package.path);
 
 require("dumpTable")
