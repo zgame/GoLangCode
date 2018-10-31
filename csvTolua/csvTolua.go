@@ -4,7 +4,6 @@ import (
 	"encoding/csv"
 	"log"
 	"os"
-	"strconv"
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
@@ -14,7 +13,9 @@ import (
 func main() {
 	fmt.Println("-------------说明------------------")
 	fmt.Println("把所有要转换的csv文件扔到app同路径下，运行即可。")
-	fmt.Println("put all csv files in this path, run!")
+	fmt.Println("-------------csv格式---------------")
+	fmt.Println("第一行是列名字")
+	fmt.Println("第二行是列类型，支持int,string,bool,float,double")
 	fmt.Println("-------------END------------------")
 
 	err:= RunCurrentPahtAllFile()
@@ -22,9 +23,7 @@ func main() {
 		fmt.Println("读当前目录下文件出错")
 		fmt.Println(err.Error())
 	}
-	//rows := readSample()
-	//appendSum(rows)
-	//writeLuaFiles(rows)
+	fmt.Println("--------------------end----------------------")
 }
 
 func readSample(filename string) [][]string {
@@ -40,39 +39,14 @@ func readSample(filename string) [][]string {
 	return rows
 }
 
-func appendSum(rows [][]string) {
-	rows[0] = append(rows[0], "SUM")
-	for i := 1; i < len(rows); i++ {
-		rows[i] = append(rows[i], sum(rows[i]))
-	}
-
-	for i,v := range rows{
-		fmt.Print(i,"_",v,"		|")
-		fmt.Println("")
-
-
-	}
-}
-
-func sum(row []string) string {
-	sum := 0
-	for _, s := range row {
-		x, err := strconv.Atoi(s)
-		if err != nil {
-			return "NA"
-		}
-		sum += x
-	}
-	return strconv.Itoa(sum)
-}
 
 // 把新数据结构写入文件中
-func writeLuaFiles(filename string,rows [][]string) {
+func writeLuaFiles(filename string,data string) {
 	f, err := os.Create(filename+".lua")
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = csv.NewWriter(f).WriteAll(rows)
+	_,err = f.WriteString(data)
 	f.Close()
 	if err != nil {
 		log.Fatal(err)
@@ -82,7 +56,7 @@ func writeLuaFiles(filename string,rows [][]string) {
 // 获取当前路径下所有文件
 func RunCurrentPahtAllFile() error {
 	pathname:=getCurrentDirectory()
-	pathname="C:/Users/Administrator/Documents/GitHub/GoLangCode/csvTolua/"
+	//pathname="C:/Users/Administrator/Documents/GitHub/GoLangCode/csvTolua/"
 
 
 	rd, err := ioutil.ReadDir(pathname)
@@ -104,11 +78,13 @@ func RunCurrentPahtAllFile() error {
 			//RunCurrentPahtAllFile(pathname + fi.Name() + "\\")
 		} else {
 			files:= strings.Split(fi.Name(), ".")
+			fileName := files[0]
 			fileType := files[1]
 			if fileType == "csv"{
 				fmt.Println("开始转换",fi.Name())
 				rows := readSample(fi.Name())
-				DealRowsData(rows)
+				str:= DealRowsData(rows)
+				writeLuaFiles(fileName,str)
 			}
 		}
 	}
@@ -125,47 +101,62 @@ func getCurrentDirectory() string {
 }
 
 
-func getString(index int, rows [][]string) string {
-	ListType := rows[1]		// 列类型
-
+func getString(RowIndex int, ListIndex int, rows [][]string) string {
+	var strOut string
+	ListName := rows[0][ListIndex] 		// 列名
+	ListType := rows[1][ListIndex] // 列类型
+	ListType = strings.ToLower(ListType)
+	data := rows[RowIndex][ListIndex]
 	if ListType == "string"{
-		
+		strOut = fmt.Sprintf(" %s = \"%s\", ",ListName,data)
+	}else if ListType == "int"{
+		strOut = fmt.Sprintf(" %s = %s, ",ListName,data)
+	}else if ListType == "float"{
+		strOut = fmt.Sprintf(" %s = %s, " ,ListName,data)
+	}else if ListType == "double"{
+		strOut = fmt.Sprintf(" %s = %s, ",ListName,data)
+	}else if ListType == "bool"{
+		data = strings.ToUpper(data)
+		if data == "1" || data == "TRUE"{
+			data = "true"
+		}else{
+			data = "false"
+		}
+		strOut = fmt.Sprintf(" %s = %s, ",ListName,data)
 	}
-	return rows
+	return strOut
 }
 
 
 
 // 处理row数据
-func DealRowsData(rows [][]string)  {
+func DealRowsData(rows [][]string)  string{
 	fmt.Println("-----------------------开始处理数据--------------------------")
-	//width:= len(rows[0])
+	width:= len(rows[0])
 	//fmt.Println("width:",width)
-	StrOut:= "module = {}\n	module = {\n"
-	fmt.Println("",StrOut)
+	StrOut:= "module = {\n"
+	//fmt.Println("",StrOut)
 	
-	ListName := rows[0]		// 列名
-	ListType := rows[1]		// 列类型
+	//ListName := rows[0]		// 列名
+	//ListType := rows[1]		// 列类型
 
-	for _,v := range rows{
-		line:="["
+	for i := range rows {
+		if i < 4 {
+			continue	// 略过前2行
+		}
 
-
-		fmt.Print(i,"_",v,"		|")
-		fmt.Println("")
+		line := "["+ rows[i][0]+"] = { "
+		for j := 1; j < width; j++ {
+			str := getString(i,j, rows)
+			line = line + str
+		}
+		line = line + " },\n"
+		//fmt.Println("", line)
+		StrOut += line
 	}
 
+	StrOut += "} \n return module"
 
-
-	for i:=0;i<width;i++{
-		
-	}
-	fmt.Println("",rows[0][1])
-	fmt.Println("",rows[1][1])
-
-	for i,v := range rows{
-		fmt.Print(i,"_",v,"		|")
-		fmt.Println("")
-	}
-
+	//fmt.Println("",StrOut)
+	return StrOut
 }
