@@ -2,6 +2,13 @@ syntax = "proto3";
 package tutorial;
 //import "google/protobuf/timestamp.proto";
 
+
+message Zsw{
+    string name =1;
+    uint32 id = 2;
+}
+
+  
 message Friend {
     double zswnameb = 1;
     bool address = 2;
@@ -16,4 +23,6 @@ message Friend {
 	fixed32 ad8 = 11;
 	fixed64 ad9 = 12;
 	bytes ad10 = 13;
+	repeated Zsw zz= 14;
   }
+
