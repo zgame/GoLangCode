@@ -16,17 +16,15 @@ require("network")
 require("commonLogic")
 require("hotReload")
 
-
-
 -------------------------------------protobuf----------------------------------------
 package.path = "Script/Protocol/build/?.lua;"..package.path
 package.path = "Script/Protocol/protobuf/?.lua;"..package.path
-
 require("protocol_test")
 
 -------------------------------------CSV----------------------------------------
 package.path = "Script/CSV/?.lua;"..package.path
-data_csv1 = require("mgby_fish_server")
+data_csv1 = require("mgby_fish_sever")
+print(data_csv1[134].type)
+print(data_csv1[134].min_force_killed_bullet)
 
-print(data_csv1[125].type)
-print(data_csv1[125].#name)
+
