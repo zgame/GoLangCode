@@ -57,6 +57,7 @@ func writeLuaFiles(filename string,data string) {
 func RunCurrentPahtAllFile() error {
 	pathname:=getCurrentDirectory()
 	//pathname="C:/Users/Administrator/Documents/GitHub/GoLangCode/csvTolua/"
+	pathname="./"
 
 
 	rd, err := ioutil.ReadDir(pathname)
@@ -65,8 +66,8 @@ func RunCurrentPahtAllFile() error {
 			files:= strings.Split(fi.Name(), ".")
 			fileType := files[1]
 			if fileType == "lua"{
-				del := os.Remove("./"+fi.Name())
-				if del != nil {
+				err = os.Remove("./"+fi.Name())
+				if err == nil {
 					fmt.Println("删除老的文件",fi.Name())
 				}
 			}
