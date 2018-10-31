@@ -107,7 +107,14 @@ func getString(RowIndex int, ListIndex int, rows [][]string) string {
 	ListName := rows[0][ListIndex] 		// 列名
 	ListType := rows[1][ListIndex] // 列类型
 	ListType = strings.ToLower(ListType)
+	// 增加一个判断,如果是#就忽略
+	if ListName[0] == '#'{
+		return ""
+	}
+
 	data := rows[RowIndex][ListIndex]
+
+
 	if ListType == "string"{
 		strOut = fmt.Sprintf(" %s = \"%s\", ",ListName,data)
 	}else if ListType == "int"{

@@ -7,6 +7,7 @@
 --print("start lua")
 
 
+-------------------------------------system----------------------------------------
 package.path = "Script/?.lua;"..package.path
 package.path = "Script/NetWork/?.lua;"..package.path
 package.path = "Script/GameCommonLogic/?.lua;"..package.path
@@ -17,14 +18,15 @@ require("hotReload")
 
 
 
---package.path = "Script/Protocol/?.lua;"..package.path
+-------------------------------------protobuf----------------------------------------
 package.path = "Script/Protocol/build/?.lua;"..package.path
 package.path = "Script/Protocol/protobuf/?.lua;"..package.path
 
 require("protocol_test")
 
+-------------------------------------CSV----------------------------------------
+package.path = "Script/CSV/?.lua;"..package.path
+data_csv1 = require("mgby_fish_server")
 
-data_csv1 = require("data_csv")
-
-print(data_csv1[1].w1)
-print(data_csv1[1].ty)
+print(data_csv1[125].type)
+print(data_csv1[125].#name)
