@@ -89,4 +89,10 @@ func main(){
 	fmt.Println("")
 
 
+	fmt.Println("--------------------------------------------")
+	var arrary1 []int
+	arrary1 = make([]int,6)
+	arrary1[1]=2
+	fmt.Printf("%v",arrary1)
+
 }

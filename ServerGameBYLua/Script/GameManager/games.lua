@@ -6,6 +6,7 @@
 ----------------------------------------------------------------
 -----------------------------game管理桌子和玩家-----------------
 ----------------------------------------------------------------
+package.path = "Script/Games/BY/?.lua;"..package.path
 require("byTable")
 
 Game = {}
@@ -33,26 +34,30 @@ end
 
 -- 创建桌子，并启动它
 function Game:CreateTable(gameType,gameScore)
+    local table_t
     if gameType == GameTypeBY then
         table_t =  ByTable:New(self.TableUUID, gameType)
+        --printTable(table_t)
     elseif gameType == GameTypeBY2 then
 
     elseif gameType == GameTypeBY3 then
 
     end
     if table_t == nil then
-        Logger("CreateTable error , gameType",gameType)
+        Logger("CreateTable error , gameType"..gameType)
         return
     end
     table_t.RoomScore = gameScore
-    Logger("创建了一个新的桌子,type:", gameType)
+    Logger("创建了一个新的桌子,type:"..gameType)
 
     --增加该桌子到总列表中
     self.AllTableList[self.TableUUID] = table_t
     self.TableUUID = self.TableUUID + 1     -- table uuid 自增
 
     -- 桌子开始自行启动计算
-    --table_t:InitTable()
+    table_t:RunTable()
+
+
 
 end
 

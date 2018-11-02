@@ -14,6 +14,6 @@ end
 
 -- 网络接收函数
 function GoCallLuaNetWorkReceive(data)
-    print("lua收到了消息：",data)
+    Logger("lua收到了消息：",data)
     luaCallGoNetWorkSend("lua想发送消息")
 end

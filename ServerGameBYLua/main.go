@@ -20,6 +20,7 @@ import (
 	"./Utils/ztimer"
 	//"github.com/yuin/gopher-lua"
 	"./GlobalVar"
+	"runtime"
 )
 
 
@@ -45,9 +46,14 @@ var err error
 
 var CommonLua *Lua.MyLua		// 公共部分lua脚本
 var CommonLogicLuaReloadTime int  // 公共逻辑处理的lua更新时间
-var GoroutineMax int 			// 给lua的游戏桌子使用的协程数量
+
+var GoroutineMax int 			// 给lua的游戏桌子使用的协程数量		暂时没用
+var GoroutineTableLua *Lua.MyLua		// 桌子lua脚本
+var GoroutineTableLuaLuaReloadTime int  // 公共逻辑处理的lua更新时间
 
 func main() {
+
+	runtime.GOMAXPROCS(4)
 
 	fmt.Println("-------------------读取本地配置文件---------------------------")
 	initSetting()
@@ -92,7 +98,9 @@ func main() {
 	fmt.Println("-------------------游戏公共逻辑处理器---------------------------")
 	CommonLogicInit()
 	CommonLogicStart()
-	CreateGoroutineForLuaGameTable()
+
+	//fmt.Println("-------------------多核桌子逻辑处理器---------------------------")
+	//CreateGoroutineForLuaGameTable()
 
 	fmt.Println("-------------------启动gameManager---------------------------")
 	CommonLua.GoCallLuaLogic("GoCallLuaStartGamesServers")
@@ -122,15 +130,18 @@ func main() {
 	//}
 
 	// ----------------------主循环计时器----------------------------------------
-	tickerCheckUpdateData := time.NewTicker(time.Second * 5)		// 每5秒触发一次计时器，用于定期更新数据库的通用配置信息
-	defer tickerCheckUpdateData.Stop()
+	//tickerCheckUpdateData := time.NewTicker(time.Second * 5)		// 每5秒触发一次计时器，用于定期更新数据库的通用配置信息
+	//defer tickerCheckUpdateData.Stop()
 
 	for {
-		select {
-		case <-tickerCheckUpdateData.C:
-			// 定期更新后台的配置数据
-			UpdateDBSetting()
-		}
+		//select {
+		//case <-tickerCheckUpdateData.C:
+		//	// 定期更新后台的配置数据
+		//	UpdateDBSetting()
+		//}
+
+		CommonLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") 		// 给lua的桌子用的 n个协程函数
+		time.Sleep(time.Millisecond * 1000)		//给其他协程让出1秒的时间， 这个可以后期调整
 	}
 	
 
@@ -191,6 +202,7 @@ func UpdateDBSetting() {
 	// 从服务器更新lua热更新的时间戳
 	GlobalVar.LuaReloadTime = 1111
 	CommonLogicLuaReloadCheck()		//共有逻辑检查一下是否需要更新, 玩家部分每个连接自己检查
+	//GoroutineTableLuaReloadCheck()
 	
 
 
@@ -261,23 +273,56 @@ func CommonLogicStart() {
 		CommonLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
 	}, 5)
 
+	// 创建计时器，定期去run公共逻辑
+	ztimer.TimerCheckUpdate(func() {
+		// 定期更新后台的配置数据
+		UpdateDBSetting()
+	}, 5)
+
 	ztimer.TimerClock12(func() {		// 创建计时器，夜里12点触发
 		CommonLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
 	})
 
 }
 
-// 一次性创建好多个协程给lua的桌子使用
-func CreateGoroutineForLuaGameTable() {
-	CommonLua.GoCallLuaLogicInt("GoCallLuaSetGoRoutineMax", GoroutineMax)	// 把上限传递给lua
-
-	for i:=1;i<= GoroutineMax;i++{
-		go func() {
-			for {
-				functionName := "GoCallLuaGoRoutineForLuaGameTable"+strconv.Itoa(i)
-				CommonLua.GoCallLuaLogic(functionName) 		// 给lua的桌子用的 n个协程函数
-			}
-			time.Sleep(time.Millisecond * 1000)		//给其他协程让出1秒的时间， 这个可以后期调整
-		}()
-	}
-}
+////----------------------------------------------------桌子逻辑部分-------------------------------------------------------------------
+//
+//// 一次性创建好多个协程给lua的游戏使用，GoroutineMax的数量跟cpu有几个核数量一样效率比较高
+//func CreateGoroutineForLuaGameTable() {
+//
+//	GoroutineTableLua = make([]*Lua.MyLua,GoroutineMax+1)
+//	GoroutineTableLuaLuaReloadTime = make([]int,GoroutineMax+1)
+//
+//	for i:=1;i<= GoroutineMax;i++{
+//		GoroutineTableLua[i] = Lua.NewMyLua()
+//		GoroutineTableLua[i].Init() // 绑定lua脚本
+//		//Lua.GoCallLuaTest(CommonLua.L,1)
+//		GoroutineTableLuaLuaReloadTime[i] = GlobalVar.LuaReloadTime
+//
+//		GoroutineTableLua[i].GoCallLuaLogicInt("GoCallLuaSetGoRoutineMax", GoroutineMax)	// 把上限传递给lua
+//
+//		// run tables
+//		go func(index int) {
+//			for {
+//				functionName := "GoCallLuaGoRoutineForLuaGameTable"+strconv.Itoa(index)
+//				//fmt.Println("",functionName)
+//				GoroutineTableLua[i].GoCallLuaLogic(functionName) 		// 给lua的桌子用的 n个协程函数
+//				time.Sleep(time.Millisecond * 1000)		//给其他协程让出1秒的时间， 这个可以后期调整
+//			}
+//		}(i)
+//	}
+//}
+//// 检查通用逻辑部分的lua是否需要更新
+//func GoroutineTableLuaReloadCheck() {
+//	for i:=1;i<= GoroutineMax;i++ {
+//		if GoroutineTableLuaLuaReloadTime[i] == GlobalVar.LuaReloadTime {
+//			return
+//		}
+//		// 如果跟本地的lua时间戳不一致，就更新
+//		err = GoroutineTableLua[i].GoCallLuaReload()
+//		if err == nil {
+//			// 热更新成功
+//			GoroutineTableLuaLuaReloadTime[i] = GlobalVar.LuaReloadTime
+//		}
+//	}
+//}

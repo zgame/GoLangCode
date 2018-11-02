@@ -7,35 +7,58 @@
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 --- go 来创建和调用的游戏管理器， 管理器管理很多游戏， 每个游戏管理桌子和玩家
+--- 新添加游戏步骤：1, 定义类型 2 AddGame  3 在games.lua里面定义根据不同的游戏定义不同的桌子 4 创建一个新游戏的桌子.lua文件
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 
 require("games")
 
 -- 游戏类型的常量定义
-local GameTypeBY  = 1   -- 普通捕鱼
-local GameTypeBY2 = 2   -- 精灵捕鱼
-local GameTypeBY3 = 3   -- ** 捕鱼
+GameTypeBY  = 1   -- 普通捕鱼
+GameTypeBY2 = 2   -- 精灵捕鱼
+GameTypeBY3 = 3   -- ** 捕鱼
 
 GoRoutineMax = 4      --桌子使用的go routine函数上限
-GoRoutineAllList = {}   -- 所有的go routine列表
+GoRoutineAllList = {}   -- 所有的go routine列表，桌子的run函数在里面
 
 local AllGamesList = {}
+AllUserUUID = 0   -- 玩家uid的自增
 
+
+-----------------------------------服务器启动-------------------------------------
 -- 服务器开始创建各个游戏
 function GoCallLuaStartGamesServers()
+    --CreateAllGoRoutineGameTable()   --创建桌子使用的goroutine函数列表
+    GetALLUserUUID()
+
     AddGame("满贯捕鱼", GameTypeBY)
     --AddGame("满贯捕鱼2", GameTypeBY2)
     --AddGame("满贯捕鱼3", GameTypeBY3)
 
-    CreateAllGoRoutineGameTable()   --创建桌子使用的goroutine函数列表
     Logger("--------------StartGamesServers  End--------------------------")
 end
 
+-----------------------------------玩家-------------------------------------
+-- 服务器启动的时候， 从数据库中读取玩家最后的uid
+function GetALLUserUUID()
+    --这个要从数据库读取
 
+    --如果读取数据是0，那么就重置
+    if ALLUserUUID == 0 then
+        ALLUserUUID = 1000000000
+    end
+end
+--有一个新的玩家注册了，那么给他分配一个UID
+function GetLastUserID()
+    local r = math.random(0, 4)        --返回[0,5)的随机整数
+    ALLUserUUID = ALLUserUUID + r            -- 玩家的UID 中间会隔一些数字， 防止玩家挨个去猜UID
+    return ALLUserUUID
+end
+
+-----------------------------------游戏-------------------------------------
 --增加一个游戏， 指定这个游戏的类型， 并且创建一个桌子，并启动桌子逻辑
 function AddGame(name, gameType)
-    game = Game:New(name, gameType,true)
+    local game = Game:New(name, gameType,true)
     AllGamesList[gameType] = game
 
     Logger("--------------AddGame--------------------------")
@@ -43,80 +66,99 @@ function AddGame(name, gameType)
 
 end
 
-
 --通过gameID获取是哪个游戏
 function GetGameByID(gameTypeID)
     return AllGamesList[gameTypeID]
 end
 
 
+-----------------------------------桌子-------------------------------------
+-- 遍历所有的列表，然后依次run
+function  GoCallLuaGoRoutineForLuaGameTable()
+    if #GoRoutineAllList > 0 then
+        for _, v in pairs(GoRoutineAllList) do
+            v() -- 执行注册的函数，table run
+        end
+    end
+end
+-- 然后注册TableRun
+function  FindGoRoutineAndRegisterTableRun(func)
+    local len = #GoRoutineAllList +1
+    GoRoutineAllList[len]=func  --注册TableRun函数
+end
 ------------------------------------------------------------------------------------------------------
 --- 利用多核的go协程
 ------------------------------------------------------------------------------------------------------
-
-function GoCallLuaSetGoRoutineMax(num)
-    GoRoutineMax = num
-end
-
-
--- 为了提高性能，go创建好多个协程给桌子使用， 这样游戏桌子可以使用多协程，提高并发效果
-function CreateAllGoRoutineGameTable()
-
-    for i=1, GoRoutineMax do
-        GoRoutineAllList[i] = {}
-        print("CreateAllGoRoutineGameTable:",i)
-    end
-
-
-end
-
--- 遍历所有的列表，然后依次run
-function  GoCallLuaGoRoutineForLuaGameTable(index)
-    for _, v in pairs(GoRoutineAllList[index]) do
-        v()         -- 执行注册的函数，table run
-    end
-end
-
--- 查找协程最少的routine ,然后注册TableRun
-function  FindGoRoutineAndRegisterTableRun(func)
-    local min = #GoRoutineAllList[1]
-    local minIndex = 1
-    for i=2, GoRoutineMax do
-        if #GoRoutineAllList[i] < min then
-            min = #GoRoutineAllList[i]
-            minIndex = i
-        end
-    end
-    GoRoutineAllList[minIndex][func]=func  -- 找到最少的组， 然后注册TableRun函数
-end
-
-
-
-function GoCallLuaGoRoutineForLuaGameTable1()
-    GoCallLuaGoRoutineForLuaGameTable(1)
-end
-function GoCallLuaGoRoutineForLuaGameTable2()
-    GoCallLuaGoRoutineForLuaGameTable(2)
-end
-function GoCallLuaGoRoutineForLuaGameTable3()
-    GoCallLuaGoRoutineForLuaGameTable(3)
-end
-function GoCallLuaGoRoutineForLuaGameTable4()
-    GoCallLuaGoRoutineForLuaGameTable(4)
-end
-
 --
---function GoCallLuaGoRoutineForLuaGameTable5()
---    GoCallLuaGoRoutineForLuaGameTable(5)
+--function GoCallLuaSetGoRoutineMax(num)
+--    GoRoutineMax = num
 --end
---function GoCallLuaGoRoutineForLuaGameTable6()
---    GoCallLuaGoRoutineForLuaGameTable(6)
+--
+--
+---- 为了提高性能，go创建好多个协程给桌子使用， 这样游戏桌子可以使用多协程，提高并发效果
+--function CreateAllGoRoutineGameTable()
+--
+--    for i=1, GoRoutineMax do
+--        GoRoutineAllList[i] = {}
+--        print("CreateAllGoRoutineGameTable:",i)
+--    end
+--
+--
 --end
---function GoCallLuaGoRoutineForLuaGameTable7()
---    GoCallLuaGoRoutineForLuaGameTable(7)
+--
+---- 遍历所有的列表，然后依次run
+--function  GoCallLuaGoRoutineForLuaGameTable(index)
+----    Logger("" .. index)
+----    Logger("len"..#GoRoutineAllList[index])
+--    if #GoRoutineAllList[index] > 0 then
+--        for _, v in pairs(GoRoutineAllList[index]) do
+--            --Logger("GoCallLuaGoRoutineForLuaGameTable"..tostring(index))
+--            v() -- 执行注册的函数，table run
+--        end
+--    end
 --end
---function GoCallLuaGoRoutineForLuaGameTable8()
---    GoCallLuaGoRoutineForLuaGameTable(8)
+--
+---- 查找协程最少的routine ,然后注册TableRun
+--function  FindGoRoutineAndRegisterTableRun(func)
+--    local min = #GoRoutineAllList[1]
+--    local minIndex = 1
+--    for i=2, GoRoutineMax do
+--        if #GoRoutineAllList[i] < min then
+--            min = #GoRoutineAllList[i]
+--            minIndex = i
+--        end
+--    end
+--    local len = #GoRoutineAllList[minIndex] +1
+--    GoRoutineAllList[minIndex][len]=func  -- 找到最少的组， 然后注册TableRun函数
 --end
-
+--
+--
+--
+--function GoCallLuaGoRoutineForLuaGameTable1()
+--    GoCallLuaGoRoutineForLuaGameTable(1)
+--end
+--function GoCallLuaGoRoutineForLuaGameTable2()
+--    GoCallLuaGoRoutineForLuaGameTable(2)
+--end
+--function GoCallLuaGoRoutineForLuaGameTable3()
+--    GoCallLuaGoRoutineForLuaGameTable(3)
+--end
+--function GoCallLuaGoRoutineForLuaGameTable4()
+--    GoCallLuaGoRoutineForLuaGameTable(4)
+--end
+--
+----
+----function GoCallLuaGoRoutineForLuaGameTable5()
+----    GoCallLuaGoRoutineForLuaGameTable(5)
+----end
+----function GoCallLuaGoRoutineForLuaGameTable6()
+----    GoCallLuaGoRoutineForLuaGameTable(6)
+----end
+----function GoCallLuaGoRoutineForLuaGameTable7()
+----    GoCallLuaGoRoutineForLuaGameTable(7)
+----end
+----function GoCallLuaGoRoutineForLuaGameTable8()
+----    GoCallLuaGoRoutineForLuaGameTable(8)
+----end
+--
 

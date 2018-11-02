@@ -5,10 +5,7 @@
 ---
 
 
--------------------------------------Logger----------------------------------------
-package.path = "Script/Logger/?.lua;"..package.path
-require("logger")
-Logger("=============================Game Server Start ....==============================")
+
 
 -------------------------------------system----------------------------------------
 
@@ -20,7 +17,7 @@ require("commonLogic")
 require("hotReload")
 require("Const")
 Logger("system ok")
-
+--
 -------------------------------------protocol buffer----------------------------------------
 package.path = "Script/Protocol/build/?.lua;"..package.path
 package.path = "Script/Protocol/protobuf/?.lua;"..package.path

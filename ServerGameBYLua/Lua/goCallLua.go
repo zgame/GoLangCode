@@ -37,7 +37,7 @@ func (m *MyLua) GoCallLuaLogic(funcName string) {
 		NRet: 0,
 		Protect: true,
 	}); err != nil {		// 参数
-		fmt.Println("GoCallLuaLogic error :",err.Error())
+		fmt.Println("GoCallLuaLogic error :",funcName, "      ",err.Error())
 	}
 }
 
@@ -48,7 +48,7 @@ func (m *MyLua)GoCallLuaNetWorkReceive(data string) {
 		NRet: 0,
 		Protect: true,
 	},lua.LString(data)); err != nil {		// 参数
-		fmt.Println("GoCallLuaNetWorkReceive  error :",err.Error())
+		fmt.Println("GoCallLuaNetWorkReceive  error :",data, "      ",err.Error())
 	}
 }
 
@@ -59,6 +59,6 @@ func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
 		NRet: 0,
 		Protect: true,
 	},lua.LNumber(ii)); err != nil {		// 参数
-		fmt.Println("GoCallLuaLogicInt error :",err.Error())
+		fmt.Println("GoCallLuaLogicInt error :", funcName ,"      ",err.Error())
 	}
 }
