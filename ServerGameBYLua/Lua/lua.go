@@ -42,6 +42,7 @@ func (m *MyLua)Init()   {
 	if err := m.L.DoFile("Script/main.lua"); err != nil {
 		fmt.Println("加载main.lua文件出错了！")
 		fmt.Println(err.Error())
+		panic("--------------error-----------------")
 	}
 	//DoCompiledFile(m.L, GlobalVar.LuaCodeToShare)
 	//return m.L

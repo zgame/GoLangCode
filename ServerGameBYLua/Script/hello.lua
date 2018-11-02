@@ -38,7 +38,7 @@ end
 -- 类的调用方法---------------------------------------------------------------
 
 print('--------自增-------------')
-counter = Counter:new(1)
+counter = Game:new(1)
 
 
 helloNum = counter:incr(helloNum)

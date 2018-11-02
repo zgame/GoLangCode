@@ -5,12 +5,15 @@
 ---
 
 -- 网络发送函数
-function NetWorkSend()
-    LuaCallGoNetWorkSend()
+-- LuaCallGoNetWorkSend(string)
+-- 这个函数是go实现的，lua直接调用LuaCallGoNetWorkSend即可
+function NetWorkSend(string)
+    luaCallGoNetWorkSend(string)
 end
+
 
 -- 网络接收函数
 function GoCallLuaNetWorkReceive(data)
     print("lua收到了消息：",data)
-    LuaCallGoNetWorkSend("lua想发送消息")
+    luaCallGoNetWorkSend("lua想发送消息")
 end

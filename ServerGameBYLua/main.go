@@ -45,7 +45,7 @@ var err error
 
 var CommonLua *Lua.MyLua		// 公共部分lua脚本
 var CommonLogicLuaReloadTime int  // 公共逻辑处理的lua更新时间
-
+var GoroutineMax int 			// 给lua的游戏桌子使用的协程数量
 
 func main() {
 
@@ -70,8 +70,8 @@ func main() {
 
 	Player.GetALLUserUUID()			// 获取玩家的总体分配UUID
 
-	//-------------------------------------创建各个游戏，以后新增游戏，要在这里增加进去即可-----------------------------------
-	Games.AddGame("满贯捕鱼", Games.GameTypeBY)
+	////-------------------------------------创建各个游戏，以后新增游戏，要在这里增加进去即可-----------------------------------
+	//Games.AddGame("满贯捕鱼", Games.GameTypeBY)
 	//Client.AddGame("满贯捕鱼2", Client.GameTypeBY2)
 	//Client.AddGame("满贯捕鱼3", Client.GameTypeBY3)
 	// 后续更多游戏可添加到此处...
@@ -92,6 +92,10 @@ func main() {
 	fmt.Println("-------------------游戏公共逻辑处理器---------------------------")
 	CommonLogicInit()
 	CommonLogicStart()
+	CreateGoroutineForLuaGameTable()
+
+	fmt.Println("-------------------启动gameManager---------------------------")
+	CommonLua.GoCallLuaLogic("GoCallLuaStartGamesServers")
 
 	fmt.Println("-------------------读取数据库设置---------------------------")
 	UpdateDBSetting()
@@ -166,7 +170,7 @@ func initSetting()  {
 	WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
 	SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
 	RedisAddress = f.Section("Server").Key("SocketServer").String()
-
+	GoroutineMax ,err  = f.Section("Server").Key("GoroutineMax").Int()
 	log.CheckError(err)
 }
 
@@ -238,6 +242,7 @@ func CommonLogicInit() {
 	CommonLogicLuaReloadTime = GlobalVar.LuaReloadTime
 }
 
+// 检查通用逻辑部分的lua是否需要更新
 func CommonLogicLuaReloadCheck() {
 	if CommonLogicLuaReloadTime == GlobalVar.LuaReloadTime {
 		return
@@ -253,12 +258,26 @@ func CommonLogicLuaReloadCheck() {
 func CommonLogicStart() {
 	// 创建计时器，定期去run公共逻辑
 	ztimer.TimerCheckUpdate(func() {
-		CommonLua.GoCallLuaCommonLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
+		CommonLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
 	}, 5)
 
 	ztimer.TimerClock12(func() {		// 创建计时器，夜里12点触发
-		CommonLua.GoCallLuaCommonLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
+		CommonLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
 	})
 
+}
 
+// 一次性创建好多个协程给lua的桌子使用
+func CreateGoroutineForLuaGameTable() {
+	CommonLua.GoCallLuaLogicInt("GoCallLuaSetGoRoutineMax", GoroutineMax)	// 把上限传递给lua
+
+	for i:=1;i<= GoroutineMax;i++{
+		go func() {
+			for {
+				functionName := "GoCallLuaGoRoutineForLuaGameTable"+strconv.Itoa(i)
+				CommonLua.GoCallLuaLogic(functionName) 		// 给lua的桌子用的 n个协程函数
+			}
+			time.Sleep(time.Millisecond * 1000)		//给其他协程让出1秒的时间， 这个可以后期调整
+		}()
+	}
 }

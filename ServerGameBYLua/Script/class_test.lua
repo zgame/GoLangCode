@@ -4,24 +4,24 @@
 --- DateTime: 2018/10/8 17:14
 ---
 
-Counter = {}
-
-function Counter:new(v)
-    c = {value = v or 0}
-    setmetatable(c,self)
-    self.__index = self
-    return c
-end
-
-
-function Counter:incr(v)
-    self.value = self.value + v
-    return self.value
-end
-
-
-function Counter:get()
-    return self.value
-end
+--Game = {}
+--
+--function Game:new(v)
+--    c = {value = v or 0}
+--    setmetatable(c,self)
+--    self.__index = self
+--    return c
+--end
+--
+--
+--function Game:incr(v)
+--    self.value = self.value + v
+--    return self.value
+--end
+--
+--
+--function Game:get()
+--    return self.value
+--end
 
 

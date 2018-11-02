@@ -5,7 +5,6 @@
 ---
 
 
-function loger()
-
-
+function Logger(str)
+    luaCallGoPrintLogger(str)
 end

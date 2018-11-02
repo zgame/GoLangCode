@@ -3,6 +3,7 @@ package Lua
 import (
 	"github.com/yuin/gopher-lua"
 	"fmt"
+	"../Utils/log"
 )
 
 //--------------------------------------------------------------------------------
@@ -15,7 +16,9 @@ import (
 func (m *MyLua)InitResister() {
 	// Lua调用go函数声明
 	//m.L.SetGlobal("double", m.L.NewFunction(Double))
-	m.L.SetGlobal("LuaCallGoNetWorkSend", m.L.NewFunction(NetWorkSend))		//注册到lua网络发送函数
+	m.L.SetGlobal("luaCallGoNetWorkSend", m.L.NewFunction(luaCallGoNetWorkSend))		//注册到lua 网络发送函数
+	m.L.SetGlobal("luaCallGoPrintLogger", m.L.NewFunction(luaCallGoPrintLogger))		//注册到lua 日志打印
+	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
 
 	//加载protobuf
 	luaopen_pb(m.L)
@@ -25,6 +28,11 @@ func (m *MyLua)InitResister() {
 func GetMyServerByLSate(L *lua.LState) *MyServer {
 	return LuaConnectMyServer[L]
 }
+
+
+//------------------------------------------------------------------------------------------------------------------------
+// 下面是lua 和 go 的交互函数
+//------------------------------------------------------------------------------------------------------------------------
 
 //// test
 //func Double(L *lua.LState) int {
@@ -38,7 +46,7 @@ func GetMyServerByLSate(L *lua.LState) *MyServer {
 //}
 
 // lua发送网络数据
-func NetWorkSend(L *lua.LState) int {
+func luaCallGoNetWorkSend(L *lua.LState) int {
 	str := L.ToString(1)
 
 	// 发送出去
@@ -48,3 +56,25 @@ func NetWorkSend(L *lua.LState) int {
 
 	return 0			// 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
 }
+
+// lua的日志处理
+func luaCallGoPrintLogger(L * lua.LState) int  {
+	str := L.ToString(1)
+	log.PrintLogger(str)
+	return 0
+}
+//
+//// lua 创建一个go协程
+//func luaCallGoCreateGoroutine(L * lua.LState) int  {
+//	funcName := L.ToString(1)
+//	go func() {
+//		if err := L.CallByParam(lua.P{
+//			Fn: L.GetGlobal(funcName),		// lua的函数名字
+//			NRet: 0,
+//			Protect: true,
+//		}); err != nil {		// 参数
+//			fmt.Println("luaCallGoCreateGoroutine error :",err.Error())
+//		}
+//	}()
+//	return 0
+//}

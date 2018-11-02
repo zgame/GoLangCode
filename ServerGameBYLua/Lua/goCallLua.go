@@ -9,7 +9,7 @@ import (
 // go 调用 lua的函数
 //--------------------------------------------------------------------------------
 
-// ----------------test----------------------------------
+// ----------------测试用例--------------------------------
 func GoCallLuaTest(L *lua.LState, num int)  {
 	// 这里是go调用lua的函数
 	if err := L.CallByParam(lua.P{
@@ -31,13 +31,13 @@ func GoCallLuaTest(L *lua.LState, num int)  {
 }
 
 // -------------------go触发lua函数，不带参数和返回值-------------------
-func (m *MyLua)GoCallLuaCommonLogic(funcName string) {
+func (m *MyLua) GoCallLuaLogic(funcName string) {
 	if err := m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
 		NRet: 0,
 		Protect: true,
 	}); err != nil {		// 参数
-		fmt.Println("GoCallLuaCommonLogic error :",err.Error())
+		fmt.Println("GoCallLuaLogic error :",err.Error())
 	}
 }
 
@@ -49,5 +49,16 @@ func (m *MyLua)GoCallLuaNetWorkReceive(data string) {
 		Protect: true,
 	},lua.LString(data)); err != nil {		// 参数
 		fmt.Println("GoCallLuaNetWorkReceive  error :",err.Error())
+	}
+}
+
+// ------------------------go 给lua传递 1个 int-----------------------------------------------
+func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
+	if err := m.L.CallByParam(lua.P{
+		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
+		NRet: 0,
+		Protect: true,
+	},lua.LNumber(ii)); err != nil {		// 参数
+		fmt.Println("GoCallLuaLogicInt error :",err.Error())
 	}
 }

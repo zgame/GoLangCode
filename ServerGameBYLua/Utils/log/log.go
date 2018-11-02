@@ -23,4 +23,12 @@ func CheckError(e error) bool{
 	return false
 }
 
+func PrintLogger(str string) {
+	file, _ := os.OpenFile("Logger.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
+	logger := log.New(file, "", log.LstdFlags)
+	logger.Println("[Log:]", str)
+	if ShowLog{
+		fmt.Println("Log："+str)
+	}
+}
 
