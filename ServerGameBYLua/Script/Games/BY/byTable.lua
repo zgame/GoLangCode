@@ -69,10 +69,10 @@ function ByTable:InitTable()
 
 end
 --------------------------------------------------------------------------------
----玩家逻辑
+--------------玩家逻辑----------------------------------------------------------
 --------------------------------------------------------------------------------
 
--------判断桌子是有人，还是空桌子------------------
+-----判断桌子是有人，还是空桌子
 function ByTable:CheckTableEmpty()
     if #self.UserSeatArray>0 then
         return false
@@ -81,23 +81,23 @@ function ByTable:CheckTableEmpty()
     return true -- 空桌子
 end
 
--------- 获取桌子的所有玩家------------------
+----获取桌子的所有玩家-
 function ByTable:GetUsersSeatInTable()
 
 end
 
-----------获取桌子的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
+-----获取桌子的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
 function ByTable:GetEmptySeatInTable()
 
 end
 
--------------玩家坐到椅子上-------------------------------
+----玩家坐到椅子上
 function ByTable:PlayerSeat(seatID,user)
     self.UserSeatArray[seatID] = user
 end
-------- 玩家离开椅子 ------------------
+----玩家离开椅子
 function ByTable:PlayerStandUp(seatID,user)
-    table.remove(self.UserSeatArray,seatID)
+    self.UserSeatArray[seatID] = nil
     -- 清理掉玩家所有子弹
     self:DelBullets(user.UserId)
     --如果是空桌子的话，清理一下桌子
@@ -106,14 +106,15 @@ function ByTable:PlayerStandUp(seatID,user)
     end
 end
 
----------清理桌子----------------------
+-----清理桌子
 function ByTable:ClearTable()
 
 end
 
 --------------------------------------------------------------------------------
----子弹
+----------------------子弹------------------------------------------------------
 --------------------------------------------------------------------------------
+---
 -----玩家发射一个新的子弹
 function ByTable:FireBullet(player , lockFishId)
     local num = player.ActivityBulletNum
@@ -147,5 +148,92 @@ function ByTable:HitFish(userId ,bulletId, fishId)
     end
 
     -- 删除鱼
+    self:DelFish(fishId)
+end
+
+----删除特定id的子弹
+function ByTable:DelBullet(bulletId)
+    local bullet = self.BulletArray[bulletId]
+    if bullet ~= nil then
+        self.BulletArray[bulletId] = nil
+    end
+    if #self.BulletArray == 0 then
+        self.GenerateBulletUid = 0  --重置一下生成子弹uuid
+    end
+end
+
+---- 删除所有子弹， 1 如果传入玩家uid，删除玩家的  ； 2  如果传入 -1 ，那么删除所有的
+function ByTable:DelBullets(userId)
+    if userId == -1 then
+        self.BulletArray = {}
+        return
+    end
+    for k,v in pairs(self.BulletArray) do
+        if v.UserID == userId then
+            self.BulletArray[k] = nil
+        end
+    end
+    if #self.BulletArray == 0 then
+        self.GenerateBulletUid = 0  --重置一下生成子弹uuid
+    end
+end
+
+----------------------------------------------------------------------------
+------------------------------鱼-----------------------------------------
+---------------------------------------------------------------------------
+
+----新建一个新的鱼
+function ByTable:CreateFish()
+    local fish = Fish:New(self.GenerateFishUid)
+    self.FishArray[fish.FishUID] = fish
+    self.GenerateFishUid = self.GenerateFishUid  + 1
+    return fish
+end
+
+--- 获取鱼的句柄
+function ByTable:GetFish(fishId)
+    return self.FishArray[fishId]
+end
+
+----删除特定uid的鱼
+function ByTable:DelFish(fishId)
+    local fish = self.FishArray[fishId]
+    if fish ~=nil then
+        self.FishArray[fishId] = nil
+    end
+    if #self.FishArray == 0 then
+        self.GenerateFishUid = 0  --重置一下生成鱼uuid
+    end
+
+end
+
+---清空所有的鱼群
+function ByTable:DelFishes()
+    self.FishArray = {}
+    self.GenerateFishUid = 0  --重置一下生成鱼uuid
+end
+
+
+----玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
+function ByTable:SendSceneFishes(user)
+
+end
+
+--- 给所有玩家同步新建的鱼的信息
+function ByTable:SendNewFishes(fish)
+
+end
+
+----------------------------------------------------------------------------
+-----------------------------消息同步-----------------------------------------
+----------------------------------------------------------------------------
+
+-----给桌上的所有玩家同步消息
+function ByTable:SendMsgToAllUsers(sendCmd,mainCmd,subCmd)
+
+end
+
+----给桌上的其他玩家同步消息
+function ByTable:SendMsgToOtherUsers(userId,sendCmd,mainCmd,subCmd)
 
 end

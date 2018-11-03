@@ -8,9 +8,9 @@
 
 Fish = {}
 
-function Fish:New()
+function Fish:New(uid)
     c = {
-        FishUID = 0, --UID
+        FishUID = uid, --UID
         FishKindID = 0, -- 鱼的表中的类型， 是小丑鱼，娃娃鱼，还是锤头鲨
         FishType = 0, -- 鱼大的分类类型， 是大鱼，小鱼，中鱼，还是boss
 
