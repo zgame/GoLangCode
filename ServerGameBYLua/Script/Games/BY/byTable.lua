@@ -3,7 +3,7 @@
 --- Created by Administrator.
 --- DateTime: 2018/11/1 14:59
 ---
-
+local FishServerExcel = require("mgby_fish_sever")
 require("byBullet")
 require("byFish")
 
@@ -17,7 +17,7 @@ function ByTable:New(tableId,gameTypeId)
         TableMax = BY_TABLE_MAX_PLAYER, --桌子容纳玩家数量
         RoomScore = 0,  --房间分数
 
-        UserSeatArray = {},  -- 座椅对应玩家uid的哈希表 ， key ： seat ，value： 玩家uid
+        UserSeatArray = {},  -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
 
 
         GenerateFishUid = 0, -- 生成鱼的uid
@@ -69,7 +69,7 @@ function ByTable:InitTable()
 
 end
 --------------------------------------------------------------------------------
---------------玩家逻辑----------------------------------------------------------
+--------------玩家----------------------------------------------------------
 --------------------------------------------------------------------------------
 
 -----判断桌子是有人，还是空桌子
@@ -83,17 +83,29 @@ end
 
 ----获取桌子的所有玩家-
 function ByTable:GetUsersSeatInTable()
-
+    local userList = {}
+    for i=1,BY_TABLE_MAX_PLAYER do
+        if self.UserSeatArray[i] ~= nil then
+            -- 说明有人在座位上
+            table.insert(userList,self.UserSeatArray[i])
+        end
+    end
+    return userList
 end
 
 -----获取桌子的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
 function ByTable:GetEmptySeatInTable()
-
+    for i=1,BY_TABLE_MAX_PLAYER do
+        if self.UserSeatArray[i] ~= nil then
+            return i        -- 返回当前空着的座位号(1,2,3,4)
+        end
+    end
+    return -1   -- 座位满了
 end
 
 ----玩家坐到椅子上
-function ByTable:PlayerSeat(seatID,user)
-    self.UserSeatArray[seatID] = user
+function ByTable:PlayerSeat(seatID,player)
+    self.UserSeatArray[seatID] = player
 end
 ----玩家离开椅子
 function ByTable:PlayerStandUp(seatID,user)
@@ -108,6 +120,17 @@ end
 
 -----清理桌子
 function ByTable:ClearTable()
+    -- 清理一下生成鱼的结构
+    self.DistributeArray = {}
+    self.BossDistributeArray = {}
+
+    -- 清理掉所有子弹和鱼群
+    self:DelBullets(-1)
+    self:DelFishes()
+
+    self.BulletArray = {}
+    self.FishArray = {}
+    self.UserSeatArray = {}
 
 end
 
@@ -235,5 +258,21 @@ end
 
 ----给桌上的其他玩家同步消息
 function ByTable:SendMsgToOtherUsers(userId,sendCmd,mainCmd,subCmd)
+
+end
+
+
+----------------------------------------------------------------------------
+-----------------------------生成鱼池-----------------------------------------
+----------------------------------------------------------------------------
+----初始化鱼池的生成组----------------------------
+function ByTable:InitDistributeInfo(roomScore)
+    local startId = roomScore * 100
+    local endId = startId + 100
+
+    for k,v in pairs(FishServerExcel) do
+        
+
+    end
 
 end

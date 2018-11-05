@@ -25,6 +25,7 @@ type Serverlist struct {
 	Max_player int
 	Nginx_addr string `xorm:"varchar(40)"`
 	Daemon int
+	Daemon_address string `xorm:"varchar(200)"`
 
 	//Ip string `xorm:"varchar(40)"`
 }

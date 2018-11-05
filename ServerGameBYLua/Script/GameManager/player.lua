@@ -11,12 +11,12 @@
 
 Player = {}
 
-function Player:New()
+function Player:New(user)
     c = {
-        User = nil,  -- user数据
+        User = user,  -- user数据
 
-        TableID = 0 ,  -- 桌子id
-        ChairID = 0,   -- 椅子id
+        TableID = TABLE_CHAIR_NOBODY ,  -- 桌子id
+        ChairID = TABLE_CHAIR_NOBODY,   -- 椅子id
         ActivityBulletNum = 0,   --当前已经发射的子弹数量
     }
     setmetatable(c, self)

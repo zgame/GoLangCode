@@ -416,8 +416,26 @@ func (this *Client)GameAI(ReLoginTime int)  {
 	if ReLoginTime >0 && time.Now().After(this.ReloginTime){
 		// 在client初始化的时候创建了时间， 1分钟左右， 这里到期之后， 就断线重连
 		fmt.Println(".......到时间了..........")
-		this.logoutGS()
+
 		this.StartAI = false
+
+
+
+
+		// index ++ 这样这个连接就会变更下一个mac地址，继续连接
+		this.Index += AllUserNum
+
+		rad := rand.Intn(2)
+		if rad == 1 {
+			// 正常退出
+			this.logoutGS()
+			fmt.Println("正常退出")
+		}else {
+			// 不正常退出，不发消息
+			this.ConnectLoginServer() // 重新登录登录服务器
+			fmt.Println("不正常退出")
+		}
+
 		return
 	}
 

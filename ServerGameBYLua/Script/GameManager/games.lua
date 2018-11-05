@@ -17,10 +17,10 @@ function Game:New(name,gameTypeId, switch)
         Id = gameTypeId,
         Switch = switch,    -- 游戏是否开启
 
-        AllTableList = {},  -- 所有桌子列表
-        TableUUID = 0,
+        AllTableList = {},  -- 所有桌子列表       key tableUid  ,value table
+        TableUUID = 1 ,     -- tableUid 从1开始
 
-        AllUserList = {},   -- 所有玩家列表
+        AllUserList = {},   -- 所有玩家列表   key  userId , value player
     }
     setmetatable(c,self)
     self.__index = self
@@ -32,7 +32,7 @@ end
 -----------------------------管理桌子---------------------------
 ----------------------------------------------------------------
 
--- 创建桌子，并启动它
+-- 创建桌子，并启动它， 参数带底分的， 不同底分的房间可以在一起管理，因为逻辑一样的，进入的时候判断一下，引导玩家进入不同底分的桌子
 function Game:CreateTable(gameType,gameScore)
     local table_t
     if gameType == GameTypeBY then
@@ -57,7 +57,7 @@ function Game:CreateTable(gameType,gameScore)
     -- 桌子开始自行启动计算
     table_t:RunTable()
 
-
+    return table_t
 
 end
 
@@ -75,11 +75,45 @@ function Game:GetUserByUID(uid)
 end
 
 -- 有玩家登陆游戏，想进入对应分数的房间
-function PlayerLoginGame()
+function Game:PlayerLoginGame(user,gameScore)
+    local player = Player:New(user)
+    self.AllUserList[user.UserId] = player      --创建好之后加入玩家总列表
+
+    --然后找一个有空位的桌子让玩家加入游戏
+    for k,v in pairs(self.AllTableList) do
+        if v.RoomScore == gameScore then    -- 进入底分一致的桌子
+            local seatId = v:GetEmptySeatInTable()
+            if seatId > 0 then
+                print("有空座位")
+                v:InitTable()    -- 看看是不是空桌子，如果是，需要初始化
+
+                v:PlayerSeat(seatId,player)
+                player.TableID = v.TableID
+                player.ChairID = seatId
+
+                return v.TableID
+            end
+        end
+    end
+
+    print("没有空座位的房间了，创建一个吧,  score".. gameScore)
+    local gameType = self.AllTableList[1].GameID
+    local table = self:CreateTable(gameType, gameScore)
+    local seatId = table:GetEmptySeatInTable()  --获取空椅位
+    table:InitTable()
+    table:PlayerSeat(seatId,player)     --让玩家坐下.
+    player.TableID = table.TableID
+    player.ChairID = seatId
+    return table.TableID
 
 end
 
 --玩家登出
-function PlayerLogOutGame()
+function Game:PlayerLogOutGame(player)
+    local table = Game:GetTableByUID(player.TableID)
+    table:PlayerStandUp(player.ChairID, player.User)        -- 玩家离开桌子
+    player.TableID = TABLE_CHAIR_NOBODY
+    player.ChairID = TABLE_CHAIR_NOBODY
 
+    print("玩家"..player.User.UserId.."离开了")
 end

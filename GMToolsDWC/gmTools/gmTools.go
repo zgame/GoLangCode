@@ -366,7 +366,7 @@ func ShowAllServerNum() int {
 	num = len(mwGlobal.model.items)
 
 	if outTE !=nil {
-		outTE.SetText(fmt.Sprintf("版本号：V1.16  (增加中心服守护)    服务器总数：%d", num))
+		outTE.SetText(fmt.Sprintf("版本号：V1.18  (增加serverlist多游戏守护)    服务器总数：%d", num))
 	}
 	return 0
 }

@@ -40,6 +40,8 @@ var UseFire bool
 var GameKindID int
 var ReLoginTime int
 
+var AllUserNum int			// 同时在线玩家数量
+
 // 程序入口
 func main() {
 	f, err := ini.Load("Setting.ini")
@@ -51,6 +53,9 @@ func main() {
 	GameServer  = f.Section("Server").Key("GameServer").Value()
 	ClientStart,err   := f.Section("Server").Key("ClientStart").Int()
 	ClientEnd ,err   := f.Section("Server").Key("ClientEnd").Int()
+
+	AllUserNum = ClientEnd - ClientStart
+
 	ShowLog ,err   = f.Section("Server").Key("ShowLog").Int()
 	SkillID ,err   = f.Section("Server").Key("SkillID").Int()
 	FireCD ,err   = f.Section("Server").Key("FireCD").Int()
@@ -177,7 +182,7 @@ func (c *Client) ConnectGameServer(addr string)  {
 }
 
 
-func (c *Client) ConnectLoginServer()  {
+func (c *Client) ConnectLoginServer() {
 	c.Conn.Close()
 
 	addr := LoginServer

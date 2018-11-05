@@ -19,7 +19,7 @@ func watchGameServer()  {
 
 	f, _ := ini.Load("Setting.ini")
 	watch,_ := f.Section("Daemon").Key("switch").Bool()
-	gameDir := f.Section("Daemon").Key("dir").Value()
+	//gameDir := f.Section("Daemon").Key("dir").Value()
 
 	centerId,_ := f.Section("Daemon").Key("center_id").Int()
 	centerDir := f.Section("Daemon").Key("center_dir").Value()
@@ -67,7 +67,11 @@ func watchGameServer()  {
 									serverId := v2.Serverid
 									serverName := v2.Room_name
 
-									cmd := "cmd.exe /c \"start " + gameDir + " /ServerID:" + strconv.Itoa(serverId) + " /ServerName:" + serverName
+									//拉起守护进程
+									// 老版本，读配置文件
+									//cmd := "cmd.exe /c \"start " + gameDir + " /ServerID:" + strconv.Itoa(serverId) + " /ServerName:" + serverName
+									// 新版本，读数据库
+									cmd := "cmd.exe /c \"start " + v2.Daemon_address + " /ServerID:" + strconv.Itoa(serverId) + " /ServerName:" + serverName
 
 									//转换一下到gb2312
 									enc := mahonia.NewEncoder("gb2312")
