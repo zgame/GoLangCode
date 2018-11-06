@@ -16,13 +16,15 @@ function Bullet:New(id)
         FireAngle = 0, -- 发射的角度
         BulletMulriple = 0, -- 倍率
         lockFishID = 0, -- 锁定鱼的ID
-        DeadTime = 0, -- 过期时间
+        DeadTime = GetOsTimeMillisecond() + 20 * 1000 , -- 过期时间 20秒
     }
     setmetatable(c, self)
     self.__index = self
     return c
 end
 
-function Bullet:Run()
-
+function Bullet:Run(table)
+    if GetOsTimeMillisecond() > self.DeadTime then
+        table:DelBullet(self.BulletUID)     -- 生存时间已经到了，销毁
+    end
 end

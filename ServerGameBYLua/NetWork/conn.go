@@ -5,7 +5,7 @@ import (
 )
 
 type Conn interface {
-	ReadMsg() ([]byte, error)
+	ReadMsg() ([]byte, int, error)
 	WriteMsg(args ...[]byte) error
 	LocalAddr() net.Addr
 	RemoteAddr() net.Addr

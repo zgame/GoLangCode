@@ -109,17 +109,18 @@ func (tcpConn *TCPConn) RemoteAddr() net.Addr {
 	return tcpConn.conn.RemoteAddr()
 }
 
-func (tcpConn *TCPConn) ReadMsg() ([]byte, error) {
+func (tcpConn *TCPConn) ReadMsg() ([]byte, int, error) {
 	//return tcpConn.msgParser.Read(tcpConn)
 	msgData := make([]byte, 1024)
 	//if _, err := io.ReadFull(tcpConn.conn, msgData); err != nil {
 	//	return nil, err
 	//}
-	if _, err := tcpConn.conn.Read(msgData); err != nil {
-		return nil, err
+	Len,err := tcpConn.conn.Read(msgData)
+	if err != nil {
+		return nil,0, err
 	}
 
-	return msgData, nil
+	return msgData,Len, nil
 	//return tcpConn.msgParser.Read(tcpConn)
 }
 

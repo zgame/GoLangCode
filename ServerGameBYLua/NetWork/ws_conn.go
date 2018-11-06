@@ -101,9 +101,10 @@ func (wsConn *WSConn) RemoteAddr() net.Addr {
 }
 
 // goroutine not safe
-func (wsConn *WSConn) ReadMsg() ([]byte, error) {
+func (wsConn *WSConn) ReadMsg() ([]byte, int,error) {
 	_, b, err := wsConn.conn.ReadMessage()
-	return b, err
+	Len:= len(b)
+	return b, Len,err
 }
 
 

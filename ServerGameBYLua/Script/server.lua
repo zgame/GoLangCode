@@ -5,24 +5,35 @@
 ---
 
 
-
+-------------------------------------protocol buffer----------------------------------------
+package.path = "Script/Protocol/build/?.lua;"..package.path
+package.path = "Script/Protocol/protobuf/?.lua;"..package.path
+--require("protocol_test")
+Logger("protocol buffer ok")
 
 -------------------------------------system----------------------------------------
 
 package.path = "Script/NetWork/?.lua;"..package.path
 package.path = "Script/GameCommonLogic/?.lua;"..package.path
 package.path = "Script/HotReload/?.lua;"..package.path
+package.path = "Script/Const/?.lua;"..package.path
+package.path = "Script/Utils/?.lua;"..package.path
+require("Const")
+require("protocol_cs")
+require("protocol_gs")
+require("protocol_ls")
+
+
 require("network")
 require("commonLogic")
 require("hotReload")
-require("Const")
+require("Time")
+require("Random")
+require("dumpTable")
+
 Logger("system ok")
 --
--------------------------------------protocol buffer----------------------------------------
-package.path = "Script/Protocol/build/?.lua;"..package.path
-package.path = "Script/Protocol/protobuf/?.lua;"..package.path
-require("protocol_test")
-Logger("protocol buffer ok")
+
 -------------------------------------CSV----------------------------------------
 package.path = "Script/CSV/?.lua;"..package.path
 data_csv1 = require("mgby_fish_sever")

@@ -4,7 +4,7 @@
 --- DateTime: 2018/11/2 16:48
 ---
 
-
+local FishServerExcel = require("mgby_fish_sever")
 
 Fish = {}
 
@@ -33,6 +33,36 @@ function Fish:New(uid)
     return c
 end
 
-function Fish:Run()
+function Fish:Run(table)
+    if GetOsTimeMillisecond() > self.DeadTime then
+        print("鱼生存时间到了")
+        table:DelFish(self.FishUID)
+    end
 
+end
+
+-- 创建一条鱼
+function Fish:CreateFish(kindId,x,y,PathID)
+    local now = GetOsTimeMillisecond()
+    local speed = FishServerExcel[kindId].speed
+    local Mulriple = FishServerExcel[kindId].mulriple
+    local CapturePro = FishServerExcel[kindId].capture_probability
+    local totalAliveTime = 120
+
+    self.FishKindID = kindId
+    self.FishType = FishServerExcel[kindId].type
+    self.CreateTime = now
+    self.TotalAliveTime = totalAliveTime
+    self.DeadTime = now + self.TotalAliveTime * 1000
+    self.Speed = speed
+    self.PathID = PathID
+    self.Mulriple = Mulriple
+    self.CapturePro = CapturePro
+
+    return self
+end
+
+-- 获取鱼的分数
+function Fish:GetFishScore()
+    return FishServerExcel[self.FishKindID].gold_multiples
 end

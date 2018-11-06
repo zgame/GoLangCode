@@ -4,16 +4,46 @@
 --- DateTime: 2018/10/12 14:56
 ---
 
+require("gameNetwork")
+
 -- 网络发送函数
--- LuaCallGoNetWorkSend(string)
--- 这个函数是go实现的，lua直接调用LuaCallGoNetWorkSend即可
-function NetWorkSend(string)
-    luaCallGoNetWorkSend(string)
+function LuaNetWorkSend(msgId,subMsgId,string,err)
+    luaCallGoNetWorkSend(msgId,subMsgId,string,err)
 end
 
 
 -- 网络接收函数
-function GoCallLuaNetWorkReceive(data)
-    Logger("lua收到了消息：",data)
-    luaCallGoNetWorkSend("lua想发送消息")
+function GoCallLuaNetWorkReceive(msgId,subMsgId,data)
+    Logger("lua收到了消息："..msgId)
+    Logger("lua收到了消息："..subMsgId)
+    Logger("lua收到了消息："..data)
+    ReceiveMsg(msgId,subMsgId,data)
+
+--    LuaNetWorkSend(msgId,subMsgId,"lua想发送消息", "")
+end
+
+
+-- 根据命令进行分支处理
+function ReceiveMsg(msgId,subMsgId,data)
+    if msgId == MDM_MB_LOGON  then
+        if subMsgId == SUB_MB_GUESTLOGIN  then
+            print("**************游客登录服申请******************* ")
+        end
+    elseif msgId == MDM_GR_LOGON  then
+        if subMsgId == SUB_GR_LOGON_USERID  then
+            print("**************游客登录游戏服申请******************* ")
+            SevLoginGSGuest(data)
+
+        end
+    elseif msgId == MDM_GF_FRAME  then
+        if subMsgId == SUB_GF_GAME_OPTION  then
+            print("**************游游客进入大厅申请***************** ")
+        end
+    elseif msgId == MDM_GF_GAME  then
+        if subMsgId == SUB_C_USER_FIRE  then
+            print("**************客户端开火***************** ")
+        elseif msgId == SUB_C_CATCH_FISH  then
+            print("*************客户端抓鱼***************** ")
+        end
+    end
 end

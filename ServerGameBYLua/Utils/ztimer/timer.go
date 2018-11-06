@@ -36,3 +36,6 @@ func TimerClock12(f func()) {
 	}()
 }
 
+func GetOsTimeMillisecond()  int64{
+	return time.Now().UnixNano() / int64(time.Millisecond)
+}

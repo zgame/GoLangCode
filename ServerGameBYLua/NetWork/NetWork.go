@@ -8,6 +8,7 @@ import (
 	"net"
 )
 
+// 这个函数在lua中没有使用
 func Send(Conn net.Conn, sendCmd proto.Message, mainCmd uint16, subCmd uint16, msg string) {
 	// 把外面组合好的protocol数据包传进来
 	protoData, _ := proto.Marshal(sendCmd)

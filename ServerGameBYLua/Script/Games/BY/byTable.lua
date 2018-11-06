@@ -6,6 +6,7 @@
 local FishServerExcel = require("mgby_fish_sever")
 require("byBullet")
 require("byFish")
+require("byFishDistribute")
 
 ByTable = {}
 
@@ -42,24 +43,22 @@ function ByTable:RunTable()
 
     -- 开始桌子的主循环
     local RunTable = function()
-        print("RunTable")
+
         if self:CheckTableEmpty() then
             print("这是一个空桌子")
         else
+            self:RunDistributeInfo(table.GetRoomScore())
+            self:RunBossDistributeInfo(table.GetRoomScore())
 
-            --self:RunDistributeInfo(table.GetRoomScore())
-            --self:RunBossDistributeInfo(table.GetRoomScore())
+            for k,bullet in pairs(self.BulletArray) do
+                bullet:BulletRun(self)      -- 遍历所有子弹，并且run
+            end
+            for k,fish in pairs(self.FishArray) do
+                fish:FishRun(self)              --遍历所有鱼，并且run
+            end
 
-
-            --for _,bullet :=range self.BulletArray{
-            --bullet.BulletRun(table)				// 遍历所有子弹，并且run
-            --}
-            --for _,fish :=range self.FishArray{
-            --fish.FishRun(table)					// 遍历所有鱼，并且run
-            --}
 
         end
-
 
     end
     FindGoRoutineAndRegisterTableRun(RunTable)    -- 注册开始一个新的协程
@@ -270,9 +269,110 @@ function ByTable:InitDistributeInfo(roomScore)
     local startId = roomScore * 100
     local endId = startId + 100
 
-    for k,v in pairs(FishServerExcel) do
-        
+    for fishKind,v in pairs(FishServerExcel) do
+        if v.is_use == 1 and fishKind > startId and fishKind < endId then
+            local distribute = FishDistribute:New()
+            distribute.FishKindID = fishKind
+
+            distribute.CreateTime = GetOsTimeMillisecond()               --生成时间
+            distribute.DistributeIntervalTime = distribute:GetIntervalTime(fishKind)      --获取时间间隔
+
+            local fishType = v.type
+            if fishType == FT_BOSS then
+                table.insert(self.BossDistributeArray, distribute)  --加入到Boss鱼生成列表中
+            else
+                table.insert(self.DistributeArray, distribute)      --加入到普通鱼生成列表中
+            end
+        end
+    end
+    print("桌子初始化鱼池结束")
+end
+
+----循环鱼池的生成组
+function ByTable:RunDistributeInfo(roomScore)
+    local now = GetOsTimeMillisecond()
+    for k,Distribute in pairs(self.DistributeArray) do
+        local kindId = Distribute.FishKindID
+        -- 到下一个生成时间了, 那么我们来生成鱼吧
+        if now >  Distribute.CreateTime + Distribute.DistributeIntervalTime then
+            print("生成时间到了")
+            local createType = 0   --鱼怎么走
+            local buildNum = 0      -- 鱼生成数量
+            local max = FishServerExcel[kindId].count_max
+            if max > 1 then
+                -- 多生成几条鱼
+                buildNum =  Distribute:GetCount(kindId)
+                print("随机生成"..buildNum.."条鱼")
+                if buildNum < 1 then
+                    buildNum = 1
+                else
+                    createType = 1  --生成一条路径的
+                    if buildNum >=5 or ZRandomPercentRate(50) then
+                        createType = 2  --位置要做偏移
+                    end
+                end
+                Distribute.NextCreateTime = now
+                Distribute.NextInterBuildTime = Distribute:GetCountFishTime(kindId)
+            end
+            Distribute.BuildNumber = buildNum
+            Distribute.CreateTime = now
+            Distribute.DistributeIntervalTime = Distribute:GetIntervalTime(kindId)
+            Distribute.CreateType = createType                  --创建类型
+            Distribute.FirstPathID = Distribute:GetPathType()    -- 获取路径
+
+            -- 创建鱼
+            self:DistributeNewFish(Distribute,0,0)
+        end
+
+        -- 多条鱼的判断
+        if Distribute.BuildNumber > 1 then
+            if now > Distribute.NextCreateTime + Distribute.NextInterBuildTime then
+                print("生成多条鱼"..kindId)
+                local offsetX = 0
+                local offsetY = 0
+                Distribute.NextCreateTime = now
+                Distribute.BuildNumber = Distribute.BuildNumber - 1
+                Distribute.NextInterBuildTime = Distribute:GetCountFishTime(kindId)
+                if Distribute.CreateType == 2 then
+                    -- 位置偏移
+                    offsetX = Distribute:GetOffsetXY()[1]
+                    offsetY = Distribute:GetOffsetXY()[2]
+                end
+                -- 创建鱼
+                self:DistributeNewFish(Distribute,offsetX,offsetY)
+            end
+        end
 
     end
+end
+
+-----循环Boss鱼池的生成组
+function ByTable:RunBossDistributeInfo(roomScore)
+    local now = GetOsTimeMillisecond()
+    for k,Distribute in pairs(self.BossDistributeArray) do
+        --到下一个生成时间了, 那么我们来生成鱼吧
+        if now > Distribute.CreateTime + Distribute.DistributeIntervalTime then
+            local kindId = Distribute.FishKindID
+            local buildNum = 1   -- 鱼生成数量
+            Distribute.BuildNumber = buildNum
+            Distribute.CreateTime = now
+            Distribute.DistributeIntervalTime = Distribute:GetIntervalTime(kindId)
+            Distribute.FirstPathID = Distribute:GetPathType()    -- 获取路径
+
+            self:DistributeNewFish(Distribute,0,0)
+        end
+    end
+end
+
+
+---- 具体生成鱼
+function ByTable:DistributeNewFish(Distribute,offsetX,offsetY)
+    local kindId = Distribute.FishKindID
+    -- 创建鱼
+    local fish = self:CreateFish()
+    fish:CreateFish(kindId,offsetY,offsetY,Distribute.FirstPathID)
+
+    -- 发送给所有客户端生成鱼的消息
+    self:SendNewFishes(fish)
 
 end

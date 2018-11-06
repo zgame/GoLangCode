@@ -42,13 +42,13 @@ func (m *MyLua) GoCallLuaLogic(funcName string) {
 }
 
 // -------------------go传递接收到的网络数据包给lua-------------------
-func (m *MyLua)GoCallLuaNetWorkReceive(data string) {
+func (m *MyLua)GoCallLuaNetWorkReceive(msgId int , subMsgId int ,buf string) {
 	if err := m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal("GoCallLuaNetWorkReceive"),		// lua的函数名字
 		NRet: 0,
 		Protect: true,
-	},lua.LString(data)); err != nil {		// 参数
-		fmt.Println("GoCallLuaNetWorkReceive  error :",data, "      ",err.Error())
+	}, lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf)); err != nil {		// 参数
+		fmt.Println("GoCallLuaNetWorkReceive  error :",msgId , subMsgId, buf, "      ",err.Error())
 	}
 }
 

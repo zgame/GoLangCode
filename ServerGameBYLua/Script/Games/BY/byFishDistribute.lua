@@ -4,7 +4,7 @@
 --- DateTime: 2018/11/5 14:23
 ---
 
-
+local FishServerExcel = require("mgby_fish_sever")
 
 FishDistribute = {}
 
@@ -26,4 +26,45 @@ function FishDistribute:New()
     self.__index = self
     return c
 end
+
+----获取生成时间间隔
+function FishDistribute:GetIntervalTime(kindId)
+    -- 获取时间间隔
+    local DistributeIntervalMin = FishServerExcel[kindId].distribute_interval_min
+    local DistributeIntervalMax = FishServerExcel[kindId].distribute_interval_max
+
+    return GetRandom(DistributeIntervalMin,DistributeIntervalMax)
+end
+----获取生成数量间隔
+function FishDistribute:GetCount(kindId)
+    -- 获取时间间隔
+    local DistributeIntervalMin = FishServerExcel[kindId].count_min
+    local DistributeIntervalMax = FishServerExcel[kindId].count_max
+
+    return GetRandom(DistributeIntervalMin,DistributeIntervalMax)
+end
+----多条鱼生成时间间隔
+function FishDistribute:GetCountFishTime(kindId)
+    -- 获取时间间隔
+    local DistributeIntervalMin = FishServerExcel[kindId].time_min
+    local DistributeIntervalMax = FishServerExcel[kindId].time_max
+
+    return GetRandom(DistributeIntervalMin,DistributeIntervalMax)
+end
+
+----获取路径的类型
+function FishDistribute:GetPathType()
+    return 1
+end
+
+----获得路径位置偏移
+function FishDistribute:GetOffsetXY()
+    local offset = {{0,0}, {-1,1}, {-0.5,1},{0,1},{0.5,1},{1,1},
+    {-1,0.5}, {-0.5,0.5},{0,0.5},{0.5,0.5},{1,0.5},{-1,1},{1,0},
+    {-1,-0.5}, {-0.5,-0.5},{0,-0.5},{0.5,-0.5},{1,-0.5},
+    {-1,-1}, {-0.5,-1},{0,-1},{0.5,-1},{1,-1}}
+
+    return offset[GetRandom(1,23)]
+end
+
 

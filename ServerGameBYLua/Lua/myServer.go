@@ -35,20 +35,66 @@ func (a *MyServer) Run() {
 	a.Init()
 	//fmt.Println("----logic start---")
 	for {
-		data, err := a.conn.ReadMsg()
+		buf,bufLen, err := a.conn.ReadMsg()
 		if err != nil {
 			fmt.Println("跟对方的连接中断了")
 			break
 		}
-		fmt.Println("收到消息------------", string(data))
-		a.myLua.GoCallLuaNetWorkReceive(string(data))		// 把收到的数据传递给lua进行处理
+		//fmt.Println("收到消息------------", string(buf))
+		bufHead := 0
+		num:=0
+		for {
+			//fmt.Println(" buf ",buf)
+			//fmt.Println(" bufsize ",bufLen)
+			bufTemp := buf[bufHead:bufLen]         //要处理的buffer
+			bufHead += a.HandlerRead(bufTemp) //处理结束之后返回，接下来要开始的范围
+			//time.Sleep(time.Millisecond * 100)
+			//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
+			num++
+			//fmt.Println("num",num)
+			if bufHead >= bufLen{
+				break
+			}
+		}
 
-		a.WriteMsg([]byte("服务器收到你的消息-------" + string(data)))
+
+		//a.myLua.GoCallLuaNetWorkReceive(string(data))		// 把收到的数据传递给lua进行处理
+		//a.WriteMsg([]byte("服务器收到你的消息-------" + string(data)))
 
 
 		a.CheckLuaReload()		// 检查lua脚本是否需要更新
 	}
 }
+
+func (a * MyServer)HandlerRead(buf []byte) int {
+	msgId, subMsgId, bufferSize, ver := NetWork.DealRecvTcpDeaderData(buf)
+
+	offset := 10
+
+	//fmt.Println("len(buf)",len(buf))
+	//fmt.Println("offset",offset)
+	//fmt.Println("bufferSize",bufferSize)
+
+	if len(buf) < offset + int(bufferSize){
+		fmt.Println("出现数据包异常")
+		return  int(bufferSize) + offset
+	}
+
+	if ver > 0{
+		offset = 12		// version == 1 的时候， 加了一个token
+	}
+	finalBuffer := buf[offset:offset + int(bufferSize)]
+	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
+	//fmt.Println("")
+	a.myLua.GoCallLuaNetWorkReceive(int(msgId),int(subMsgId),string(finalBuffer))		// 把收到的数据传递给lua进行处理
+
+
+	return int(bufferSize) + offset
+
+}
+
+
+
 
 func (a *MyServer) OnClose() {
 	a.myLua.L.Close()		// 关闭lua调用
