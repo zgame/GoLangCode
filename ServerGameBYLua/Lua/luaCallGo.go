@@ -20,16 +20,13 @@ func (m *MyLua)InitResister() {
 	m.L.SetGlobal("luaCallGoNetWorkSend", m.L.NewFunction(luaCallGoNetWorkSend))		//注册到lua 网络发送函数
 	m.L.SetGlobal("luaCallGoPrintLogger", m.L.NewFunction(luaCallGoPrintLogger))		//注册到lua 日志打印
 	m.L.SetGlobal("luaCallGoGetOsTimeMillisecond", m.L.NewFunction(luaCallGoGetOsTimeMillisecond))		//注册到lua 获取毫秒时间
+	m.L.SetGlobal("luaCallGoResisterUID", m.L.NewFunction(luaCallGoResisterUID))		//注册到lua 获取毫秒时间
 	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
 
 	//加载protobuf
 	luaopen_pb(m.L)
 }
 
-// 通过lua堆栈找到对应的是哪个myServer
-func GetMyServerByLSate(L *lua.LState) *MyServer {
-	return LuaConnectMyServer[L]
-}
 
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -49,38 +46,29 @@ func GetMyServerByLSate(L *lua.LState) *MyServer {
 
 // lua发送网络数据
 func luaCallGoNetWorkSend(L *lua.LState) int {
-	mainCmd := L.ToInt(1)
-	subCmd := L.ToInt(2)
-	data := L.ToString(3)
-	msg := L.ToString(4)
+	userId := L.ToInt(1)
+	mainCmd := L.ToInt(2)
+	subCmd := L.ToInt(3)
+	data := L.ToString(4)
+	msg := L.ToString(5)
 
-	// 组合一下str
-	protoData := []byte(data)
-	protoDataSize := len(protoData)
-
-	// 增加服务器的错误提示msg
-	msgData := []byte(msg)
-	msgSize :=  len(msgData)
-
-	// 生成数据包头部信息
-	bufferHead := NetWork.GetSendTcpHeaderData(uint16(mainCmd),uint16( subCmd), uint16(protoDataSize), uint8(msgSize))
-	headSize :=  len(bufferHead)
-
-
-	// 发送最后数据包
-	bufferEnd := make([]byte, protoDataSize + headSize + msgSize)
-	copy(bufferEnd, bufferHead)		// copy 数据包头部
-	copy(bufferEnd[headSize:protoDataSize + headSize], protoData)	// copy protobuffer 数据
-	copy(bufferEnd[protoDataSize + headSize:], msgData)		// copy msg 数据
+	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd)
 	//_, err := Conn.Write(bufferEnd)
 	//log.CheckError(err)
 
 	// 发送出去
-	GetMyServerByLSate(L).WriteMsg(bufferEnd)
+	if userId == 0 {
+		// 给玩家自己回复消息
+		GetMyServerByLSate(L).WriteMsg(bufferEnd)
+	}else{
+		// 给其他玩家发送消息
+		GetMyServerByUID(userId).WriteMsg(bufferEnd)
+	}
 
 	//fmt.Println("lua send :" + str)
-	return 0			// 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
+	return 0 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
 }
+
 
 // lua的日志处理
 func luaCallGoPrintLogger(L * lua.LState) int  {
@@ -108,4 +96,13 @@ func luaCallGoPrintLogger(L * lua.LState) int  {
 func luaCallGoGetOsTimeMillisecond(L *lua.LState) int {
 	L.Push(lua.LNumber(ztimer.GetOsTimeMillisecond()))
 	return 1
+}
+
+// user id 要注册，方便以后查询
+func luaCallGoResisterUID(L * lua.LState) int  {
+	uid := L.ToNumber(1)		 // 玩家uid
+	server := GetMyServerByLSate(L)		// my server
+	LuaUIDConnectMyServer[int(uid)] = server   // 进行关联
+
+	return 0
 }

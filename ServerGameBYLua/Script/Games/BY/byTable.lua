@@ -7,9 +7,12 @@ local FishServerExcel = require("mgby_fish_sever")
 require("byBullet")
 require("byFish")
 require("byFishDistribute")
+require("player")
+require("user")
+
+local CMD_Game_pb = require("CMD_Game_pb")
 
 ByTable = {}
-
 
 function ByTable:New(tableId,gameTypeId)
     c = {
@@ -24,12 +27,12 @@ function ByTable:New(tableId,gameTypeId)
         GenerateFishUid = 0, -- 生成鱼的uid
         GenerateBulletUid = 0, -- 生成子弹的uid
 
-        FishArray = {},   -- 鱼的哈希表
-        BulletArray = {},   -- 子弹的哈希表
+        FishArray = {},   -- 鱼的哈希表    uid, fish
+        BulletArray = {},   -- 子弹的哈希表   id,  bullet
 
 
-        DistributeArray = {},   -- 鱼的生成信息数据
-        BossDistributeArray = {},   -- Boss鱼的生成信息数组
+        DistributeArray = {},   -- 鱼的生成信息数据    key顺序生成1,2,3,4...  Distribute
+        BossDistributeArray = {},   -- Boss鱼的生成信息数组 key顺序生成1,2,3,4...  Distribute
     }
     setmetatable(c,self)
     self.__index = self
@@ -238,12 +241,26 @@ end
 
 ----玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
 function ByTable:SendSceneFishes(user)
+    print("鱼数量"..GetTableLen(self.FishArray))
+    local sendCmd = CMD_Game_pb.CMD_S_SCENE_FISH()
+    for k,fish in pairs(self.FishArray) do
+        local cmd = sendCmd.scene_fishs:add()
+        cmd.uid = fish.FishUID
+        cmd.kind_id = fish.FishKindID
+    end
+    LuaNetWorkSend( MDM_GF_GAME, SUB_S_SCENE_FISH, sendCmd, nil)
 
 end
 
 --- 给所有玩家同步新建的鱼的信息
 function ByTable:SendNewFishes(fish)
+    local sendCmd = CMD_Game_pb.CMD_S_DISTRIBUTE_FISH()
 
+    local cmd = sendCmd.scene_fishs:add()
+    cmd.uid = fish.FishUID
+    cmd.kind_id = fish.FishKindID
+
+    self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_DISTRIBUTE_FISH, sendCmd)
 end
 
 ----------------------------------------------------------------------------
@@ -251,13 +268,21 @@ end
 ----------------------------------------------------------------------------
 
 -----给桌上的所有玩家同步消息
-function ByTable:SendMsgToAllUsers(sendCmd,mainCmd,subCmd)
-
+function ByTable:SendMsgToAllUsers(mainCmd,subCmd,sendCmd)
+    for k,player in pairs(self.UserSeatArray) do
+        if player ~= nil and player.IsRobot == false then
+            LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
+        end
+    end
 end
 
 ----给桌上的其他玩家同步消息
 function ByTable:SendMsgToOtherUsers(userId,sendCmd,mainCmd,subCmd)
-
+    for k,player in pairs(self.UserSeatArray) do
+        if player ~= nil and player.IsRobot == false and MyUser.UserId ~= player.User.UserId  then
+            LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
+        end
+    end
 end
 
 

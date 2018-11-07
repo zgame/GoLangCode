@@ -13,6 +13,7 @@ import (
 
 
 var LuaConnectMyServer map[*lua.LState]*MyServer	// 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
+var LuaUIDConnectMyServer map[int]*MyServer     // 将uid跟连接句柄进行哈希
 
 type MyLua struct {
 	L *lua.LState
@@ -27,8 +28,17 @@ func NewMyLua() *MyLua {
 // --------------------全局变量初始化--------------------------
 func InitGlobalVar() {
 	LuaConnectMyServer = make(map[* lua.LState]*MyServer)
+	LuaUIDConnectMyServer = make(map[int]*MyServer)
 }
 
+// 通过lua堆栈找到对应的是哪个myServer
+func GetMyServerByLSate(L *lua.LState) *MyServer {
+	return LuaConnectMyServer[L]
+}
+// 通过 user id 找到对应的是哪个myServer
+func GetMyServerByUID(uid int) *MyServer {
+	return LuaUIDConnectMyServer[uid]
+}
 
 
 //----------------------对象个体初始化-----------------------
@@ -37,7 +47,6 @@ func (m *MyLua)Init()   {
 	//defer luaPool.Put(L)
 
 	m.InitResister() // 这里是统一的lua函数注册入口
-
 
 	if err := m.L.DoFile("Script/main.lua"); err != nil {
 		fmt.Println("加载main.lua文件出错了！")

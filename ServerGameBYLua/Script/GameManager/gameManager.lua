@@ -15,8 +15,9 @@ require("games")
 
 -- 游戏类型的常量定义
 GameTypeBY  = 1   -- 普通捕鱼
-GameTypeBY2 = 2   -- 精灵捕鱼
-GameTypeBY3 = 3   -- ** 捕鱼
+GameTypeBY30  = 2   -- 普通捕鱼30倍房间
+GameTypeBY2 = 3   -- 精灵捕鱼
+GameTypeBY3 = 4   -- ** 捕鱼
 
 GoRoutineMax = 4      --桌子使用的go routine函数上限
 GoRoutineAllList = {}   -- 所有的go routine列表，桌子的run函数在里面
@@ -31,7 +32,8 @@ function GoCallLuaStartGamesServers()
     --CreateAllGoRoutineGameTable()   --创建桌子使用的goroutine函数列表
     GetALLUserUUID()
 
-    AddGame("满贯捕鱼", GameTypeBY)
+    AddGame("满贯捕鱼", GameTypeBY , 1)     -- 普通房间
+    --AddGame("满贯捕鱼30倍", GameTypeBY30 , 30)    -- 30倍房间
     --AddGame("满贯捕鱼2", GameTypeBY2)
     --AddGame("满贯捕鱼3", GameTypeBY3)
 
@@ -57,13 +59,13 @@ end
 
 -----------------------------------游戏-------------------------------------
 --增加一个游戏， 指定这个游戏的类型， 并且创建一个桌子，并启动桌子逻辑
-function AddGame(name, gameType)
+function AddGame(name, gameType, gameScore)
     local game = Game:New(name, gameType,true)
     AllGamesList[gameType] = game
 
     Logger("--------------AddGame--------------------------")
-    game:CreateTable(gameType,1)
-
+    game:CreateTable(gameType,gameScore)
+    game.gameScore = gameScore
 end
 
 --通过gameID获取是哪个游戏

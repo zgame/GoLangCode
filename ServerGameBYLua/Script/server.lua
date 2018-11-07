@@ -30,6 +30,7 @@ require("hotReload")
 require("Time")
 require("Random")
 require("dumpTable")
+require("zTable")
 
 Logger("system ok")
 --

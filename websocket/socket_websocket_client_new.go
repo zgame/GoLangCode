@@ -14,14 +14,14 @@ import (
 
 
 func main() {
-	IsWebSocket := true
+	IsWebSocket := false
 
-	if false {
+	if true {
 		// socket client----------------------------------------------------------
 		var clients []*NetWork.TCPClient
 
 		client := new(NetWork.TCPClient)
-		client.Addr = "127.0.0.1:8088"
+		client.Addr = "127.0.0.1:8123"
 		client.ConnNum = 1
 		client.ConnectInterval = 3 * time.Second
 		client.PendingWriteNum = 100

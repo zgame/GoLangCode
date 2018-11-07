@@ -37,7 +37,7 @@ func main() {
 		fmt.Println("配置文件出错")
 		return
 	}
-	LoginServer := f.Section("Server").Key("LoginServer").Value()
+	//LoginServer := f.Section("Server").Key("LoginServer").Value()
 	GameServer  = f.Section("Server").Key("GameServer").Value()
 	ClientStart,err   := f.Section("Server").Key("ClientStart").Int()
 	ClientEnd ,err   := f.Section("Server").Key("ClientEnd").Int()
@@ -45,8 +45,8 @@ func main() {
 
 
 
-	addr := LoginServer
-	tcpAddr, _ := net.ResolveTCPAddr("tcp", addr)
+	//addr := LoginServer
+	//tcpAddr, _ := net.ResolveTCPAddr("tcp", addr)
 
 	//num := ClientNum					// 压测客户端数量
 
@@ -63,15 +63,15 @@ func main() {
 			defer w.Done()
 
 			fmt.Println("connection:", i)
-			conn, e := net.DialTCP("tcp", nil, tcpAddr)
-			if e != nil {
-				fmt.Println(i, e)
-				return
-			}
-			defer conn.Close()
+			//conn, e := net.DialTCP("tcp", nil, tcpAddr)
+			//if e != nil {
+			//	fmt.Println(i, e)
+			//	return
+			//}
+			//defer conn.Close()
 
 
-			clients := &Client{conn, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0}
+			clients := &Client{nil, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0}
 			clients.Gameinfo = clients.Gameinfo.New()
 
 			//fmt.Println("发送登录请求",i)

@@ -5,13 +5,81 @@
 ---
 
 local CMD_GameServer_pb = require("CMD_GameServer_pb")
+local CMD_Game_pb = require("CMD_Game_pb")
+
+
+MyUser = nil    -- 这是全局的玩家句柄，因为每一个LState是一个单独的lua空间，所以每个玩家都拥有自己单独的MyPlayer句柄
+MyGame = nil
 
 ----游客登录游戏服申请
 function SevLoginGSGuest(buf)
     local msg = CMD_GameServer_pb.CMD_GR_LogonUserID()
     msg:ParseFromString(buf)
 
-    print("gamekind id: ".. msg.kind_id)
-    print("user_id id: ".. msg.user_id)
+    --print("gamekind id: ".. msg.kind_id)
+    --print("user_id id: ".. msg.user_id)
+    MyGame = GetGameByID(msg.kind_id)
+    if MyGame == nil then
+        Logger("请求登录游戏类型不正确"..msg.kind_id)
+        LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
+        return
+    end
+
+    ---- 先判断该玩家是否已经登录了， 如果登录了，返回错误消息给客户端告知已经登录了，可以踢掉之前登录的账号。
+
+
+    MyUser = User:New()
+    ---- 以后增加判断，先读数据库，如果没有，创建新的玩家，如果有，读数据库
+
+
+    MyUser.FaceId = 0
+    MyUser.Gender = 0
+    MyUser.UserId = 2027445
+    MyUser.GameId = 320395999
+    MyUser.Exp = 254
+    MyUser.Loveliness = 0
+    MyUser.Score = 100000009
+    MyUser.NickName = "玩家320395999"
+    MyUser.Level = 1
+    MyUser.VipLevel = 0
+    MyUser.AccountLevel = 3
+    MyUser.SiteLevel = 0
+    MyUser.CurLevelExp = 0
+    MyUser.NextLevelExp = 457
+    MyUser.PayTotal = 0
+    MyUser.Diamond = 29
+
+    -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
+    luaCallGoResisterUID(MyUser.UserId)
+
+    -- 发送登录成功
+    local sendCmd = CMD_GameServer_pb.CMD_GR_LogonSuccess()
+    sendCmd.server_id = 99099
+
+--    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
+    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, sendCmd, nil)
+    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FINISH, nil, nil)
 
 end
+
+
+----客户端申请进入大厅
+function SevEnterScence(buf)
+    print("------------客户端申请进入大厅-------------")
+    local msg = CMD_GameServer_pb.CMD_GF_GameOption()
+    msg:ParseFromString(buf)
+
+    print("客户端申请进入大厅, GetClientVersion:"..msg.client_version)
+    --玩家登陆游戏，分配桌子
+    local table = MyGame:PlayerLoginGame(MyUser)
+    local sendCmd = CMD_Game_pb.CMD_S_ENTER_SCENE()
+    LuaNetWorkSend(  MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil) --进入房间
+
+    --LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_GAME_STATUS , nil, nil)--更新游戏状态
+    --LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_SYSTEM_MESSAGE , nil, nil)--系统消息
+    --LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_USER_SKILL , nil, nil)--玩家技能
+
+    table:SendSceneFishes()			-- 同步一下渔场的所有鱼
+
+end
+

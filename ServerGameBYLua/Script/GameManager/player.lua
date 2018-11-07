@@ -17,6 +17,8 @@ function Player:New(user)
 
         TableID = TABLE_CHAIR_NOBODY ,  -- 桌子id
         ChairID = TABLE_CHAIR_NOBODY,   -- 椅子id
+
+        IsRobot = false,            -- 是不是机器人
         ActivityBulletNum = 0,   --当前已经发射的子弹数量
     }
     setmetatable(c, self)

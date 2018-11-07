@@ -7,7 +7,7 @@
 
 --- 获取随机数
 function GetRandom(min,max)
-    math.randomseed(luaCallGoGetOsTimeMillisecond())
+    math.randomseed(GetOsTimeMillisecond())
     math.random(min,max)  -- [min,max]
 end
 

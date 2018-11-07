@@ -6,17 +6,37 @@
 
 require("gameNetwork")
 
--- 网络发送函数
-function LuaNetWorkSend(msgId,subMsgId,string,err)
-    luaCallGoNetWorkSend(msgId,subMsgId,string,err)
+
+----------------------------------------------------------------------
+---发送消息
+----------------------------------------------------------------------
+-- 玩家自己的网络发送函数
+function LuaNetWorkSend(msgId,subMsgId,sendCmd,err)
+    LuaNetWorkSendToUser(0,msgId,subMsgId,sendCmd,err)
+end
+
+-- 发送消息给其他玩家
+function LuaNetWorkSendToUser(userId,msgId,subMsgId,sendCmd,err)
+    local buffer = ""
+    if sendCmd ~= nil then
+        buffer = sendCmd:SerializeToString()
+    end
+
+    if err == nil then
+        err = ""
+    end
+    luaCallGoNetWorkSend(userId,msgId,subMsgId,buffer,err)
 end
 
 
+----------------------------------------------------------------------
+---接收消息
+----------------------------------------------------------------------
 -- 网络接收函数
 function GoCallLuaNetWorkReceive(msgId,subMsgId,data)
-    Logger("lua收到了消息："..msgId)
-    Logger("lua收到了消息："..subMsgId)
-    Logger("lua收到了消息："..data)
+    --Logger("lua收到了消息："..msgId)
+    --Logger("lua收到了消息："..subMsgId)
+    --Logger("lua收到了消息："..data)
     ReceiveMsg(msgId,subMsgId,data)
 
 --    LuaNetWorkSend(msgId,subMsgId,"lua想发送消息", "")

@@ -55,6 +55,30 @@ func Send(Conn net.Conn, sendCmd proto.Message, mainCmd uint16, subCmd uint16, m
 }
 
 
+// lua 使用的是下面的方法
+// 把要发送出去的proto buf -- data， 错误消息 msg， 命令，组合成buffer，准备发送
+func DealSendData(data string, msg string, mainCmd int, subCmd int) []byte {
+	// 组合一下str
+	protoData := []byte(data)
+	protoDataSize := len(protoData)
+	// 增加服务器的错误提示msg
+	msgData := []byte(msg)
+	msgSize := len(msgData)
+	// 生成数据包头部信息
+	bufferHead := GetSendTcpHeaderData(uint16(mainCmd), uint16(subCmd), uint16(protoDataSize), uint8(msgSize))
+	headSize := len(bufferHead)
+	// 发送最后数据包
+	bufferEnd := make([]byte, protoDataSize+headSize+msgSize)
+	copy(bufferEnd, bufferHead)
+	// copy 数据包头部
+	copy(bufferEnd[headSize:protoDataSize+headSize], protoData)
+	// copy protobuffer 数据
+	copy(bufferEnd[protoDataSize+headSize:], msgData)
+	// copy msg 数据
+	return bufferEnd
+}
+
+
 //--------------------------------------------------------------------------------------------------
 //处理头部数据
 //--------------------------------------------------------------------------------------------------
