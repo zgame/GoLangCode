@@ -44,12 +44,14 @@ var RedisAddress string		// redis 服务器地址
 var err error
 
 
-var CommonLua *Lua.MyLua		// 公共部分lua脚本
-var CommonLogicLuaReloadTime int  // 公共逻辑处理的lua更新时间
+var GameManagerLua *Lua.MyLua    // 公共部分lua脚本
+var GameManagerLuaReloadTime int // 公共逻辑处理的lua更新时间
 
-var GoroutineMax int 			// 给lua的游戏桌子使用的协程数量		暂时没用
-var GoroutineTableLua *Lua.MyLua		// 桌子lua脚本
-var GoroutineTableLuaLuaReloadTime int  // 公共逻辑处理的lua更新时间
+
+
+//var GoroutineMax int 			// 给lua的游戏桌子使用的协程数量		暂时没用
+//var GoroutineTableLua *Lua.MyLua		// 桌子lua脚本
+//var GoroutineTableLuaLuaReloadTime int  // 公共逻辑处理的lua更新时间
 
 func main() {
 
@@ -96,14 +98,15 @@ func main() {
 
 
 	fmt.Println("-------------------游戏公共逻辑处理器---------------------------")
-	CommonLogicInit()
+	GameManagerInit()
 	CommonLogicStart()
 
 	//fmt.Println("-------------------多核桌子逻辑处理器---------------------------")
 	//CreateGoroutineForLuaGameTable()
 
 	fmt.Println("-------------------启动gameManager---------------------------")
-	CommonLua.GoCallLuaLogic("GoCallLuaStartGamesServers")
+	GameManagerLua.GoCallLuaLogic("GoCallLuaStartGamesServers")
+	//StartMultiThreadChannelPlayerToGameManager()
 
 	fmt.Println("-------------------读取数据库设置---------------------------")
 	UpdateDBSetting()
@@ -140,8 +143,9 @@ func main() {
 		//	UpdateDBSetting()
 		//}
 
-		CommonLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") 		// 给lua的桌子用的 n个协程函数
-		time.Sleep(time.Millisecond * 1000)		//给其他协程让出1秒的时间， 这个可以后期调整
+		GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
+		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 给lua的桌子用的 n个协程函数
+		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
 	}
 	
 
@@ -181,7 +185,7 @@ func initSetting()  {
 	WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
 	SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
 	RedisAddress = f.Section("Server").Key("SocketServer").String()
-	GoroutineMax ,err  = f.Section("Server").Key("GoroutineMax").Int()
+	//GoroutineMax ,err  = f.Section("Server").Key("GoroutineMax").Int()
 	log.CheckError(err)
 }
 
@@ -201,7 +205,7 @@ func UpdateDBSetting() {
 
 	// 从服务器更新lua热更新的时间戳
 	GlobalVar.LuaReloadTime = 1111
-	CommonLogicLuaReloadCheck()		//共有逻辑检查一下是否需要更新, 玩家部分每个连接自己检查
+	GameManagerLuaReloadCheck() //共有逻辑检查一下是否需要更新, 玩家部分每个连接自己检查
 	//GoroutineTableLuaReloadCheck()
 	
 
@@ -246,31 +250,36 @@ func NetWorkServerStart()  {
 }
 
 //-----------------------------------游戏公共逻辑处理-------------------------------------------------------
-func CommonLogicInit() {
+func GameManagerInit() {
 
-	CommonLua = Lua.NewMyLua()
-	CommonLua.Init() // 绑定lua脚本
-	//Lua.GoCallLuaTest(CommonLua.L,1)
-	CommonLogicLuaReloadTime = GlobalVar.LuaReloadTime
+	GameManagerLua = Lua.NewMyLua()
+
+
+
+	GameManagerLua.Init() // 绑定lua脚本
+	//Lua.GoCallLuaTest(GameManagerLua.L,1)
+	GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
+
+
 }
 
 // 检查通用逻辑部分的lua是否需要更新
-func CommonLogicLuaReloadCheck() {
-	if CommonLogicLuaReloadTime == GlobalVar.LuaReloadTime {
+func GameManagerLuaReloadCheck() {
+	if GameManagerLuaReloadTime == GlobalVar.LuaReloadTime {
 		return
 	}
 	// 如果跟本地的lua时间戳不一致，就更新
-	err = CommonLua.GoCallLuaReload()
+	err = GameManagerLua.GoCallLuaReload()
 	if err == nil{
 		// 热更新成功
-		CommonLogicLuaReloadTime = GlobalVar.LuaReloadTime
+		GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
 	}
 }
 
 func CommonLogicStart() {
 	// 创建计时器，定期去run公共逻辑
 	ztimer.TimerCheckUpdate(func() {
-		CommonLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
+		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
 	}, 5)
 
 	// 创建计时器，定期去run公共逻辑
@@ -279,11 +288,21 @@ func CommonLogicStart() {
 		UpdateDBSetting()
 	}, 5)
 
-	ztimer.TimerClock12(func() {		// 创建计时器，夜里12点触发
-		CommonLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
+	ztimer.TimerClock12(func() { // 创建计时器，夜里12点触发
+		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
 	})
 
 }
+//func StartMultiThreadChannelPlayerToGameManager()  {
+//
+//	//开始开启监听线程，监听玩家消息，进行线程间通信
+//	go func() {
+//		for {
+//			GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
+//		}
+//	}()
+//
+//}
 
 ////----------------------------------------------------桌子逻辑部分-------------------------------------------------------------------
 //
@@ -296,7 +315,7 @@ func CommonLogicStart() {
 //	for i:=1;i<= GoroutineMax;i++{
 //		GoroutineTableLua[i] = Lua.NewMyLua()
 //		GoroutineTableLua[i].Init() // 绑定lua脚本
-//		//Lua.GoCallLuaTest(CommonLua.L,1)
+//		//Lua.GoCallLuaTest(GameManagerLua.L,1)
 //		GoroutineTableLuaLuaReloadTime[i] = GlobalVar.LuaReloadTime
 //
 //		GoroutineTableLua[i].GoCallLuaLogicInt("GoCallLuaSetGoRoutineMax", GoroutineMax)	// 把上限传递给lua

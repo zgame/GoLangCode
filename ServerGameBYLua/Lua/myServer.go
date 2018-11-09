@@ -32,7 +32,7 @@ func NewMyServer(conn NetWork.Conn)  *MyServer{
 
 //--------------------------各个玩家连接逻辑主循环------------------------------
 func (a *MyServer) Run() {
-	fmt.Println("--------------------------------------各个玩家连接逻辑主循环-------------------------------------")
+	fmt.Println("-------------各个玩家连接逻辑主循环---------")
 	a.Init()
 	for {
 		buf,bufLen, err := a.conn.ReadMsg()

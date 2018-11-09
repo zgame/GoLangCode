@@ -58,6 +58,7 @@ function ReceiveMsg(msgId,subMsgId,data)
     elseif msgId == MDM_GF_FRAME  then
         if subMsgId == SUB_GF_GAME_OPTION  then
             print("**************游游客进入大厅申请***************** ")
+            SevEnterScence(data)
         end
     elseif msgId == MDM_GF_GAME  then
         if subMsgId == SUB_C_USER_FIRE  then

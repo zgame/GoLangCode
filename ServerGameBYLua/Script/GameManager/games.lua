@@ -47,7 +47,7 @@ function Game:CreateTable(gameType,gameScore)
     end
     if table_t == nil then
         Logger("CreateTable error , gameType"..gameType)
-        return
+        return nil
     end
     table_t.RoomScore = gameScore
     Logger("创建了一个新的桌子,type:"..gameType)
@@ -79,6 +79,7 @@ end
 -- 有玩家登陆游戏，想进入对应分数的房间
 function Game:PlayerLoginGame(user)
     local player = Player:New(user)
+--    player.gameType =self.Id
     self.AllUserList[user.UserId] = player      --创建好之后加入玩家总列表
 
     --然后找一个有空位的桌子让玩家加入游戏
@@ -93,7 +94,7 @@ function Game:PlayerLoginGame(user)
                 player.TableID = v.TableID
                 player.ChairID = seatId
 
-                return v
+                return player
             end
         else
             print("有底分不一致的情况？"..k)
@@ -108,7 +109,7 @@ function Game:PlayerLoginGame(user)
     table:PlayerSeat(seatId,player)     --让玩家坐下.
     player.TableID = table.TableID
     player.ChairID = seatId
-    return table
+    return player
 
 end
 

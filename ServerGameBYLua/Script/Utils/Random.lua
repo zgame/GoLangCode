@@ -8,7 +8,7 @@
 --- 获取随机数
 function GetRandom(min,max)
     math.randomseed(GetOsTimeMillisecond())
-    math.random(min,max)  -- [min,max]
+    return math.random(min,max)  -- [min,max]
 end
 
 ---获取百分比方法， 比如10几率， 那么小于等于10，返回true

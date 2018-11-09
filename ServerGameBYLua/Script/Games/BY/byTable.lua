@@ -42,16 +42,15 @@ end
 ------------主循环-------------------
 function ByTable:RunTable()
     --    luaCallGoCreateGoroutine("RunTable")
-    self:InitTable()        -- 可以进行初始化
+--    self:InitTable()        -- 可以进行初始化
 
     -- 开始桌子的主循环
     local RunTable = function()
-
         if self:CheckTableEmpty() then
-            print("这是一个空桌子")
+--            print("这是一个空桌子")
         else
-            self:RunDistributeInfo(table.GetRoomScore())
-            self:RunBossDistributeInfo(table.GetRoomScore())
+            self:RunDistributeInfo(table.RoomScore)
+            self:RunBossDistributeInfo(table.RoomScore)
 
             for k,bullet in pairs(self.BulletArray) do
                 bullet:BulletRun(self)      -- 遍历所有子弹，并且run
@@ -59,8 +58,6 @@ function ByTable:RunTable()
             for k,fish in pairs(self.FishArray) do
                 fish:FishRun(self)              --遍历所有鱼，并且run
             end
-
-
         end
 
     end
@@ -68,7 +65,10 @@ function ByTable:RunTable()
 end
 
 function ByTable:InitTable()
-
+    if self:CheckTableEmpty() then
+        -- 如果桌子是空的， 那么需要初始化一下
+        self:InitDistributeInfo()
+    end
 end
 --------------------------------------------------------------------------------
 --------------玩家----------------------------------------------------------
@@ -98,7 +98,7 @@ end
 -----获取桌子的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
 function ByTable:GetEmptySeatInTable()
     for i=1,BY_TABLE_MAX_PLAYER do
-        if self.UserSeatArray[i] ~= nil then
+        if self.UserSeatArray[i] == nil then
             return i        -- 返回当前空着的座位号(1,2,3,4)
         end
     end
@@ -240,7 +240,7 @@ end
 
 
 ----玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
-function ByTable:SendSceneFishes(user)
+function ByTable:SendSceneFishes(UserId)
     print("鱼数量"..GetTableLen(self.FishArray))
     local sendCmd = CMD_Game_pb.CMD_S_SCENE_FISH()
     for k,fish in pairs(self.FishArray) do
@@ -248,15 +248,14 @@ function ByTable:SendSceneFishes(user)
         cmd.uid = fish.FishUID
         cmd.kind_id = fish.FishKindID
     end
-    LuaNetWorkSend( MDM_GF_GAME, SUB_S_SCENE_FISH, sendCmd, nil)
+    LuaNetWorkSendToUser(UserId, MDM_GF_GAME, SUB_S_SCENE_FISH, sendCmd, nil)
 
 end
 
 --- 给所有玩家同步新建的鱼的信息
 function ByTable:SendNewFishes(fish)
     local sendCmd = CMD_Game_pb.CMD_S_DISTRIBUTE_FISH()
-
-    local cmd = sendCmd.scene_fishs:add()
+    local cmd = sendCmd.fishs:add()
     cmd.uid = fish.FishUID
     cmd.kind_id = fish.FishKindID
 
@@ -290,8 +289,8 @@ end
 -----------------------------生成鱼池-----------------------------------------
 ----------------------------------------------------------------------------
 ----初始化鱼池的生成组----------------------------
-function ByTable:InitDistributeInfo(roomScore)
-    local startId = roomScore * 100
+function ByTable:InitDistributeInfo()
+    local startId = self.RoomScore * 100
     local endId = startId + 100
 
     for fishKind,v in pairs(FishServerExcel) do
@@ -316,6 +315,7 @@ end
 ----循环鱼池的生成组
 function ByTable:RunDistributeInfo(roomScore)
     local now = GetOsTimeMillisecond()
+    --printTable(self.DistributeArray)
     for k,Distribute in pairs(self.DistributeArray) do
         local kindId = Distribute.FishKindID
         -- 到下一个生成时间了, 那么我们来生成鱼吧

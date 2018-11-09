@@ -33,7 +33,8 @@ function FishDistribute:GetIntervalTime(kindId)
     local DistributeIntervalMin = FishServerExcel[kindId].distribute_interval_min
     local DistributeIntervalMax = FishServerExcel[kindId].distribute_interval_max
 
-    return GetRandom(DistributeIntervalMin,DistributeIntervalMax)
+    local re = GetRandom(DistributeIntervalMin,DistributeIntervalMax)
+    return re
 end
 ----获取生成数量间隔
 function FishDistribute:GetCount(kindId)

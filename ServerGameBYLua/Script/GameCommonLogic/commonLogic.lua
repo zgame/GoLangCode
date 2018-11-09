@@ -13,7 +13,7 @@
 
 --公共逻辑循环处理
 function GoCallLuaCommonLogicRun()
-    --print("公共逻辑循环处理")
+--    print("公共逻辑循环处理")
 end
 
 

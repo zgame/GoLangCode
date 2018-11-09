@@ -20,6 +20,8 @@ function Player:New(user)
 
         IsRobot = false,            -- 是不是机器人
         ActivityBulletNum = 0,   --当前已经发射的子弹数量
+
+        gameType = 0 ,     -- 游戏类型
     }
     setmetatable(c, self)
     self.__index = self

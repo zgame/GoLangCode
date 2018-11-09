@@ -33,7 +33,7 @@ func main() {
 
 	// 支线程
 	go start(2)
-	//go start(2)
+	go start(3)
 
 
 	//主线程
@@ -45,11 +45,17 @@ func main() {
 		fmt.Println(err.Error())
 	}
 
+	go func() {
+		for {
+			goCallLuaSelect(L)
+		}
+	}()
+
 	for{
 		fmt.Println("主循环")
-		goCallLuaSelect(L)
+		GoCallLuaLogic(L,"test")
 
-		//time.Sleep(time.Millisecond * 1000 * 1)
+		time.Sleep(time.Millisecond * 1000 * 1)
 		//select {
 		//
 		//}
@@ -208,7 +214,7 @@ func timerFunc(L *lua.LState,timer time.Duration)  {
 	//goCallLua(L,int(timer))
 
 	num++
-	goCallLuaSend(L)
+	goCallLuaSend(L, strconv.Itoa(int(timer)))
 }
 
 // Lua重新加载，Lua的热更新按钮
@@ -292,13 +298,13 @@ func goCallLuaSelect(L *lua.LState)  {
 }
 
 // go调用lua函数
-func goCallLuaSend(L *lua.LState)  {
+func goCallLuaSend(L *lua.LState,myName string)  {
 	// 这里是go调用lua的函数
 	if err := L.CallByParam(lua.P{
 		Fn: L.GetGlobal("sendzz"),
 		NRet: 0,
 		Protect: true,
-	}); err != nil {
+	},lua.LString(myName)); err != nil {
 		fmt.Println("",err.Error())
 	}
 
@@ -308,4 +314,14 @@ func goCallLuaSend(L *lua.LState)  {
 	//fmt.Println("lua return: ",ret)
 	//L.Pop(1)  // remove received value
 	//L.Pop(1)  // remove received value
+}
+
+func GoCallLuaLogic(L *lua.LState,funcName string) {
+	if err := L.CallByParam(lua.P{
+		Fn: L.GetGlobal(funcName),		// lua的函数名字
+		NRet: 0,
+		Protect: true,
+	}); err != nil {		// 参数
+		fmt.Println("GoCallLuaLogic error :",funcName, "      ",err.Error())
+	}
 }

@@ -4,12 +4,18 @@
 --- DateTime: 2018/11/1 14:34
 ---
 
+-------------------------------------CSV----------------------------------------
+package.path = "Script/CSV/?.lua;"..package.path
+--data_csv1 = require("mgby_fish_sever")
+--print(data_csv1[134].type)
+--print(data_csv1[134].min_force_killed_bullet)
+--Logger("csv ok")
 
 -------------------------------------protocol buffer----------------------------------------
 package.path = "Script/Protocol/build/?.lua;"..package.path
 package.path = "Script/Protocol/protobuf/?.lua;"..package.path
 --require("protocol_test")
-Logger("protocol buffer ok")
+--Logger("protocol buffer ok")
 
 -------------------------------------system----------------------------------------
 
@@ -18,13 +24,15 @@ package.path = "Script/GameCommonLogic/?.lua;"..package.path
 package.path = "Script/HotReload/?.lua;"..package.path
 package.path = "Script/Const/?.lua;"..package.path
 package.path = "Script/Utils/?.lua;"..package.path
+package.path = "Script/GameManager/?.lua;"..package.path
+
 require("Const")
 require("protocol_cs")
 require("protocol_gs")
 require("protocol_ls")
 
 
-require("network")
+
 require("commonLogic")
 require("hotReload")
 require("Time")
@@ -32,19 +40,12 @@ require("Random")
 require("dumpTable")
 require("zTable")
 
-Logger("system ok")
---
-
--------------------------------------CSV----------------------------------------
-package.path = "Script/CSV/?.lua;"..package.path
-data_csv1 = require("mgby_fish_sever")
---print(data_csv1[134].type)
---print(data_csv1[134].min_force_killed_bullet)
-Logger("csv ok")
+--Logger("system ok")
 
 
+require("multiThreadChannel")
+require("network")
 -------------------------------------GameManager----------------------------------------
-package.path = "Script/GameManager/?.lua;"..package.path
 require("gameManager")
 
 
