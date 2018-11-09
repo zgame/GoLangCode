@@ -27,7 +27,7 @@ AllUserUUID = 0   -- 玩家uid的自增
 
 
 -----------------------------------服务器启动-------------------------------------
--- 服务器开始创建各个游戏
+-- 服务器开始创建各个游戏，这里的游戏都是多人的游戏， 如果是单人游戏，玩家自己创建即可
 function GoCallLuaStartGamesServers()
     --CreateAllGoRoutineGameTable()   --创建桌子使用的goroutine函数列表
     GetALLUserUUID()

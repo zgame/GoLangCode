@@ -139,6 +139,14 @@ func (a *MyServer) Init()  {
 	a.myLua.Init() // 绑定lua脚本
 	a.luaReloadTime = GlobalVar.LuaReloadTime
 	LuaConnectMyServer[a.myLua.L] = a
+
+	// 以后这里可以初始化玩家自己solo的游戏服务器
+
+
+	// 以后如果有逻辑需要循环， 可以这里加一个协程，做逻辑的run
+	//go func() {
+	//	// 调用lua的逻辑run
+	//}()
 }
 
 //---------------------------热更新检查-----------------------------

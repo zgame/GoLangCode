@@ -14,8 +14,15 @@ import (
 
 var num = 0
 var codeToShare *lua.FunctionProto
+
+var ch chan lua.LValue
+var quit chan lua.LValue
+
 func main() {
-	runtime.GOMAXPROCS(1)
+	ch = make(chan lua.LValue)
+	quit = make(chan lua.LValue)
+
+	runtime.GOMAXPROCS(4)
 
 	//defer luaPool.Shutdown()
 	var err error
@@ -24,16 +31,28 @@ func main() {
 		fmt.Println("加载main.lua文件出错了！")
 	}
 
-	go start(1)
+	// 支线程
+	go start(2)
 	//go start(2)
 
 
-	//goCallLua(L)
+	//主线程
+	L := lua.NewState()
+	L.SetGlobal("ch", lua.LChannel(ch))
+	L.SetGlobal("quit", lua.LChannel(quit))
+	if err := L.DoFile("goroutine.lua"); err != nil {
+		fmt.Println("加载main.lua文件出错了！")
+		fmt.Println(err.Error())
+	}
 
 	for{
-		select {
+		fmt.Println("主循环")
+		goCallLuaSelect(L)
 
-		}
+		//time.Sleep(time.Millisecond * 1000 * 1)
+		//select {
+		//
+		//}
 	}
 
 
@@ -47,11 +66,10 @@ func start(timer time.Duration) {
 
 
 	L := lua.NewState()
-
-
 	//L := lua.NewState()
 	defer L.Close()
-
+	L.SetGlobal("ch", lua.LChannel(ch))
+	L.SetGlobal("quit", lua.LChannel(quit))
 
 	//L := luaPool.Get()
 	//defer luaPool.Put(L)
@@ -67,7 +85,7 @@ func start(timer time.Duration) {
 	//DoCompiledFile(L, codeToShare)
 
 	//// 执行lua文件
-	if err := L.DoFile("main.lua"); err != nil {
+	if err := L.DoFile("goroutine.lua"); err != nil {
 		fmt.Println("加载main.lua文件出错了！")
 		fmt.Println(err.Error())
 	}
@@ -88,6 +106,7 @@ func start(timer time.Duration) {
 	defer tickerCheckUpdateData.Stop()
 
 	for{
+		//goCallLuaSelect(L)
 		select {
 		case <-tickerCheckUpdateData.C:
 			timerFunc(L,timer)
@@ -189,7 +208,7 @@ func timerFunc(L *lua.LState,timer time.Duration)  {
 	//goCallLua(L,int(timer))
 
 	num++
-	//goCallLua(L)
+	goCallLuaSend(L)
 }
 
 // Lua重新加载，Lua的热更新按钮
@@ -252,3 +271,41 @@ func Double(L *lua.LState) int {
 	return 2                    /* number of results */
 }
 
+
+// go调用lua函数
+func goCallLuaSelect(L *lua.LState)  {
+	// 这里是go调用lua的函数
+	if err := L.CallByParam(lua.P{
+		Fn: L.GetGlobal("receivezz"),
+		NRet: 0,
+		Protect: true,
+	}); err != nil {
+		fmt.Println("",err.Error())
+	}
+
+	//ret := L.Get(1) // returned value
+	//fmt.Println("lua return: ",ret)
+	//ret = L.Get(2) // returned value
+	//fmt.Println("lua return: ",ret)
+	//L.Pop(1)  // remove received value
+	//L.Pop(1)  // remove received value
+}
+
+// go调用lua函数
+func goCallLuaSend(L *lua.LState)  {
+	// 这里是go调用lua的函数
+	if err := L.CallByParam(lua.P{
+		Fn: L.GetGlobal("sendzz"),
+		NRet: 0,
+		Protect: true,
+	}); err != nil {
+		fmt.Println("",err.Error())
+	}
+
+	//ret := L.Get(1) // returned value
+	//fmt.Println("lua return: ",ret)
+	//ret = L.Get(2) // returned value
+	//fmt.Println("lua return: ",ret)
+	//L.Pop(1)  // remove received value
+	//L.Pop(1)  // remove received value
+}

@@ -9,7 +9,7 @@ local CMD_Game_pb = require("CMD_Game_pb")
 
 
 MyUser = nil    -- 这是全局的玩家句柄，因为每一个LState是一个单独的lua空间，所以每个玩家都拥有自己单独的MyPlayer句柄
-MyGame = nil
+--MyGame = nil
 
 ----游客登录游戏服申请
 function SevLoginGSGuest(buf)
@@ -18,14 +18,15 @@ function SevLoginGSGuest(buf)
 
     --print("gamekind id: ".. msg.kind_id)
     --print("user_id id: ".. msg.user_id)
-    MyGame = GetGameByID(msg.kind_id)
-    if MyGame == nil then
-        Logger("请求登录游戏类型不正确"..msg.kind_id)
-        LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
-        return
-    end
+    --MyGame = GetGameByID(msg.kind_id)
+    --if MyGame == nil then
+    --    Logger("请求登录游戏类型不正确"..msg.kind_id)
+    --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
+    --    return
+    --end
 
     ---- 先判断该玩家是否已经登录了， 如果登录了，返回错误消息给客户端告知已经登录了，可以踢掉之前登录的账号。
+    -- 为了统一，可以用数据库来判断
 
 
     MyUser = User:New()
