@@ -32,28 +32,32 @@ func main() {
 	}
 
 	// 支线程
-	go start(2)
-	go start(3)
+	//go start(2)
+	//go start(3)
 
 
 	//主线程
 	L := lua.NewState()
 	L.SetGlobal("ch", lua.LChannel(ch))
 	L.SetGlobal("quit", lua.LChannel(quit))
-	if err := L.DoFile("goroutine.lua"); err != nil {
+
+	// 直接调用luaopen_pb
+	luaopen_pb(L)
+
+	if err := L.DoFile("main.lua"); err != nil {
 		fmt.Println("加载main.lua文件出错了！")
 		fmt.Println(err.Error())
 	}
 
-	go func() {
-		for {
-			goCallLuaSelect(L)
-		}
-	}()
+	//go func() {
+	//	for {
+	//		goCallLuaSelect(L)
+	//	}
+	//}()
 
 	for{
-		fmt.Println("主循环")
-		GoCallLuaLogic(L,"test")
+		//fmt.Println("主循环")
+		//GoCallLuaLogic(L,"test")
 
 		time.Sleep(time.Millisecond * 1000 * 1)
 		//select {
@@ -91,7 +95,7 @@ func start(timer time.Duration) {
 	//DoCompiledFile(L, codeToShare)
 
 	//// 执行lua文件
-	if err := L.DoFile("goroutine.lua"); err != nil {
+	if err := L.DoFile("main.lua"); err != nil {
 		fmt.Println("加载main.lua文件出错了！")
 		fmt.Println(err.Error())
 	}
@@ -214,7 +218,7 @@ func timerFunc(L *lua.LState,timer time.Duration)  {
 	//goCallLua(L,int(timer))
 
 	num++
-	goCallLuaSend(L, strconv.Itoa(int(timer)))
+	//goCallLuaSend(L, strconv.Itoa(int(timer)))
 }
 
 // Lua重新加载，Lua的热更新按钮
