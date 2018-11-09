@@ -91,5 +91,6 @@ function SevEnterScence(buf)
     --
     --table:SendSceneFishes()			-- 同步一下渔场的所有鱼
     MultiThreadChannelGameManagerToPlayer("SendSceneFishes",MyPlayer)
+    print("同步一下渔场的所有鱼")
 end
 

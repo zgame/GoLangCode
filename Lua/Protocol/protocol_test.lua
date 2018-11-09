@@ -59,4 +59,13 @@ print("msg**********************************************************************
 
 
 
+local CMD_Game_pb = require('CMD_Game_pb')
+
+local mm = CMD_Game_pb.tagSceneFish()
+mm.uid = 1
+
+local sendCmd = CMD_Game_pb.CCMD_S_DISTRIBUTE_FISH()
+local cmd = sendCmd.fishs:add()
+cmd.uid = 1
+cmd.kind_id = 1
 

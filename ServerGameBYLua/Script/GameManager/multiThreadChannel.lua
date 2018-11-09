@@ -24,6 +24,7 @@ local function _dealData(ok,v)
         local result = {}
         local name = v.name -- 名字
         local data = v.data -- 数据
+        Logger("玩家申请游戏管理器消息"..name)
 
         if name == "PlayerLoginGame" then       -- 玩家申请分配一个桌子
             local player = data

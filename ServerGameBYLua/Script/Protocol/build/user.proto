@@ -1,7 +1,0 @@
-syntax = "proto3";
-package tutorial;
-
-message Friend {
-    string name = 1;
-    string address = 2;
-  }

@@ -254,6 +254,8 @@ end
 
 --- 给所有玩家同步新建的鱼的信息
 function ByTable:SendNewFishes(fish)
+    print(CMD_Game_pb)
+    print(CMD_Game_pb.CMD_S_DISTRIBUTE_FISH())
     local sendCmd = CMD_Game_pb.CMD_S_DISTRIBUTE_FISH()
     local cmd = sendCmd.fishs:add()
     cmd.uid = fish.FishUID
