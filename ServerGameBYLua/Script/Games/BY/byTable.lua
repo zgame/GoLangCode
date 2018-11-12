@@ -92,7 +92,7 @@ function ByTable:GetUsersSeatInTable()
             table.insert(userList,self.UserSeatArray[i])
         end
     end
-    return userList
+    return userList     -- 元素是player对象
 end
 
 -----获取桌子的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
@@ -132,7 +132,7 @@ function ByTable:ClearTable()
 
     self.BulletArray = {}
     self.FishArray = {}
-    self.UserSeatArray = {}
+    self.UserSeatArray = {}     --  seatID    player
 
 end
 

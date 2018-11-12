@@ -82,8 +82,8 @@ function SevEnterScence(buf)
     --print("-----------------------------------------------------")
 
     --local table = MyGame:PlayerLoginGame(MyUser)
-    --local sendCmd = CMD_Game_pb.CMD_S_ENTER_SCENE()
-    --LuaNetWorkSend(  MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil) --进入房间
+    local sendCmd = CMD_GameServer_pb.CMD_S_ENTER_SCENE()
+    LuaNetWorkSend(  MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil) --进入房间
     --
     ----LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_GAME_STATUS , nil, nil)--更新游戏状态
     ----LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_SYSTEM_MESSAGE , nil, nil)--系统消息

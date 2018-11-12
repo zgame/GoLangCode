@@ -33,7 +33,7 @@ function Fish:New(uid)
     return c
 end
 
-function Fish:Run(table)
+function Fish:FishRun(table)
     if GetOsTimeMillisecond() > self.DeadTime then
         print("鱼生存时间到了")
         table:DelFish(self.FishUID)

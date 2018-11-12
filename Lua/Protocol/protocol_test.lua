@@ -62,17 +62,24 @@ print("msg**********************************************************************
 local CMD_Game_pb = require('CMD_Game_pb')
 
 local mm = CMD_Game_pb.tagSceneFish()
-mm.uid = 1
+mm.uid = 123
+
+local data = mm:SerializeToString()
+local msg = CMD_Game_pb.tagSceneFish()
+msg:ParseFromString(data)
+print("msg**********************************************************************",msg.uid)
+
+
 
 local sendCmd = CMD_Game_pb.CCMD_S_DISTRIBUTE_FISH()
 local cmd = sendCmd.fishs:add()
 cmd.uid = 1
 cmd.kind_id = 1
+local cmd2 = sendCmd.fishs:add()
+cmd2.uid = 222
+cmd2.kind_id = 234
 
-
-
-local msg = user_pb.Friend()
+local data = sendCmd:SerializeToString()
+local msg = CMD_Game_pb.CCMD_S_DISTRIBUTE_FISH()
 msg:ParseFromString(data)
-
-print("",)
-
+print("msg**********************************************************************",msg.fishs[2].uid)

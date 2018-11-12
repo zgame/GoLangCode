@@ -32,6 +32,13 @@ local function _dealData(ok,v)
             player = game:PlayerLoginGame(player.User)
             result.TableID = player.TableID
             result.ChairID = player.ChairID                 -- 把player桌子id，椅子id的数据 返回去
+            local table = game:GetTableByUID(player.TableID)
+            local playerList = table:GetUsersSeatInTable()
+            result.users = {}
+            for k,v in pairs(playerList)do
+                result.users[k] = {}
+                result.users[k].UserId =  v.User.UserId
+            end
             GameManagerSendCh:send(result)
         elseif name == "SendSceneFishes" then   -- 玩家申请下发
             local player = data
