@@ -69,3 +69,10 @@ local cmd = sendCmd.fishs:add()
 cmd.uid = 1
 cmd.kind_id = 1
 
+
+
+local msg = user_pb.Friend()
+msg:ParseFromString(data)
+
+print("",)
+

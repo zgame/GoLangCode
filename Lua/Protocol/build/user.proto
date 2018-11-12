@@ -3,12 +3,13 @@ package tutorial;
 //import "google/protobuf/timestamp.proto";
 
 
+
 message Zsw{
     string name =1;
     uint32 id = 2;
 }
 
-  
+
 message Friend {
     double zswnameb = 1;
     bool address = 2;
