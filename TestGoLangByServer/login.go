@@ -190,7 +190,12 @@ func (this *Client)handleServerList(buf []byte, bufferSize int){
 
 
 func (this *Client)loginGS() {
-	user_id := uint32(2027445)
+
+	this.User = this.User.New()
+	this.User.user_id = 2027445
+
+
+	user_id := uint32(this.User.user_id)
 	plaza_version := uint32(0)
 	frame_version := uint32(101056515)
 	process_version := uint32(101056515)

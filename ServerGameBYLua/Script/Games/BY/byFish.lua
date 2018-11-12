@@ -35,7 +35,7 @@ end
 
 function Fish:FishRun(table)
     if GetOsTimeMillisecond() > self.DeadTime then
-        print("鱼生存时间到了")
+        --print("鱼生存时间到了",self.FishUID)
         table:DelFish(self.FishUID)
     end
 
@@ -47,7 +47,7 @@ function Fish:CreateFish(kindId,x,y,PathID)
     local speed = FishServerExcel[kindId].speed
     local Mulriple = FishServerExcel[kindId].mulriple
     local CapturePro = FishServerExcel[kindId].capture_probability
-    local totalAliveTime = 120
+    local totalAliveTime = 5           -- 鱼的生存时间
 
     self.FishKindID = kindId
     self.FishType = FishServerExcel[kindId].type

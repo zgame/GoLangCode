@@ -163,7 +163,7 @@ func (this *Client)handleEnterScence(buf []byte, bufferSize int){
 	checkError(err)
 	//dataJ, _ := json.MarshalIndent(msg, "", " ")
 	//fmt.Printf("%s", dataJ)
-	//fmt.Println("----------------进入场景--------------", this.Index)
+	fmt.Println("----------------进入场景--------------", this.Index)
 	for _,v := range msg.GetTableUsers(){
 		if v.GetUserId() == uint32(this.User.user_id){
 			this.Gameinfo.chair_id = int(v.GetChairId())
@@ -192,10 +192,10 @@ func (this *Client)handleSceneFish(buf []byte, bufferSize int){
 	msg := &CMD.CMD_S_SCENE_FISH{}
 	err := proto.Unmarshal(protocolBuffer, msg)
 	checkError(err)
-	dataJ, _ := json.MarshalIndent(msg, "", " ")
-	fmt.Printf("%s", dataJ)
-	fmt.Printf("----------------场景鱼刷新-------------%d", this.Index)
-	fmt.Println("")
+	//dataJ, _ := json.MarshalIndent(msg, "", " ")
+	//fmt.Printf("%s", dataJ)
+
+	//fmt.Println("")
 
 	fish_cnt :=0
 	if this.Gameinfo.fish_pool == nil {
@@ -216,6 +216,7 @@ func (this *Client)handleSceneFish(buf []byte, bufferSize int){
 			return
 		}
 	}
+	fmt.Printf("----------------场景鱼刷新-------------%d", fish_cnt)
 
 }
 
@@ -320,7 +321,7 @@ func (this *Client)handleUserFire(buf []byte, bufferSize int){
 		var bullt BulletObj
 		bullt.bullet_id = int(msg.GetBulletId())
 		bullt.fish_id = int(msg.GetLockFishId())
-		bullt.bullet_local_id = int(msg.GetBulletTempId())
+		//bullt.bullet_local_id = int(msg.GetBulletTempId())
 		bullt.tick = time.Now()
 
 		//this.User.score = msg.GetCurrScore()

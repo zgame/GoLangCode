@@ -12,7 +12,7 @@ require("gameNetwork")
 ----------------------------------------------------------------------
 -- 玩家自己的网络发送函数
 function LuaNetWorkSend(msgId,subMsgId,sendCmd,err)
-    LuaNetWorkSendToUser(0,msgId,subMsgId,sendCmd,err)
+    LuaNetWorkSendToUser(0,msgId,subMsgId,sendCmd,err)      -- userId 如果是0的话， 就是给玩家自己回消息 ，这是在go那边定义的
 end
 
 -- 发送消息给其他玩家
@@ -63,8 +63,10 @@ function ReceiveMsg(msgId,subMsgId,data)
     elseif msgId == MDM_GF_GAME  then
         if subMsgId == SUB_C_USER_FIRE  then
             print("**************客户端开火***************** ")
+            HandleUserFire(data)
         elseif msgId == SUB_C_CATCH_FISH  then
             print("*************客户端抓鱼***************** ")
+            HandleCatchFish(data)
         end
     end
 end

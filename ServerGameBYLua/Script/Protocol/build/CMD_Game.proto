@@ -37,7 +37,30 @@ message tagUserInfo
 	optional uint32 secsitelv = 26;					//妖怪房炮等级
 	optional uint32 monster_upper = 27;				// 妖怪房炮提升倍数			
 }
+//已使用的技能
+message tagUsedSkill
+{
+	optional uint32 skill_id = 1;					//技能ID
+	optional uint32 time = 2;						//剩余时间(毫秒)
+	optional uint32 cd = 3;
+	optional uint32	used = 4;						//已使用技能数
+	optional uint32	total = 5;						//总共技能数
+	optional uint32 addSec = 6;                     //附加的技能时间
+}
+//奖池配置信息
+message tagRewardPoolOption
+{
+	optional int32  detail_cost_type = 1;         //1 gold， 2 lottery， 3.diamond
+	optional int64  detail_cost_value = 2;
+	optional uint32 player_min_stay_time = 3;      //参加奖池所需最小停留时长 （ms）
+}
 
+message tagBuff
+{
+	optional uint32 buff_id = 1;					//buffid
+	optional int32  duration = 2;					//持续时间
+	optional int32  add_ratio = 3;					//增加比例
+ }
 
 // 进入场景------------------------------------------------------------------------------------------------------------
 message CMD_S_ENTER_SCENE
@@ -70,6 +93,7 @@ message CMD_S_OTHER_ENTER_SCENE
 
 
 //场景鱼------------------------------------------------------------------------------------------------------------
+
 message tagSceneFish
 {
 	optional uint32			uid = 1;				//鱼UID
@@ -83,6 +107,11 @@ message tagSceneFish
 	optional uint32         boat_id  = 9;           //所属船的ID
 	optional uint32         alive_state = 10;       //在存活状态下子状态
 	optional bool           is_form_fish = 11;      //是否属于鱼阵的鱼
+}
+//服务器发送场景鱼
+message CMD_S_SCENE_FISH
+{
+	repeated tagSceneFish scene_fishs = 1;			//场景鱼
 }
 //生成鱼
 message CMD_S_DISTRIBUTE_FISH
@@ -141,4 +170,14 @@ message CMD_S_USE_SKILL
 	optional uint32 bind_user_id= 7;				//技能绑定的非机器人玩家ID，用来计算捕鱼发包
 	optional uint32 target_id = 8;					//目标
 	optional uint32 add_secs = 9;					//增加时间
+};
+
+//捕获鱼儿(单个)------------------------------------------------------------------------------------------------------
+message CMD_C_CATCH_FISH
+{
+	optional uint32 fish_uid = 1;					//鱼ID
+	optional uint32 bullet_id = 2;					//子弹ID
+	optional uint32 bullet_temp_id = 3;				//子弹临时ID
+	optional uint32  chair_id = 4;					//椅子ID
+	optional uint32 weakness_id = 5;                //波塞冬弱点位置
 };

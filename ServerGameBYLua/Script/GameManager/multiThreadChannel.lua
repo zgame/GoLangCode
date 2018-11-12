@@ -24,27 +24,51 @@ local function _dealData(ok,v)
         local result = {}
         local name = v.name -- 名字
         local data = v.data -- 数据
-        Logger("玩家申请游戏管理器消息"..name)
+        local player = data.Player
+        local game = GetGameByID(player.gameType)
+        if game == nil then
+            result.error = 1
+            GameManagerSendCh:send(result)      -- 找不到游戏类型
+            return
+        end
 
-        if name == "PlayerLoginGame" then       -- 玩家申请分配一个桌子
-            local player = data
-            local game = GetGameByID(player.gameType)
+        local table = game:GetTableByUID(player.TableID)
+        if name ~= "PlayerLoginGame" and table == nil then
+            result.error = 1
+            GameManagerSendCh:send(result)      -- 找不到桌子
+            return
+        end
+        --Logger("玩家申请游戏管理器消息"..name)
+
+        ---- 玩家申请分配一个桌子----------------
+        if name == "PlayerLoginGame" then
             player = game:PlayerLoginGame(player.User)
             result.TableID = player.TableID
             result.ChairID = player.ChairID                 -- 把player桌子id，椅子id的数据 返回去
-            local table = game:GetTableByUID(player.TableID)
+            table = game:GetTableByUID(player.TableID)
             local playerList = table:GetUsersSeatInTable()
             result.users = {}
             for k,v in pairs(playerList)do
                 result.users[k] = {}
                 result.users[k].UserId =  v.User.UserId
+                result.users[k].ChairID =  k
             end
             GameManagerSendCh:send(result)
-        elseif name == "SendSceneFishes" then   -- 玩家申请下发
-            local player = data
-            local game = GetGameByID(player.gameType)
-            local table = game:GetTableByUID(player.TableID)
+
+        ---- 玩家申请下发场景鱼群----------------
+        elseif name == "SendSceneFishes" then
+
             table:SendSceneFishes(player.User.UserId)       -- 桌子会发送消息给玩家
+
+        ----  玩家申请开火  ----------------
+        elseif name == "HandleUserFire" then
+
+            table:FireBullet(player , data.LockFishId )       -- 桌子会发送消息给玩家
+
+        ----  玩家申请抓到鱼  ----------------
+        elseif name == "HandleCatchFish" then
+
+            table:LogicCatchFish(player,data.LockFishId,data.BulletId)  -- 桌子会发送消息给玩家
         else
 
         end

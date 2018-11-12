@@ -49,6 +49,7 @@ function ByTable:RunTable()
         if self:CheckTableEmpty() then
 --            print("这是一个空桌子")
         else
+            print("当前有多少条鱼", self:GetFishNum())
             self:RunDistributeInfo(table.RoomScore)
             self:RunBossDistributeInfo(table.RoomScore)
 
@@ -70,6 +71,27 @@ function ByTable:InitTable()
         self:InitDistributeInfo()
     end
 end
+
+
+--- 捕鱼的逻辑判断
+
+function ByTable:LogicCatchFish(player,LockFishId,BulletId)
+    -- 这里判断鱼是否可以被捕获
+    local isCatchFish = false
+
+    isCatchFish = true
+
+    
+
+
+
+end
+
+
+
+
+
+
 --------------------------------------------------------------------------------
 --------------玩家----------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -145,10 +167,12 @@ function ByTable:FireBullet(player , lockFishId)
     local num = player.ActivityBulletNum
     if num > MAX_BULLET_NUMBER then
         print("子弹超过上限了")
+        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,nil,"子弹超过上限了")
     end
     local cost = self.RoomScore
     if player.User.Score < cost then
         print("玩家没钱了")
+        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,nil,"玩家没钱了")
     end
     -- 创建新的子弹
     local bullet = Bullet:New(self.GenerateBulletUid)
@@ -157,6 +181,18 @@ function ByTable:FireBullet(player , lockFishId)
     bullet.lockFishID = lockFishId                  --锁定鱼
     player.ActivityBulletNum = player.ActivityBulletNum + 1  --玩家已激活子弹增加
     self.GenerateBulletUid  = self.GenerateBulletUid + 1        -- 生成子弹id，自增
+
+
+    -- 给所有玩家同步一下，这个玩家发子弹了
+    local sendCmd = CMD_Game_pb.CMD_S_USER_FIRE()
+    sendCmd.chair_id = player.ChairID
+    sendCmd.bullet_id = bullet.BulletUID
+    sendCmd.lock_fish_id = lockFishId
+    --sendCmd.curr_score = player.User.Score
+
+    self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_USER_FIRE,sendCmd)
+
+
 end
 
 -----击中一条鱼
@@ -239,6 +275,16 @@ function ByTable:DelFishes()
 end
 
 
+---- 有多少条鱼
+function ByTable:GetFishNum()
+    local re = 0
+    for k,fish in pairs(self.FishArray) do
+        re = re + 1
+    end
+    return re
+end
+
+
 ----玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
 function ByTable:SendSceneFishes(UserId)
     print("鱼数量"..GetTableLen(self.FishArray))
@@ -254,8 +300,6 @@ end
 
 --- 给所有玩家同步新建的鱼的信息
 function ByTable:SendNewFishes(fish)
-    print(CMD_Game_pb)
-    print(CMD_Game_pb.CMD_S_DISTRIBUTE_FISH())
     local sendCmd = CMD_Game_pb.CMD_S_DISTRIBUTE_FISH()
     local cmd = sendCmd.fishs:add()
     cmd.uid = fish.FishUID
@@ -322,7 +366,7 @@ function ByTable:RunDistributeInfo(roomScore)
         local kindId = Distribute.FishKindID
         -- 到下一个生成时间了, 那么我们来生成鱼吧
         if now >  Distribute.CreateTime + Distribute.DistributeIntervalTime then
-            print("生成时间到了")
+--            print("生成时间到了")
             local createType = 0   --鱼怎么走
             local buildNum = 0      -- 鱼生成数量
             local max = FishServerExcel[kindId].count_max
@@ -394,6 +438,7 @@ end
 
 ---- 具体生成鱼
 function ByTable:DistributeNewFish(Distribute,offsetX,offsetY)
+--    print("生成一条鱼"..Distribute.FishKindID)
     local kindId = Distribute.FishKindID
     -- 创建鱼
     local fish = self:CreateFish()
