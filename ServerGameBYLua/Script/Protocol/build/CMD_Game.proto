@@ -181,3 +181,64 @@ message CMD_C_CATCH_FISH
 	optional uint32  chair_id = 4;					//椅子ID
 	optional uint32 weakness_id = 5;                //波塞冬弱点位置
 };
+
+//场景子弹
+message tagSceneBullet
+{
+	optional int32	chair_id = 1;					//椅子ID
+	optional uint32 bullet_id = 2;					//子弹ID
+	optional float  pos_x = 3;						//子弹位置X
+	optional float  pos_y = 4;						//子弹位置Z
+	optional float  angle = 5;						//子弹角度
+	optional uint32 tick_count = 6;					//子弹时间
+	optional uint32 bullet_mulriple = 7;			//子弹倍率
+	optional bool	is_double = 8;					//是否为双倍
+	optional uint32 lock_fish_id = 9;				//锁定鱼的ID
+	optional uint32 bullet_num = 10;				//子弹个数(炮管数量)
+}
+//掉落道具
+message tagDropItem
+{
+	optional uint32 item_id = 1;					//道具ID
+	optional uint32 item_num = 2;					//道具数量
+}
+//捕获鱼儿
+message tagCatchFish
+{
+	optional uint32 fish_uid		= 1;				//鱼的UID
+	optional uint32 fish_kind		= 2;				//鱼的类型
+	optional uint32 fish_score		= 3;				//鱼的分数，增量
+	optional uint32	fish_lottery	= 4;				//鱼的奖券，增量
+	optional uint32 diamond			= 5;				//钻石，增量
+	optional bool	bullet_double	= 6;				//是否双倍子弹
+	optional bool	link_fish_uid	= 7;				//连接的鱼UID
+	optional bool   dead_sign		= 8;               //是否死亡的标志
+	optional uint32 skill_id		= 9;				//获得技能,技能鱼自带技能
+	//optional uint32 skill_num		= 10;				//获得技能数量--弃用
+	optional uint32 fish_mulriple	= 11;				//鱼的倍率（加成后的）
+	optional uint32 fish_original_score	= 12;			//鱼的原始金币（受寻宝影响前）
+	repeated tagDropItem drop_items		=13;				//掉落道具
+	optional uint32 fish_score_show = 14;        // 用于客户端显示捕获该条鱼得到的金币值
+	optional uint32 buff_id = 15;				 // buff_id
+	optional int32  buff_time = 16;				// buff剩余时间
+	optional int32  buff_add = 17;				// buff增加比例
+	optional int32  crit_rate = 18;             // 死亡暴击倍数
+};
+//服务器返回捕获鱼儿
+message CMD_S_CATCH_FISH
+{
+	optional int32	chair_id		= 1;				//椅子ID
+	optional int32  fish_type		= 2;				//中鱼类型
+	optional tagSceneBullet bullet	= 3;				//子弹ID
+	optional int64  curr_score		= 4;				//分数，当前数值
+	optional int64	curr_lottery	= 5;				//奖券，当前数值
+	optional int64  curr_diamond	= 6;				//钻石，当前数值
+	optional uint32 curr_time       = 7;				//当前服务器时间，用于客户端同步显示
+	repeated tagCatchFish catch_fishs = 8;				//捕获的鱼
+	optional int32  add_exp			= 9;
+	optional uint32 skill_id		= 10;				//技能抓捕到鱼
+	optional bool	is_crit			= 11;				//是否暴击
+	optional uint32 buff_id         = 12;               //BUFF状态下打死鱼
+	optional uint32 treasure_effect = 13;               //海皇秘宝特效
+};
+

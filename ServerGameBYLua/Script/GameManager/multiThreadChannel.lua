@@ -68,7 +68,7 @@ local function _dealData(ok,v)
         ----  玩家申请抓到鱼  ----------------
         elseif name == "HandleCatchFish" then
 
-            table:LogicCatchFish(player,data.LockFishId,data.BulletId)  -- 桌子会发送消息给玩家
+            table:LogicCatchFish(player,data.LockFishIdList,data.BulletId)  -- 桌子会发送消息给玩家
         else
 
         end

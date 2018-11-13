@@ -115,7 +115,7 @@ func startClient(c *Client) {
 			return
 		}
 
-		//c.GameAI()
+		c.GameAI()
 
 
 	}

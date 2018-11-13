@@ -284,7 +284,7 @@ func (this *Client)do_fire() {
 	size := len(data)
 	bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_USER_FIRE, uint16(size))
 	this.Send(bufferT, data)
-	//fmt.Println("发子弹")
+	fmt.Println("发子弹")
 }
 
 func (this *Client)do_catch(bullet *BulletObj) {
@@ -335,6 +335,7 @@ func (this *Client)handleCatchFish(buf []byte, bufferSize int){
 	protocolBuffer := buf
 	msg := &CMD.CMD_S_CATCH_FISH{}
 	err := proto.Unmarshal(protocolBuffer, msg)
+
 	checkError(err)
 	dataJ, _ := json.MarshalIndent(msg, "", " ")
 	fmt.Printf("%s", dataJ)
@@ -384,7 +385,7 @@ func (this *Client)GameAI()  {
 	if !this.StartAI{
 		return
 	}
-	//fmt.Println("AI-----")
+	fmt.Println("AI-----")
 	if time.Now().After(this.Last_fire_tick)   {
 		this.Last_fire_tick = time.Now().Add( time.Microsecond * 200)
 		this.do_fire()

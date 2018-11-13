@@ -49,7 +49,7 @@ function ByTable:RunTable()
         if self:CheckTableEmpty() then
 --            print("这是一个空桌子")
         else
-            print("当前有多少条鱼", self:GetFishNum())
+--            print("当前有多少条鱼", self:GetFishNum())
             self:RunDistributeInfo(table.RoomScore)
             self:RunBossDistributeInfo(table.RoomScore)
 
@@ -73,16 +73,66 @@ function ByTable:InitTable()
 end
 
 
---- 捕鱼的逻辑判断
+--- 判断玩家是否捕到鱼的逻辑判断
+function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
+    print("玩家申请捕鱼")
 
-function ByTable:LogicCatchFish(player,LockFishId,BulletId)
-    -- 这里判断鱼是否可以被捕获
-    local isCatchFish = false
+    local bullet = self:GetBullet(BulletId)
+    if bullet == nil then
+        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_CATCH_FISH,nil,"子弹的uid不正确")
+        return
+    end
 
-    isCatchFish = true
+    local ALLCurrScore = 0   -- 获得的分数
+    local AllFishes = {}     -- 抓获的鱼list
 
-    
+    for k,v in pairs(LockFishIdList) do
 
+        local fish = self:GetFish(v)
+        if fish ~= nil then
+
+            -- 这里判断鱼是否可以被捕获
+            local isCatchFish = false
+
+            -- 以后增加击中鱼之后的计算
+            -- ...
+
+            isCatchFish = true
+
+            if isCatchFish then
+                fish.CurrScore = fish:GetFishScore()   --鱼的分数
+                ALLCurrScore = ALLCurrScore + fish.CurrScore
+
+                AllFishes[fish.FishUID] = fish
+            end
+
+        end
+    end
+    --LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_CATCH_FISH,nil,"要捕获的鱼id不正确或者已经被别人捕捉了")
+
+
+    -- 删除鱼
+    self:DelFishList(LockFishIdList)
+    --删除子弹
+    self:DelBullet(BulletId)
+    -- 获得鱼的金币
+    player.User.Score = player.User.Score + ALLCurrScore
+
+
+    -- 给所有玩家同步一下，这个玩家捕到鱼了
+    local sendCmd = CMD_Game_pb.CMD_S_CATCH_FISH()
+
+    for k,v in pairs(AllFishes) do
+        local cmd = sendCmd.catch_fishs:add()
+        cmd.fish_uid = v.FishUID
+        cmd.fish_score = v.CurrScore
+    end
+
+    sendCmd.chair_id = player.ChairID
+    sendCmd.bullet.bullet_id = bullet.BulletUID
+    sendCmd.curr_score = player.User.Score
+
+    self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_USER_FIRE,sendCmd)
 
 
 end
@@ -164,6 +214,8 @@ end
 ---
 -----玩家发射一个新的子弹
 function ByTable:FireBullet(player , lockFishId)
+    print("玩家发射一个子弹")
+
     local num = player.ActivityBulletNum
     if num > MAX_BULLET_NUMBER then
         print("子弹超过上限了")
@@ -195,21 +247,8 @@ function ByTable:FireBullet(player , lockFishId)
 
 end
 
------击中一条鱼
-function ByTable:HitFish(userId ,bulletId, fishId)
-    -- 增加CD判断，不可以太频繁
-
-    --删除子弹
-    self:DelBullet(bulletId)
-
-    -- 获得鱼的金币
-    local fish = self.FishArray[fishId]
-    if fish ~= nil then
-        print("捕鱼成功")
-    end
-
-    -- 删除鱼
-    self:DelFish(fishId)
+function ByTable:GetBullet(bulletId)
+    return self.BulletArray[bulletId]
 end
 
 ----删除特定id的子弹
@@ -258,6 +297,7 @@ end
 
 ----删除特定uid的鱼
 function ByTable:DelFish(fishId)
+
     local fish = self.FishArray[fishId]
     if fish ~=nil then
         self.FishArray[fishId] = nil
@@ -267,6 +307,20 @@ function ByTable:DelFish(fishId)
     end
 
 end
+----删除特定uid的鱼list
+function ByTable:DelFishList(fishIdList)
+    for k,v in pairs(fishIdList) do
+        local fish = self.FishArray[v]
+        if fish ~=nil then
+            self.FishArray[fishId] = nil
+        end
+    end
+    if #self.FishArray == 0 then
+        self.GenerateFishUid = 0  --重置一下生成鱼uuid
+    end
+end
+
+
 
 ---清空所有的鱼群
 function ByTable:DelFishes()
@@ -373,7 +427,7 @@ function ByTable:RunDistributeInfo(roomScore)
             if max > 1 then
                 -- 多生成几条鱼
                 buildNum =  Distribute:GetCount(kindId)
-                print("随机生成"..buildNum.."条鱼")
+--                print("随机生成"..buildNum.."条鱼")
                 if buildNum < 1 then
                     buildNum = 1
                 else
@@ -398,7 +452,7 @@ function ByTable:RunDistributeInfo(roomScore)
         -- 多条鱼的判断
         if Distribute.BuildNumber > 1 then
             if now > Distribute.NextCreateTime + Distribute.NextInterBuildTime then
-                print("生成多条鱼"..kindId)
+--                print("生成多条鱼"..kindId)
                 local offsetX = 0
                 local offsetY = 0
                 Distribute.NextCreateTime = now

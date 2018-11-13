@@ -150,7 +150,8 @@ function HandleCatchFish(buf)
 
     local data = {}
     data.Player = MyPlayer
-    data.LockFishId =  msg.fish_uid     -- 要打击的鱼id
+    data.LockFishIdList = {}      -- 要打击的鱼id
+    data.LockFishIdList[1] =  msg.fish_uid     -- 要打击的鱼id
     data.BulletId =  msg.bullet_id
     local result = MultiThreadChannelGameManagerToPlayer("HandleCatchFish",data)
     if result.error ~= nil then
