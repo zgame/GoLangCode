@@ -16,7 +16,7 @@ function Bullet:New(id)
         FireAngle = 0, -- 发射的角度
         BulletMulriple = 0, -- 倍率
         lockFishID = 0, -- 锁定鱼的ID
-        DeadTime = GetOsTimeMillisecond() + 20 * 1000 , -- 过期时间 20秒
+        DeadTime = GetOsTimeMillisecond() + 5 * 1000 , -- 过期时间 5秒
     }
     setmetatable(c, self)
     self.__index = self

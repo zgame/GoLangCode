@@ -57,17 +57,18 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	//_, err := Conn.Write(bufferEnd)
 	//log.CheckError(err)
 
+	var result bool
 	// 发送出去
 	if userId == 0 {
 		// 给玩家自己回复消息
-		GetMyServerByLSate(L).WriteMsg(bufferEnd)
+		result = GetMyServerByLSate(L).WriteMsg(bufferEnd)
 	}else{
 		// 给其他玩家发送消息
-		GetMyServerByUID(userId).WriteMsg(bufferEnd)
+		result = GetMyServerByUID(userId).WriteMsg(bufferEnd)
 	}
-
+	L.Push(lua.LBool(result))		 /* push result */
 	//fmt.Println("lua send :" + str)
-	return 0 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
+	return 1 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
 }
 
 

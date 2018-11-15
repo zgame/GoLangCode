@@ -22,7 +22,7 @@ function Game:New(name,gameTypeId, switch)
 
         AllUserList = {},   -- 所有玩家列表   key  userId , value player
 
-        gameScore = 0 ,     --  游戏倍率
+        GameScore = 0 ,     --  游戏倍率
     }
     setmetatable(c,self)
     self.__index = self
@@ -34,7 +34,7 @@ end
 -----------------------------管理桌子---------------------------
 ----------------------------------------------------------------
 
--- 创建桌子，并启动它， 参数带底分的， 不同底分的房间可以在一起管理，因为逻辑一样的，进入的时候判断一下，引导玩家进入不同底分的桌子
+--- 创建桌子，并启动它， 参数带底分的， 不同底分的房间可以在一起管理，因为逻辑一样的，进入的时候判断一下，引导玩家进入不同底分的桌子
 function Game:CreateTable(gameType,gameScore)
     local table_t
     if gameType == GameTypeBY or gameType == GameTypeBY30 then
@@ -63,7 +63,7 @@ function Game:CreateTable(gameType,gameScore)
 
 end
 
--- 根据桌子uid 返回桌子的句柄
+--- 根据桌子uid 返回桌子的句柄
 function Game:GetTableByUID(tableId)
     return self.AllTableList[tableId]
 end
@@ -71,20 +71,41 @@ end
 ----------------------------------------------------------------
 -----------------------------管理玩家---------------------------
 ----------------------------------------------------------------
--- 根据user uid 返回user的句柄
+--- 根据user uid 返回user的句柄
 function Game:GetUserByUID(uid)
     return self.AllUserList[uid]
 end
 
--- 有玩家登陆游戏，想进入对应分数的房间
-function Game:PlayerLoginGame(user)
-    local player = Player:New(user)
---    player.gameType =self.Id
-    self.AllUserList[user.UserId] = player      --创建好之后加入玩家总列表
+--- 有玩家登陆游戏，想进入对应分数的房间
+function Game:PlayerLoginGame(oldPlayer)
+    local player
+    -- 如果玩家是断线重连的
+    if self.AllUserList[oldPlayer.User.UserId] ~= nil then      --找到之前有玩家在线
+        player = self.AllUserList[oldPlayer.User.UserId]          -- 把之前的玩家数据取出来
+        if oldPlayer.GameType == player.GameType and oldPlayer.NetWorkState == false then
+            -- 同一个游戏， 并且玩家状态是等待断线重连
+            player.NetWorkState = true                      -- 网络恢复正常
+            player.NetWorkCloseTimer = 0
+            print("把断线重连的player返回去")
+            return player
+        else
+            -- 不是同一个游戏，或者有玩家在里面玩呢
+            -- player会被替换掉，那么之前的连接也到t掉才可以
+
+            -- 这里以后增加，t掉玩家的连接的功能
+        end
+
+    end
+
+    -- 不是断线重连的就重新建一个玩家数据
+    player = Player:New(oldPlayer.User)
+    player.GameType = oldPlayer.GameType            -- 设定游戏类型
+    self.AllUserList[oldPlayer.User.UserId] = player      --创建好之后加入玩家总列表
+
 
     --然后找一个有空位的桌子让玩家加入游戏
     for k,v in pairs(self.AllTableList) do
-        if v.RoomScore == self.gameScore then    -- 进入底分一致的桌子
+        if v.RoomScore == self.GameScore then    -- 进入底分一致的桌子
             local seatId = v:GetEmptySeatInTable()
             if seatId > 0 then
                 print("有空座位")
@@ -101,9 +122,10 @@ function Game:PlayerLoginGame(user)
         end
     end
 
+    --没有空座位的房间了，创建一个
     print("没有空座位的房间了，创建一个吧,  score".. self.Id)
     local gameType = self.AllTableList[1].GameID
-    local table = self:CreateTable(gameType, self.gameScore)
+    local table = self:CreateTable(gameType, self.GameScore)
     local seatId = table:GetEmptySeatInTable()  --获取空椅位
     table:InitTable()
     table:PlayerSeat(seatId,player)     --让玩家坐下.
@@ -113,12 +135,11 @@ function Game:PlayerLoginGame(user)
 
 end
 
---玩家登出
+----玩家登出
 function Game:PlayerLogOutGame(player)
     local table = Game:GetTableByUID(player.TableID)
-    table:PlayerStandUp(player.ChairID, player.User)        -- 玩家离开桌子
-    player.TableID = TABLE_CHAIR_NOBODY
-    player.ChairID = TABLE_CHAIR_NOBODY
+    table:PlayerStandUp(player.ChairID, player)        -- 玩家离开桌子
+
 
     print("玩家"..player.User.UserId.."离开了")
 end

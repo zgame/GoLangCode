@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"./Utils/log"
 	"./Utils/zRedis"
-	"./Games"
-	"./Logic/Player"
-	"./CSV"
+	//"./Games"
+	//"./Logic/Player"
+	//"./CSV"
 	"time"
 	"math"
 	"./NetWork"
@@ -69,14 +69,14 @@ func main() {
 	fmt.Println("-------------------数据库连接---------------------------")
 	zRedis.InitRedis(RedisAddress)
 
-	fmt.Println("-------------------读取CVS数据文件---------------------------")
-	CSV.LoadFishServerExcel()
+	//fmt.Println("-------------------读取CVS数据文件---------------------------")
+	//CSV.LoadFishServerExcel()
 
 	fmt.Println("-------------------服务器初始化---------------------------")
 	initVar()
 
 
-	Player.GetALLUserUUID()			// 获取玩家的总体分配UUID
+	//Player.GetALLUserUUID()			// 获取玩家的总体分配UUID
 
 	////-------------------------------------创建各个游戏，以后新增游戏，要在这里增加进去即可-----------------------------------
 	//Games.AddGame("满贯捕鱼", Games.GameTypeBY)
@@ -145,7 +145,7 @@ func main() {
 
 		GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
 		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 给lua的桌子用的 n个协程函数
-		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
+		time.Sleep(time.Millisecond * 100)                                //给其他协程让出1秒的时间， 这个可以后期调整
 	}
 	
 
@@ -193,7 +193,7 @@ func initSetting()  {
 func initVar()  {
 	//Client.AllClientsList = make(map[*Client.Client]struct{})
 	//Client.AllUserClientList = make(map[uint32]*Client.Client)
-	Games.AllGamesList = make(map[int]*Games.Games)
+	//Games.AllGamesList = make(map[int]*Games.Games)
 	Lua.InitGlobalVar()
 }
 

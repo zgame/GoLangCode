@@ -74,34 +74,34 @@ func (this *Client) Receive()  bool{
 //--------------------------------------------------------------------------------------------------
 func (this *Client) Send(bufferH []byte, data []byte) {
 	// 增加token id 作为发送的编号
-	token1 := this.SendTokenID
-	this.SendTokenID ++
+	//token1 := this.SendTokenID
+	//this.SendTokenID ++
 
-	buffertt := new(bytes.Buffer)
-	binary.Write(buffertt, binary.LittleEndian, int16(token1))
-	tokenBuf := buffertt.Bytes()
+	//buffertt := new(bytes.Buffer)
+	//binary.Write(buffertt, binary.LittleEndian, int16(token1))
+	//tokenBuf := buffertt.Bytes()
 
 
 	dataSize :=  len(data)
 	headSize :=  len(bufferH)
-	tokenSize :=  len(tokenBuf)
+	//tokenSize :=  len(tokenBuf)
 
 
-	// 开始加密
-	bufferData := make([]byte, dataSize + tokenSize)
-	copy(bufferData, tokenBuf)
-	copy(bufferData[tokenSize:], data)
+	//// 开始加密
+	//bufferData := make([]byte, dataSize + tokenSize)
+	//copy(bufferData, tokenBuf)
+	//copy(bufferData[tokenSize:], data)
 
 	//fmt.Printf("send buf: %x",bufferData)
 	//fmt.Println("")
 	//bufferEncryp := Encryp(bufferData)
-	bufferEncryp := (bufferData)
+	bufferEncryp := (data)
 
 
 	// 发送最后数据包
 	//fmt.Println("数据包大小：", strconv.Itoa(dataSize))
 	//fmt.Println("token大小：", strconv.Itoa( tokenSize))
-	bufferEnd := make([]byte, dataSize+  headSize + tokenSize)
+	bufferEnd := make([]byte, dataSize+  headSize )
 	copy(bufferEnd, bufferH)
 	copy(bufferEnd[headSize:], bufferEncryp)
 	_, err := this.Conn.Write(bufferEnd)
@@ -147,7 +147,8 @@ func (this *Client)SendGmCmd(cmd string){
 	}
 	data, _ := proto.Marshal(sendCmd)
 	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_GF_GMCMD, GMCMD_CMD, uint16(size))
+	bufferT := getSendTcpHeaderData(MDM_GF_GMCMD, GMCMD_CMD, uint16(size), uint16(this.SendTokenID))
+	this.SendTokenID ++
 
 	this.Send(bufferT, data)
 
@@ -156,7 +157,8 @@ func (this *Client)SendGmCmd(cmd string){
 
 func (this *Client) SendReg(msg string) {
 
-	_, err := this.Conn.Write(getSendTcpHeaderData(MAIN_CMD_ID, SUB_C_MONITOR_REG, 0)) //发送注册成为客户端请求
+	_, err := this.Conn.Write(getSendTcpHeaderData(MAIN_CMD_ID, SUB_C_MONITOR_REG, 0,uint16(this.SendTokenID))) //发送注册成为客户端请求
+	this.SendTokenID++
 	checkError(err)
 
 }
@@ -179,16 +181,16 @@ func checkError(e error) {
 //--------------------------------------------------------------------------------------------------
 //处理头部数据
 //--------------------------------------------------------------------------------------------------
-func getSendTcpHeaderData(maincmd uint16, childcmd uint16, size uint16) []byte {
+func getSendTcpHeaderData(maincmd uint16, childcmd uint16, size uint16 , token uint16) []byte {
 
 	bufferT := new(bytes.Buffer)
 	binary.Write(bufferT,binary.LittleEndian,uint8(0))
-	binary.Write(bufferT,binary.LittleEndian,uint8(1))
-	binary.Write(bufferT,binary.LittleEndian,size+2)		// 注意这里+2 是因为有一个token
+	binary.Write(bufferT,binary.LittleEndian,uint8(0))
+	binary.Write(bufferT,binary.LittleEndian,size)
 	binary.Write(bufferT,binary.LittleEndian,maincmd)
 	binary.Write(bufferT,binary.LittleEndian,childcmd)
-	binary.Write(bufferT,binary.LittleEndian,uint16(1))			// 编号1 是要增加一个token
-	//binary.Write(bufferT,binary.LittleEndian,SendTokenID)			//注意头有2个结构
+	binary.Write(bufferT,binary.LittleEndian,token)			// 是要增加一个token
+
 
 
 	//buffer_t = struct.pack("BBHHHH", 0, 1, size, maincmd, childcmd, 0)

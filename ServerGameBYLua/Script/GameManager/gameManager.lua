@@ -74,7 +74,7 @@ function AddGame(name, gameType, gameScore)
 
     Logger("--------------AddGame--------------------------")
     game:CreateTable(gameType,gameScore)
-    game.gameScore = gameScore
+    game.GameScore = gameScore
 end
 
 --通过gameID获取是哪个游戏

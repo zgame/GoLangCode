@@ -55,7 +55,8 @@ func (this *Client)LoginSend() {
 	}
 	data, _ := proto.Marshal(sendCmd)
 	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_MB_LOGON, SUB_MB_GUESTLOGIN, uint16(size))  // size要增加一个token的位置
+	bufferT := getSendTcpHeaderData(MDM_MB_LOGON, SUB_MB_GUESTLOGIN, uint16(size),uint16(this.SendTokenID))  // size要增加一个token的位置
+	this.SendTokenID++
 
 	this.Send(bufferT, data)
 }
@@ -114,7 +115,8 @@ func (this *Client)loginCS() {
 	}
 	data, _ := proto.Marshal(sendCmd)
 	size := len(data)
-	bufferT := getSendTcpHeaderData(MAIN_CHAT_CMD, SUB_C_LOGIN, uint16(size))
+	bufferT := getSendTcpHeaderData(MAIN_CHAT_CMD, SUB_C_LOGIN, uint16(size),uint16(this.SendTokenID))
+	this.SendTokenID++
 	this.Send(bufferT, data)
 }
 
@@ -224,7 +226,8 @@ func (this *Client)loginGS() {
 	}
 	data, _ := proto.Marshal(sendCmd)
 	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_GR_LOGON, SUB_GR_LOGON_USERID, uint16(size))
+	bufferT := getSendTcpHeaderData(MDM_GR_LOGON, SUB_GR_LOGON_USERID, uint16(size),uint16(this.SendTokenID))
+	this.SendTokenID++
 
 	this.Send(bufferT, data)
 }

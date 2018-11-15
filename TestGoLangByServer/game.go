@@ -113,7 +113,8 @@ func (this *Client)EnterScence() {
 	}
 	data, _ := proto.Marshal(sendCmd)
 	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_GF_FRAME, SUB_GF_GAME_OPTION, uint16(size))
+	bufferT := getSendTcpHeaderData(MDM_GF_FRAME, SUB_GF_GAME_OPTION, uint16(size),uint16(this.SendTokenID))
+	this.SendTokenID++
 	this.Send(bufferT, data)
 }
 
@@ -192,8 +193,8 @@ func (this *Client)handleSceneFish(buf []byte, bufferSize int){
 	msg := &CMD.CMD_S_SCENE_FISH{}
 	err := proto.Unmarshal(protocolBuffer, msg)
 	checkError(err)
-	//dataJ, _ := json.MarshalIndent(msg, "", " ")
-	//fmt.Printf("%s", dataJ)
+	dataJ, _ := json.MarshalIndent(msg, "", " ")
+	fmt.Printf("%s\n", dataJ)
 
 	//fmt.Println("")
 
@@ -228,7 +229,7 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 	checkError(err)
 	//dataJ, _ := json.MarshalIndent(msg, "", " ")
 	//fmt.Printf("%s", dataJ)
-	//fmt.Printf("----------------新增鱼-------------%d", this.Index)
+	fmt.Printf("----------------新增鱼-------------%d\n", this.Index)
 	//fmt.Println("")
 
 	fish_cnt :=0
@@ -259,6 +260,10 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 func (this *Client)do_fire() {
 	this.select_fish()
 
+	if this.Fish_id <=0 {
+		return
+	}
+
 	tick_count := uint64(time.Now().Unix())
 	angle := float32(45)
 	lock_fish_id := uint32(this.Fish_id)			//选择一个鱼
@@ -282,9 +287,15 @@ func (this *Client)do_fire() {
 	}
 	data, _ := proto.Marshal(sendCmd)
 	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_USER_FIRE, uint16(size))
+	bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_USER_FIRE, uint16(size),uint16(this.SendTokenID))
+	this.SendTokenID++
 	this.Send(bufferT, data)
-	fmt.Println("发子弹")
+	//fmt.Println("发子弹")
+
+
+
+
+
 }
 
 func (this *Client)do_catch(bullet *BulletObj) {
@@ -301,8 +312,10 @@ func (this *Client)do_catch(bullet *BulletObj) {
 	}
 	data, _ := proto.Marshal(sendCmd)
 	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_CATCH_FISH, uint16(size))
+	bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_CATCH_FISH, uint16(size),uint16(this.SendTokenID))
+	this.SendTokenID++
 	this.Send(bufferT, data)
+	fmt.Println("申请捕鱼",fish_uid,bullet_id,chair_id)
 }
 
 
@@ -325,6 +338,8 @@ func (this *Client)handleUserFire(buf []byte, bufferSize int){
 		bullt.tick = time.Now()
 
 		//this.User.score = msg.GetCurrScore()
+
+
 		this.do_catch(&bullt)
 	}
 
@@ -374,7 +389,8 @@ func (this *Client)handleDrawAlm(buf []byte, bufferSize int){
 	//fmt.Printf("%s", dataJ)
 	fmt.Printf("----------------获取救济金,------------%d", this.Index)
 
-	_, err = this.Conn.Write(getSendTcpHeaderData(MDM_GF_GAME, SUB_C_GET_ALMS, 0)) //发送注册成为客户端请求
+	_, err = this.Conn.Write(getSendTcpHeaderData(MDM_GF_GAME, SUB_C_GET_ALMS, 0,uint16(this.SendTokenID))) //发送注册成为客户端请求
+	this.SendTokenID++
 	checkError(err)
 }
 
@@ -385,10 +401,17 @@ func (this *Client)GameAI()  {
 	if !this.StartAI{
 		return
 	}
-	fmt.Println("AI-----")
+	//fmt.Println("AI-----")
 	if time.Now().After(this.Last_fire_tick)   {
 		this.Last_fire_tick = time.Now().Add( time.Microsecond * 200)
 		this.do_fire()
+
+
+		//var bullt BulletObj
+		//bullt.bullet_id = 1
+		//bullt.fish_id = 1
+		//bullt.tick = time.Now()
+		//this.do_catch(&bullt)
 	}
 
 	//# 处理过期的鱼

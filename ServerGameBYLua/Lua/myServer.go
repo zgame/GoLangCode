@@ -6,6 +6,7 @@ import (
 	"../NetWork"
 	"../GlobalVar"
 
+	"../Utils/log"
 )
 
 // ----------------------------服务器处理的统一接口----------------------------------
@@ -32,15 +33,16 @@ func NewMyServer(conn NetWork.Conn)  *MyServer{
 
 //--------------------------各个玩家连接逻辑主循环------------------------------
 func (a *MyServer) Run() {
-	fmt.Println("-------------各个玩家连接逻辑主循环---------")
+	//fmt.Println("-------------各个玩家连接逻辑主循环---------")
 	a.Init()
 	for {
 		buf,bufLen, err := a.conn.ReadMsg()
 		if err != nil {
-			fmt.Println("跟对方的连接中断了")
+			//fmt.Println("跟对方的连接中断了")
+			// 中断网络连接，关闭网络连接，关闭lua
 			break
 		}
-		//fmt.Println("收到消息------------", string(buf))
+		//fmt.Printf("收到消息------------%x \n", buf)
 		bufHead := 0
 		num:=0
 		for {
@@ -57,7 +59,6 @@ func (a *MyServer) Run() {
 			}
 		}
 
-
 		//a.myLua.GoCallLuaNetWorkReceive(string(data))		// 把收到的数据传递给lua进行处理
 		//a.WriteMsg([]byte("服务器收到你的消息-------" + string(data)))
 
@@ -67,7 +68,8 @@ func (a *MyServer) Run() {
 }
 
 func (a * MyServer)HandlerRead(buf []byte) int {
-	msgId, subMsgId, bufferSize, ver := NetWork.DealRecvTcpDeaderData(buf)
+	//fmt.Printf("buf......%x",buf)
+	msgId, subMsgId, bufferSize, _ := NetWork.DealRecvTcpDeaderData(buf)
 
 	offset := 10
 
@@ -80,9 +82,10 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 		return  int(bufferSize) + offset
 	}
 
-	if ver > 0{
-		offset = 12		// version == 1 的时候， 加了一个token
-	}
+	//fmt.Println("")
+	//if ver > 0{
+	//	offset = 12		// version == 1 的时候， 加了一个token
+	//}
 	finalBuffer := buf[offset:offset + int(bufferSize)]
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
 	//fmt.Println("")
@@ -94,20 +97,21 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 }
 
 
-
-
+// 在网络中断的时候会自动调用， 关闭lua脚本
 func (a *MyServer) OnClose() {
+	log.PrintLogger("玩家中断了网络连接， 我们要关闭网络， 同时关闭玩家的lua文件")
 	a.myLua.L.Close()		// 关闭lua调用
 }
 
 // ---------------------发送数据到网络-------------------------
-func (a *MyServer) WriteMsg(msg ... []byte) {
+func (a *MyServer) WriteMsg(msg ... []byte) bool{
 
 	err := a.conn.WriteMsg(msg...)
 	if err != nil {
-		fmt.Printf("发送消息：%v， 出错了！", msg)
+		fmt.Println("玩家的网络中断，不能正常发送消息给该玩家")
+		return  false   // 发送失败
 	}
-	//}
+	return true    // 发送成功
 }
 
 func (a *MyServer) LocalAddr() net.Addr {
@@ -135,7 +139,7 @@ func (a *MyServer) Destroy() {
 //}
 
 //--------------------------lua 启动-------------------------------
-func (a *MyServer) Init()  {
+func (a *MyServer) Init() {
 	a.myLua.Init() // 绑定lua脚本
 	a.luaReloadTime = GlobalVar.LuaReloadTime
 	LuaConnectMyServer[a.myLua.L] = a
@@ -150,7 +154,7 @@ func (a *MyServer) Init()  {
 }
 
 //---------------------------热更新检查-----------------------------
-func (a *MyServer) CheckLuaReload()  {
+func (a *MyServer) CheckLuaReload() {
 	// 检查一下lua更新的时间戳
 	if a.luaReloadTime == GlobalVar.LuaReloadTime{
 		return

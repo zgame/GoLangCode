@@ -10,7 +10,7 @@ func (this *Client)handlerRead(buf []byte) int {
 	//var err error
 	//fmt.Printf("Receive buf: %x",buf)
 	//fmt.Println(" ")
-	msg_id, sub_msg_id, bufferSize, ver, msgSize := dealRecvTcpDeaderData(buf)
+	msg_id, sub_msg_id, bufferSize, _, msgSize := dealRecvTcpDeaderData(buf)
 
 	offset := 10
 
@@ -21,17 +21,18 @@ func (this *Client)handlerRead(buf []byte) int {
 	if len(buf) < offset + int(bufferSize){
 		fmt.Println("出现数据包异常")
 
-		return  int(bufferSize) + offset
+		return  int(bufferSize) + offset + int(msgSize)
 	}
-	if ver > 0{
-		offset = 12		// version == 1 的时候， 加了一个token
-	}
+	//if ver > 0{
+	//	offset = 12		// version == 1 的时候， 加了一个token
+	//}
 	finalBuffer := buf[offset:offset + int(bufferSize)]
 	msgBuffer := buf[offset + int(bufferSize):offset + int(bufferSize)+ int(msgSize)]
 
 	if msgSize >0 {
-		fmt.Println("有错误提示了")
+		//fmt.Println("有错误提示了")
 		fmt.Println(string(msgBuffer))
+		return int(bufferSize) + offset + int(msgSize)
 	}
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
 	//fmt.Println("")
@@ -121,10 +122,9 @@ func (this *Client)handlerRead(buf []byte) int {
 
 			// 送一些金币
 			//fmt.Println("发送gm命令，送金币")
-			this.SendGmCmd("@设置金币 10000000")
+			//this.SendGmCmd("@设置金币 10000000")
 			//this.do_fire()
 			this.StartAI = true
-
 
 		} else if sub_msg_id == SUB_S_OTHER_ENTER_SCENE {
 			this.handleOtherEnterScence(finalBuffer,int(bufferSize))			//进入场景,接收鱼数据
@@ -141,7 +141,6 @@ func (this *Client)handlerRead(buf []byte) int {
 		}else if sub_msg_id == SUB_S_START_ALMS {
 			this.handleDrawAlm(finalBuffer,int(bufferSize))			//# alms
 		}
-
 	}
 
 	return int(bufferSize) + offset + int(msgSize)

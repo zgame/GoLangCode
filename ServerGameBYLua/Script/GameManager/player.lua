@@ -21,10 +21,12 @@ function Player:New(user)
         IsRobot = false,            -- 是不是机器人
         ActivityBulletNum = 0,   --当前已经发射的子弹数量
 
-        gameType = 0 ,     -- 游戏类型
+        GameType = 0 ,     -- 游戏类型
+
+        NetWorkState = true,   -- 网络状态正常
+        NetWorkCloseTimer = 0 ,   -- 等待玩家断线重连的时间倒计时
     }
     setmetatable(c, self)
     self.__index = self
     return c
 end
-

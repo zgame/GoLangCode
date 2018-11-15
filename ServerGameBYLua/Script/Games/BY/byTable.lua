@@ -24,8 +24,8 @@ function ByTable:New(tableId,gameTypeId)
         UserSeatArray = {},  -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
 
 
-        GenerateFishUid = 0, -- 生成鱼的uid
-        GenerateBulletUid = 0, -- 生成子弹的uid
+        GenerateFishUid = 1, -- 生成鱼的uid
+        GenerateBulletUid = 1, -- 生成子弹的uid
 
         FishArray = {},   -- 鱼的哈希表    uid, fish
         BulletArray = {},   -- 子弹的哈希表   id,  bullet
@@ -33,6 +33,8 @@ function ByTable:New(tableId,gameTypeId)
 
         DistributeArray = {},   -- 鱼的生成信息数据    key顺序生成1,2,3,4...  Distribute
         BossDistributeArray = {},   -- Boss鱼的生成信息数组 key顺序生成1,2,3,4...  Distribute
+
+        LastRunTime = 0   -- 循环周期时间
     }
     setmetatable(c,self)
     self.__index = self
@@ -47,20 +49,38 @@ function ByTable:RunTable()
     -- 开始桌子的主循环
     local RunTable = function()
         if self:CheckTableEmpty() then
---            print("这是一个空桌子")
+            --            print("这是一个空桌子")
+            LastRunTime = GetOsTimeMillisecond()
         else
---            print("当前有多少条鱼", self:GetFishNum())
-            self:RunDistributeInfo(table.RoomScore)
-            self:RunBossDistributeInfo(table.RoomScore)
+            local now = GetOsTimeMillisecond()
 
-            for k,bullet in pairs(self.BulletArray) do
+            if self:GetFishNum() < MAX_Fish_NUMBER then
+                self:RunDistributeInfo(table.RoomScore)
+                self:RunBossDistributeInfo(table.RoomScore)
+            end
+            for k, bullet in pairs(self.BulletArray) do
                 bullet:BulletRun(self)      -- 遍历所有子弹，并且run
             end
-            for k,fish in pairs(self.FishArray) do
+            for k, fish in pairs(self.FishArray) do
                 fish:FishRun(self)              --遍历所有鱼，并且run
             end
-        end
+            for k, player in pairs(self.UserSeatArray) do
+                if player.NetWorkState == false then
+                    if now - player.NetWorkCloseTimer > 1000 then
+                        -- 玩家长时间断线，t掉吧
+                        self:PlayerStandUp(player.ChairID,player)
+                        print("长时间断线， t掉这个玩家",player.User.UserId)
+                    end
+                end
+            end
 
+            if now - LastRunTime > 3000 then
+                print("当前有多少条鱼", self:GetFishNum())
+                print("当前有多少子弹", self:GetBulletNum())
+                print("当前有多少玩家", GetTableLen(self.UserSeatArray))
+                LastRunTime = GetOsTimeMillisecond()
+            end
+        end
     end
     FindGoRoutineAndRegisterTableRun(RunTable)    -- 注册开始一个新的协程
 end
@@ -75,7 +95,7 @@ end
 
 --- 判断玩家是否捕到鱼的逻辑判断
 function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
-    print("玩家申请捕鱼")
+--    print("玩家申请捕鱼")
 
     local bullet = self:GetBullet(BulletId)
     if bullet == nil then
@@ -86,8 +106,11 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
     local ALLCurrScore = 0   -- 获得的分数
     local AllFishes = {}     -- 抓获的鱼list
 
-    for k,v in pairs(LockFishIdList) do
 
+    --printTable(LockFishIdList)
+
+    for k,v in pairs(LockFishIdList) do
+--        print("抓鱼uid",v)
         local fish = self:GetFish(v)
         if fish ~= nil then
 
@@ -100,23 +123,30 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
             isCatchFish = true
 
             if isCatchFish then
-                fish.CurrScore = fish:GetFishScore()   --鱼的分数
+                fish.CurrScore = tonumber( fish:GetFishScore())   --鱼的分数
                 ALLCurrScore = ALLCurrScore + fish.CurrScore
 
                 AllFishes[fish.FishUID] = fish
+                -- 删除鱼
+                self:DelFish(fish.FishUID)
             end
 
         end
     end
-    --LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_CATCH_FISH,nil,"要捕获的鱼id不正确或者已经被别人捕捉了")
 
+    if GetTableLen(AllFishes) == 0 then
+        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_CATCH_FISH,nil,"要捕获的鱼id不正确或者已经被别人捕捉了")
+        return
+    end
 
-    -- 删除鱼
-    self:DelFishList(LockFishIdList)
     --删除子弹
     self:DelBullet(BulletId)
     -- 获得鱼的金币
     player.User.Score = player.User.Score + ALLCurrScore
+
+    --print("获得金币",ALLCurrScore)
+    --print("当前金币",player.User.Score)
+    --printTable(AllFishes)
 
 
     -- 给所有玩家同步一下，这个玩家捕到鱼了
@@ -132,7 +162,7 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
     sendCmd.bullet.bullet_id = bullet.BulletUID
     sendCmd.curr_score = player.User.Score
 
-    self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_USER_FIRE,sendCmd)
+    self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_CATCH_FISH,sendCmd)
 
 
 end
@@ -148,24 +178,24 @@ end
 
 -----判断桌子是有人，还是空桌子
 function ByTable:CheckTableEmpty()
-    if #self.UserSeatArray>0 then
+    if GetTableLen(self.UserSeatArray) >0 then
         return false
     end
 
     return true -- 空桌子
 end
 
-----获取桌子的所有玩家-
-function ByTable:GetUsersSeatInTable()
-    local userList = {}
-    for i=1,BY_TABLE_MAX_PLAYER do
-        if self.UserSeatArray[i] ~= nil then
-            -- 说明有人在座位上
-            table.insert(userList,self.UserSeatArray[i])
-        end
-    end
-    return userList     -- 元素是player对象
-end
+--获取桌子的所有玩家-
+--function ByTable:GetUsersSeatInTable()
+--    local userList = {}
+--    for i=1,BY_TABLE_MAX_PLAYER do
+--        if self.UserSeatArray[i] ~= nil then
+--            -- 说明有人在座位上
+--            table.insert(userList,self.UserSeatArray[i])
+--        end
+--    end
+--    return userList     -- 元素是player对象
+--end
 
 -----获取桌子的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
 function ByTable:GetEmptySeatInTable()
@@ -182,10 +212,15 @@ function ByTable:PlayerSeat(seatID,player)
     self.UserSeatArray[seatID] = player
 end
 ----玩家离开椅子
-function ByTable:PlayerStandUp(seatID,user)
-    self.UserSeatArray[seatID] = nil
+function ByTable:PlayerStandUp(seatID,player)
+    local game = GetGameByID(player.GameType)
+    game.AllUserList[player.User.UserId] = nil      -- 清理掉游戏管理的玩家总列表
+    self.UserSeatArray[seatID] = nil                -- 清理掉桌子的玩家列表
+    player.TableID = TABLE_CHAIR_NOBODY
+    player.ChairID = TABLE_CHAIR_NOBODY
+
     -- 清理掉玩家所有子弹
-    self:DelBullets(user.UserId)
+    self:DelBullets(player.User.UserId)
     --如果是空桌子的话，清理一下桌子
     if self:CheckTableEmpty() then
         self:ClearTable()
@@ -213,18 +248,20 @@ end
 --------------------------------------------------------------------------------
 ---
 -----玩家发射一个新的子弹
-function ByTable:FireBullet(player , lockFishId)
-    print("玩家发射一个子弹")
+function ByTable:HandleUserFire(player , lockFishId)
+    --print("玩家发射一个子弹")
 
     local num = player.ActivityBulletNum
-    if num > MAX_BULLET_NUMBER then
-        print("子弹超过上限了")
-        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,nil,"子弹超过上限了")
-    end
+--    if num > MAX_BULLET_NUMBER then
+----        print("子弹超过上限了")
+--        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,nil,"子弹超过上限了")
+--        return
+--    end
     local cost = self.RoomScore
     if player.User.Score < cost then
         print("玩家没钱了")
         LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,nil,"玩家没钱了")
+        return
     end
     -- 创建新的子弹
     local bullet = Bullet:New(self.GenerateBulletUid)
@@ -277,7 +314,11 @@ function ByTable:DelBullets(userId)
         self.GenerateBulletUid = 0  --重置一下生成子弹uuid
     end
 end
-
+---- 有多少子弹
+function ByTable:GetBulletNum()
+    local re = GetTableLen(self.BulletArray)
+    return re
+end
 ----------------------------------------------------------------------------
 ------------------------------鱼-----------------------------------------
 ---------------------------------------------------------------------------
@@ -331,10 +372,7 @@ end
 
 ---- 有多少条鱼
 function ByTable:GetFishNum()
-    local re = 0
-    for k,fish in pairs(self.FishArray) do
-        re = re + 1
-    end
+    local re = GetTableLen(self.FishArray)
     return re
 end
 
@@ -369,8 +407,13 @@ end
 -----给桌上的所有玩家同步消息
 function ByTable:SendMsgToAllUsers(mainCmd,subCmd,sendCmd)
     for k,player in pairs(self.UserSeatArray) do
-        if player ~= nil and player.IsRobot == false then
-            LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
+        if player ~= nil and player.IsRobot == false and player.NetWorkState then
+            local result = LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
+            if not result then
+                -- 发送失败了，玩家网络中断了
+                player.NetWorkState = false
+                player.NetWorkCloseTimer = GetOsTimeMillisecond()
+            end
         end
     end
 end
@@ -378,7 +421,7 @@ end
 ----给桌上的其他玩家同步消息
 function ByTable:SendMsgToOtherUsers(userId,sendCmd,mainCmd,subCmd)
     for k,player in pairs(self.UserSeatArray) do
-        if player ~= nil and player.IsRobot == false and MyUser.UserId ~= player.User.UserId  then
+        if player ~= nil and player.IsRobot == false and MyUser.UserId ~= player.User.UserId and player.NetWorkState then
             LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
         end
     end
@@ -393,13 +436,17 @@ function ByTable:InitDistributeInfo()
     local startId = self.RoomScore * 100
     local endId = startId + 100
 
-    for fishKind,v in pairs(FishServerExcel) do
+    for fishKind, v in pairs(FishServerExcel) do
         if v.is_use == 1 and fishKind > startId and fishKind < endId then
             local distribute = FishDistribute:New()
             distribute.FishKindID = fishKind
 
             distribute.CreateTime = GetOsTimeMillisecond()               --生成时间
             distribute.DistributeIntervalTime = distribute:GetIntervalTime(fishKind)      --获取时间间隔
+
+            if distribute.DistributeIntervalTime == 0 then
+                distribute.DistributeIntervalTime = 1000            -- 这里有生成间隔是0的东西
+            end
 
             local fishType = v.type
             if fishType == FT_BOSS then
@@ -419,8 +466,12 @@ function ByTable:RunDistributeInfo(roomScore)
     for k,Distribute in pairs(self.DistributeArray) do
         local kindId = Distribute.FishKindID
         -- 到下一个生成时间了, 那么我们来生成鱼吧
+
+        --print("now",now,"Distribute.CreateTime",Distribute.CreateTime, " Distribute.DistributeIntervalTime", Distribute.DistributeIntervalTime)
+
         if now >  Distribute.CreateTime + Distribute.DistributeIntervalTime then
---            print("生成时间到了")
+            --print("生成时间到了")
+            --print("now",now,"Distribute.CreateTime",Distribute.CreateTime, " Distribute.DistributeIntervalTime", Distribute.DistributeIntervalTime)
             local createType = 0   --鱼怎么走
             local buildNum = 0      -- 鱼生成数量
             local max = FishServerExcel[kindId].count_max

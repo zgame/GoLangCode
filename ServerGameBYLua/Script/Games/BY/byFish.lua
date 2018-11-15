@@ -47,7 +47,7 @@ function Fish:CreateFish(kindId,x,y,PathID)
     local speed = FishServerExcel[kindId].speed
     local Mulriple = FishServerExcel[kindId].mulriple
     local CapturePro = FishServerExcel[kindId].capture_probability
-    local totalAliveTime = 5           -- 鱼的生存时间
+    local totalAliveTime = 10           -- 鱼的生存时间
 
     self.FishKindID = kindId
     self.FishType = FishServerExcel[kindId].type
@@ -64,5 +64,7 @@ end
 
 -- 获取鱼的分数
 function Fish:GetFishScore()
-    return FishServerExcel[self.FishKindID].gold_multiples
+    local score = FishServerExcel[self.FishKindID].gold_multiples
+    score = 100
+    return score
 end

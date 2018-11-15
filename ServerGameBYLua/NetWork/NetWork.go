@@ -84,12 +84,12 @@ func DealSendData(data string, msg string, mainCmd int, subCmd int) []byte {
 //--------------------------------------------------------------------------------------------------
 
 type TCPHeader struct {
-	DateKind  uint8  //数据类型
-	CheckCode uint8  //效验字段
-	PackSize  uint16 //数据大小
+	DateKind  uint8  //数据类型			始终是0
+	CheckCode uint8  //效验字段			msg错误消息的长度
+	PackSize  uint16 //数据大小			数据包的大小
 	MainCMDID uint16 // 主命令码
 	SubCMDID  uint16 // 子命令码
-	PackerVer uint16 // 封包版本号
+	PackerVer uint16 // 封包版本号		数据包的一个客户端编号，用来防止重复的，客户端可以自己记录，然后到9999清零
 }
 
 

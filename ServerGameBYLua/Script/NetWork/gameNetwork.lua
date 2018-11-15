@@ -59,7 +59,7 @@ function SevLoginGSGuest(buf)
     MyUser.Diamond = 29
 
     MyPlayer = Player:New(MyUser)
-    MyPlayer.gameType = msg.kind_id
+    --MyPlayer.GameType = msg.kind_id
 
 
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
@@ -84,8 +84,11 @@ function SevEnterScence(buf)
 
     print("客户端申请进入大厅, GetClientVersion:"..msg.client_version)
     --玩家登陆游戏，分配桌子
+    local gameType = GameTypeBY     -- 游戏类型
+
     local data = {}
     data.Player = MyPlayer
+    MyPlayer.GameType = gameType
     local result = MultiThreadChannelGameManagerToPlayer("PlayerLoginGame",data)    -- 申请分配一个桌子， 返回的数据中带有桌子和椅子的id了
 
     if result.error ~= nil then
@@ -101,7 +104,7 @@ function SevEnterScence(buf)
 
     --local table = MyGame:PlayerLoginGame(MyUser)
     local sendCmd = CMD_Game_pb.CMD_S_ENTER_SCENE()
-    sendCmd.scene_id = MyPlayer.gameType
+    sendCmd.scene_id = MyPlayer.GameType
     sendCmd.table_id = MyPlayer.TableID
     for k,v in pairs(result.users) do       -- 从桌子传递过来的其他玩家信息
         local uu = sendCmd.table_users:add()
@@ -140,6 +143,7 @@ function HandleUserFire(buf)
         return
     end
 
+    --print("开火完成")
 
 end
 
@@ -147,6 +151,10 @@ end
 function HandleCatchFish(buf)
     local msg = CMD_Game_pb.CMD_C_CATCH_FISH()
     msg:ParseFromString(buf)
+
+    if msg.fish_uid == 0 then
+        return   -- 鱼的uid不为0
+    end
 
     local data = {}
     data.Player = MyPlayer
@@ -158,6 +166,6 @@ function HandleCatchFish(buf)
         LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
         return
     end
-
+--    print("抓鱼完成")
 end
 

@@ -43,6 +43,11 @@ func main()  {
 	}
 	fmt.Println(t10)
 
+	for {
+		tt := time.Now().UnixNano() / int64(time.Millisecond)
+		fmt.Println("", tt)
+		time.Sleep(time.Millisecond * 100)
+	}
 
 
 }

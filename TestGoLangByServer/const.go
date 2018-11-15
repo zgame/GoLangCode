@@ -30,6 +30,8 @@ const LogLevelCritical = 0x20
 //constd wMainCmdID = 3   // 主命令码
 //constd wSubCmdID = 4  // 子命令码
 //constd wPacketVer = 5   // 封包版本号
+
+
 type TCPHeader struct {
 	DateKind  uint8  //数据类型
 	CheckCode uint8  //效验字段
