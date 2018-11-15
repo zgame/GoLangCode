@@ -18,6 +18,8 @@ var codeToShare *lua.FunctionProto
 var ch chan lua.LValue
 var quit chan lua.LValue
 
+const FileLua  = "goroutine.lua"
+
 func main() {
 	ch = make(chan lua.LValue)
 	quit = make(chan lua.LValue)
@@ -26,25 +28,29 @@ func main() {
 
 	//defer luaPool.Shutdown()
 	var err error
-	codeToShare,err = CompileLua("main.lua")
+	codeToShare,err = CompileLua(FileLua)
 	if err!=nil{
 		fmt.Println("加载main.lua文件出错了！")
 	}
 
 	// 支线程
-	//go start(2)
-	//go start(3)
+	for i:= 1;i<300;i++ {
+		go start(1, i) // 间隔时间， 编号
+
+	}
 
 
 	//主线程
 	L := lua.NewState()
 	L.SetGlobal("ch", lua.LChannel(ch))
 	L.SetGlobal("quit", lua.LChannel(quit))
+	// 声明double函数为Lua的全局函数，绑定go函数Double
+	L.SetGlobal("zClose", L.NewFunction(zClose))
 
 	// 直接调用luaopen_pb
 	luaopen_pb(L)
 
-	if err := L.DoFile("main.lua"); err != nil {
+	if err := L.DoFile(FileLua); err != nil {
 		fmt.Println("加载main.lua文件出错了！")
 		fmt.Println(err.Error())
 	}
@@ -58,8 +64,8 @@ func main() {
 	for{
 		//fmt.Println("主循环")
 		//GoCallLuaLogic(L,"test")
-
-		time.Sleep(time.Millisecond * 1000 * 1)
+		goCallLuaSelect(L)			// 主线程监听
+		time.Sleep(time.Millisecond * 10 * 1)
 		//select {
 		//
 		//}
@@ -72,7 +78,7 @@ func main() {
 func IntPtr(L *lua.LState) uintptr {
 	return uintptr(unsafe.Pointer(L))
 }
-func start(timer time.Duration) {
+func start(timer time.Duration, index int) {
 
 
 	L := lua.NewState()
@@ -90,12 +96,12 @@ func start(timer time.Duration) {
 
 	// Lua调用go函数声明
 	// 声明double函数为Lua的全局函数，绑定go函数Double
-	////L.SetGlobal("double", L.NewFunction(Double))
+	L.SetGlobal("zClose", L.NewFunction(zClose))
 	//L.Register("double", Double)
 	//DoCompiledFile(L, codeToShare)
 
 	//// 执行lua文件
-	if err := L.DoFile("main.lua"); err != nil {
+	if err := L.DoFile(FileLua); err != nil {
 		fmt.Println("加载main.lua文件出错了！")
 		fmt.Println(err.Error())
 	}
@@ -119,7 +125,7 @@ func start(timer time.Duration) {
 		//goCallLuaSelect(L)
 		select {
 		case <-tickerCheckUpdateData.C:
-			timerFunc(L,timer)
+			timerFunc(L,index)
 
 		}
 	}
@@ -212,13 +218,13 @@ func DoCompiledFile(L *lua.LState, proto *lua.FunctionProto) error {
 
 
 //-------------计时器------------------------
-func timerFunc(L *lua.LState,timer time.Duration)  {
+func timerFunc(L *lua.LState,index int)  {
 	//fmt.Println("timer--------")
 	//goCallLuaReload(L)
 	//goCallLua(L,int(timer))
 
 	num++
-	//goCallLuaSend(L, strconv.Itoa(int(timer)))
+	goCallLuaSend(L, strconv.Itoa(index))			// 分支线程发消息
 }
 
 // Lua重新加载，Lua的热更新按钮
@@ -279,6 +285,12 @@ func Double(L *lua.LState) int {
 	L.Push(lua.LString(str+"  call "+strconv.Itoa(lv * lv2))) /* push result */
 
 	return 2                    /* number of results */
+}
+
+// Lua调用的go函数
+func zClose(L *lua.LState) int {
+	L.Close()
+	return 0                    /* number of results */
 }
 
 

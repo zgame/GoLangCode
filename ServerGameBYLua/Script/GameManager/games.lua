@@ -9,6 +9,7 @@
 package.path = "Script/Games/BY/?.lua;"..package.path
 require("byTable")
 
+
 Game = {}
 
 function Game:New(name,gameTypeId, switch)
@@ -86,7 +87,7 @@ function Game:PlayerLoginGame(oldPlayer)
             -- 同一个游戏， 并且玩家状态是等待断线重连
             player.NetWorkState = true                      -- 网络恢复正常
             player.NetWorkCloseTimer = 0
-            print("把断线重连的player返回去")
+            print("把断线重连的player返回去， 玩家本来就坐在这里，不用同步信息给其他玩家， 就是反应他傻了一会后继续游戏了")
             return player
         else
             -- 不是同一个游戏，或者有玩家在里面玩呢
@@ -103,22 +104,23 @@ function Game:PlayerLoginGame(oldPlayer)
     self.AllUserList[oldPlayer.User.UserId] = player      --创建好之后加入玩家总列表
 
 
-    --然后找一个有空位的桌子让玩家加入游戏
-    for k,v in pairs(self.AllTableList) do
-        if v.RoomScore == self.GameScore then    -- 进入底分一致的桌子
-            local seatId = v:GetEmptySeatInTable()
-            if seatId > 0 then
-                print("有空座位")
-                v:InitTable()    -- 看看是不是空桌子，如果是，需要初始化
 
-                v:PlayerSeat(seatId,player)
-                player.TableID = v.TableID
+    --然后找一个有空位的桌子让玩家加入游戏
+    for k, table in pairs(self.AllTableList) do
+        if table.RoomScore == self.GameScore then    -- 进入底分一致的桌子
+            local seatId = table:GetEmptySeatInTable()
+            if seatId > 0 then
+                --print("有空座位")
+                table:InitTable()    -- 看看是不是空桌子，如果是，需要初始化
+                table:PlayerSeat(seatId,player)
+                player.TableID = table.TableID
                 player.ChairID = seatId
 
+                self:SendYouLoginToOthers(player,table)-- 发消息给同桌子的其他玩家，告诉他们你登录了
                 return player
             end
         else
-            print("有底分不一致的情况？"..k)
+            Logger("有底分不一致的情况？"..k)
         end
     end
 
@@ -131,9 +133,24 @@ function Game:PlayerLoginGame(oldPlayer)
     table:PlayerSeat(seatId,player)     --让玩家坐下.
     player.TableID = table.TableID
     player.ChairID = seatId
+    self:SendYouLoginToOthers(player,table)-- 发消息给同桌子的其他玩家，告诉他们你登录了
     return player
 
 end
+
+
+--- 发消息给同桌子的其他玩家，告诉他们你登录了
+function Game:SendYouLoginToOthers(player,table)
+    print("玩家",player.User.UserId, "桌子",table.TableID,"椅子",player.ChairID)
+
+    local CMD_Game_pb = require("CMD_Game_pb")
+    local sendCmd = CMD_Game_pb.CMD_S_OTHER_ENTER_SCENE()
+    sendCmd.user_info.user_id = player.User.UserId
+    sendCmd.user_info.chair_id = player.ChairID
+    table:SendMsgToOtherUsers(player.User.UserId, sendCmd, MDM_GF_GAME, SUB_S_OTHER_ENTER_SCENE)
+end
+
+
 
 ----玩家登出
 function Game:PlayerLogOutGame(player)

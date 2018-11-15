@@ -27,8 +27,9 @@ func main()  {
 			//<- zcha
 			fmt.Println("---------------")
 			temp := <- zcha
-			fmt.Println("", temp)
+			fmt.Println("zcha:::::", temp)
 		}
+
 	}()
 
 

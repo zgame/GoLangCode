@@ -6,7 +6,6 @@ import (
 	"../NetWork"
 	"../GlobalVar"
 
-	"../Utils/log"
 )
 
 // ----------------------------服务器处理的统一接口----------------------------------
@@ -96,11 +95,15 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 
 }
 
-
 // 在网络中断的时候会自动调用， 关闭lua脚本
 func (a *MyServer) OnClose() {
-	log.PrintLogger("玩家中断了网络连接， 我们要关闭网络， 同时关闭玩家的lua文件")
-	a.myLua.L.Close()		// 关闭lua调用
+	//log.PrintLogger("玩家中断了网络连接， 我们要关闭网络， 同时关闭玩家的lua文件")
+
+//	a.myLua.L.DoString(`	// 关闭channel
+//	GameManagerReceiveCh:close()
+//    GameManagerSendCh:close()
+//`)
+	a.myLua.L.Close() // 关闭lua调用
 }
 
 // ---------------------发送数据到网络-------------------------

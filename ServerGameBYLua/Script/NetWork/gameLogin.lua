@@ -17,7 +17,6 @@
 local CMD_GameServer_pb = require("CMD_GameServer_pb")
 local CMD_Game_pb = require("CMD_Game_pb")
 
-
 MyPlayer = nil -- 这是全局的玩家句柄，因为每一个LState是一个单独的lua空间，所以每个玩家都拥有自己单独的MyPlayer句柄
 
 ----游客登录游戏服申请,参数带要登录的是哪个游戏
@@ -38,12 +37,16 @@ function SevLoginGSGuest(buf)
     -- 为了统一，可以用数据库来判断
 
 
+    -- 去游戏管理器申请一个玩家uid
+    local result = MultiThreadChannelGameManagerToPlayer("GetLastUserID",nil)    -- 申请分配一个桌子， 返回的数据中带有桌子和椅子的id了
+    print("分配uid", result.UserId)
+
     local MyUser = User:New()
     ---- 以后增加判断，先读数据库，如果没有，创建新的玩家，如果有，读数据库
 
     MyUser.FaceId = 0
     MyUser.Gender = 0
-    MyUser.UserId = 2027445
+    MyUser.UserId = result.UserId
     MyUser.GameId = 320395999
     MyUser.Exp = 254
     MyUser.Loveliness = 0
@@ -67,6 +70,7 @@ function SevLoginGSGuest(buf)
 
     -- 发送登录成功
     local sendCmd = CMD_GameServer_pb.CMD_GR_LogonSuccess()
+    sendCmd.user_right = MyUser.UserId          -- 把生成的uid发送给客户端，让客户端以后用这个uid来登录
     sendCmd.server_id = 99099
 
 --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
@@ -78,11 +82,11 @@ end
 
 ----客户端申请进入大厅
 function SevEnterScence(buf)
-    print("------------客户端申请进入大厅-------------")
+--    print("------------客户端申请进入大厅-------------")
     local msg = CMD_GameServer_pb.CMD_GF_GameOption()
     msg:ParseFromString(buf)
 
-    print("客户端申请进入大厅, GetClientVersion:"..msg.client_version)
+--    print("客户端申请进入大厅, GetClientVersion:"..msg.client_version)
     --玩家登陆游戏，分配桌子
     local gameType = GameTypeBY     -- 游戏类型
 
@@ -106,7 +110,7 @@ function SevEnterScence(buf)
     local sendCmd = CMD_Game_pb.CMD_S_ENTER_SCENE()
     sendCmd.scene_id = MyPlayer.GameType
     sendCmd.table_id = MyPlayer.TableID
-    for k,v in pairs(result.users) do       -- 从桌子传递过来的其他玩家信息
+    for k,v in pairs(result.users) do       -- 从桌子传递过来的其他玩家信息，原来坐着的玩家信息
         local uu = sendCmd.table_users:add()
         uu.user_id = v.UserId
         uu.chair_id = v.ChairID
@@ -126,46 +130,5 @@ function SevEnterScence(buf)
         LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
         return
     end
-    print("同步一下渔场的所有鱼")
+--    print("同步一下渔场的所有鱼")
 end
-
-----客户端开火
-function HandleUserFire(buf)
-    local msg = CMD_Game_pb.CMD_C_USER_FIRE()
-    msg:ParseFromString(buf)
-
-    local data = {}
-    data.Player = MyPlayer
-    data.LockFishId =  msg.lock_fish_id     -- 要打击的鱼id
-    local result = MultiThreadChannelGameManagerToPlayer("HandleUserFire",data)
-    if result.error ~= nil then
-        LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
-        return
-    end
-
-    --print("开火完成")
-
-end
-
---- 客户端抓鱼
-function HandleCatchFish(buf)
-    local msg = CMD_Game_pb.CMD_C_CATCH_FISH()
-    msg:ParseFromString(buf)
-
-    if msg.fish_uid == 0 then
-        return   -- 鱼的uid不为0
-    end
-
-    local data = {}
-    data.Player = MyPlayer
-    data.LockFishIdList = {}      -- 要打击的鱼id
-    data.LockFishIdList[1] =  msg.fish_uid     -- 要打击的鱼id
-    data.BulletId =  msg.bullet_id
-    local result = MultiThreadChannelGameManagerToPlayer("HandleCatchFish",data)
-    if result.error ~= nil then
-        LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
-        return
-    end
---    print("抓鱼完成")
-end
-

@@ -147,8 +147,16 @@ func main() {
 		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 给lua的桌子用的 n个协程函数
 		time.Sleep(time.Millisecond * 100)                                //给其他协程让出1秒的时间， 这个可以后期调整
 	}
-	
 
+
+	// 主逻辑退出时候
+	defer func() {
+		GameManagerLua.L.DoString(`	// 关闭channel
+	GameManagerReceiveCh:close()
+    GameManagerSendCh:close()
+`)
+		GameManagerLua.L.Close()
+	}()
 
 }
 //

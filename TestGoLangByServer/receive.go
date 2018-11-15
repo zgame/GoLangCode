@@ -124,7 +124,11 @@ func (this *Client)handlerRead(buf []byte) int {
 			//fmt.Println("发送gm命令，送金币")
 			//this.SendGmCmd("@设置金币 10000000")
 			//this.do_fire()
-			this.StartAI = true
+
+
+
+
+			//this.StartAI = true
 
 		} else if sub_msg_id == SUB_S_OTHER_ENTER_SCENE {
 			this.handleOtherEnterScence(finalBuffer,int(bufferSize))			//进入场景,接收鱼数据

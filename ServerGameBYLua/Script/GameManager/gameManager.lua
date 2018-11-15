@@ -27,8 +27,7 @@ GoRoutineMax = 4      --桌子使用的go routine函数上限
 GoRoutineAllList = {}   -- 所有的go routine列表，桌子的run函数在里面
 
 local AllGamesList = {}
-AllUserUUID = 0   -- 玩家uid的自增
-
+ALLUserUUID = 0   -- 玩家uid的自增
 
 -----------------------------------服务器启动-------------------------------------
 -- 服务器开始创建各个游戏，这里的游戏都是多人的游戏， 如果是单人游戏，玩家自己创建即可
@@ -53,10 +52,11 @@ function GetALLUserUUID()
     if ALLUserUUID == 0 then
         ALLUserUUID = 1000000000
     end
+
 end
 --有一个新的玩家注册了，那么给他分配一个UID
 function GetLastUserID()
-    local r = math.random(0, 4)        --返回[0,5)的随机整数
+    local r = math.random(1, 4)        --返回[1,4]的随机整数
     ALLUserUUID = ALLUserUUID + r            -- 玩家的UID 中间会隔一些数字， 防止玩家挨个去猜UID
     return ALLUserUUID
 end
@@ -86,6 +86,12 @@ end
 -----------------------------------桌子-------------------------------------
 -- 遍历所有的列表，然后依次run
 function  GoCallLuaGoRoutineForLuaGameTable()
+    --print("----------------当前有"..#GoRoutineAllList.."个桌子")
+    for k,v in pairs(AllGamesList) do
+        local game = GetGameByID(k)
+--        print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(game.AllUserList))
+    end
+
     if #GoRoutineAllList > 0 then
         for _, v in pairs(GoRoutineAllList) do
             v() -- 执行注册的函数，table run

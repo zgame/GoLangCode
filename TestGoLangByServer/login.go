@@ -240,7 +240,8 @@ func (this *Client)handleLoginSucessGs(buf []byte, bufferSize int){
 	checkError(err)
 	dataJ, _ := json.MarshalIndent(msg, "", " ")
 	fmt.Printf("%s", dataJ)
-	fmt.Println("----------------登录游戏服务器成功--------------", this.Index)
+	fmt.Println("----------------登录游戏服务器成功--------------", this.Index, msg.GetUserRight())
+	this.User.user_id = int(msg.GetUserRight())
 
 }
 // gs 登录失败

@@ -4,8 +4,9 @@
 --- DateTime: 2018/10/12 14:56
 ---
 
-require("gameNetwork")
 
+require("gameFire")
+require("gameLogin")
 
 ----------------------------------------------------------------------
 ---发送消息

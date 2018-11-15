@@ -193,8 +193,8 @@ func (this *Client)handleSceneFish(buf []byte, bufferSize int){
 	msg := &CMD.CMD_S_SCENE_FISH{}
 	err := proto.Unmarshal(protocolBuffer, msg)
 	checkError(err)
-	dataJ, _ := json.MarshalIndent(msg, "", " ")
-	fmt.Printf("%s\n", dataJ)
+	//dataJ, _ := json.MarshalIndent(msg, "", " ")
+	//fmt.Printf("%s\n", dataJ)
 
 	//fmt.Println("")
 
@@ -229,7 +229,7 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 	checkError(err)
 	//dataJ, _ := json.MarshalIndent(msg, "", " ")
 	//fmt.Printf("%s", dataJ)
-	fmt.Printf("----------------新增鱼-------------%d\n", this.Index)
+	//fmt.Printf("----------------新增鱼-------------%d\n", this.Index)
 	//fmt.Println("")
 
 	fish_cnt :=0
@@ -352,8 +352,8 @@ func (this *Client)handleCatchFish(buf []byte, bufferSize int){
 	err := proto.Unmarshal(protocolBuffer, msg)
 
 	checkError(err)
-	dataJ, _ := json.MarshalIndent(msg, "", " ")
-	fmt.Printf("%s", dataJ)
+	//dataJ, _ := json.MarshalIndent(msg, "", " ")
+	//fmt.Printf("%s", dataJ)
 	catch_cnt := 0
 	total_score := 0
 

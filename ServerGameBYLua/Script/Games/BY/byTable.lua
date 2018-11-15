@@ -75,9 +75,9 @@ function ByTable:RunTable()
             end
 
             if now - LastRunTime > 3000 then
-                print("当前有多少条鱼", self:GetFishNum())
-                print("当前有多少子弹", self:GetBulletNum())
-                print("当前有多少玩家", GetTableLen(self.UserSeatArray))
+                print(self.TableID.."当前有多少条鱼", self:GetFishNum())
+                print(self.TableID.."当前有多少子弹", self:GetBulletNum())
+                print(self.TableID.."当前有多少玩家", GetTableLen(self.UserSeatArray))
                 LastRunTime = GetOsTimeMillisecond()
             end
         end
@@ -379,7 +379,7 @@ end
 
 ----玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
 function ByTable:SendSceneFishes(UserId)
-    print("鱼数量"..GetTableLen(self.FishArray))
+--    print("鱼数量"..GetTableLen(self.FishArray))
     local sendCmd = CMD_Game_pb.CMD_S_SCENE_FISH()
     for k,fish in pairs(self.FishArray) do
         local cmd = sendCmd.scene_fishs:add()
@@ -421,7 +421,7 @@ end
 ----给桌上的其他玩家同步消息
 function ByTable:SendMsgToOtherUsers(userId,sendCmd,mainCmd,subCmd)
     for k,player in pairs(self.UserSeatArray) do
-        if player ~= nil and player.IsRobot == false and MyUser.UserId ~= player.User.UserId and player.NetWorkState then
+        if player ~= nil and player.IsRobot == false and userId ~= player.User.UserId and player.NetWorkState then
             LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
         end
     end
@@ -456,7 +456,7 @@ function ByTable:InitDistributeInfo()
             end
         end
     end
-    print("桌子初始化鱼池结束")
+--    print("桌子初始化鱼池结束")
 end
 
 ----循环鱼池的生成组
