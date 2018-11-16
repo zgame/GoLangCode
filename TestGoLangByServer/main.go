@@ -11,6 +11,7 @@ import (
 
 	"time"
 	"github.com/go-ini/ini"
+	"runtime"
 )
 
 
@@ -32,6 +33,8 @@ var ShowLog int
 
 // 程序入口
 func main() {
+	runtime.GOMAXPROCS(4)
+
 	f, err := ini.Load("Setting.ini")
 	if err != nil{
 		fmt.Println("配置文件出错")

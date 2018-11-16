@@ -85,23 +85,27 @@ end
 
 -----------------------------------桌子-------------------------------------
 -- 遍历所有的列表，然后依次run
-function  GoCallLuaGoRoutineForLuaGameTable()
+function GoCallLuaGoRoutineForLuaGameTable()
     --print("----------------当前有"..#GoRoutineAllList.."个桌子")
-    for k,v in pairs(AllGamesList) do
+    for k, v in pairs(AllGamesList) do
         local game = GetGameByID(k)
---        print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(game.AllUserList))
+        --        print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(game.AllUserList))
     end
 
-    if #GoRoutineAllList > 0 then
-        for _, v in pairs(GoRoutineAllList) do
-            v() -- 执行注册的函数，table run
-        end
+    --    if #GoRoutineAllList > 0 then
+    for _, v in pairs(GoRoutineAllList) do
+        v() -- 执行注册的函数，table run
     end
+    --    end
 end
+
 -- 然后注册TableRun
-function  FindGoRoutineAndRegisterTableRun(func)
-    local len = #GoRoutineAllList +1
-    GoRoutineAllList[len]=func  --注册TableRun函数
+function FindGoRoutineAndRegisterTableRun(func)
+    --    local len = #GoRoutineAllList +1
+--    GoRoutineAllList[len]=func  --注册TableRun函数
+
+    table.insert(GoRoutineAllList,func)--注册TableRun函数
+
 end
 ------------------------------------------------------------------------------------------------------
 --- 利用多核的go协程

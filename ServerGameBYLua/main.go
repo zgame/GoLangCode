@@ -142,10 +142,14 @@ func main() {
 		//	// 定期更新后台的配置数据
 		//	UpdateDBSetting()
 		//}
-
+		start:= ztimer.GetOsTimeMillisecond()
 		GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
 		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 给lua的桌子用的 n个协程函数
 		time.Sleep(time.Millisecond * 100)                                //给其他协程让出1秒的时间， 这个可以后期调整
+		end:= ztimer.GetOsTimeMillisecond()
+		if end - start > 120 {
+			fmt.Println("一个循环用时", end-start)
+		}
 	}
 
 

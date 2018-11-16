@@ -111,7 +111,7 @@ func (a *MyServer) WriteMsg(msg ... []byte) bool{
 
 	err := a.conn.WriteMsg(msg...)
 	if err != nil {
-		fmt.Println("玩家的网络中断，不能正常发送消息给该玩家")
+		fmt.Printf("玩家的网络中断，不能正常发送消息给该玩家%x \n",msg)
 		return  false   // 发送失败
 	}
 	return true    // 发送成功

@@ -6,7 +6,6 @@ import (
 	"./CMD"
 	"time"
 	"math/rand"
-	"encoding/json"
 )
 // -------------------------------------子弹 和 鱼-------------------------------------------
 //# 子弹对象
@@ -180,10 +179,10 @@ func (this *Client)handleOtherEnterScence(buf []byte, bufferSize int){
 	msg := &CMD.CMD_S_OTHER_ENTER_SCENE{}
 	err := proto.Unmarshal(protocolBuffer, msg)
 	checkError(err)
-	dataJ, _ := json.MarshalIndent(msg, "", " ")
-	fmt.Printf("%s", dataJ)
-	fmt.Printf("----------------%s进入了房间--------------%d",  msg.GetUserInfo().GetNickName(),this.Index,)
-	fmt.Println("")
+	//dataJ, _ := json.MarshalIndent(msg, "", " ")
+	//fmt.Printf("%s", dataJ)
+	//fmt.Printf("----------------%d进入了房间--------------%d",  msg.GetUserInfo().GetUserId(),this.Index,)
+	//fmt.Println("")
 
 }
 
@@ -217,7 +216,7 @@ func (this *Client)handleSceneFish(buf []byte, bufferSize int){
 			return
 		}
 	}
-	fmt.Printf("----------------场景鱼刷新-------------%d", fish_cnt)
+	//fmt.Printf("----------------场景鱼刷新-------------%d", fish_cnt)
 
 }
 
@@ -229,8 +228,8 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 	checkError(err)
 	//dataJ, _ := json.MarshalIndent(msg, "", " ")
 	//fmt.Printf("%s", dataJ)
-	//fmt.Printf("----------------新增鱼-------------%d\n", this.Index)
-	//fmt.Println("")
+	fmt.Printf("----------------新增鱼-------------%d\n", this.Index)
+
 
 	fish_cnt :=0
 	if this.Gameinfo.fish_pool == nil {

@@ -48,9 +48,10 @@ function ByTable:RunTable()
 
     -- 开始桌子的主循环
     local RunTable = function()
+        --print("table       run"..self.TableID)
         if self:CheckTableEmpty() then
             --            print("这是一个空桌子")
-            LastRunTime = GetOsTimeMillisecond()
+            self.LastRunTime = GetOsTimeMillisecond()
         else
             local now = GetOsTimeMillisecond()
 
@@ -74,11 +75,11 @@ function ByTable:RunTable()
                 end
             end
 
-            if now - LastRunTime > 3000 then
-                print(self.TableID.."当前有多少条鱼", self:GetFishNum())
-                print(self.TableID.."当前有多少子弹", self:GetBulletNum())
-                print(self.TableID.."当前有多少玩家", GetTableLen(self.UserSeatArray))
-                LastRunTime = GetOsTimeMillisecond()
+            if now - self.LastRunTime > 3000 then
+                --print(self.TableID.."当前有多少条鱼", self:GetFishNum())
+                --print(self.TableID.."当前有多少子弹", self:GetBulletNum())
+                --print(self.TableID.."当前有多少玩家", GetTableLen(self.UserSeatArray))
+                self.LastRunTime = GetOsTimeMillisecond()
             end
         end
     end

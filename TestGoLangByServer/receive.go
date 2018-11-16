@@ -128,7 +128,7 @@ func (this *Client)handlerRead(buf []byte) int {
 
 
 
-			//this.StartAI = true
+			this.StartAI = true
 
 		} else if sub_msg_id == SUB_S_OTHER_ENTER_SCENE {
 			this.handleOtherEnterScence(finalBuffer,int(bufferSize))			//进入场景,接收鱼数据
