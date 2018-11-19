@@ -90,6 +90,9 @@ func main() {
 	for{
 		//fmt.Println("主循环")
 		//GoCallLuaLogic(L,"test")
+		mutex.Lock()
+		GoCallLuaLogic(L,"pp")
+		mutex.Unlock()
 		//goCallLuaSelect(L)			// 主线程监听
 		time.Sleep(time.Millisecond * 100 * 1)
 		//select {

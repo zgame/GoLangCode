@@ -145,10 +145,10 @@ func main() {
 		start:= ztimer.GetOsTimeMillisecond()
 		GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
 		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 给lua的桌子用的 n个协程函数
-		time.Sleep(time.Millisecond * 100)                                //给其他协程让出1秒的时间， 这个可以后期调整
+		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
 		end:= ztimer.GetOsTimeMillisecond()
 		if end - start > 120 {
-			fmt.Println("一个循环用时", end-start)
+			//fmt.Println("一个循环用时", end-start)
 		}
 	}
 
@@ -222,7 +222,7 @@ func NetWorkServerStart()  {
 		wsServer.CertFile = ""
 		wsServer.KeyFile = ""
 		wsServer.NewAgent = func(conn *NetWork.WSConn) NetWork.Agent {
-			a := Lua.NewMyServer(conn)				// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+			a := Lua.NewMyServer(conn,GameManagerLua)				// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
 			return a
 		}
 
@@ -238,7 +238,7 @@ func NetWorkServerStart()  {
 		server.LenMsgLen = 4
 		server.MaxMsgLen = math.MaxUint32
 		server.NewAgent = func(conn *NetWork.TCPConn) NetWork.Agent {
-			a := Lua.NewMyServer(conn)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+			a := Lua.NewMyServer(conn,GameManagerLua)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
 			return a
 		}
 		server.Start()

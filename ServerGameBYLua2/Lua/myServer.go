@@ -12,22 +12,29 @@ import (
 // myServer其实是一个个连接单独处理的模块
 //-----------------------------------------------------------------------------------
 
-
+var MyServerUUID = 0
 
 type MyServer struct {
 	conn NetWork.Conn			// 对应的每个玩家的连接
 	myLua     *MyLua			// 处理该玩家的lua脚本
 	luaReloadTime	int			// 记录上次lua脚本更新的时间戳
-
+	ServerId int
 	//userData interface{}
 }
 
 
 
 // 分配一个玩家处理逻辑模块的内存
-func NewMyServer(conn NetWork.Conn)  *MyServer{
-	myLua := NewMyLua()
-	return &MyServer{conn:conn,myLua:myLua}
+func NewMyServer(conn NetWork.Conn,GameManagerLua *MyLua)  *MyServer{
+	//myLua := NewMyLua()
+	myLua:= GameManagerLua		// 改为统一一个LState
+
+	ServerId := MyServerUUID
+	MyServerUUID ++
+	if MyServerUUID >= 9990000{
+		MyServerUUID = 0
+	}
+	return &MyServer{conn:conn,myLua:myLua,ServerId:ServerId}
 }
 
 //--------------------------各个玩家连接逻辑主循环------------------------------
@@ -88,7 +95,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	finalBuffer := buf[offset:offset + int(bufferSize)]
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
 	//fmt.Println("")
-	a.myLua.GoCallLuaNetWorkReceive(int(msgId),int(subMsgId),string(finalBuffer))		// 把收到的数据传递给lua进行处理
+	a.myLua.GoCallLuaNetWorkReceive( a.ServerId ,int(msgId),int(subMsgId),string(finalBuffer))		// 把收到的数据传递给lua进行处理
 
 
 	return int(bufferSize) + offset
@@ -143,9 +150,11 @@ func (a *MyServer) Destroy() {
 
 //--------------------------lua 启动-------------------------------
 func (a *MyServer) Init() {
-	a.myLua.Init() // 绑定lua脚本
-	a.luaReloadTime = GlobalVar.LuaReloadTime
-	LuaConnectMyServer[a.myLua.L] = a
+
+
+	//a.myLua.Init() // 绑定lua脚本
+	//a.luaReloadTime = GlobalVar.LuaReloadTime
+	LuaConnectMyServer[a.ServerId] = a
 
 	// 以后这里可以初始化玩家自己solo的游戏服务器
 

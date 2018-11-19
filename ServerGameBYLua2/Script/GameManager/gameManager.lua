@@ -88,7 +88,7 @@ end
 function ShowAllGameStates()
     for k, v in pairs(AllGamesList) do
         local game = GetGameByID(k)
-        print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(game.AllUserList))
+        print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(game.AllPlayerList))
     end
 end
 

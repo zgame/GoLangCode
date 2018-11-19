@@ -18,7 +18,7 @@ local CMD_Game_pb = require("CMD_Game_pb")
 
 
 ----客户端开火
-function HandleUserFire(buf)
+function HandleUserFire(serverId,buf)
     local msg = CMD_Game_pb.CMD_C_USER_FIRE()
     msg:ParseFromString(buf)
 
@@ -27,7 +27,7 @@ function HandleUserFire(buf)
     data.LockFishId =  msg.lock_fish_id     -- 要打击的鱼id
     local result = MultiThreadChannelGameManagerToPlayer("HandleUserFire",data)
     if result.error ~= nil then
-        LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+        LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
         return
     end
 
@@ -36,7 +36,7 @@ function HandleUserFire(buf)
 end
 
 --- 客户端抓鱼
-function HandleCatchFish(buf)
+function HandleCatchFish(serverId,buf)
     local msg = CMD_Game_pb.CMD_C_CATCH_FISH()
     msg:ParseFromString(buf)
 
@@ -51,7 +51,7 @@ function HandleCatchFish(buf)
     data.BulletId =  msg.bullet_id
     local result = MultiThreadChannelGameManagerToPlayer("HandleCatchFish",data)
     if result.error ~= nil then
-        LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+        LuaNetWorkSend( serverId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
         return
     end
 --    print("抓鱼完成")

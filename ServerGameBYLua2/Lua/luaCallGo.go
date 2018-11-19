@@ -48,10 +48,11 @@ func (m *MyLua)InitResister() {
 // lua发送网络数据
 func luaCallGoNetWorkSend(L *lua.LState) int {
 	userId := L.ToInt(1)
-	mainCmd := L.ToInt(2)
-	subCmd := L.ToInt(3)
-	data := L.ToString(4)
-	msg := L.ToString(5)
+	serverId := L.ToInt(2)
+	mainCmd := L.ToInt(3)
+	subCmd := L.ToInt(4)
+	data := L.ToString(5)
+	msg := L.ToString(6)
 
 	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd)
 	//_, err := Conn.Write(bufferEnd)
@@ -61,7 +62,7 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	// 发送出去
 	if userId == 0 {
 		// 给玩家自己回复消息
-		result = GetMyServerByLSate(L).WriteMsg(bufferEnd)
+		result = GetMyServerByLSate(serverId).WriteMsg(bufferEnd)
 	}else{
 		// 给其他玩家发送消息
 		result = GetMyServerByUID(userId).WriteMsg(bufferEnd)
@@ -102,9 +103,10 @@ func luaCallGoGetOsTimeMillisecond(L *lua.LState) int {
 
 // user id 要注册，方便以后查询
 func luaCallGoResisterUID(L * lua.LState) int  {
-	uid := L.ToNumber(1)		 // 玩家uid
-	server := GetMyServerByLSate(L)		// my server
-	LuaUIDConnectMyServer[int(uid)] = server   // 进行关联
+	uid := L.ToNumber(1)                     // 玩家uid
+	serverId := L.ToNumber(2)                     // 玩家uid
+	server := GetMyServerByLSate(int(serverId))   // my server
+	LuaUIDConnectMyServer[int(uid)] = server // 进行关联
 
 	return 0
 }

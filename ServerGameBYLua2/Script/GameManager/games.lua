@@ -21,7 +21,7 @@ function Game:New(name,gameTypeId, switch)
         AllTableList = {},  -- 所有桌子列表       key tableUid  ,value table
         TableUUID = 1 ,     -- tableUid 从1开始
 
-        AllUserList = {},   -- 所有玩家列表   key  userId , value player
+        AllPlayerList = {},   -- 所有玩家列表   key  userId , value player
 
         GameScore = 0 ,     --  游戏倍率
     }
@@ -74,15 +74,15 @@ end
 ----------------------------------------------------------------
 --- 根据user uid 返回user的句柄
 function Game:GetUserByUID(uid)
-    return self.AllUserList[uid]
+    return self.AllPlayerList[uid]
 end
 
 --- 有玩家登陆游戏，想进入对应分数的房间
 function Game:PlayerLoginGame(oldPlayer)
     local player
     -- 如果玩家是断线重连的
-    if self.AllUserList[oldPlayer.User.UserId] ~= nil then      --找到之前有玩家在线
-        player = self.AllUserList[oldPlayer.User.UserId]          -- 把之前的玩家数据取出来
+    if self.AllPlayerList[oldPlayer.User.UserId] ~= nil then      --找到之前有玩家在线
+        player = self.AllPlayerList[oldPlayer.User.UserId]          -- 把之前的玩家数据取出来
         if oldPlayer.GameType == player.GameType and oldPlayer.NetWorkState == false then
             -- 同一个游戏， 并且玩家状态是等待断线重连
             player.NetWorkState = true                      -- 网络恢复正常
@@ -101,7 +101,7 @@ function Game:PlayerLoginGame(oldPlayer)
     -- 不是断线重连的就重新建一个玩家数据
     player = Player:New(oldPlayer.User)
     player.GameType = oldPlayer.GameType            -- 设定游戏类型
-    self.AllUserList[oldPlayer.User.UserId] = player      --创建好之后加入玩家总列表
+    self.AllPlayerList[oldPlayer.User.UserId] = player      --创建好之后加入玩家总列表
 
 
 

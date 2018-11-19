@@ -215,7 +215,7 @@ end
 ----玩家离开椅子
 function ByTable:PlayerStandUp(seatID,player)
     local game = GetGameByID(player.GameType)
-    game.AllUserList[player.User.UserId] = nil      -- 清理掉游戏管理的玩家总列表
+    game.AllPlayerList[player.User.UserId] = nil      -- 清理掉游戏管理的玩家总列表
     self.UserSeatArray[seatID] = nil                -- 清理掉桌子的玩家列表
     player.TableID = TABLE_CHAIR_NOBODY
     player.ChairID = TABLE_CHAIR_NOBODY

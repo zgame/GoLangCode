@@ -20,7 +20,7 @@ local CMD_Game_pb = require("CMD_Game_pb")
 MyPlayer = nil -- 这是全局的玩家句柄，因为每一个LState是一个单独的lua空间，所以每个玩家都拥有自己单独的MyPlayer句柄
 
 ----游客登录游戏服申请,参数带要登录的是哪个游戏
-function SevLoginGSGuest(buf)
+function SevLoginGSGuest(serverId,buf)
     local msg = CMD_GameServer_pb.CMD_GR_LogonUserID()
     msg:ParseFromString(buf)
 
@@ -36,7 +36,7 @@ function SevLoginGSGuest(buf)
     ---- 先判断该玩家是否已经登录了， 如果登录了，返回错误消息给客户端告知已经登录了，可以踢掉之前登录的账号。
     -- 为了统一，可以用数据库来判断
 
-
+    result.UserId = GetLastUserID()       -- 桌子会发送消息给玩家
     -- 去游戏管理器申请一个玩家uid
     local result = MultiThreadChannelGameManagerToPlayer("GetLastUserID",nil)    -- 申请分配一个桌子， 返回的数据中带有桌子和椅子的id了
     print("分配uid", result.UserId)
@@ -74,14 +74,14 @@ function SevLoginGSGuest(buf)
     sendCmd.server_id = 99099
 
 --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
-    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, sendCmd, nil)
-    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FINISH, nil, nil)
+    LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, sendCmd, nil)
+    LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_FINISH, nil, nil)
 
 end
 
 
 ----客户端申请进入大厅
-function SevEnterScence(buf)
+function SevEnterScence(serverId,buf)
 --    print("------------客户端申请进入大厅-------------")
     local msg = CMD_GameServer_pb.CMD_GF_GameOption()
     msg:ParseFromString(buf)
@@ -96,7 +96,7 @@ function SevEnterScence(buf)
     local result = MultiThreadChannelGameManagerToPlayer("PlayerLoginGame",data)    -- 申请分配一个桌子， 返回的数据中带有桌子和椅子的id了
 
     if result.error ~= nil then
-        LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
+        LuaNetWorkSend( serverId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
         return
     end
 
@@ -116,7 +116,7 @@ function SevEnterScence(buf)
         uu.chair_id = v.ChairID
     end
 
-    LuaNetWorkSend(  MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil) --进入房间
+    LuaNetWorkSend(serverId,MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil) --进入房间
     --
     ----LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_GAME_STATUS , nil, nil)--更新游戏状态
     ----LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_SYSTEM_MESSAGE , nil, nil)--系统消息
@@ -127,7 +127,7 @@ function SevEnterScence(buf)
 
     result = MultiThreadChannelGameManagerToPlayer("SendSceneFishes",data)      -- 同步一下渔场的所有鱼
     if result.error ~= nil then
-        LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+        LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
         return
     end
 --    print("同步一下渔场的所有鱼")

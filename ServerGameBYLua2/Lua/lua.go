@@ -14,7 +14,7 @@ import (
 var GameManagerReceiveCh chan lua.LValue		// 这是每个玩家线程跟主线程之间的通信用channel
 var GameManagerSendCh chan lua.LValue			// 这是主线程给每个玩家线程跟之间的通信用channel
 
-var LuaConnectMyServer map[*lua.LState]*MyServer	// 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
+var LuaConnectMyServer map[int]*MyServer	// 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
 var LuaUIDConnectMyServer map[int]*MyServer     // 将uid跟连接句柄进行哈希
 
 type MyLua struct {
@@ -29,7 +29,7 @@ func NewMyLua() *MyLua {
 
 // --------------------全局变量初始化--------------------------
 func InitGlobalVar() {
-	LuaConnectMyServer = make(map[* lua.LState]*MyServer)
+	LuaConnectMyServer = make(map[int]*MyServer)
 	LuaUIDConnectMyServer = make(map[int]*MyServer)
 	GameManagerReceiveCh = make(chan lua.LValue)// 这是每个玩家线程跟主线程之间的通信用channel
 	GameManagerSendCh = make(chan lua.LValue)
@@ -37,8 +37,8 @@ func InitGlobalVar() {
 }
 
 // 通过lua堆栈找到对应的是哪个myServer
-func GetMyServerByLSate(L *lua.LState) *MyServer {
-	return LuaConnectMyServer[L]
+func GetMyServerByLSate(id int) *MyServer {
+	return LuaConnectMyServer[id]
 }
 // 通过 user id 找到对应的是哪个myServer
 func GetMyServerByUID(uid int) *MyServer {
@@ -50,8 +50,8 @@ func GetMyServerByUID(uid int) *MyServer {
 func (m *MyLua)Init()   {
 	//L := luaPool.Get()		// 这是用池的方式， 但是玩家数据需要清理重置，以后再考虑吧
 	//defer luaPool.Put(L)
-	m.L.SetGlobal("GameManagerReceiveCh", lua.LChannel(GameManagerReceiveCh))// 这是每个玩家线程跟主线程之间的通信用channel
-	m.L.SetGlobal("GameManagerSendCh", lua.LChannel(GameManagerSendCh))
+	//m.L.SetGlobal("GameManagerReceiveCh", lua.LChannel(GameManagerReceiveCh))// 这是每个玩家线程跟主线程之间的通信用channel
+	//m.L.SetGlobal("GameManagerSendCh", lua.LChannel(GameManagerSendCh))
 
 	m.InitResister() // 这里是统一的lua函数注册入口
 

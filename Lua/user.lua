@@ -19,3 +19,7 @@ function show_uid()
     print("userid",userid)
 end
 
+function pp()
+    userid = userid - 1
+end
+
