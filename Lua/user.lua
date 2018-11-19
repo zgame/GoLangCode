@@ -9,7 +9,8 @@ local userid = 0
 
 print("start")
 
-require("Script/CSV/mgby_fish_sever")
+--require("Script/CSV/mgby_fish_sever")
+
 
 function add_uid()
     userid = userid + 1
@@ -17,3 +18,4 @@ end
 function show_uid()
     print("userid",userid)
 end
+

@@ -64,7 +64,7 @@ print("msg**********************************************************************
 
 
 --
---local CMD_Game_pb = require('CMD_Game_pb')
+local CMD_Game_pb = require('CMD_Game_pb')
 --
 --local mm = CMD_Game_pb.tagSceneFish()
 --mm.uid = 123

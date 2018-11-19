@@ -10,6 +10,7 @@ import (
 	"github.com/yuin/gopher-lua/parse"
 	"unsafe"
 	"runtime"
+	"sync"
 )
 
 var num = 0
@@ -18,6 +19,8 @@ var codeToShare *lua.FunctionProto
 var ch chan lua.LValue
 var quit chan lua.LValue
 
+
+var mutex sync.Mutex
 //const FileLua  = "Script/main.lua"
 //const FileLua  = "goroutine.lua"
 const FileLua  = "user.lua"
@@ -30,17 +33,17 @@ func main() {
 	runtime.GOMAXPROCS(4)
 
 	//defer luaPool.Shutdown()
-	//var err error
-	//codeToShare,err = CompileLua(FileLua)
-	//if err!=nil{
-	//	fmt.Println("加载main.lua文件出错了！")
-	//}
-
-	// 支线程
-	for i:= 1;i<100;i++ {
-		go start(1, i) // 间隔时间， 编号
-
+	var err error
+	codeToShare,err = CompileLua(FileLua)
+	if err!=nil{
+		fmt.Println("加载main.lua文件出错了！")
 	}
+
+	////支线程
+	//for i:= 1;i<3;i++ {
+	//	go start(1, i) // 间隔时间， 编号
+	//
+	//}
 
 
 	//主线程
@@ -70,17 +73,18 @@ func main() {
 
 
 
-	//for i:=0;i<10;i++{
-	//	go func() {
-	//		for{
-	//			GoCallLuaLogic(L,"add_uid")
-	//			GoCallLuaLogic(L,"show_uid")
-	//
-	//			time.Sleep(time.Second*1)
-	//		}
-	//	}()
-	//
-	//}
+	for i:=0;i<10;i++{
+		go func() {
+			for{
+				mutex.Lock()
+				GoCallLuaLogic(L,"add_uid")
+				GoCallLuaLogic(L,"show_uid")
+				mutex.Unlock()
+				//time.Sleep(time.Second*1)
+			}
+		}()
+
+	}
 
 
 	for{
