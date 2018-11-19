@@ -1,0 +1,56 @@
+
+// To use the "libprotobuf-lite.lib" library for C++ code.
+//option optimize_for = LITE_RUNTIME;
+
+syntax = "proto2";
+// Namespace: MESSAGE
+package CMD;
+
+//I D 登录
+message CMD_GR_LogonUserID
+{
+	//版本信息
+	optional uint32					plaza_version = 1;						//广场版本
+	optional uint32					frame_version = 2;						//框架版本
+	optional uint32					process_version = 3;					//进程版本
+	optional int32					client_type = 4;						//客户端类型 1为网页 2为PC 3为IOS 4为Android
+
+	//登录信息
+	optional uint32					user_id = 5;							//用户 I D
+	optional bytes					password = 6;							//登录密码(32md5)
+	optional bytes					machine_id = 7;							//机器序列
+	optional int32					kind_id = 8;							//类型索引
+	optional bytes					ip_addr = 9;							//IP地址
+	optional int32 					ditch_number = 10;						//渠道号 1为官网
+	optional bytes					device_type = 11;						//设备的型号
+	optional uint32                 packet_index = 12;                      //包索引，用来记录这是第几次发送这个包，服务器收到这个包检查BUG
+	optional bool					is_android = 13;						//是否为机器人
+	//大师赛专用
+	optional uint32					cannon_mulriple = 14;					//炮倍率
+ 
+};
+//登录成功
+message CMD_GR_LogonSuccess
+{
+	optional uint32							user_right = 1;						//用户权限
+	optional uint32							master_right = 2;					//管理权限
+	optional uint32                         new_guide = 3;                      //新手引导
+	optional int32							server_id = 4;						//服务器房间ID
+	optional int32							cannon_num_switch = 5;				//炮数量开关0:关,1:开. 0是有x1-x3
+};
+
+//登录失败
+message CMD_GR_LogonFailure
+{
+	optional int32							error_code = 1;					//错误代码
+	optional int32							server_id = 2;					//服务器房间ID
+	optional bytes							describe = 3;					//描述消息
+};
+
+//游戏配置
+message CMD_GF_GameOption
+{
+	optional int32							allow_lookon = 1;				//旁观标志
+	optional uint32							frame_version = 2;				//框架版本
+	optional uint32							client_version = 3;				//游戏版本
+};
