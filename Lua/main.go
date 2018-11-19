@@ -18,7 +18,10 @@ var codeToShare *lua.FunctionProto
 var ch chan lua.LValue
 var quit chan lua.LValue
 
-const FileLua  = "goroutine.lua"
+//const FileLua  = "Script/main.lua"
+//const FileLua  = "goroutine.lua"
+const FileLua  = "user.lua"
+//const FileLua  = "main.lua"
 
 func main() {
 	ch = make(chan lua.LValue)
@@ -27,14 +30,14 @@ func main() {
 	runtime.GOMAXPROCS(4)
 
 	//defer luaPool.Shutdown()
-	var err error
-	codeToShare,err = CompileLua(FileLua)
-	if err!=nil{
-		fmt.Println("加载main.lua文件出错了！")
-	}
+	//var err error
+	//codeToShare,err = CompileLua(FileLua)
+	//if err!=nil{
+	//	fmt.Println("加载main.lua文件出错了！")
+	//}
 
 	// 支线程
-	for i:= 1;i<300;i++ {
+	for i:= 1;i<100;i++ {
 		go start(1, i) // 间隔时间， 编号
 
 	}
@@ -50,6 +53,10 @@ func main() {
 	// 直接调用luaopen_pb
 	luaopen_pb(L)
 
+
+
+	//DoCompiledFile(L, codeToShare)
+
 	if err := L.DoFile(FileLua); err != nil {
 		fmt.Println("加载main.lua文件出错了！")
 		fmt.Println(err.Error())
@@ -61,11 +68,26 @@ func main() {
 	//	}
 	//}()
 
+
+
+	//for i:=0;i<10;i++{
+	//	go func() {
+	//		for{
+	//			GoCallLuaLogic(L,"add_uid")
+	//			GoCallLuaLogic(L,"show_uid")
+	//
+	//			time.Sleep(time.Second*1)
+	//		}
+	//	}()
+	//
+	//}
+
+
 	for{
 		//fmt.Println("主循环")
 		//GoCallLuaLogic(L,"test")
-		goCallLuaSelect(L)			// 主线程监听
-		time.Sleep(time.Millisecond * 10 * 1)
+		//goCallLuaSelect(L)			// 主线程监听
+		time.Sleep(time.Millisecond * 100 * 1)
 		//select {
 		//
 		//}
@@ -98,9 +120,11 @@ func start(timer time.Duration, index int) {
 	// 声明double函数为Lua的全局函数，绑定go函数Double
 	L.SetGlobal("zClose", L.NewFunction(zClose))
 	//L.Register("double", Double)
+	//lua.RegistrySize = 10244 * 20
+	//lua.CallStackSize = 10244
 	//DoCompiledFile(L, codeToShare)
 
-	//// 执行lua文件
+	// 执行lua文件
 	if err := L.DoFile(FileLua); err != nil {
 		fmt.Println("加载main.lua文件出错了！")
 		fmt.Println(err.Error())
@@ -224,7 +248,7 @@ func timerFunc(L *lua.LState,index int)  {
 	//goCallLua(L,int(timer))
 
 	num++
-	goCallLuaSend(L, strconv.Itoa(index))			// 分支线程发消息
+	//goCallLuaSend(L, strconv.Itoa(index))			// 分支线程发消息
 }
 
 // Lua重新加载，Lua的热更新按钮

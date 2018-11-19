@@ -114,7 +114,6 @@ func getString(RowIndex int, ListIndex int, rows [][]string) string {
 
 	data := rows[RowIndex][ListIndex]
 
-
 	if ListType == "string"{
 		strOut = fmt.Sprintf(" %s = \"%s\", ",ListName,data)
 	}else if ListType == "int"{
@@ -153,7 +152,7 @@ func DealRowsData(rows [][]string)  string{
 			continue	// 略过前2行
 		}
 
-		line := "["+ rows[i][0]+"] = { "
+		line := "[\""+ rows[i][0]+"\"] = { "			// 这里写入每行的key， 要注意， 这里需要用字符串， 因为用字符串就是key， 不用就是数组，必须用key
 		for j := 1; j < width; j++ {
 			str := getString(i,j, rows)
 			line = line + str

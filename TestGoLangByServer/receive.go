@@ -27,11 +27,12 @@ func (this *Client)handlerRead(buf []byte) int {
 	//	offset = 12		// version == 1 的时候， 加了一个token
 	//}
 	finalBuffer := buf[offset:offset + int(bufferSize)]
-	msgBuffer := buf[offset + int(bufferSize):offset + int(bufferSize)+ int(msgSize)]
+
 
 	if msgSize >0 {
 		//fmt.Println("有错误提示了")
-		fmt.Println(string(msgBuffer))
+		//msgBuffer := buf[offset + int(bufferSize):offset + int(bufferSize)+ int(msgSize)]
+		//fmt.Println(string(msgBuffer))
 		return int(bufferSize) + offset + int(msgSize)
 	}
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。

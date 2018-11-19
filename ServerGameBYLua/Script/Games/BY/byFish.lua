@@ -44,13 +44,13 @@ end
 -- 创建一条鱼
 function Fish:CreateFish(kindId,x,y,PathID)
     local now = GetOsTimeMillisecond()
-    local speed = FishServerExcel[kindId].speed
-    local Mulriple = FishServerExcel[kindId].mulriple
-    local CapturePro = FishServerExcel[kindId].capture_probability
+    local speed = FishServerExcel.kindId.speed
+    local Mulriple = FishServerExcel.kindId.mulriple
+    local CapturePro = FishServerExcel.kindId.capture_probability
     local totalAliveTime = 10           -- 鱼的生存时间
 
     self.FishKindID = kindId
-    self.FishType = FishServerExcel[kindId].type
+    self.FishType = FishServerExcel.kindId.type
     self.CreateTime = now
     self.TotalAliveTime = totalAliveTime
     self.DeadTime = now + self.TotalAliveTime * 1000

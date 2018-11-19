@@ -40,7 +40,7 @@ func (this *Client) quit() {
 //--------------------------------------------------------------------------------------------------
 
 func (this *Client) Receive()  bool{
-	buf := make([]byte,1024 * 8) //定义一个切片的长度是1024 * 8
+	buf := make([]byte,1024 * 1) //定义一个切片的长度是1024 * 8
 	bufLen,err := this.Conn.Read(buf)
 	if err != nil && err != io.EOF {  //io.EOF在网络编程中表示对端把链接关闭了。
 		fmt.Println("接收时候对方服务器链接关闭了！")

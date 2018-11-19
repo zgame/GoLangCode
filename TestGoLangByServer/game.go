@@ -205,17 +205,17 @@ func (this *Client)handleSceneFish(buf []byte, bufferSize int){
 	if fish_cnt > MAX_FISH_CNT {
 		return
 	}
-	for _,v :=range msg.GetSceneFishs(){
-		var ffish FishObj
-		ffish.kind_id = int(v.GetKindId())
-		ffish.uid = int(v.GetUid())
-		ffish.tick = time.Now()
-		this.Gameinfo.fish_pool = append(this.Gameinfo.fish_pool, &ffish)
-		fish_cnt += 1
-		if fish_cnt > MAX_FISH_CNT{
-			return
-		}
-	}
+	//for _,v :=range msg.GetSceneFishs(){
+	//	var ffish FishObj
+	//	ffish.kind_id = int(v.GetKindId())
+	//	ffish.uid = int(v.GetUid())
+	//	ffish.tick = time.Now()
+	//	this.Gameinfo.fish_pool = append(this.Gameinfo.fish_pool, &ffish)
+	//	fish_cnt += 1
+	//	if fish_cnt > MAX_FISH_CNT{
+	//		return
+	//	}
+	//}
 	//fmt.Printf("----------------场景鱼刷新-------------%d", fish_cnt)
 
 }
@@ -228,7 +228,7 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 	checkError(err)
 	//dataJ, _ := json.MarshalIndent(msg, "", " ")
 	//fmt.Printf("%s", dataJ)
-	fmt.Printf("----------------新增鱼-------------%d\n", this.Index)
+	//fmt.Printf("----------------新增鱼-------------%d\n", this.Index)
 
 
 	fish_cnt :=0
@@ -240,15 +240,17 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 		return
 	}
 	for _,v :=range msg.GetFishs(){
-		var ffish FishObj
-		ffish.kind_id = int(v.GetKindId())
-		ffish.uid = int(v.GetUid())
-		ffish.tick = time.Now()
-		this.Gameinfo.fish_pool = append(this.Gameinfo.fish_pool, &ffish)
-		fish_cnt += 1
-		if fish_cnt > MAX_FISH_CNT{
-			return
-		}
+		//var ffish FishObj
+		//ffish.kind_id = int(v.GetKindId())
+		//ffish.uid = int(v.GetUid())
+		//ffish.tick = time.Now()
+		//this.Gameinfo.fish_pool = append(this.Gameinfo.fish_pool, &ffish)
+		//fish_cnt += 1
+		//if fish_cnt > MAX_FISH_CNT{
+		//	return
+		//}
+
+		this.Fish_id = int(v.GetUid())
 	}
 
 }
@@ -257,7 +259,7 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 // -------------------------------------捕鱼-------------------------------------------
 
 func (this *Client)do_fire() {
-	this.select_fish()
+	//this.select_fish()
 
 	if this.Fish_id <=0 {
 		return
@@ -314,7 +316,7 @@ func (this *Client)do_catch(bullet *BulletObj) {
 	bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_CATCH_FISH, uint16(size),uint16(this.SendTokenID))
 	this.SendTokenID++
 	this.Send(bufferT, data)
-	fmt.Println("申请捕鱼",fish_uid,bullet_id,chair_id)
+	//fmt.Println("申请捕鱼",fish_uid,bullet_id,chair_id)
 }
 
 
@@ -371,8 +373,8 @@ func (this *Client)handleCatchFish(buf []byte, bufferSize int){
 	if msg.GetChairId() == int32(this.Gameinfo.chair_id){
 		this.ShowLog++
 		if this.ShowLog % uint64(ShowLog) ==0 {
-			fmt.Printf("----------------捕获到%d条鱼,获得金币:%d,经验:%d------------%d", catch_cnt, total_score, msg.GetAddExp(), this.Index)
-			fmt.Println("")
+			fmt.Printf("----------------捕获到%d条鱼,获得金币:%d,经验:%d------------%d \n", catch_cnt, total_score, msg.GetAddExp(), this.Index)
+			//fmt.Println("")
 		}
 	}
 
@@ -414,10 +416,10 @@ func (this *Client)GameAI()  {
 	}
 
 	//# 处理过期的鱼
-	if time.Now().After(this.Last_check_due_tick) {
-		this.Last_check_due_tick = time.Now().Add(time.Second)
-		this.check_overdue_fish()
-	}
+	//if time.Now().After(this.Last_check_due_tick) {
+	//	this.Last_check_due_tick = time.Now().Add(time.Second)
+	//	this.check_overdue_fish()
+	//}
 
 }
 
