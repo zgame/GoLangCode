@@ -3,6 +3,7 @@ package Lua
 import (
 	"github.com/yuin/gopher-lua"
 	"fmt"
+	"../GlobalVar"
 )
 
 //--------------------------------------------------------------------------------
@@ -32,6 +33,7 @@ func GoCallLuaTest(L *lua.LState, num int)  {
 
 // -------------------go触发lua函数，不带参数和返回值-------------------
 func (m *MyLua) GoCallLuaLogic(funcName string) {
+	GlobalVar.Mutex.Lock()
 	if err := m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
 		NRet: 0,
@@ -39,26 +41,47 @@ func (m *MyLua) GoCallLuaLogic(funcName string) {
 	}); err != nil {		// 参数
 		fmt.Println("GoCallLuaLogic error :",funcName, "      ",err.Error())
 	}
+	GlobalVar.Mutex.Unlock()
 }
 
 // -------------------go传递接收到的网络数据包给lua-------------------
-func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,msgId int , subMsgId int ,buf string) {
+func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMsgId int ,buf string) {
+	GlobalVar.Mutex.Lock()
 	if err := m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal("GoCallLuaNetWorkReceive"),		// lua的函数名字
 		NRet: 0,
 		Protect: true,
-	}, lua.LNumber(serverId),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf)); err != nil {		// 参数
+	}, lua.LNumber(serverId),lua.LNumber(userId),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf)); err != nil {		// 参数
 		fmt.Println("GoCallLuaNetWorkReceive  error :",msgId , subMsgId, buf, "      ",err.Error())
 	}
+	GlobalVar.Mutex.Unlock()
 }
 
 // ------------------------go 给lua传递 1个 int-----------------------------------------------
-func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
-	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
+//func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
+//	if err := m.L.CallByParam(lua.P{
+//		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
+//		NRet: 0,
+//		Protect: true,
+//	},lua.LNumber(ii)); err != nil {		// 参数
+//		fmt.Println("GoCallLuaLogicInt error :", funcName ,"      ",err.Error())
+//	}
+//}
+
+// ----------------------Lua重新加载，Lua的热更新按钮----------------------------------------
+func (m *MyLua)GoCallLuaReload() error {
+	//fmt.Println("----------lua reload--------------")
+	GlobalVar.Mutex.Lock()
+	var err error
+	err = m.L.CallByParam(lua.P{
+		Fn: m.L.GetGlobal("ReloadAll"), //reloadUp  ReloadAll
 		NRet: 0,
 		Protect: true,
-	},lua.LNumber(ii)); err != nil {		// 参数
-		fmt.Println("GoCallLuaLogicInt error :", funcName ,"      ",err.Error())
+	})
+
+	GlobalVar.Mutex.Unlock()
+	if err != nil {
+		fmt.Println("热更新出错 ",err.Error())
 	}
+	return err
 }

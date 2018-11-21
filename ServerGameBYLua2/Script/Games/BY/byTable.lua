@@ -215,7 +215,7 @@ end
 ----玩家离开椅子
 function ByTable:PlayerStandUp(seatID,player)
     local game = GetGameByID(player.GameType)
-    game.AllPlayerList[player.User.UserId] = nil      -- 清理掉游戏管理的玩家总列表
+    AllPlayerList[player.User.UserId] = nil      -- 清理掉游戏管理的玩家总列表
     self.UserSeatArray[seatID] = nil                -- 清理掉桌子的玩家列表
     player.TableID = TABLE_CHAIR_NOBODY
     player.ChairID = TABLE_CHAIR_NOBODY
@@ -438,6 +438,7 @@ function ByTable:InitDistributeInfo()
     local endId = startId + 100
 
     for fishKind, v in pairs(FishServerExcel) do
+        fishKind = tonumber(fishKind)
         if v.is_use == 1 and fishKind > startId and fishKind < endId then
             local distribute = FishDistribute:New()
             distribute.FishKindID = fishKind
@@ -475,7 +476,7 @@ function ByTable:RunDistributeInfo(roomScore)
             --print("now",now,"Distribute.CreateTime",Distribute.CreateTime, " Distribute.DistributeIntervalTime", Distribute.DistributeIntervalTime)
             local createType = 0   --鱼怎么走
             local buildNum = 0      -- 鱼生成数量
-            local max = FishServerExcel[kindId].count_max
+            local max = FishServerExcel[tostring(kindId)].count_max
             if max > 1 then
                 -- 多生成几条鱼
                 buildNum =  Distribute:GetCount(kindId)

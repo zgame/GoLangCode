@@ -11,11 +11,11 @@ import (
 // lua的接口，包含热更新
 //--------------------------------------------------------------------------------
 
-var GameManagerReceiveCh chan lua.LValue		// 这是每个玩家线程跟主线程之间的通信用channel
-var GameManagerSendCh chan lua.LValue			// 这是主线程给每个玩家线程跟之间的通信用channel
+//var GameManagerReceiveCh chan lua.LValue		// 这是每个玩家线程跟主线程之间的通信用channel
+//var GameManagerSendCh chan lua.LValue			// 这是主线程给每个玩家线程跟之间的通信用channel
 
-var LuaConnectMyServer map[int]*MyServer	// 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
-var LuaUIDConnectMyServer map[int]*MyServer     // 将uid跟连接句柄进行哈希
+var luaConnectMyServer map[int]*MyServer    // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
+var luaUIDConnectMyServer map[int]*MyServer // 将uid跟连接句柄进行哈希
 
 type MyLua struct {
 	L *lua.LState
@@ -29,20 +29,20 @@ func NewMyLua() *MyLua {
 
 // --------------------全局变量初始化--------------------------
 func InitGlobalVar() {
-	LuaConnectMyServer = make(map[int]*MyServer)
-	LuaUIDConnectMyServer = make(map[int]*MyServer)
-	GameManagerReceiveCh = make(chan lua.LValue)// 这是每个玩家线程跟主线程之间的通信用channel
-	GameManagerSendCh = make(chan lua.LValue)
+	luaConnectMyServer = make(map[int]*MyServer)
+	luaUIDConnectMyServer = make(map[int]*MyServer)
+	//GameManagerReceiveCh = make(chan lua.LValue)// 这是每个玩家线程跟主线程之间的通信用channel
+	//GameManagerSendCh = make(chan lua.LValue)
 
 }
 
 // 通过lua堆栈找到对应的是哪个myServer
 func GetMyServerByLSate(id int) *MyServer {
-	return LuaConnectMyServer[id]
+	return luaConnectMyServer[id]
 }
 // 通过 user id 找到对应的是哪个myServer
 func GetMyServerByUID(uid int) *MyServer {
-	return LuaUIDConnectMyServer[uid]
+	return luaUIDConnectMyServer[uid]
 }
 
 
@@ -95,20 +95,6 @@ func DoCompiledFile(L *lua.LState, proto *lua.FunctionProto) error {
 }
 
 
-// ----------------------Lua重新加载，Lua的热更新按钮----------------------------------------
-func (m *MyLua)GoCallLuaReload() error {
-	//fmt.Println("----------lua reload--------------")
-	var err error
-	err = m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal("ReloadAll"), //reloadUp  ReloadAll
-		NRet: 0,
-		Protect: true,
-	})
-	if err != nil {
-		fmt.Println("热更新出错 ",err.Error())
-	}
-	return err
-}
 
 //-----------------------lua 对应的类型列表------------------------------
 //Type name	Go type	Type() value	Constants

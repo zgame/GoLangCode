@@ -8,8 +8,13 @@ import (
 // 处理单个包内容
 func (this *Client)handlerRead(buf []byte) int {
 	//var err error
-	//fmt.Printf("Receive buf: %x",buf)
-	//fmt.Println(" ")
+	//fmt.Printf("Receive buf: %x\n",buf)
+
+	if len(buf)< 10 {
+		fmt.Printf("error buf len < 10 : %x",buf)
+		return 0
+	}
+
 	msg_id, sub_msg_id, bufferSize, _, msgSize := dealRecvTcpDeaderData(buf)
 
 	offset := 10
@@ -99,10 +104,10 @@ func (this *Client)handlerRead(buf []byte) int {
 		} else if sub_msg_id == SUB_GR_LOGON_SUCCESS {
 			this.handleLoginSucessGs(finalBuffer,int(bufferSize))
 		} else if sub_msg_id == SUB_GR_LOGON_FINISH {
-			fmt.Println("游戏服务器登录完成 ------")
+			//fmt.Println("游戏服务器登录完成 ------")
 
 			//  开始进入场景
-			//fmt.Println("开始发送进入场景")
+			//fmt.Println("开始发送进入场景",this.User.user_id)
 			this.EnterScence()
 
 		}

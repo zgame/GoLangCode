@@ -26,7 +26,8 @@ GameTypeBY3 = 4   -- ** 捕鱼
 GoRoutineMax = 4      --桌子使用的go routine函数上限
 GoRoutineAllList = {}   -- 所有的go routine列表，桌子的run函数在里面
 
-AllGamesList = {}
+AllGamesList = {}   -- gameType , game
+AllPlayerList = {}   -- 所有玩家列表   key  userId , value player
 ALLUserUUID = 0   -- 玩家uid的自增
 
 -----------------------------------服务器启动-------------------------------------
@@ -61,6 +62,13 @@ function GetLastUserID()
     return ALLUserUUID
 end
 
+
+--- 根据user uid 返回user的句柄
+function GetPlayerByUID(uid)
+    return AllPlayerList[uid]
+end
+
+
 -----------------------------------游戏-------------------------------------
 --增加一个游戏， 指定这个游戏的类型， 并且创建一个桌子，并启动桌子逻辑
 function AddGame(name, gameType, gameScore)
@@ -88,7 +96,7 @@ end
 function ShowAllGameStates()
     for k, v in pairs(AllGamesList) do
         local game = GetGameByID(k)
-        print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(game.AllPlayerList))
+        print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(AllPlayerList))
     end
 end
 

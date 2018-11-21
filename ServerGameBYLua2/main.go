@@ -143,7 +143,7 @@ func main() {
 		//	UpdateDBSetting()
 		//}
 		start:= ztimer.GetOsTimeMillisecond()
-		GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
+		//GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
 		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 给lua的桌子用的 n个协程函数
 		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
 		end:= ztimer.GetOsTimeMillisecond()
@@ -260,7 +260,7 @@ func GameManagerInit() {
 // 检查通用逻辑部分的lua是否需要更新
 func GameManagerLuaReloadCheck() {
 	if GameManagerLuaReloadTime == GlobalVar.LuaReloadTime {
-		return
+		//return
 	}
 	// 如果跟本地的lua时间戳不一致，就更新
 	err = GameManagerLua.GoCallLuaReload()

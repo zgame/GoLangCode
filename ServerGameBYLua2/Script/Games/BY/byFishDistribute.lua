@@ -29,6 +29,7 @@ end
 
 ----获取生成时间间隔
 function FishDistribute:GetIntervalTime(kindId)
+    kindId  = tostring(kindId)          -- 这里要注意，之所以用string是因为用int，消耗内存大
     -- 获取时间间隔
     local DistributeIntervalMin = FishServerExcel[kindId].distribute_interval_min
     local DistributeIntervalMax = FishServerExcel[kindId].distribute_interval_max
@@ -38,6 +39,7 @@ function FishDistribute:GetIntervalTime(kindId)
 end
 ----获取生成数量间隔
 function FishDistribute:GetCount(kindId)
+    kindId  = tostring(kindId)          -- 这里要注意，之所以用string是因为用int，消耗内存大
     -- 获取时间间隔
     local DistributeIntervalMin = FishServerExcel[kindId].count_min
     local DistributeIntervalMax = FishServerExcel[kindId].count_max
@@ -46,6 +48,7 @@ function FishDistribute:GetCount(kindId)
 end
 ----多条鱼生成时间间隔
 function FishDistribute:GetCountFishTime(kindId)
+    kindId  = tostring(kindId)          -- 这里要注意，之所以用string是因为用int，消耗内存大
     -- 获取时间间隔
     local DistributeIntervalMin = FishServerExcel[kindId].time_min
     local DistributeIntervalMax = FishServerExcel[kindId].time_max

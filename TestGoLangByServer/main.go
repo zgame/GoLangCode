@@ -65,7 +65,7 @@ func main() {
 		go func(i int) {
 			defer w.Done()
 
-			fmt.Println("connection:", i)
+			//fmt.Println("connection:", i)
 			//conn, e := net.DialTCP("tcp", nil, tcpAddr)
 			//if e != nil {
 			//	fmt.Println(i, e)

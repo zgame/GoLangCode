@@ -12,7 +12,6 @@ import (
 	"encoding/binary"
 	"strings"
 	"log"
-	"encoding/json"
 )
 
 
@@ -238,9 +237,9 @@ func (this *Client)handleLoginSucessGs(buf []byte, bufferSize int){
 	msg := &CMD.CMD_GR_LogonSuccess{}
 	err := proto.Unmarshal(protocolBuffer, msg)
 	checkError(err)
-	dataJ, _ := json.MarshalIndent(msg, "", " ")
-	fmt.Printf("%s", dataJ)
-	fmt.Println("----------------登录游戏服务器成功--------------", this.Index, msg.GetUserRight())
+	//dataJ, _ := json.MarshalIndent(msg, "", " ")
+	//fmt.Printf("%s", dataJ)
+	//fmt.Println("----------------登录游戏服务器成功--------------",  msg.GetUserRight())
 	this.User.user_id = int(msg.GetUserRight())
 
 }

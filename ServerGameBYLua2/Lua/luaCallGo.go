@@ -103,10 +103,10 @@ func luaCallGoGetOsTimeMillisecond(L *lua.LState) int {
 
 // user id 要注册，方便以后查询
 func luaCallGoResisterUID(L * lua.LState) int  {
-	uid := L.ToNumber(1)                     // 玩家uid
-	serverId := L.ToNumber(2)                     // 玩家uid
-	server := GetMyServerByLSate(int(serverId))   // my server
-	LuaUIDConnectMyServer[int(uid)] = server // 进行关联
-
+	uid := L.ToNumber(1)                        // 玩家uid
+	serverId := L.ToNumber(2)                   // 玩家uid
+	server := GetMyServerByLSate(int(serverId)) // my server
+	luaUIDConnectMyServer[int(uid)] = server    // 进行关联
+	server.UserId = int(uid)                    // 保存uid
 	return 0
 }

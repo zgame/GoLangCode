@@ -12,9 +12,11 @@ import (
 	"./CMD"
 
 	"time"
+	"sync"
 )
 
 type Client struct {
+
 	Conn       net.Conn
 	Index      int
 	User       *User
@@ -35,13 +37,19 @@ func (this *Client) quit() {
 	this.Conn.Close()
 }
 
+var Mutex sync.Mutex
+
 //--------------------------------------------------------------------------------------------------
 // 接受数据包逻辑
 //--------------------------------------------------------------------------------------------------
 
 func (this *Client) Receive()  bool{
 	buf := make([]byte,1024 * 1) //定义一个切片的长度是1024 * 8
+
+	Mutex.Lock()
 	bufLen,err := this.Conn.Read(buf)
+	Mutex.Unlock()
+
 	if err != nil && err != io.EOF {  //io.EOF在网络编程中表示对端把链接关闭了。
 		fmt.Println("接收时候对方服务器链接关闭了！")
 		//log.Println(err)
@@ -53,7 +61,7 @@ func (this *Client) Receive()  bool{
 		return true
 	}
 	bufHead := 0
-	num:=0
+	//num:=0
 	for {
 		//fmt.Println(" buf ",buf)
 
@@ -61,7 +69,7 @@ func (this *Client) Receive()  bool{
 		bufHead += this.handlerRead(bufTemp)   //处理结束之后返回，接下来要开始的范围
 		time.Sleep(time.Millisecond * 100)
 		//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
-		num++
+		//num++
 		//fmt.Println("num",num)
 		if bufHead >= bufLen{
 			return true
@@ -104,7 +112,11 @@ func (this *Client) Send(bufferH []byte, data []byte) {
 	bufferEnd := make([]byte, dataSize+  headSize )
 	copy(bufferEnd, bufferH)
 	copy(bufferEnd[headSize:], bufferEncryp)
+
+	Mutex.Lock()
 	_, err := this.Conn.Write(bufferEnd)
+	Mutex.Unlock()
+
 	checkError(err)
 
 

@@ -21,7 +21,7 @@ function Game:New(name,gameTypeId, switch)
         AllTableList = {},  -- 所有桌子列表       key tableUid  ,value table
         TableUUID = 1 ,     -- tableUid 从1开始
 
-        AllPlayerList = {},   -- 所有玩家列表   key  userId , value player
+
 
         GameScore = 0 ,     --  游戏倍率
     }
@@ -51,7 +51,7 @@ function Game:CreateTable(gameType,gameScore)
         return nil
     end
     table_t.RoomScore = gameScore
-    Logger("创建了一个新的桌子,type:"..gameType)
+--    Logger("创建了一个新的桌子,type:"..gameType)
 
     --增加该桌子到总列表中
     self.AllTableList[self.TableUUID] = table_t
@@ -72,17 +72,14 @@ end
 ----------------------------------------------------------------
 -----------------------------管理玩家---------------------------
 ----------------------------------------------------------------
---- 根据user uid 返回user的句柄
-function Game:GetUserByUID(uid)
-    return self.AllPlayerList[uid]
-end
+
 
 --- 有玩家登陆游戏，想进入对应分数的房间
 function Game:PlayerLoginGame(oldPlayer)
     local player
     -- 如果玩家是断线重连的
-    if self.AllPlayerList[oldPlayer.User.UserId] ~= nil then      --找到之前有玩家在线
-        player = self.AllPlayerList[oldPlayer.User.UserId]          -- 把之前的玩家数据取出来
+    if AllPlayerList[oldPlayer.User.UserId] ~= nil then      --找到之前有玩家在线
+        player = AllPlayerList[oldPlayer.User.UserId]          -- 把之前的玩家数据取出来
         if oldPlayer.GameType == player.GameType and oldPlayer.NetWorkState == false then
             -- 同一个游戏， 并且玩家状态是等待断线重连
             player.NetWorkState = true                      -- 网络恢复正常
@@ -101,7 +98,7 @@ function Game:PlayerLoginGame(oldPlayer)
     -- 不是断线重连的就重新建一个玩家数据
     player = Player:New(oldPlayer.User)
     player.GameType = oldPlayer.GameType            -- 设定游戏类型
-    self.AllPlayerList[oldPlayer.User.UserId] = player      --创建好之后加入玩家总列表
+    AllPlayerList[oldPlayer.User.UserId] = player      --创建好之后加入玩家总列表
 
 
 
@@ -125,7 +122,7 @@ function Game:PlayerLoginGame(oldPlayer)
     end
 
     --没有空座位的房间了，创建一个
-    print("没有空座位的房间了，创建一个吧,  score".. self.Id)
+--    print("没有空座位的房间了，创建一个吧,  score".. self.Id)
     local gameType = self.AllTableList[1].GameID
     local table = self:CreateTable(gameType, self.GameScore)
     local seatId = table:GetEmptySeatInTable()  --获取空椅位
@@ -141,12 +138,13 @@ end
 
 --- 发消息给同桌子的其他玩家，告诉他们你登录了
 function Game:SendYouLoginToOthers(player,table)
-    print("玩家",player.User.UserId, "桌子",table.TableID,"椅子",player.ChairID)
+--    print("玩家",player.User.UserId, "桌子",table.TableID,"椅子",player.ChairID)
 
     local CMD_Game_pb = require("CMD_Game_pb")
     local sendCmd = CMD_Game_pb.CMD_S_OTHER_ENTER_SCENE()
     sendCmd.user_info.user_id = player.User.UserId
     sendCmd.user_info.chair_id = player.ChairID
+    sendCmd.user_info.table_id = player.TableID
     table:SendMsgToOtherUsers(player.User.UserId, sendCmd, MDM_GF_GAME, SUB_S_OTHER_ENTER_SCENE)
 end
 

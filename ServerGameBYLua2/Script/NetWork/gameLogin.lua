@@ -19,7 +19,7 @@ local CMD_Game_pb = require("CMD_Game_pb")
 
 MyPlayer = nil -- 这是全局的玩家句柄，因为每一个LState是一个单独的lua空间，所以每个玩家都拥有自己单独的MyPlayer句柄
 
-----游客登录游戏服申请,参数带要登录的是哪个游戏
+----游客登录申请,获取玩家的数据， 判断是否已经登录，
 function SevLoginGSGuest(serverId,buf)
     local msg = CMD_GameServer_pb.CMD_GR_LogonUserID()
     msg:ParseFromString(buf)
@@ -33,25 +33,74 @@ function SevLoginGSGuest(serverId,buf)
     --    return
     --end
 
-    ---- 先判断该玩家是否已经登录了， 如果登录了，返回错误消息给客户端告知已经登录了，可以踢掉之前登录的账号。
+    -- 先判断该玩家是否已经登录了， 如果登录了，返回错误消息给客户端告知已经登录了，可以踢掉之前登录的账号。
     -- 为了统一，可以用数据库来判断
 
-    result.UserId = GetLastUserID()       -- 桌子会发送消息给玩家
+    --result.UserId = GetLastUserID()       -- 桌子会发送消息给玩家
     -- 去游戏管理器申请一个玩家uid
-    local result = MultiThreadChannelGameManagerToPlayer("GetLastUserID",nil)    -- 申请分配一个桌子， 返回的数据中带有桌子和椅子的id了
-    print("分配uid", result.UserId)
+    --local result = MultiThreadChannelGameManagerToPlayer("GetLastUserID",nil)    -- 申请分配一个桌子， 返回的数据中带有桌子和椅子的id了
+    --print("分配uid", result.UserId)
+
+    --local MyUser = User:New()
+    ------ 以后增加判断，先读数据库，如果没有，创建新的玩家，如果有，读数据库
+    --
+    --MyUser.FaceId = 0
+    --MyUser.Gender = 0
+    local UserId = GetLastUserID()
+    --MyUser.GameId = 320395999
+    --MyUser.Exp = 254
+    --MyUser.Loveliness = 0
+    --MyUser.Score = 100000009
+    --MyUser.NickName = "玩家"..MyUser.UserId
+    --MyUser.Level = 1
+    --MyUser.VipLevel = 0
+    --MyUser.AccountLevel = 3
+    --MyUser.SiteLevel = 0
+    --MyUser.CurLevelExp = 0
+    --MyUser.NextLevelExp = 457
+    --MyUser.PayTotal = 0
+    --MyUser.Diamond = 29
+    --
+    --local player = Player:New(MyUser)
+    --player.GameType = msg.kind_id
+
+
+    -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
+    luaCallGoResisterUID(UserId,serverId)
+
+    -- 发送登录成功
+    local sendCmd = CMD_GameServer_pb.CMD_GR_LogonSuccess()
+    sendCmd.user_right = UserId          -- 把生成的uid发送给客户端，让客户端以后用这个uid来登录
+    sendCmd.server_id = 99099
+
+--    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
+    LuaNetWorkSendToUser(UserId, MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, sendCmd, nil)
+    LuaNetWorkSendToUser(UserId, MDM_GR_LOGON, SUB_GR_LOGON_FINISH, nil, nil)
+
+end
+
+
+----客户端申请进入大厅 , 玩家申请登录游戏房间， 分配桌子，坐下
+function SevEnterScene(userId, buf)
+--    print("------------客户端申请进入大厅-------------")
+    local msg = CMD_GameServer_pb.CMD_GF_GameOption()
+    msg:ParseFromString(buf)
+
+--    print("客户端申请进入大厅, GetClientVersion:"..msg.client_version)
+    --玩家登陆游戏，分配桌子
+    local gameType = GameTypeBY     -- 申请登录的游戏类型
 
     local MyUser = User:New()
     ---- 以后增加判断，先读数据库，如果没有，创建新的玩家，如果有，读数据库
 
     MyUser.FaceId = 0
     MyUser.Gender = 0
-    MyUser.UserId = result.UserId
+    MyUser.UserId = userId
     MyUser.GameId = 320395999
     MyUser.Exp = 254
     MyUser.Loveliness = 0
     MyUser.Score = 100000009
-    MyUser.NickName = "玩家320395999"
+    MyUser.NickName = "玩家"..MyUser.UserId
     MyUser.Level = 1
     MyUser.VipLevel = 0
     MyUser.AccountLevel = 3
@@ -61,62 +110,63 @@ function SevLoginGSGuest(serverId,buf)
     MyUser.PayTotal = 0
     MyUser.Diamond = 29
 
-    MyPlayer = Player:New(MyUser)
-    --MyPlayer.GameType = msg.kind_id
+    local oldPlayer = Player:New(MyUser)
+    oldPlayer.GameType = gameType
 
 
-    -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
-    luaCallGoResisterUID(MyUser.UserId)
+    --local data = {}
+    --data.Player = MyPlayer
+    --MyPlayer.GameType = gameType
+    --local result = MultiThreadChannelGameManagerToPlayer("PlayerLoginGame",data)    -- 申请分配一个桌子， 返回的数据中带有桌子和椅子的id了
 
-    -- 发送登录成功
-    local sendCmd = CMD_GameServer_pb.CMD_GR_LogonSuccess()
-    sendCmd.user_right = MyUser.UserId          -- 把生成的uid发送给客户端，让客户端以后用这个uid来登录
-    sendCmd.server_id = 99099
-
---    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
-    LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, sendCmd, nil)
-    LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_FINISH, nil, nil)
-
-end
-
-
-----客户端申请进入大厅
-function SevEnterScence(serverId,buf)
---    print("------------客户端申请进入大厅-------------")
-    local msg = CMD_GameServer_pb.CMD_GF_GameOption()
-    msg:ParseFromString(buf)
-
---    print("客户端申请进入大厅, GetClientVersion:"..msg.client_version)
-    --玩家登陆游戏，分配桌子
-    local gameType = GameTypeBY     -- 游戏类型
-
-    local data = {}
-    data.Player = MyPlayer
-    MyPlayer.GameType = gameType
-    local result = MultiThreadChannelGameManagerToPlayer("PlayerLoginGame",data)    -- 申请分配一个桌子， 返回的数据中带有桌子和椅子的id了
-
-    if result.error ~= nil then
-        LuaNetWorkSend( serverId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
+    local game = GetGameByID(gameType)
+    if game == nil then
+        LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
         return
     end
 
+    local player = game:PlayerLoginGame(oldPlayer)
+    --result.TableID = player.TableID
+    --result.ChairID = player.ChairID                 -- 把player桌子id，椅子id的数据 返回去
+    local table = game:GetTableByUID(player.TableID)
+    if table == nil then
+        LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+        return
+    end
+    --local playerList = table:GetUsersSeatInTable()
+    --result.users = {}
+    --for k,v in pairs(table.UserSeatArray)do      -- 把桌子的其他玩家数据也发回去
+    --    result.users[k] = {}
+    --    result.users[k].UserId =  v.User.UserId
+    --    result.users[k].ChairID =  k
+    --end
 
-    MyPlayer.TableID = result.TableID       -- 桌子传递回来的桌子椅子id
-    MyPlayer.ChairID = result.ChairID
+
+
+
+    --
+    --if result.error ~= nil then
+    --    LuaNetWorkSend(connId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
+    --    return
+    --end
+
+
+    --MyPlayer.TableID = result.TableID       -- 桌子传递回来的桌子椅子id
+    --MyPlayer.ChairID = result.ChairID
     --printTable(result)
     --print("-----------------------------------------------------")
 
     --local table = MyGame:PlayerLoginGame(MyUser)
     local sendCmd = CMD_Game_pb.CMD_S_ENTER_SCENE()
-    sendCmd.scene_id = MyPlayer.GameType
-    sendCmd.table_id = MyPlayer.TableID
-    for k,v in pairs(result.users) do       -- 从桌子传递过来的其他玩家信息，原来坐着的玩家信息
+    sendCmd.scene_id = player.GameType
+    sendCmd.table_id = player.TableID
+    for k,v in pairs(table.UserSeatArray) do       -- 从桌子传递过来的其他玩家信息，原来坐着的玩家信息
         local uu = sendCmd.table_users:add()
-        uu.user_id = v.UserId
-        uu.chair_id = v.ChairID
+        uu.user_id = v.User.UserId
+        uu.chair_id = k
     end
 
-    LuaNetWorkSend(serverId,MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil) --进入房间
+    LuaNetWorkSendToUser(userId,MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil) --进入房间
     --
     ----LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_GAME_STATUS , nil, nil)--更新游戏状态
     ----LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_SYSTEM_MESSAGE , nil, nil)--系统消息
@@ -125,10 +175,12 @@ function SevEnterScence(serverId,buf)
     --table:SendSceneFishes()
 
 
-    result = MultiThreadChannelGameManagerToPlayer("SendSceneFishes",data)      -- 同步一下渔场的所有鱼
-    if result.error ~= nil then
-        LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
-        return
-    end
+    table:SendSceneFishes(player.User.UserId)
+
+    --result = MultiThreadChannelGameManagerToPlayer("SendSceneFishes",data)      -- 同步一下渔场的所有鱼
+    --if result.error ~= nil then
+    --    LuaNetWorkSend(connId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+    --    return
+    --end
 --    print("同步一下渔场的所有鱼")
 end

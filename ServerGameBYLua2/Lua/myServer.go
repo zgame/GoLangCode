@@ -6,6 +6,7 @@ import (
 	"../NetWork"
 	"../GlobalVar"
 
+	"time"
 )
 
 // ----------------------------服务器处理的统一接口----------------------------------
@@ -14,11 +15,13 @@ import (
 
 var MyServerUUID = 0
 
+
 type MyServer struct {
 	conn NetWork.Conn			// 对应的每个玩家的连接
 	myLua     *MyLua			// 处理该玩家的lua脚本
 	luaReloadTime	int			// 记录上次lua脚本更新的时间戳
 	ServerId int
+	UserId  int					// 玩家uid
 	//userData interface{}
 }
 
@@ -29,11 +32,13 @@ func NewMyServer(conn NetWork.Conn,GameManagerLua *MyLua)  *MyServer{
 	//myLua := NewMyLua()
 	myLua:= GameManagerLua		// 改为统一一个LState
 
+	GlobalVar.Mutex.Lock()
 	ServerId := MyServerUUID
 	MyServerUUID ++
 	if MyServerUUID >= 9990000{
 		MyServerUUID = 0
 	}
+	GlobalVar.Mutex.Unlock()
 	return &MyServer{conn:conn,myLua:myLua,ServerId:ServerId}
 }
 
@@ -50,31 +55,40 @@ func (a *MyServer) Run() {
 		}
 		//fmt.Printf("收到消息------------%x \n", buf)
 		bufHead := 0
-		num:=0
+		//num:=0
+
+		//GlobalVar.Mutex.Lock()
 		for {
 			//fmt.Println(" buf ",buf)
 			//fmt.Println(" bufsize ",bufLen)
 			bufTemp := buf[bufHead:bufLen]         //要处理的buffer
 			bufHead += a.HandlerRead(bufTemp) //处理结束之后返回，接下来要开始的范围
-			//time.Sleep(time.Millisecond * 100)
+			time.Sleep(time.Millisecond * 100)
 			//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
-			num++
+			//num++
 			//fmt.Println("num",num)
 			if bufHead >= bufLen{
 				break
 			}
 		}
+		//GlobalVar.Mutex.Unlock()
 
 		//a.myLua.GoCallLuaNetWorkReceive(string(data))		// 把收到的数据传递给lua进行处理
 		//a.WriteMsg([]byte("服务器收到你的消息-------" + string(data)))
 
 
-		a.CheckLuaReload()		// 检查lua脚本是否需要更新
+		//a.CheckLuaReload()		// 检查lua脚本是否需要更新
 	}
 }
 
 func (a * MyServer)HandlerRead(buf []byte) int {
 	//fmt.Printf("buf......%x",buf)
+	if len(buf)< 10 {
+		fmt.Printf("error buf len < 10 : %x",buf)
+		return 0
+	}
+
+
 	msgId, subMsgId, bufferSize, _ := NetWork.DealRecvTcpDeaderData(buf)
 
 	offset := 10
@@ -95,7 +109,10 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	finalBuffer := buf[offset:offset + int(bufferSize)]
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
 	//fmt.Println("")
-	a.myLua.GoCallLuaNetWorkReceive( a.ServerId ,int(msgId),int(subMsgId),string(finalBuffer))		// 把收到的数据传递给lua进行处理
+
+
+	a.myLua.GoCallLuaNetWorkReceive( a.ServerId,  a.UserId,int(msgId),int(subMsgId),string(finalBuffer))		// 把收到的数据传递给lua进行处理
+
 
 
 	return int(bufferSize) + offset
@@ -116,7 +133,9 @@ func (a *MyServer) OnClose() {
 // ---------------------发送数据到网络-------------------------
 func (a *MyServer) WriteMsg(msg ... []byte) bool{
 
+	//GlobalVar.Mutex.Lock()
 	err := a.conn.WriteMsg(msg...)
+	//GlobalVar.Mutex.Unlock()
 	if err != nil {
 		fmt.Printf("玩家的网络中断，不能正常发送消息给该玩家%x \n",msg)
 		return  false   // 发送失败
@@ -154,7 +173,10 @@ func (a *MyServer) Init() {
 
 	//a.myLua.Init() // 绑定lua脚本
 	//a.luaReloadTime = GlobalVar.LuaReloadTime
-	LuaConnectMyServer[a.ServerId] = a
+
+	//GlobalVar.Mutex.Lock()
+	luaConnectMyServer[a.ServerId] = a
+	//GlobalVar.Mutex.Unlock()
 
 	// 以后这里可以初始化玩家自己solo的游戏服务器
 
@@ -165,17 +187,17 @@ func (a *MyServer) Init() {
 	//}()
 }
 
-//---------------------------热更新检查-----------------------------
-func (a *MyServer) CheckLuaReload() {
-	// 检查一下lua更新的时间戳
-	if a.luaReloadTime == GlobalVar.LuaReloadTime{
-		return
-	}
-
-	// 如果跟本地的lua时间戳不一致，就更新
-	err := a.myLua.GoCallLuaReload()
-	if err == nil{
-		// 热更新成功
-		a.luaReloadTime = GlobalVar.LuaReloadTime
-	}
-}
+////---------------------------热更新检查-----------------------------
+//func (a *MyServer) CheckLuaReload() {
+//	// 检查一下lua更新的时间戳
+//	if a.luaReloadTime == GlobalVar.LuaReloadTime{
+//		return
+//	}
+//
+//	// 如果跟本地的lua时间戳不一致，就更新
+//	err := a.myLua.GoCallLuaReload()
+//	if err == nil{
+//		// 热更新成功
+//		a.luaReloadTime = GlobalVar.LuaReloadTime
+//	}
+//}

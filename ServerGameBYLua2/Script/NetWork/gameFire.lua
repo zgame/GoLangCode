@@ -18,25 +18,30 @@ local CMD_Game_pb = require("CMD_Game_pb")
 
 
 ----客户端开火
-function HandleUserFire(serverId,buf)
+function HandleUserFire(userId, buf)
     local msg = CMD_Game_pb.CMD_C_USER_FIRE()
     msg:ParseFromString(buf)
 
-    local data = {}
-    data.Player = MyPlayer
-    data.LockFishId =  msg.lock_fish_id     -- 要打击的鱼id
-    local result = MultiThreadChannelGameManagerToPlayer("HandleUserFire",data)
-    if result.error ~= nil then
-        LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
-        return
-    end
+
+    local player,game,table = GetPlayer_Game_Table(userId)
+    table:HandleUserFire(player , msg.lock_fish_id )       -- 桌子会发送消息给玩家
+
+
+    --local data = {}
+    --data.Player = MyPlayer
+    --data.LockFishId =  msg.lock_fish_id     -- 要打击的鱼id
+    --local result = MultiThreadChannelGameManagerToPlayer("HandleUserFire",data)
+    --if result.error ~= nil then
+    --    LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+    --    return
+    --end
 
     --print("开火完成")
 
 end
 
 --- 客户端抓鱼
-function HandleCatchFish(serverId,buf)
+function HandleCatchFish(userId, buf)
     local msg = CMD_Game_pb.CMD_C_CATCH_FISH()
     msg:ParseFromString(buf)
 
@@ -44,16 +49,50 @@ function HandleCatchFish(serverId,buf)
         return   -- 鱼的uid不为0
     end
 
-    local data = {}
-    data.Player = MyPlayer
-    data.LockFishIdList = {}      -- 要打击的鱼id
-    data.LockFishIdList[1] =  msg.fish_uid     -- 要打击的鱼id
-    data.BulletId =  msg.bullet_id
-    local result = MultiThreadChannelGameManagerToPlayer("HandleCatchFish",data)
-    if result.error ~= nil then
-        LuaNetWorkSend( serverId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
-        return
-    end
+
+    local player,game,table = GetPlayer_Game_Table(userId)
+
+    local LockFishIdList = {}      -- 要打击的鱼id
+    LockFishIdList[1] =  msg.fish_uid     -- 要打击的鱼id
+    table:LogicCatchFish(player,LockFishIdList, msg.bullet_id)
+
+
+    --local data = {}
+    --data.Player = MyPlayer
+    --data.LockFishIdList = {}      -- 要打击的鱼id
+    --data.LockFishIdList[1] =  msg.fish_uid     -- 要打击的鱼id
+    --data.BulletId =  msg.bullet_id
+    --local result = MultiThreadChannelGameManagerToPlayer("HandleCatchFish",data)
+    --if result.error ~= nil then
+    --    LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+    --    return
+    --end
 --    print("抓鱼完成")
 end
 
+
+--- 通用函数，获取玩家的数据
+function GetPlayer_Game_Table(userId)
+    local player = GetPlayerByUID(userId)
+    if player == nil then
+        LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "玩家没有正常登录")
+        return nil,nil,nil
+    end
+
+    local game = GetGameByID(player.GameType)
+    if game == nil then
+        LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
+        return nil,nil,nil
+    end
+
+    --local player = game:PlayerLoginGame(oldPlayer)
+    --result.TableID = player.TableID
+    --result.ChairID = player.ChairID                 -- 把player桌子id，椅子id的数据 返回去
+    local table = game:GetTableByUID(player.TableID)
+    if table == nil then
+        LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+        return nil,nil,nil
+    end
+
+    return player,game, table
+end

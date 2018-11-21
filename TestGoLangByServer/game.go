@@ -163,14 +163,14 @@ func (this *Client)handleEnterScence(buf []byte, bufferSize int){
 	checkError(err)
 	//dataJ, _ := json.MarshalIndent(msg, "", " ")
 	//fmt.Printf("%s", dataJ)
-	fmt.Println("----------------进入场景--------------", this.Index)
+	//fmt.Println("----------------进入场景--------------", this.User.user_id )
 	for _,v := range msg.GetTableUsers(){
 		if v.GetUserId() == uint32(this.User.user_id){
 			this.Gameinfo.chair_id = int(v.GetChairId())
 		}
 	}
-	fmt.Printf("进入场景,场景id:%d,桌子id:%d,椅子id:%d",msg.GetSceneId(), msg.GetTableId(),this.Gameinfo.chair_id )
-	fmt.Println("")
+	//fmt.Printf("进入场景,场景id:%d,桌子id:%d,椅子id:%d  \n",msg.GetSceneId(), msg.GetTableId(),this.Gameinfo.chair_id )
+	//fmt.Println("")
 }
 
 //# 其他人进入房间
@@ -181,7 +181,7 @@ func (this *Client)handleOtherEnterScence(buf []byte, bufferSize int){
 	checkError(err)
 	//dataJ, _ := json.MarshalIndent(msg, "", " ")
 	//fmt.Printf("%s", dataJ)
-	//fmt.Printf("----------------%d进入了房间--------------%d",  msg.GetUserInfo().GetUserId(),this.Index,)
+	//fmt.Printf("----------------%d进入了房间%d--椅子 ：%d \n",  msg.GetUserInfo().GetUserId(), msg.GetUserInfo().GetTableId(), msg.GetUserInfo().GetChairId())
 	//fmt.Println("")
 
 }
