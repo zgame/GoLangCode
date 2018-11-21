@@ -33,7 +33,7 @@ function ReloadAll()
 
 
     -- GameManager
-    --reloadFile("Script/GameManager/gameManager")      ----- 注意事项： 因为这里有游戏的全局变量，所以不能reload
+    reloadFile("Script/GameManager/gameManager")
     reloadFile("Script/GameManager/games")
     reloadFile("Script/GameManager/player")
     reloadFile("Script/GameManager/user")
@@ -46,6 +46,7 @@ function ReloadAll()
     reloadFile("Script/Games/BY/byTable")
 
 
+    -- GlobalVar    -- 注意事项： 因为这里有游戏的全局变量，所以不能reload
 
     -- Logger
     reloadFile("Script/Logger/logger")

@@ -69,7 +69,7 @@ function AddGame(name, gameType, gameScore)
     local game = Game:New(name, gameType,true)
     AllGamesList[gameType] = game
 
-    Logger("--------------AddGame--------------------------")
+    --Logger("--------------AddGame--------------------------")
     game:CreateTable(gameType,gameScore)
     game.GameScore = gameScore
 end

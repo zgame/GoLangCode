@@ -280,7 +280,7 @@ func CommonLogicStart() {
 	ztimer.TimerCheckUpdate(func() {
 		// 定期更新后台的配置数据
 		UpdateDBSetting()
-	}, 5)
+	}, 10)  // 60秒
 
 	ztimer.TimerClock12(func() { // 创建计时器，夜里12点触发
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
