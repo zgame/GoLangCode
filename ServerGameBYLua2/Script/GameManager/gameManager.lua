@@ -17,18 +17,7 @@
 
 require("games")
 
--- 游戏类型的常量定义
-GameTypeBY  = 1   -- 普通捕鱼
-GameTypeBY30  = 2   -- 普通捕鱼30倍房间
-GameTypeBY2 = 3   -- 精灵捕鱼
-GameTypeBY3 = 4   -- ** 捕鱼
 
-GoRoutineMax = 4      --桌子使用的go routine函数上限
-GoRoutineAllList = {}   -- 所有的go routine列表，桌子的run函数在里面
-
-AllGamesList = {}   -- gameType , game
-AllPlayerList = {}   -- 所有玩家列表   key  userId , value player
-ALLUserUUID = 0   -- 玩家uid的自增
 
 -----------------------------------服务器启动-------------------------------------
 -- 服务器开始创建各个游戏，这里的游戏都是多人的游戏， 如果是单人游戏，玩家自己创建即可

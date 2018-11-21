@@ -20,10 +20,10 @@ function ReloadAll()
     reloadFile("Script/HotReload/hotReload")
 
     -- Const
-    reloadFile("Script/Const")
-    reloadFile("Script/protocol_cs")
-    reloadFile("Script/protocol_gs")
-    reloadFile("Script/protocol_ls")
+    reloadFile("Script/Const/Const")
+    reloadFile("Script/Const/protocol_cs")
+    reloadFile("Script/Const/protocol_gs")
+    reloadFile("Script/Const/protocol_ls")
 
     -- CSV
     reloadFile("Script/CSV/mgby_fish_sever")
@@ -31,8 +31,24 @@ function ReloadAll()
     -- GameCommonLogic
     reloadFile("Script/GameCommonLogic/commonLogic")
 
+
+    -- GameManager
+    --reloadFile("Script/GameManager/gameManager")      ----- 注意事项： 因为这里有游戏的全局变量，所以不能reload
+    reloadFile("Script/GameManager/games")
+    reloadFile("Script/GameManager/player")
+    reloadFile("Script/GameManager/user")
+
+
+    -- Games
+    reloadFile("Script/Games/BY/byBullet")
+    reloadFile("Script/Games/BY/byFish")
+    reloadFile("Script/Games/BY/byFishDistribute")
+    reloadFile("Script/Games/BY/byTable")
+
+
+
     -- Logger
-    reloadFile("Script/Loger/loger")
+    reloadFile("Script/Logger/logger")
 
     -- NetWork
     reloadFile("Script/NetWork/network")
@@ -40,8 +56,14 @@ function ReloadAll()
     reloadFile("Script/NetWork/gameFire")
 
     -- Protocol
-    reloadFile("Script/Protocol/build/CMD_Game_pb")
-    reloadFile("Script/Protocol/build/CMD_GameServer_pb")
+--    reloadFile("Script/Protocol/build/CMD_Game_pb")
+--    reloadFile("Script/Protocol/build/CMD_GameServer_pb")
+
+
+    -- Utils
+    reloadFile("Script/Utils/Random")
+    reloadFile("Script/Utils/Time")
+    reloadFile("Script/Utils/zTable")
 
 
     -- main

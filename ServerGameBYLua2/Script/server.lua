@@ -24,6 +24,7 @@ package.path = "Script/GameCommonLogic/?.lua;"..package.path
 package.path = "Script/HotReload/?.lua;"..package.path
 package.path = "Script/Const/?.lua;"..package.path
 package.path = "Script/Utils/?.lua;"..package.path
+package.path = "Script/GlobalVar/?.lua;"..package.path
 package.path = "Script/GameManager/?.lua;"..package.path
 
 require("Const")
@@ -46,6 +47,8 @@ require("zTable")
 require("multiThreadChannel")
 require("network")
 -------------------------------------GameManager----------------------------------------
+
+require("globalVar")
 require("gameManager")
 
 
