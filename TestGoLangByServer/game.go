@@ -6,6 +6,7 @@ import (
 	"./CMD"
 	"time"
 	"math/rand"
+	"strconv"
 )
 // -------------------------------------子弹 和 鱼-------------------------------------------
 //# 子弹对象
@@ -292,7 +293,7 @@ func (this *Client)do_fire() {
 	this.SendTokenID++
 	this.Send(bufferT, data)
 	//fmt.Println("发子弹")
-
+	this.SendMsgTime = this.GetOsTime()
 
 
 
@@ -322,6 +323,10 @@ func (this *Client)do_catch(bullet *BulletObj) {
 
 // #处理子弹消息,
 func (this *Client)handleUserFire(buf []byte, bufferSize int){
+	now:= this.GetOsTime()
+	end:= now-this.SendMsgTime
+	this.Zlog("消息间隔时间："+strconv.Itoa(int(end))+"毫秒")
+
 	protocolBuffer := buf
 	msg := &CMD.CMD_S_USER_FIRE{}
 	err := proto.Unmarshal(protocolBuffer, msg)

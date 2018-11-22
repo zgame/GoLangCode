@@ -31,6 +31,7 @@ type Client struct {
 	Failed_cnt int			// 锁定鱼打了几炮
 
 	ShowLog uint64 			//打鱼的记录
+	SendMsgTime int64	// 发送消息时间
 }
 
 func (this *Client) quit() {
@@ -68,12 +69,12 @@ func (this *Client) Receive()  bool{
 		bufTemp := buf[bufHead:bufLen]   //要处理的buffer
 		bufHeadTemp := this.handlerRead(bufTemp)   //处理结束之后返回，接下来要开始的范围
 		bufHead += bufHeadTemp
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * 10)
 		//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
 
 		if bufHeadTemp == 0 {
 			num++
-			if num > 99 {
+			if num > 9 {
 				return true
 			}
 		}
@@ -194,8 +195,15 @@ func checkError(e error) {
 		logger.Println("...error:...",e.Error())
 	}
 }
+func (this *Client)Zlog(s string)  {
+	file, _ := os.OpenFile("Log.log",os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
+	logger := log.New(file, "", log.LstdFlags)
+	logger.Println("[Log]",s)
+}
 
-
+func (this *Client)GetOsTime()  int64{
+	return time.Now().UnixNano() / int64(time.Millisecond)
+}
 
 //--------------------------------------------------------------------------------------------------
 //处理头部数据

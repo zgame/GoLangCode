@@ -62,6 +62,7 @@ func main() {
 	w := sync.WaitGroup{}
 	for i := ClientStart; i < ClientEnd; i++ {
 		w.Add(1)
+		Mutex.Lock()
 		go func(i int) {
 			defer w.Done()
 
@@ -74,7 +75,7 @@ func main() {
 			//defer conn.Close()
 
 
-			clients := &Client{nil, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0}
+			clients := &Client{nil, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0,0}
 			clients.Gameinfo = clients.Gameinfo.New()
 
 			//fmt.Println("发送登录请求",i)
@@ -84,6 +85,7 @@ func main() {
 			startClient(clients)
 
 		}(i)
+		Mutex.Unlock()
 		time.Sleep(time.Millisecond * 10)
 	}
 
