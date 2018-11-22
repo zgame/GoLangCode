@@ -373,7 +373,7 @@ func (this *Client)handleCatchFish(buf []byte, bufferSize int){
 	if msg.GetChairId() == int32(this.Gameinfo.chair_id){
 		this.ShowLog++
 		if this.ShowLog % uint64(ShowLog) ==0 {
-			fmt.Printf("----------------捕获到%d条鱼,获得金币:%d,经验:%d------------%d \n", catch_cnt, total_score, msg.GetAddExp(), this.Index)
+			//fmt.Printf("----------------捕获到%d条鱼,获得金币:%d,经验:%d------------%d \n", catch_cnt, total_score, msg.GetAddExp(), this.Index)
 			//fmt.Println("")
 		}
 	}

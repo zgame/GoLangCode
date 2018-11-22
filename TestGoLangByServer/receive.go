@@ -11,7 +11,7 @@ func (this *Client)handlerRead(buf []byte) int {
 	//fmt.Printf("Receive buf: %x\n",buf)
 
 	if len(buf)< 10 {
-		fmt.Printf("error buf len < 10 : %x",buf)
+		fmt.Printf("error buf len < 10 : %x   \n",buf)
 		return 0
 	}
 

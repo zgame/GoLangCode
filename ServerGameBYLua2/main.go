@@ -39,6 +39,9 @@ var WebSocketServer bool	// websocket 开启
 var SocketServer bool		// socket 开启
 var WebSockewtPort int
 var SockewtPort int
+var SocketAddress string		// SocketAddress 服务器地址
+var WebSocketAddress string		// WebSocketAddress 服务器地址
+
 
 var RedisAddress string		// redis 服务器地址
 var err error
@@ -181,6 +184,8 @@ func initSetting()  {
 	WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
 	SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
 	RedisAddress = f.Section("Server").Key("SocketServer").String()
+	SocketAddress = f.Section("Server").Key("SocketAddress").String()
+	WebSocketAddress = f.Section("Server").Key("WebSocketAddress").String()
 	//GoroutineMax ,err  = f.Section("Server").Key("GoroutineMax").Int()
 	log.CheckError(err)
 }
@@ -213,7 +218,7 @@ func NetWorkServerStart()  {
 	if WebSocketServer {
 		// websocket 服务器开启---------------------------------
 		wsServer = new(NetWork.WSServer)
-		wsServer.Addr = "localhost:"+strconv.Itoa(WebSockewtPort)
+		wsServer.Addr = WebSocketAddress + ":"+strconv.Itoa(WebSockewtPort)
 		//fmt.Println("websocket 绑定："+ wsServer.Addr)
 		wsServer.MaxConnNum = 2000
 		wsServer.PendingWriteNum = 100
@@ -231,7 +236,7 @@ func NetWorkServerStart()  {
 	if SocketServer{
 		// socket 服务器开启----------------------------------
 		server = new(NetWork.TCPServer)
-		server.Addr = "127.0.0.1:"+strconv.Itoa(SockewtPort)
+		server.Addr = SocketAddress +":"+strconv.Itoa(SockewtPort)
 		//fmt.Println("socket 绑定："+ server.Addr)
 		server.MaxConnNum = int(math.MaxInt32)
 		server.PendingWriteNum = 100

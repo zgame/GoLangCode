@@ -55,18 +55,24 @@ func (a *MyServer) Run() {
 		}
 		//fmt.Printf("收到消息------------%x \n", buf)
 		bufHead := 0
-		//num:=0
+		errNum :=0
 
 		//GlobalVar.Mutex.Lock()
 		for {
 			//fmt.Println(" buf ",buf)
 			//fmt.Println(" bufsize ",bufLen)
 			bufTemp := buf[bufHead:bufLen]         //要处理的buffer
-			bufHead += a.HandlerRead(bufTemp) //处理结束之后返回，接下来要开始的范围
+			bufHeadTemp := a.HandlerRead(bufTemp) //处理结束之后返回，接下来要开始的范围
+			bufHead += bufHeadTemp
 			time.Sleep(time.Millisecond * 100)
 			//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
-			//num++
-			//fmt.Println("num",num)
+			if bufHeadTemp == 0 {
+				errNum++
+				if errNum > 9 {
+					break 	// 错误太多，放弃
+				}
+			}
+			//fmt.Println("errNum",errNum)
 			if bufHead >= bufLen{
 				break
 			}
@@ -84,7 +90,7 @@ func (a *MyServer) Run() {
 func (a * MyServer)HandlerRead(buf []byte) int {
 	//fmt.Printf("buf......%x",buf)
 	if len(buf)< 10 {
-		fmt.Printf("error buf len < 10 : %x",buf)
+		fmt.Printf("error buf len < 10 : %x \n",buf)
 		return 0
 	}
 

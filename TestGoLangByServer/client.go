@@ -61,15 +61,22 @@ func (this *Client) Receive()  bool{
 		return true
 	}
 	bufHead := 0
-	//num:=0
+	num:=0
 	for {
 		//fmt.Println(" buf ",buf)
 
 		bufTemp := buf[bufHead:bufLen]   //要处理的buffer
-		bufHead += this.handlerRead(bufTemp)   //处理结束之后返回，接下来要开始的范围
+		bufHeadTemp := this.handlerRead(bufTemp)   //处理结束之后返回，接下来要开始的范围
+		bufHead += bufHeadTemp
 		time.Sleep(time.Millisecond * 100)
 		//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
-		//num++
+
+		if bufHeadTemp == 0 {
+			num++
+			if num > 99 {
+				return true
+			}
+		}
 		//fmt.Println("num",num)
 		if bufHead >= bufLen{
 			return true
