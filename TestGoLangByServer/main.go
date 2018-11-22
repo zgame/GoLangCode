@@ -84,6 +84,7 @@ func main() {
 			startClient(clients)
 
 		}(i)
+		time.Sleep(time.Millisecond * 10)
 	}
 
 	w.Wait()
