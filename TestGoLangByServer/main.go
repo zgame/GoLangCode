@@ -75,8 +75,11 @@ func main() {
 			//defer conn.Close()
 
 
-			clients := &Client{nil, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0,0}
+			clients := &Client{nil, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0,0,false}
 			clients.Gameinfo = clients.Gameinfo.New()
+			if i==ClientStart{
+				clients.ShowMsgSendTime = true	// 第一个才显示
+			}
 
 			//fmt.Println("发送登录请求",i)
 			//clients.LoginSend()		//开始登录请求

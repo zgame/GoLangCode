@@ -11,7 +11,7 @@ func (this *Client)handlerRead(buf []byte) int {
 	//fmt.Printf("Receive buf: %x\n",buf)
 
 	if len(buf)< 10 {
-		fmt.Printf("error buf len < 10 : %x   \n",buf)
+		fmt.Printf("数据包头部小于 10 : %x   \n",buf)
 		return 0
 	}
 
@@ -24,9 +24,8 @@ func (this *Client)handlerRead(buf []byte) int {
 	//fmt.Println("bufferSize",bufferSize)
 
 	if len(buf) < offset + int(bufferSize){
-		fmt.Println("出现数据包异常")
-
-		return  int(bufferSize) + offset + int(msgSize)
+		fmt.Printf("出现数据包异常buflen%d,bufferSize%d,%x  \n",len(buf),int(bufferSize),buf)
+		return  0 //int(bufferSize) + offset + int(msgSize)
 	}
 	//if ver > 0{
 	//	offset = 12		// version == 1 的时候， 加了一个token

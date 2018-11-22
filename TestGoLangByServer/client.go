@@ -32,6 +32,7 @@ type Client struct {
 
 	ShowLog uint64 			//打鱼的记录
 	SendMsgTime int64	// 发送消息时间
+	ShowMsgSendTime bool  // 是否显示
 }
 
 func (this *Client) quit() {
@@ -69,7 +70,7 @@ func (this *Client) Receive()  bool{
 		bufTemp := buf[bufHead:bufLen]   //要处理的buffer
 		bufHeadTemp := this.handlerRead(bufTemp)   //处理结束之后返回，接下来要开始的范围
 		bufHead += bufHeadTemp
-		time.Sleep(time.Millisecond * 10)
+		time.Sleep(time.Millisecond * 5)
 		//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
 
 		if bufHeadTemp == 0 {

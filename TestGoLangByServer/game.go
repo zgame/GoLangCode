@@ -323,9 +323,11 @@ func (this *Client)do_catch(bullet *BulletObj) {
 
 // #处理子弹消息,
 func (this *Client)handleUserFire(buf []byte, bufferSize int){
-	now:= this.GetOsTime()
-	end:= now-this.SendMsgTime
-	this.Zlog("消息间隔时间："+strconv.Itoa(int(end))+"毫秒")
+	if this.ShowMsgSendTime {
+		now := this.GetOsTime()
+		end := now - this.SendMsgTime
+		fmt.Println("消息间隔时间：" + strconv.Itoa(int(end)) + "毫秒")
+	}
 
 	protocolBuffer := buf
 	msg := &CMD.CMD_S_USER_FIRE{}

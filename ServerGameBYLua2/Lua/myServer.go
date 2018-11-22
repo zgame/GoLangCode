@@ -64,7 +64,7 @@ func (a *MyServer) Run() {
 			bufTemp := buf[bufHead:bufLen]         //要处理的buffer
 			bufHeadTemp := a.HandlerRead(bufTemp) //处理结束之后返回，接下来要开始的范围
 			bufHead += bufHeadTemp
-			time.Sleep(time.Millisecond * 100)
+			time.Sleep(time.Millisecond * 5)
 			//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
 			if bufHeadTemp == 0 {
 				errNum++
@@ -90,7 +90,7 @@ func (a *MyServer) Run() {
 func (a * MyServer)HandlerRead(buf []byte) int {
 	//fmt.Printf("buf......%x",buf)
 	if len(buf)< 10 {
-		fmt.Printf("error buf len < 10 : %x \n",buf)
+		fmt.Printf("数据包头部小于 10 : %x \n",buf)
 		return 0
 	}
 
@@ -104,8 +104,8 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	//fmt.Println("bufferSize",bufferSize)
 
 	if len(buf) < offset + int(bufferSize){
-		fmt.Println("出现数据包异常")
-		return  int(bufferSize) + offset
+		fmt.Printf("数据包格式不正确buflen%d,bufferSize%d,%x  \n",len(buf),int(bufferSize),buf)
+		return  0 //int(bufferSize) + offset
 	}
 
 	//fmt.Println("")
