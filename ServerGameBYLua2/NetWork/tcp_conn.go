@@ -113,8 +113,9 @@ func (tcpConn *TCPConn) ReadMsg() ([]byte, int, error) {
 	//return tcpConn.msgParser.Read(tcpConn)
 	msgData := make([]byte, 1024*1)
 	//if _, err := io.ReadFull(tcpConn.conn, msgData); err != nil {
-	//	return nil, err
+	//	return nil,0, err
 	//}
+	//Len:= len(msgData)
 	Len,err := tcpConn.conn.Read(msgData)
 	if err != nil {
 		return nil,0, err
