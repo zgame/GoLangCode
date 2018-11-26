@@ -11,7 +11,10 @@ func (this *Client)handlerRead(buf []byte) int {
 	//fmt.Printf("Receive buf: %x\n",buf)
 
 	if len(buf)< 10 {
-		fmt.Printf("数据包头部小于 10 : %x   \n",buf)
+		//fmt.Printf("数据包头部小于 10 : %x   \n",buf)
+		this.ReceiveBuf = buf
+		str:= fmt.Sprintf("数据包头部小于 10 : %x   ",buf)
+		this.Zlog(str)
 		return 0
 	}
 
@@ -23,8 +26,12 @@ func (this *Client)handlerRead(buf []byte) int {
 	//fmt.Println("offset",offset)
 	//fmt.Println("bufferSize",bufferSize)
 
-	if len(buf) < offset + int(bufferSize){
-		fmt.Printf("出现数据包异常buflen%d,bufferSize%d,%x  \n",len(buf),int(bufferSize),buf)
+	if len(buf) < offset + int(bufferSize)+ int(msgSize){
+		this.ReceiveBuf = buf
+		//fmt.Printf("出现数据包异常buflen=%d,bufferSize=%d,  msgSize=%d  %x  \n",len(buf),int(bufferSize),int(msgSize)buf)
+		str:= fmt.Sprintf("出现数据包异常buflen=%d,bufferSize=%d,  msgSize=%d  %x  ",len(buf),int(bufferSize),int(msgSize),buf)
+		this.Zlog(str)
+		//this.Zlog("出现数据包异常buflen=" +strconv.Itoa(len(buf))  +"bufferSize="+ strconv.Itoa(int(bufferSize)) +"msgSize="+strconv.Itoa(int(msgSize))+"buf="+string(this.ReceiveBuf))
 		return  0 //int(bufferSize) + offset + int(msgSize)
 	}
 	//if ver > 0{

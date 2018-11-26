@@ -64,7 +64,7 @@ func (a *MyServer) Run() {
 			bufTemp := buf[bufHead:bufLen]         //要处理的buffer
 			bufHeadTemp := a.HandlerRead(bufTemp) //处理结束之后返回，接下来要开始的范围
 			bufHead += bufHeadTemp
-			time.Sleep(time.Millisecond * 5)
+			time.Sleep(time.Millisecond * 1)
 			//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
 			if bufHeadTemp == 0 {
 				errNum++

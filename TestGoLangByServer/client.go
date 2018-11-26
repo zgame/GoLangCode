@@ -33,6 +33,8 @@ type Client struct {
 	ShowLog uint64 			//打鱼的记录
 	SendMsgTime int64	// 发送消息时间
 	ShowMsgSendTime bool  // 是否显示
+
+	ReceiveBuf []byte
 }
 
 func (this *Client) quit() {
@@ -47,7 +49,7 @@ var Mutex sync.Mutex
 
 func (this *Client) Receive()  bool{
 
-	Mutex.Lock()
+	//Mutex.Lock()
 	buf := make([]byte,1024 * 1) //定义一个切片的长度是1024 * 8
 	bufLen,err := this.Conn.Read(buf)
 
@@ -56,7 +58,7 @@ func (this *Client) Receive()  bool{
 	//buf,err:= ioutil.ReadAll(this.Conn)
 	//bufLen:= len(buf)
 
-	Mutex.Unlock()
+	//Mutex.Unlock()
 
 	if err != nil && err != io.EOF {  //io.EOF在网络编程中表示对端把链接关闭了。
 		fmt.Println("接收时候对方服务器链接关闭了！")
@@ -70,24 +72,36 @@ func (this *Client) Receive()  bool{
 		return true
 	}
 	bufHead := 0
-	num:=0
+	//num:=0
 	for {
+		if this.ReceiveBuf !=nil {
+			str:= fmt.Sprintf("上次buf: %x ", this.ReceiveBuf)
+			this.Zlog(str)
+			str= fmt.Sprintf("本次buf: %x ", buf)
+			this.Zlog(str)
+		}
 		//fmt.Println(" buf ",buf)
-
 		bufTemp := buf[bufHead:bufLen]   //要处理的buffer
 		bufHeadTemp := this.handlerRead(bufTemp)   //处理结束之后返回，接下来要开始的范围
 		bufHead += bufHeadTemp
-		time.Sleep(time.Millisecond * 1)
+		time.Sleep(time.Millisecond * 2)
 		//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
-
 		if bufHeadTemp == 0 {
-			num++
-			if num > 9 {
-				return true
-			}
+			//num++
+			//if num == 9 {
+			//	//this.Zlog("数据包异常:"+string(bufTemp))
+			//	if num>99 {
+			//		this.Zlog("放弃数据包:"+ string(bufTemp))
+					return true
+			//	}
+			//}
 		}
 		//fmt.Println("num",num)
 		if bufHead >= bufLen{
+			//if num>0 {
+			//	this.Zlog("num:" + strconv.Itoa(num))
+			//}
+			this.ReceiveBuf = nil
 			return true
 		}
 	}
@@ -130,9 +144,9 @@ func (this *Client) Send(bufferH []byte, data []byte) {
 	copy(bufferEnd, bufferH)
 	copy(bufferEnd[headSize:], bufferEncryp)
 
-	Mutex.Lock()
+	//Mutex.Lock()
 	_, err := this.Conn.Write(bufferEnd)
-	Mutex.Unlock()
+	//Mutex.Unlock()
 
 	checkError(err)
 
@@ -208,6 +222,7 @@ func (this *Client)Zlog(s string)  {
 	file, _ := os.OpenFile("Log.log",os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
 	logger := log.New(file, "", log.LstdFlags)
 	logger.Println("[Log]",s)
+	fmt.Println(s)
 }
 
 func (this *Client)GetOsTime()  int64{

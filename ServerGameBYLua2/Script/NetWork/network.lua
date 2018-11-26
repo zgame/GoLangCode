@@ -45,9 +45,9 @@ function LuaNetWorkSendToUser(userId,msgId,subMsgId,sendCmd,err)
     --print("发消息给",userId,msgId,subMsgId)
 
     local now = GetOsTimeMillisecond()
-    if now - ZswLogShowSendMsgLastTime > 2000 then
+    if now - ZswLogShowSendMsgLastTime > 1000 then
         ZswLogShowSendMsgLastTime = now
-        print("2秒发送消息数量", ZswLogShowSendMsgNum)
+        print("1秒发送消息数量", ZswLogShowSendMsgNum)
         ZswLogShowSendMsgNum = 0
     else
         ZswLogShowSendMsgNum = ZswLogShowSendMsgNum + 1       -- 没到一秒就加数量
@@ -68,9 +68,9 @@ function GoCallLuaNetWorkReceive(serverId,userId, msgId, subMsgId, data)
     ReceiveMsg(serverId,userId,msgId,subMsgId,data)
 
     local now = GetOsTimeMillisecond()
-    if now - ZswLogShowReceiveLastTime > 2000 then
+    if now - ZswLogShowReceiveLastTime > 1000 then
         ZswLogShowReceiveLastTime = now
-        print("2秒接收消息数量", ZswLogShowReceiveMsgNum)
+        print("1秒接收消息数量", ZswLogShowReceiveMsgNum)
         ZswLogShowReceiveMsgNum = 0
     else
         ZswLogShowReceiveMsgNum = ZswLogShowReceiveMsgNum + 1       -- 没到一秒就加数量

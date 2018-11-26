@@ -261,6 +261,7 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 
 func (this *Client)do_fire() {
 	//this.select_fish()
+	//fmt.Println("do fire")
 
 	if this.Fish_id <=0 {
 		return
@@ -410,9 +411,9 @@ func (this *Client)GameAI()  {
 		return
 	}
 	//fmt.Println("AI-----")
-	if time.Now().After(this.Last_fire_tick)   {
-		this.Last_fire_tick = time.Now().Add( time.Microsecond * 200)
-		this.do_fire()
+	//if time.Now().After(this.Last_fire_tick)   {
+	//	this.Last_fire_tick = time.Now().Add( time.Microsecond * 1000)
+	//	this.do_fire()
 
 
 		//var bullt BulletObj
@@ -420,7 +421,10 @@ func (this *Client)GameAI()  {
 		//bullt.fish_id = 1
 		//bullt.tick = time.Now()
 		//this.do_catch(&bullt)
-	}
+	//}
+
+	this.do_fire()
+
 
 	//# 处理过期的鱼
 	//if time.Now().After(this.Last_check_due_tick) {

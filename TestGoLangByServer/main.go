@@ -62,7 +62,7 @@ func main() {
 	w := sync.WaitGroup{}
 	for i := ClientStart; i < ClientEnd; i++ {
 		w.Add(1)
-		Mutex.Lock()
+		//Mutex.Lock()
 		go func(i int) {
 			defer w.Done()
 
@@ -75,7 +75,7 @@ func main() {
 			//defer conn.Close()
 
 
-			clients := &Client{nil, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0,0,false}
+			clients := &Client{nil, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0,0,false,nil}
 			clients.Gameinfo = clients.Gameinfo.New()
 			if i==ClientStart{
 				clients.ShowMsgSendTime = true	// 第一个才显示
@@ -88,7 +88,7 @@ func main() {
 			startClient(clients)
 
 		}(i)
-		Mutex.Unlock()
+		//Mutex.Unlock()
 		time.Sleep(time.Millisecond * 10)
 	}
 
@@ -126,6 +126,7 @@ func startClient(c *Client) {
 
 		c.GameAI()
 
+		time.Sleep(time.Millisecond * 200)
 
 	}
 
