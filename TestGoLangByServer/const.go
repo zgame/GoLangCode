@@ -34,7 +34,7 @@ const LogLevelCritical = 0x20
 
 type TCPHeader struct {
 	DateKind  uint8  //数据类型
-	CheckCode uint8  //效验字段
+	CheckCode uint16  //效验字段	msgSize
 	PackSize  uint16 //数据大小
 	MainCMDID uint16 // 主命令码
 	SubCMDID  uint16 // 子命令码

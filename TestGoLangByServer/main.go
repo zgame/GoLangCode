@@ -89,7 +89,7 @@ func main() {
 
 		}(i)
 		//Mutex.Unlock()
-		time.Sleep(time.Millisecond * 10)
+		time.Sleep(time.Millisecond * 50)
 	}
 
 	w.Wait()
@@ -124,10 +124,10 @@ func startClient(c *Client) {
 			return
 		}
 
-		c.GameAI()
+
 
 		time.Sleep(time.Millisecond * 200)
-
+		c.GameAI()
 	}
 
 }
@@ -142,12 +142,12 @@ func (c *Client) ConnectGameServer(addr string)  {
 	//fmt.Println("connection:", c.Index,  "------",  addr)
 	conn, e := net.DialTCP("tcp", nil, tcpAddr)
 	if e != nil {
-		fmt.Println(c.Index, e)
+		fmt.Println(c.Index, "连接不给力， 服务器可能玩家太多了",e)
 		return
 	}
 	defer conn.Close()
 	c.Conn = conn
-	c.SendTokenID = 0
+	c.SendTokenID = 1
 	//clients := &Client{conn, i, nil,nil , nil}
 	//clients.Gameinfo = clients.Gameinfo.New()
 

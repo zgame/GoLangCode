@@ -25,7 +25,7 @@ function HandleUserFire(userId, buf)
 
     local player,game,table = GetPlayer_Game_Table(userId)
     if player ==nil or game ==nil or table ==nil then
-        Logger("玩家数据："..player.."game:"..game.."table:"..table)
+        --Logger("玩家数据："..player.."game:"..game.."table:"..table)
         return
     end
     table:HandleUserFire(player , msg.lock_fish_id )       -- 桌子会发送消息给玩家
@@ -57,7 +57,7 @@ function HandleCatchFish(userId, buf)
 
     local player,game,table = GetPlayer_Game_Table(userId)
     if player ==nil or game ==nil or table ==nil then
-        Logger("玩家数据："..player.."game:"..game.."table:"..table)
+        --Logger("玩家数据："..player.."game:"..game.."table:"..table)
         return
     end
 

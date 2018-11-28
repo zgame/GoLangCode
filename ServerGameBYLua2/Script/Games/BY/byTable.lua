@@ -70,7 +70,7 @@ function ByTable:RunTable()
                     if now - player.NetWorkCloseTimer > 1000 then
                         -- 玩家长时间断线，t掉吧
                         self:PlayerStandUp(player.ChairID,player)
-                        print("长时间断线， t掉这个玩家",player.User.UserId)
+                        --print("长时间断线， t掉这个玩家",player.User.UserId)
                     end
                 end
             end
@@ -225,6 +225,8 @@ function ByTable:PlayerStandUp(seatID,player)
     --如果是空桌子的话，清理一下桌子
     if self:CheckTableEmpty() then
         self:ClearTable()
+
+        game:ReleaseTableByUID(self.TableID)    --回收桌子
     end
 end
 

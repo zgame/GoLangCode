@@ -10,35 +10,44 @@ func (this *Client)handlerRead(buf []byte) int {
 	//var err error
 	//fmt.Printf("Receive buf: %x\n",buf)
 
-	if len(buf)< 10 {
+	if len(buf)< TCPHeaderSize {		// 接受不全，那么缓存
 		//fmt.Printf("数据包头部小于 10 : %x   \n",buf)
 		this.ReceiveBuf = buf
-		str:= fmt.Sprintf("数据包头部小于 10 : %x   ",buf)
-		this.Zlog(str)
+		//str:= fmt.Sprintf("%d数据包头部小于 10 : %x   ",this.Index,buf)
+		//this.Zlog(str)
 		return 0
 	}
 
-	msg_id, sub_msg_id, bufferSize, _, msgSize := dealRecvTcpDeaderData(buf)
+	headFlag, msg_id, sub_msg_id, bufferSize, _, msgSize := dealRecvTcpDeaderData(buf)
 
-	offset := 10
+	if headFlag != uint8(254){
+		str:= fmt.Sprintf("%d数据包头部判断不正确 %x",this.Index, buf)
+		this.Zlog(str)
+		return -1 			// 数据包格式校验不正确
+	}
+
+	offset := TCPHeaderSize
+
+	//if msgSize > 200 {
+	//	str:= fmt.Sprintf("%d错误消息%d",this.Index,msgSize)
+	//	this.Zlog(str)
+	//}
 
 	//fmt.Println("len(buf)",len(buf))
 	//fmt.Println("offset",offset)
 	//fmt.Println("bufferSize",bufferSize)
 
-	if len(buf) < offset + int(bufferSize)+ int(msgSize){
+	if len(buf) < offset + int(bufferSize)+ int(msgSize){	// 接受不全，那么缓存
 		this.ReceiveBuf = buf
 		//fmt.Printf("出现数据包异常buflen=%d,bufferSize=%d,  msgSize=%d  %x  \n",len(buf),int(bufferSize),int(msgSize)buf)
-		str:= fmt.Sprintf("出现数据包异常buflen=%d,bufferSize=%d,  msgSize=%d  %x  ",len(buf),int(bufferSize),int(msgSize),buf)
-		this.Zlog(str)
+		//str:= fmt.Sprintf("%d出现数据包异常buflen=%d,bufferSize=%d,  msgSize=%d  %x  ",this.Index,len(buf),int(bufferSize),int(msgSize),buf)
+		//this.Zlog(str)
 		//this.Zlog("出现数据包异常buflen=" +strconv.Itoa(len(buf))  +"bufferSize="+ strconv.Itoa(int(bufferSize)) +"msgSize="+strconv.Itoa(int(msgSize))+"buf="+string(this.ReceiveBuf))
 		return  0 //int(bufferSize) + offset + int(msgSize)
 	}
 	//if ver > 0{
 	//	offset = 12		// version == 1 的时候， 加了一个token
 	//}
-	finalBuffer := buf[offset:offset + int(bufferSize)]
-
 
 	if msgSize >0 {
 		//fmt.Println("有错误提示了")
@@ -46,6 +55,9 @@ func (this *Client)handlerRead(buf []byte) int {
 		//fmt.Println(string(msgBuffer))
 		return int(bufferSize) + offset + int(msgSize)
 	}
+
+	//----------------------------解析 proto buffer-----------------------------------
+	finalBuffer := buf[offset:offset + int(bufferSize)]
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
 	//fmt.Println("")
 
@@ -159,5 +171,6 @@ func (this *Client)handlerRead(buf []byte) int {
 		}
 	}
 
-	return int(bufferSize) + offset + int(msgSize)
+
+	return offset + int(bufferSize) + int(msgSize)
 }

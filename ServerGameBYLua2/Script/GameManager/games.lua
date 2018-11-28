@@ -69,6 +69,15 @@ function Game:GetTableByUID(tableId)
     return self.AllTableList[tableId]
 end
 
+--- 桌子回收
+function Game:ReleaseTableByUID(tableId)
+    if tableId ~= 1 then
+        self.AllTableList[tableId] = nil
+    else
+        -- 第一个桌子是保留着的
+    end
+end
+
 ----------------------------------------------------------------
 -----------------------------管理玩家---------------------------
 ----------------------------------------------------------------

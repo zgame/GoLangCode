@@ -48,6 +48,9 @@ var Mutex sync.Mutex
 //--------------------------------------------------------------------------------------------------
 
 func (this *Client) Receive()  bool{
+	if this.Conn == nil {
+		return false
+	}
 
 	//Mutex.Lock()
 	buf := make([]byte,1024 * 1) //定义一个切片的长度是1024 * 8
@@ -69,40 +72,46 @@ func (this *Client) Receive()  bool{
 	}
 	if bufLen <= 0{
 		fmt.Println("收到的数据为空！", bufLen)
-		return true
+		return false
 	}
 	bufHead := 0
 	//num:=0
 	for {
 		if this.ReceiveBuf !=nil {
-			str:= fmt.Sprintf("上次buf: %x ", this.ReceiveBuf)
-			this.Zlog(str)
-			str= fmt.Sprintf("本次buf: %x ", buf)
-			this.Zlog(str)
+			//str:= fmt.Sprintf("%d上次buf: %x ", this.Index,this.ReceiveBuf)
+			//this.Zlog(str)
+			//str= fmt.Sprintf("%d本次buf: %x ", this.Index,buf)
+			//this.Zlog(str)
+
+			buf2 := make([]byte,len(this.ReceiveBuf)+bufLen)		//缓存从新组合包
+			copy(buf2, this.ReceiveBuf)
+			copy(buf2[len(this.ReceiveBuf):],buf[:bufLen])
+			//str= fmt.Sprintf("%d合并后buf2: %x ", this.Index,buf2)
+			//this.Zlog(str)
+			buf = buf2
+			bufLen= len(buf2)
 		}
 		//fmt.Println(" buf ",buf)
 		bufTemp := buf[bufHead:bufLen]   //要处理的buffer
-		bufHeadTemp := this.handlerRead(bufTemp)   //处理结束之后返回，接下来要开始的范围
+		bufHeadTemp := this.handlerRead(bufTemp) //处理结束之后返回，接下来要开始的范围
 		bufHead += bufHeadTemp
 		time.Sleep(time.Millisecond * 2)
+
 		//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
 		if bufHeadTemp == 0 {
-			//num++
-			//if num == 9 {
-			//	//this.Zlog("数据包异常:"+string(bufTemp))
-			//	if num>99 {
-			//		this.Zlog("放弃数据包:"+ string(bufTemp))
-					return true
-			//	}
-			//}
+			return true 		// 包不全，等待下一次继续接受包
+		}else if bufHeadTemp > 0 {				// 解析完成
+			if this.ReceiveBuf != nil {			// 如果是拼接包，清理一下
+				//str := fmt.Sprintf("%d 拼接后成功解析%x", this.Index, buf)
+				//this.Zlog(str)
+				this.ReceiveBuf = nil
+			}
+		}else if bufHeadTemp == -1 {
+			return true 		//数据包不正确，放弃
 		}
-		//fmt.Println("num",num)
-		if bufHead >= bufLen{
-			//if num>0 {
-			//	this.Zlog("num:" + strconv.Itoa(num))
-			//}
-			this.ReceiveBuf = nil
-			return true
+
+		if bufHead >= bufLen {
+			return true //解析结束，等待下一次继续接受
 		}
 	}
 
@@ -235,13 +244,12 @@ func (this *Client)GetOsTime()  int64{
 func getSendTcpHeaderData(maincmd uint16, childcmd uint16, size uint16 , token uint16) []byte {
 
 	bufferT := new(bytes.Buffer)
-	binary.Write(bufferT,binary.LittleEndian,uint8(0))
-	binary.Write(bufferT,binary.LittleEndian,uint8(0))
+	binary.Write(bufferT,binary.LittleEndian,uint8(254))
+	binary.Write(bufferT,binary.LittleEndian,uint16(0))
 	binary.Write(bufferT,binary.LittleEndian,size)
 	binary.Write(bufferT,binary.LittleEndian,maincmd)
 	binary.Write(bufferT,binary.LittleEndian,childcmd)
 	binary.Write(bufferT,binary.LittleEndian,token)			// 是要增加一个token
-
 
 
 	//buffer_t = struct.pack("BBHHHH", 0, 1, size, maincmd, childcmd, 0)
@@ -249,17 +257,19 @@ func getSendTcpHeaderData(maincmd uint16, childcmd uint16, size uint16 , token u
 	//fmt.Println("")
 	return bufferT.Bytes()
 }
+var TCPHeaderSize = 11
 
 //# 获取TCPHead头部信息
-func dealRecvTcpDeaderData(msg []byte) (uint16, uint16,uint16,uint16,uint8){
+func dealRecvTcpDeaderData(msg []byte) (uint8,uint16, uint16,uint16,uint16,uint16){
 	var hh TCPHeader
-	buf1 := bytes.NewBuffer(msg[:10])
+	buf1 := bytes.NewBuffer(msg[:TCPHeaderSize])
 	binary.Read(buf1,binary.LittleEndian,&hh)
+	HeadFlag := hh.DateKind
 	bufferSize := hh.PackSize
 	subCmd := hh.SubCMDID
 	mainCmd := hh.MainCMDID
 	ver := hh.PackerVer
 	msgSize := hh.CheckCode
-	return mainCmd, subCmd, bufferSize, ver,msgSize
+	return HeadFlag,mainCmd, subCmd, bufferSize, ver,msgSize
 }
 
