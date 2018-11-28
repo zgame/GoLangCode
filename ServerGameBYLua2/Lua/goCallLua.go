@@ -85,3 +85,8 @@ func (m *MyLua)GoCallLuaReload() error {
 	}
 	return err
 }
+
+// 将服务器地址和端口传递给lua， 记录用
+func (m *MyLua)GoCallLuaSetVar(name string, address string) {
+	m.L.SetGlobal(name, lua.LString(address))
+}

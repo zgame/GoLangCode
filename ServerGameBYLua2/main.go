@@ -45,6 +45,7 @@ var WebSocketAddress string		// WebSocketAddress 服务器地址
 
 
 var RedisAddress string		// redis 服务器地址
+var RedisPass string		// redis pwd
 var err error
 
 
@@ -59,19 +60,21 @@ var GameManagerLuaReloadTime int // 公共逻辑处理的lua更新时间
 
 func main() {
 
-	runtime.GOMAXPROCS(4)
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	fmt.Println("-------------------读取本地配置文件---------------------------")
 	initSetting()
 
-	fmt.Println("-------------------lua编译---------------------------")
-	GlobalVar.LuaCodeToShare,err = Lua.CompileLua("Script/main.lua")
-	if err!=nil{
-		fmt.Println("加载main.lua文件出错了！")
-	}
+	//fmt.Println("-------------------lua编译---------------------------")
+	//GlobalVar.LuaCodeToShare,err = Lua.CompileLua("Script/main.lua")
+	//if err!=nil{
+	//	fmt.Println("加载main.lua文件出错了！")
+	//}
 
 	fmt.Println("-------------------数据库连接---------------------------")
-	zRedis.InitRedis(RedisAddress)
+	if zRedis.InitRedis(RedisAddress,RedisPass) == false{
+		return
+	}
 
 	//fmt.Println("-------------------读取CVS数据文件---------------------------")
 	//CSV.LoadFishServerExcel()
@@ -101,9 +104,8 @@ func main() {
 
 
 
-	fmt.Println("-------------------游戏公共逻辑处理器---------------------------")
+	fmt.Println("-------------------Lua逻辑处理器---------------------------")
 	GameManagerInit()
-	CommonLogicStart()
 
 	//fmt.Println("-------------------多核桌子逻辑处理器---------------------------")
 	//CreateGoroutineForLuaGameTable()
@@ -111,6 +113,8 @@ func main() {
 	fmt.Println("-------------------启动gameManager---------------------------")
 	GameManagerLua.GoCallLuaLogic("GoCallLuaStartGamesServers")
 	//StartMultiThreadChannelPlayerToGameManager()
+
+	TimerCommonLogicStart()
 
 	fmt.Println("-------------------读取数据库设置---------------------------")
 	UpdateDBSetting()
@@ -190,12 +194,15 @@ func initSetting()  {
 		WebSocketPort, err = f.Section("Server").Key("WebSocketPort").Int()
 	}
 	if SocketPort == 0 {
+		fmt.Println("Warning!!!! You sould write arguments like : -WebSocketPort=8089 -SocketPort=8124")
 		SocketPort, err = f.Section("Server").Key("SocketPort").Int()
 	}
+	fmt.Println("WebSocketPort=",WebSocketPort,"SocketPort=",SocketPort)
 	log.ShowLog,err  = f.Section("Server").Key("ShowLog").Bool()
 	WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
 	SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
-	RedisAddress = f.Section("Server").Key("SocketServer").String()
+	RedisAddress = f.Section("Server").Key("RedisAddress").String()
+	RedisPass = f.Section("Server").Key("RedisPass").String()
 	SocketAddress = f.Section("Server").Key("SocketAddress").String()
 	WebSocketAddress = f.Section("Server").Key("WebSocketAddress").String()
 	//GoroutineMax ,err  = f.Section("Server").Key("GoroutineMax").Int()
@@ -270,7 +277,7 @@ func GameManagerInit() {
 	GameManagerLua.Init() // 绑定lua脚本
 	//Lua.GoCallLuaTest(GameManagerLua.L,1)
 	GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
-
+	GameManagerLua.GoCallLuaSetVar("ServerIP_Port", SocketAddress + "_" + strconv.Itoa(SocketPort)) 	//把服务器地址传递给lua
 
 }
 
@@ -287,11 +294,16 @@ func GameManagerLuaReloadCheck() {
 	}
 }
 
-func CommonLogicStart() {
+func TimerCommonLogicStart() {
 	// 创建计时器，定期去run公共逻辑
 	ztimer.TimerCheckUpdate(func() {
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
 	}, 5)
+
+	// 创建计时器，定期去保存服务器状态
+	ztimer.TimerCheckUpdate(func() {
+		GameManagerLua.GoCallLuaLogic("GoCallLuaSaveServerState") // 保存服务器的状态
+	}, 60)
 
 	// 创建计时器，定期去run公共逻辑
 	ztimer.TimerCheckUpdate(func() {

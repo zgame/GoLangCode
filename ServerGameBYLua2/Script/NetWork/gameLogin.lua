@@ -41,29 +41,35 @@ function SevLoginGSGuest(serverId,buf)
     --local result = MultiThreadChannelGameManagerToPlayer("GetLastUserID",nil)    -- 申请分配一个桌子， 返回的数据中带有桌子和椅子的id了
     --print("分配uid", result.UserId)
 
-    --local MyUser = User:New()
+    local UserId = GetLastUserID()
+
+    local MyUser = User:New()
     ------ 以后增加判断，先读数据库，如果没有，创建新的玩家，如果有，读数据库
     --
-    --MyUser.FaceId = 0
-    --MyUser.Gender = 0
-    local UserId = GetLastUserID()
-    --MyUser.GameId = 320395999
-    --MyUser.Exp = 254
-    --MyUser.Loveliness = 0
-    --MyUser.Score = 100000009
-    --MyUser.NickName = "玩家"..MyUser.UserId
-    --MyUser.Level = 1
-    --MyUser.VipLevel = 0
-    --MyUser.AccountLevel = 3
-    --MyUser.SiteLevel = 0
-    --MyUser.CurLevelExp = 0
-    --MyUser.NextLevelExp = 457
-    --MyUser.PayTotal = 0
-    --MyUser.Diamond = 29
-    --
+    MyUser.FaceId = 0
+    MyUser.Gender = 0
+    MyUser.UserId = UserId
+    MyUser.GameId = 320395999
+    MyUser.Exp = 254
+    MyUser.Loveliness = 0
+    MyUser.Score = 100000009
+    MyUser.NickName = "玩家"..MyUser.UserId
+    MyUser.Level = 1
+    MyUser.VipLevel = 0
+    MyUser.AccountLevel = 3
+    MyUser.SiteLevel = 0
+    MyUser.CurLevelExp = 0
+    MyUser.NextLevelExp = 457
+    MyUser.PayTotal = 0
+    MyUser.Diamond = 29
+
+    --RedisSavePlayer(MyUser)           -- redis 数据库
+    --local user = RedisGetPlayer(UserId)
+
+
+
     --local player = Player:New(MyUser)
     --player.GameType = msg.kind_id
-
 
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
     luaCallGoResisterUID(UserId,serverId)

@@ -17,6 +17,21 @@ function GoCallLuaCommonLogicRun()
     ShowAllGameStates()
 end
 
+-- 每60秒记录一下，服务器的状态到数据库中
+function GoCallLuaSaveServerState()
+    local tableNum = 0
+    local playerNum = 0
+    for k, v in pairs(AllGamesList) do
+        local game = GetGameByID(k)
+        --print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(AllPlayerList))
+        tableNum = tableNum + GetTableLen(game.AllTableList)
+    end
+    local state = {}
+    state["Tables"] = tableNum
+    state["Players"] = GetTableLen(AllPlayerList)
+    RedisSaveServerState(state)
+end
+
 
 --夜里12点触发公共逻辑变动，因为新的一天开始了
 function GoCallLuaCommonLogic12clock()

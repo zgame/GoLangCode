@@ -15,100 +15,100 @@
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
 
-
-
--- 游戏管理根据玩家请求，处理消息
-function MultiThreadChannelDealData(ok,v)
-    if ok then
---        printTable(v)
-        local result = {}
-        local name = v.name -- 名字
-        local data = v.data -- 数据
-        local player
-        local game
-        local table
-
-        if data ~= nil then     -- 如果有具体的数据申请，那么把句柄那出来
-            player = data.Player
-            game = GetGameByID(player.GameType)
-            if game == nil then
-                result.error = 1            -- 找不到游戏类型
-                return
-            end
-
-            if player.TableID ~= TABLE_CHAIR_NOBODY then    -- 有分配好的桌子，那么把桌子找出来
-                table = game:GetTableByUID(player.TableID)
-                if table == nil then
-                    result.error = 1 -- 找不到桌子
-                    return
-                end
-            end
-        end
-        --Logger("玩家申请游戏管理器消息"..name)
-
-        ---- 玩家申请分配一个桌子----------------
-        if name == "PlayerLoginGame" then
-            player = game:PlayerLoginGame(player)
-            result.TableID = player.TableID
-            result.ChairID = player.ChairID                 -- 把player桌子id，椅子id的数据 返回去
-            table = game:GetTableByUID(player.TableID)
-            --local playerList = table:GetUsersSeatInTable()
-            result.users = {}
-            for k,v in pairs(table.UserSeatArray)do      -- 把桌子的其他玩家数据也发回去
-                result.users[k] = {}
-                result.users[k].UserId =  v.User.UserId
-                result.users[k].ChairID =  k
-            end
-
-
-        ---- 玩家申请uid----------------
-        elseif name == "GetLastUserID" then
-
-            result.UserId = GetLastUserID()       -- 桌子会发送消息给玩家
-
-        ---- 玩家申请下发场景鱼群----------------
-        elseif name == "SendSceneFishes" then
-
-            table:SendSceneFishes(player.User.UserId)       -- 桌子会发送消息给玩家
-
-
-            ----  玩家申请开火  ----------------
-        elseif name == "HandleUserFire" then
-            table:HandleUserFire(player , data.LockFishId )       -- 桌子会发送消息给玩家
-
-
-            ----  玩家申请抓到鱼  ----------------
-        elseif name == "HandleCatchFish" then
-
-            table:LogicCatchFish(player,data.LockFishIdList,data.BulletId)  -- 桌子会发送消息给玩家
-
-        else
-
-        end
-
-        GameManagerSendCh:send(result)
-
-    end
-end
-
-
-
--- 游戏管理器监听玩家发送的消息， 如果有消息来，那么分别处理， 处理之后再回给玩家
-function MultiThreadChannelPlayerToGameManager()
-    channel.select(
-            {"|<-", GameManagerReceiveCh, MultiThreadChannelDealData},
-            {"default"}
-    )
-end
-
-
--- 玩家发完消息，就等着游戏管理器给反馈了
-function MultiThreadChannelGameManagerToPlayer(name,data)
-    local myData = {}
-    myData.name = name
-    myData.data = data
-    GameManagerReceiveCh:send(myData)       -- 玩家给游戏管理器发线程通信
-    local ok, v = GameManagerSendCh:receive()            -- 监听游戏管理给的反馈
-    return v
-end
-
+--
+--
+---- 游戏管理根据玩家请求，处理消息
+--function MultiThreadChannelDealData(ok,v)
+--    if ok then
+----        printTable(v)
+--        local result = {}
+--        local name = v.name -- 名字
+--        local data = v.data -- 数据
+--        local player
+--        local game
+--        local table
+--
+--        if data ~= nil then     -- 如果有具体的数据申请，那么把句柄那出来
+--            player = data.Player
+--            game = GetGameByID(player.GameType)
+--            if game == nil then
+--                result.error = 1            -- 找不到游戏类型
+--                return
+--            end
+--
+--            if player.TableID ~= TABLE_CHAIR_NOBODY then    -- 有分配好的桌子，那么把桌子找出来
+--                table = game:GetTableByUID(player.TableID)
+--                if table == nil then
+--                    result.error = 1 -- 找不到桌子
+--                    return
+--                end
+--            end
+--        end
+--        --Logger("玩家申请游戏管理器消息"..name)
+--
+--        ---- 玩家申请分配一个桌子----------------
+--        if name == "PlayerLoginGame" then
+--            player = game:PlayerLoginGame(player)
+--            result.TableID = player.TableID
+--            result.ChairID = player.ChairID                 -- 把player桌子id，椅子id的数据 返回去
+--            table = game:GetTableByUID(player.TableID)
+--            --local playerList = table:GetUsersSeatInTable()
+--            result.users = {}
+--            for k,v in pairs(table.UserSeatArray)do      -- 把桌子的其他玩家数据也发回去
+--                result.users[k] = {}
+--                result.users[k].UserId =  v.User.UserId
+--                result.users[k].ChairID =  k
+--            end
+--
+--
+--        ---- 玩家申请uid----------------
+--        elseif name == "GetLastUserID" then
+--
+--            result.UserId = GetLastUserID()       -- 桌子会发送消息给玩家
+--
+--        ---- 玩家申请下发场景鱼群----------------
+--        elseif name == "SendSceneFishes" then
+--
+--            table:SendSceneFishes(player.User.UserId)       -- 桌子会发送消息给玩家
+--
+--
+--            ----  玩家申请开火  ----------------
+--        elseif name == "HandleUserFire" then
+--            table:HandleUserFire(player , data.LockFishId )       -- 桌子会发送消息给玩家
+--
+--
+--            ----  玩家申请抓到鱼  ----------------
+--        elseif name == "HandleCatchFish" then
+--
+--            table:LogicCatchFish(player,data.LockFishIdList,data.BulletId)  -- 桌子会发送消息给玩家
+--
+--        else
+--
+--        end
+--
+--        GameManagerSendCh:send(result)
+--
+--    end
+--end
+--
+--
+--
+---- 游戏管理器监听玩家发送的消息， 如果有消息来，那么分别处理， 处理之后再回给玩家
+--function MultiThreadChannelPlayerToGameManager()
+--    channel.select(
+--            {"|<-", GameManagerReceiveCh, MultiThreadChannelDealData},
+--            {"default"}
+--    )
+--end
+--
+--
+---- 玩家发完消息，就等着游戏管理器给反馈了
+--function MultiThreadChannelGameManagerToPlayer(name,data)
+--    local myData = {}
+--    myData.name = name
+--    myData.data = data
+--    GameManagerReceiveCh:send(myData)       -- 玩家给游戏管理器发线程通信
+--    local ok, v = GameManagerSendCh:receive()            -- 监听游戏管理给的反馈
+--    return v
+--end
+--

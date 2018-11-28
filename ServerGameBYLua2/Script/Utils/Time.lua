@@ -10,3 +10,6 @@ function GetOsTimeMillisecond()
     return luaCallGoGetOsTimeMillisecond()
 end
 
+function GetOsDateNow()
+    return os.date("%Y-%m-%d %H:%M:%S",os.time())
+end

@@ -4,21 +4,28 @@ import (
 	//"github.com/gomodule/redigo/redis"
 	"github.com/garyburd/redigo/redis"
 	"fmt"
-
+	"../log"
 )
 
 var RRedis redis.Conn
 
 // Redis数据库初始化
-func InitRedis(address string) {
+func InitRedis(address string, pwd string) bool{
 	re, err := redis.Dial("tcp", address)
 	if err != nil {
-		fmt.Println("connect to redis err", err.Error())
-		return
+		fmt.Println("Redis 服务器连接不上"+ address,err.Error())
+		return false
+	}
+	// 密码验证
+	if _, err := re.Do("AUTH", pwd); err != nil {
+		re.Close()
+		fmt.Println("Redis 服务器密码不正确")
+		return false
 	}
 	RRedis = re
+	return true
 }
-//
+
 //func newPool(host string, db int) *redis.Pool {
 //	return &redis.Pool {
 //		MaxIdle: 50,
@@ -41,56 +48,53 @@ func InitRedis(address string) {
 //}
 
 
+// 保存数据            dir 组信息 key value
+func SaveStringToRedis(dir string, key string,value string)  {
+
+	//data, _ := json.MarshalIndent(player, "", " ")
+	//key := "BY_Player_UID_"+ strconv.Itoa(int( player.UserId))
+
+	_, err := RRedis.Do("hdel", dir, key)
+	_, err = RRedis.Do("hset", dir, key,value)
+	if err !=nil {
+		log.PrintLogger("redis 保存的时候出错了:"+err.Error())
+	}
+	//if ret == '1'{
+	//	fmt.Println("save success", ret)
+	//} else {
+	//	fmt.Println("save failed", ret)
+	//}
+	//fmt.Println("redis save ",ret)
+}
 
 
 
+// 获取数据
+func GetStringFromRedis(dir string,key string) string {
+	//var key string
+	//key = "BY_Player_UID_"+ strconv.Itoa(uid)
+	//fmt.Println("",key)
+	ret, err :=  RRedis.Do("hget",dir, key)
+	//ret, err := RRedis.Do("hget", "ALL_Players", "BY_Player_UID_2027445")
+	//fmt.Println(reflect.TypeOf(ret))
 
+	if err !=nil {
+		fmt.Println("redis 读取出错了:", err)
+	}
+	//fmt.Println(ret.(string))
+	//var player Player.Player
+	if ret!= nil {
+		//fmt.Println("收到",string(ret.([]byte)))
+		//if err := json.Unmarshal(ret.([]byte), &player); err != nil {
+		//	log.Fatalf("JSON unmarshaling failed: %s", err)
+		//}
+		return string(ret.([]byte))
+	}else{
+		fmt.Println("获取到数据为空")
+		return ""
+	}
 
-//
-//// 保存数据
-//func SavePlayerToRedis(player *Player.Player)  {
-//
-//	data, _ := json.MarshalIndent(player, "", " ")
-//	key := "BY_Player_UID_"+ strconv.Itoa(int( player.UserId))
-//	ret, err := RRedis.Do("hdel", "ALL_Players", key)
-//	ret, err = RRedis.Do("hset", "ALL_Players", key,string(data))
-//	if err !=nil {
-//		fmt.Println("redis 出错了:", err)
-//	}
-//	fmt.Println(ret)
-//}
-//
-//
-//
-//// 获取数据
-//func GetPlayerFromRedis(uid int) *Player.Player {
-//	var key string
-//	key = "BY_Player_UID_"+ strconv.Itoa(uid)
-//	//fmt.Println("",key)
-//	ret, err :=  RRedis.Do("hget","ALL_Players", key)
-//	//ret, err := RRedis.Do("hget", "ALL_Players", "BY_Player_UID_2027445")
-//	//fmt.Println(reflect.TypeOf(ret))
-//
-//	if err !=nil {
-//		fmt.Println("redis 出错了:", err)
-//	}
-//	//fmt.Println(ret.(string))
-//	var player Player.Player
-//	if ret!= nil {
-//		if err := json.Unmarshal(ret.([]byte), &player); err != nil {
-//			log.Fatalf("JSON unmarshaling failed: %s", err)
-//		}
-//	}else{
-//		fmt.Println("获取到数据为空")
-//		return nil
-//	}
-//	return &player
-//}
-
-
-
-
-
+}
 
 
 //

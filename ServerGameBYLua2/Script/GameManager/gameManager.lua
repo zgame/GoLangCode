@@ -46,7 +46,7 @@ function GetALLUserUUID()
 end
 --有一个新的玩家注册了，那么给他分配一个UID
 function GetLastUserID()
-    local r = math.random(1, 4)        --返回[1,4]的随机整数
+    local r = 1     -- math.random(1, 4)        --返回[1,4]的随机整数
     ALLUserUUID = ALLUserUUID + r            -- 玩家的UID 中间会隔一些数字， 防止玩家挨个去猜UID
     return ALLUserUUID
 end
@@ -96,9 +96,8 @@ end
 function GoCallLuaGoRoutineForLuaGameTable()
     --print("----------------当前有"..#GoRoutineAllList.."个桌子")
 
-
     --    if #GoRoutineAllList > 0 then
-    for _, v in pairs(GoRoutineAllList) do
+    for _, v in pairs(GoRunTableAllList) do
         v() -- 执行注册的函数，table run
     end
     --    end
@@ -109,7 +108,7 @@ function FindGoRoutineAndRegisterTableRun(func)
     --    local len = #GoRoutineAllList +1
 --    GoRoutineAllList[len]=func  --注册TableRun函数
 
-    table.insert(GoRoutineAllList,func)--注册TableRun函数
+    table.insert(GoRunTableAllList,func)--注册TableRun函数
 
 end
 ------------------------------------------------------------------------------------------------------

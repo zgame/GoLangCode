@@ -4,6 +4,7 @@ import (
 	"github.com/yuin/gopher-lua"
 	"../Utils/log"
 	"../Utils/ztimer"
+	"../Utils/zRedis"
 	"../NetWork"
 )
 
@@ -21,6 +22,8 @@ func (m *MyLua)InitResister() {
 	m.L.SetGlobal("luaCallGoPrintLogger", m.L.NewFunction(luaCallGoPrintLogger))		//注册到lua 日志打印
 	m.L.SetGlobal("luaCallGoGetOsTimeMillisecond", m.L.NewFunction(luaCallGoGetOsTimeMillisecond))		//注册到lua 获取毫秒时间
 	m.L.SetGlobal("luaCallGoResisterUID", m.L.NewFunction(luaCallGoResisterUID))		//注册到lua 将uid注册到列表中
+	m.L.SetGlobal("luaCallGoRedisSaveString", m.L.NewFunction(luaCallGoRedisSaveString))		//注册到lua redis save
+	m.L.SetGlobal("luaCallGoRedisGetString", m.L.NewFunction(luaCallGoRedisGetString))		//注册到lua redis load
 
 	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
 
@@ -109,4 +112,23 @@ func luaCallGoResisterUID(L * lua.LState) int  {
 	luaUIDConnectMyServer[int(uid)] = server    // 进行关联
 	server.UserId = int(uid)                    // 保存uid
 	return 0
+}
+
+// redis set value
+func  luaCallGoRedisSaveString(L * lua.LState) int  {
+	dir := L.ToString(1)
+	key := L.ToString(2)
+	value := L.ToString(3)
+	zRedis.SaveStringToRedis(dir , key ,value )
+	return 0
+}
+// redis get value
+func  luaCallGoRedisGetString(L * lua.LState) int  {
+	dir := L.ToString(1)
+	key := L.ToString(2)
+
+	value := zRedis.GetStringFromRedis(dir , key  )
+	//fmt.Println("value",value)
+	L.Push(lua.LString(value))
+	return 1
 }

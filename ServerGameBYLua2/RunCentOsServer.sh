@@ -5,4 +5,4 @@ firewall-cmd --add-port=8123/tcp	# socket
 firewall-cmd --add-port=8124/tcp
 firewall-cmd --add-port=8089/tcp	#websocket
 firewall-cmd --add-port=8090/tcp
-./BYGameServerLua
+./BYGameServerLua -WebSocketPort=8089 -SocketPort=8123

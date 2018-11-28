@@ -22,7 +22,6 @@ function Game:New(name,gameTypeId, switch)
         TableUUID = 1 ,     -- tableUid 从1开始
 
 
-
         GameScore = 0 ,     --  游戏倍率
     }
     setmetatable(c,self)
@@ -76,6 +75,7 @@ function Game:ReleaseTableByUID(tableId)
     else
         -- 第一个桌子是保留着的
     end
+    collectgarbage()        -- 强制gc
 end
 
 ----------------------------------------------------------------

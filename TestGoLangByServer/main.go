@@ -33,7 +33,7 @@ var ShowLog int
 
 // 程序入口
 func main() {
-	runtime.GOMAXPROCS(4)
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	f, err := ini.Load("Setting.ini")
 	if err != nil{
@@ -142,7 +142,7 @@ func (c *Client) ConnectGameServer(addr string)  {
 	//fmt.Println("connection:", c.Index,  "------",  addr)
 	conn, e := net.DialTCP("tcp", nil, tcpAddr)
 	if e != nil {
-		fmt.Println(c.Index, "连接不给力， 服务器可能玩家太多了",e)
+		fmt.Println(c.Index, "服务器连接不上",e)
 		return
 	}
 	defer conn.Close()

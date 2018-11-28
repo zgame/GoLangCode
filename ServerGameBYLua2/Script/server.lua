@@ -40,6 +40,7 @@ require("Time")
 require("Random")
 require("dumpTable")
 require("zTable")
+require("zRedis")
 
 --Logger("system ok")
 

@@ -76,6 +76,11 @@ function ByTable:RunTable()
             end
 
             if now - self.LastRunTime > 3000 then
+                local state = {}
+                state["FishNum"] = self:GetFishNum()
+                state["BulletNum"] = self:GetBulletNum()
+                state["SeatArray"] = GetTableLen(self.UserSeatArray)
+                RedisSaveGameState(self.GameID, self.TableID, state)
                 --print(self.TableID.."当前有多少条鱼", self:GetFishNum())
                 --print(self.TableID.."当前有多少子弹", self:GetBulletNum())
                 --print(self.TableID.."当前有多少玩家", GetTableLen(self.UserSeatArray))
