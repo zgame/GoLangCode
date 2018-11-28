@@ -21,6 +21,7 @@ import (
 	//"github.com/yuin/gopher-lua"
 	"./GlobalVar"
 	"runtime"
+	"flag"
 )
 
 
@@ -37,8 +38,8 @@ var server *NetWork.TCPServer
 
 var WebSocketServer bool	// websocket 开启
 var SocketServer bool		// socket 开启
-var WebSockewtPort int
-var SockewtPort int
+var WebSocketPort int
+var SocketPort int
 var SocketAddress string		// SocketAddress 服务器地址
 var WebSocketAddress string		// WebSocketAddress 服务器地址
 
@@ -118,7 +119,7 @@ func main() {
 	NetWorkServerStart()
 
 
-	//service := "127.0.0.1:"+strconv.Itoa(SockewtPort)
+	//service := "127.0.0.1:"+strconv.Itoa(SocketPort)
 	//listener, err := net.Listen("tcp", service)
 	//log.CheckError(err)
 	//for {
@@ -170,7 +171,7 @@ func main() {
 
 
 
-
+// -WebSocketPort=8089 -SocketPort=8124
 //-----------------------------本地配置文件---------------------------------------------------
 func initSetting()  {
 	f, err := ini.Load("Setting.ini")
@@ -178,8 +179,19 @@ func initSetting()  {
 		fmt.Println("读取配置文件出错")
 		return
 	}
-	WebSockewtPort ,err  = f.Section("Server").Key("WebSocketPort").Int()
-	SockewtPort ,err   = f.Section("Server").Key("SocketPort").Int()
+	// -------------------------首先读取命令行参数--------------------------
+	wsPort := flag.Int("WebSocketPort", 0, "")
+	sPort := flag.Int("SocketPort", 0, "")
+	flag.Parse()
+	WebSocketPort = *wsPort
+	SocketPort = *sPort
+	//-------------------------------------------------------------------
+	if WebSocketPort == 0 {
+		WebSocketPort, err = f.Section("Server").Key("WebSocketPort").Int()
+	}
+	if SocketPort == 0 {
+		SocketPort, err = f.Section("Server").Key("SocketPort").Int()
+	}
 	log.ShowLog,err  = f.Section("Server").Key("ShowLog").Bool()
 	WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
 	SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
@@ -218,7 +230,7 @@ func NetWorkServerStart()  {
 	if WebSocketServer {
 		// websocket 服务器开启---------------------------------
 		wsServer = new(NetWork.WSServer)
-		wsServer.Addr = WebSocketAddress + ":"+strconv.Itoa(WebSockewtPort)
+		wsServer.Addr = WebSocketAddress + ":"+strconv.Itoa(WebSocketPort)
 		//fmt.Println("websocket 绑定："+ wsServer.Addr)
 		wsServer.MaxConnNum = 2000
 		wsServer.PendingWriteNum = 100
@@ -236,7 +248,7 @@ func NetWorkServerStart()  {
 	if SocketServer{
 		// socket 服务器开启----------------------------------
 		server = new(NetWork.TCPServer)
-		server.Addr = SocketAddress +":"+strconv.Itoa(SockewtPort)
+		server.Addr = SocketAddress +":"+strconv.Itoa(SocketPort)
 		//fmt.Println("socket 绑定："+ server.Addr)
 		server.MaxConnNum = int(math.MaxInt32)
 		server.PendingWriteNum = 100
