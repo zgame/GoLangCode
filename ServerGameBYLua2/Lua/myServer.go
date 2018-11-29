@@ -165,13 +165,21 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 
 // 在网络中断的时候会自动调用， 关闭lua脚本
 func (a *MyServer) OnClose() {
-	//log.PrintLogger("玩家中断了网络连接， 我们要关闭网络， 同时关闭玩家的lua文件")
+	// log.PrintLogger("玩家中断了网络连接， 我们要关闭网络")
+	//	a.myLua.L.DoString(`	// 关闭channel
+	//	GameManagerReceiveCh:close()
+	//    GameManagerSendCh:close()
+	//`)
+	//	a.myLua.L.Close() // 关闭lua调用
 
-//	a.myLua.L.DoString(`	// 关闭channel
-//	GameManagerReceiveCh:close()
-//    GameManagerSendCh:close()
-//`)
-	a.myLua.L.Close() // 关闭lua调用
+
+	// 连接关闭了， 通知lua， 这个玩家网络中断了
+	a.myLua.GoCallLuaLogicInt("GoCallLuaPlayerNetworkBroken",a.UserId)
+
+	// 清理掉一些调用关系
+	luaConnectMyServer[a.ServerId] = nil
+	luaUIDConnectMyServer[a.UserId] = nil
+
 }
 
 // ---------------------发送数据到网络-------------------------

@@ -63,8 +63,8 @@ function SevLoginGSGuest(serverId,buf)
     MyUser.PayTotal = 0
     MyUser.Diamond = 29
 
-    --RedisSavePlayer(MyUser)           -- redis 数据库
-    --local user = RedisGetPlayer(UserId)
+    --RedisSavePlayer(MyUser)           -- redis 数据库 save
+    --local user = RedisGetPlayer(UserId)   -- redis load
 
 
 

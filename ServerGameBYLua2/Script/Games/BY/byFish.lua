@@ -7,7 +7,6 @@
 local FishServerExcel = require("mgby_fish_sever")
 
 Fish = {}
-
 function Fish:New(uid)
     c = {
         FishUID = uid, --UID

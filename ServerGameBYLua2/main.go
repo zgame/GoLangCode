@@ -259,8 +259,8 @@ func NetWorkServerStart()  {
 		//fmt.Println("socket 绑定："+ server.Addr)
 		server.MaxConnNum = int(math.MaxInt32)
 		server.PendingWriteNum = 100
-		server.LenMsgLen = 4
-		server.MaxMsgLen = math.MaxUint32
+		//server.LenMsgLen = 4
+		//server.MaxMsgLen = math.MaxUint32
 		server.NewAgent = func(conn *NetWork.TCPConn) NetWork.Agent {
 			a := Lua.NewMyServer(conn,GameManagerLua)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
 			return a

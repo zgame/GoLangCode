@@ -11,7 +11,6 @@ require("byTable")
 
 
 Game = {}
-
 function Game:New(name,gameTypeId, switch)
     c = {
         Name = name,
@@ -21,7 +20,7 @@ function Game:New(name,gameTypeId, switch)
         AllTableList = {},  -- 所有桌子列表       key tableUid  ,value table
         TableUUID = 1 ,     -- tableUid 从1开始
 
-
+        GoRunTableAllList = {},   -- 桌子的run函数在里面
         GameScore = 0 ,     --  游戏倍率
     }
     setmetatable(c,self)
@@ -77,6 +76,13 @@ function Game:ReleaseTableByUID(tableId)
     end
     collectgarbage()        -- 强制gc
 end
+
+
+--- 然后注册TableRun
+function Game:FindGoRoutineAndRegisterTableRun(tableId,func)
+    self.GoRunTableAllList[tableId] = func  --注册TableRun函数
+end
+
 
 ----------------------------------------------------------------
 -----------------------------管理玩家---------------------------
@@ -163,7 +169,6 @@ end
 function Game:PlayerLogOutGame(player)
     local table = Game:GetTableByUID(player.TableID)
     table:PlayerStandUp(player.ChairID, player)        -- 玩家离开桌子
-
 
     print("玩家"..player.User.UserId.."离开了")
 end

@@ -8,10 +8,10 @@
 require("gameFire")
 require("gameLogin")
 
-ZswLogShowSendMsgNum = 0        -- 发送数量
-ZswLogShowSendMsgLastTime = 0   -- 发送时间
-ZswLogShowReceiveMsgNum = 0
-ZswLogShowReceiveLastTime = 0
+local ZswLogShowSendMsgNum = 0        -- 发送数量
+local ZswLogShowSendMsgLastTime = 0   -- 发送时间
+local ZswLogShowReceiveMsgNum = 0     -- 接收数量
+local ZswLogShowReceiveLastTime = 0      -- 接收时间
 ----------------------------------------------------------------------
 ---发送消息
 ----------------------------------------------------------------------
@@ -48,12 +48,19 @@ function LuaNetWorkSendToUser(userId,msgId,subMsgId,sendCmd,err)
     if now - ZswLogShowSendMsgLastTime > 1000 then
         ZswLogShowSendMsgLastTime = now
         print("1秒发送消息数量", ZswLogShowSendMsgNum)
+        -- 给服务器一分钟统计提供数据
+        if ServerStateSendNum == 0 then
+            ServerStateSendNum = ZswLogShowSendMsgNum   -- 赋值即可
+        else
+            ServerStateSendNum =  math.ceil( (ServerStateSendNum+ZswLogShowSendMsgNum)/2 )  -- 求一下平均值
+        end
+
         ZswLogShowSendMsgNum = 0
     else
         ZswLogShowSendMsgNum = ZswLogShowSendMsgNum + 1       -- 没到一秒就加数量
     end
 
-    return luaCallGoNetWorkSend(userId,0,msgId,subMsgId,buffer,err)       -- 返回结果 true 发送成功  false 发送失败
+    luaCallGoNetWorkSend(userId,0,msgId,subMsgId,buffer,err)       -- 返回结果 true 发送成功  false 发送失败
 end
 
 
@@ -71,6 +78,12 @@ function GoCallLuaNetWorkReceive(serverId,userId, msgId, subMsgId, data)
     if now - ZswLogShowReceiveLastTime > 1000 then
         ZswLogShowReceiveLastTime = now
         print("1秒接收消息数量", ZswLogShowReceiveMsgNum)
+        -- 给服务器一分钟统计提供数据
+        if ServerStateReceiveNum == 0 then
+            ServerStateReceiveNum = ZswLogShowReceiveMsgNum   -- 赋值即可
+        else
+            ServerStateReceiveNum =  math.ceil(  (ServerStateReceiveNum+ZswLogShowReceiveMsgNum)/2)   -- 求一下平均值
+        end
         ZswLogShowReceiveMsgNum = 0
     else
         ZswLogShowReceiveMsgNum = ZswLogShowReceiveMsgNum + 1       -- 没到一秒就加数量

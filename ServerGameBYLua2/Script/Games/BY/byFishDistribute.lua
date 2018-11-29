@@ -7,7 +7,6 @@
 local FishServerExcel = require("mgby_fish_sever")
 
 FishDistribute = {}
-
 function FishDistribute:New()
     c = {
         FishKindID = 0, -- 鱼的类型

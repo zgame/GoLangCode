@@ -57,16 +57,18 @@ func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMs
 	GlobalVar.Mutex.Unlock()
 }
 
-// ------------------------go 给lua传递 1个 int-----------------------------------------------
-//func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
-//	if err := m.L.CallByParam(lua.P{
-//		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
-//		NRet: 0,
-//		Protect: true,
-//	},lua.LNumber(ii)); err != nil {		// 参数
-//		fmt.Println("GoCallLuaLogicInt error :", funcName ,"      ",err.Error())
-//	}
-//}
+//------------------------go 给lua传递 1个 int-----------------------------------------------
+func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
+	GlobalVar.Mutex.Lock()
+	if err := m.L.CallByParam(lua.P{
+		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
+		NRet: 0,
+		Protect: true,
+	},lua.LNumber(ii)); err != nil {		// 参数
+		fmt.Println("GoCallLuaLogicInt error :", funcName ,"      ",err.Error())
+	}
+	GlobalVar.Mutex.Unlock()
+}
 
 // ----------------------Lua重新加载，Lua的热更新按钮----------------------------------------
 func (m *MyLua)GoCallLuaReload() error {

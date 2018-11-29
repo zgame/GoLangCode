@@ -24,6 +24,7 @@ func (m *MyLua)InitResister() {
 	m.L.SetGlobal("luaCallGoResisterUID", m.L.NewFunction(luaCallGoResisterUID))		//注册到lua 将uid注册到列表中
 	m.L.SetGlobal("luaCallGoRedisSaveString", m.L.NewFunction(luaCallGoRedisSaveString))		//注册到lua redis save
 	m.L.SetGlobal("luaCallGoRedisGetString", m.L.NewFunction(luaCallGoRedisGetString))		//注册到lua redis load
+	m.L.SetGlobal("luaCallGoRedisDelKey", m.L.NewFunction(luaCallGoRedisDelKey))		//注册到lua redis del key
 
 	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
 
@@ -57,22 +58,26 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	data := L.ToString(5)
 	msg := L.ToString(6)
 
-	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd)
-	//_, err := Conn.Write(bufferEnd)
-	//log.CheckError(err)
+	// lua传递过来之后， 立即开启一个新的协程去专门做发送工作
+	go func() {
+		bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd)
+		//_, err := Conn.Write(bufferEnd)
+		//log.CheckError(err)
 
-	var result bool
-	// 发送出去
-	if userId == 0 {
-		// 给玩家自己回复消息
-		result = GetMyServerByLSate(serverId).WriteMsg(bufferEnd)
-	}else{
-		// 给其他玩家发送消息
-		result = GetMyServerByUID(userId).WriteMsg(bufferEnd)
-	}
-	L.Push(lua.LBool(result))		 /* push result */
+		//var result bool
+		// 发送出去
+		if userId == 0 {
+			// 给玩家自己回复消息
+			GetMyServerByLSate(serverId).WriteMsg(bufferEnd)
+		}else{
+			// 给其他玩家发送消息
+			GetMyServerByUID(userId).WriteMsg(bufferEnd)
+		}
+	}()
+
+	//L.Push(lua.LBool(result))		 /* push result */
 	//fmt.Println("lua send :" + str)
-	return 1 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
+	return 0 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
 }
 
 
@@ -131,4 +136,12 @@ func  luaCallGoRedisGetString(L * lua.LState) int  {
 	//fmt.Println("value",value)
 	L.Push(lua.LString(value))
 	return 1
+}
+
+// redis del key
+func  luaCallGoRedisDelKey(L * lua.LState) int  {
+	dir := L.ToString(1)
+	key := L.ToString(2)
+	zRedis.DelKeyToRedis(dir , key)
+	return 0
 }

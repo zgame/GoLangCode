@@ -7,7 +7,6 @@
 
 
 Bullet = {}
-
 function Bullet:New(id)
     c = {
         BulletUID = id, --UID

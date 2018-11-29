@@ -4,7 +4,7 @@
 --- DateTime: 2018/11/28 14:27
 ---
 
-zJson = require("Json")
+local zJson = require("Json")
 
 function RedisSaveString(dir,key,value)
     return luaCallGoRedisSaveString(dir,key,value)
@@ -14,39 +14,41 @@ function RedisGetString(dir,key)
     return luaCallGoRedisGetString(dir,key)
 end
 
-RedisDirAllPlayers = "AllPlayers"
-RedisDirServerState = "ServerState_IP_"
-RedisDirGameState = "GameState_"
+function RedisDelKey(dir,key)
+    luaCallGoRedisDelKey(dir,key)
+end
 
+-----------------------DIR-------------------------
+local RedisDirAllPlayers = "BY_AllPlayers"           -- 所有玩家列表
+local RedisDirServerState = "BY_ServerState_"         -- 各个服务器状态 多少个桌子，多少玩家在线， 网络情况，1分钟记录一次，永久记忆
+local RedisDirGameState = "BY_GameState_"                -- 当前各个服务器，各个游戏的状态，多少鱼，多少子弹，多少椅子有人
 
-RedisKeyPlayer = "UID_"
-RedisKeyServerState = "Time_"
-RedisKeyGameState = "Table_"
+-----------------------KEY-------------------------
+local RedisKeyPlayer = "UID_"
+local RedisKeyServerState = "Time_"
+local RedisKeyGameState = "Table_ID_"
 
 ----------------------------玩家信息-----------------------------
 function RedisSavePlayer(User)
-    local value = zJson.encode(User)
-    --print("保存玩家信息")
-    --print(value)
-    RedisSaveString(RedisDirAllPlayers,RedisKeyPlayer..User.UserId, value)
+    RedisSaveString(RedisDirAllPlayers,RedisKeyPlayer..User.UserId, zJson.encode(User))
 end
 
 function RedisGetPlayer(uid)
-    local userStr =  RedisGetString(RedisDirAllPlayers, RedisKeyPlayer..uid)
-    --print("获取玩家信息",userStr)
-
-    return  zJson.decode(userStr)
-    --printTable(user)
+    return  zJson.decode(RedisGetString(RedisDirAllPlayers, RedisKeyPlayer..uid))
 end
 
 ----------------------------保存服务器状态信息-----------------------------
 function RedisSaveServerState(state)
-    local value = zJson.encode(state)
-    RedisSaveString(RedisDirServerState..ServerIP_Port,RedisKeyServerState..GetOsDateNow(), value)
+    RedisSaveString(RedisDirServerState..ServerIP_Port,RedisKeyServerState..GetOsDateNow(), zJson.encode(state))
 end
 ----------------------------保存桌子状态信息-----------------------------
 function RedisSaveGameState(gameType,tableId, state)
-    local value = zJson.encode(state)
-    RedisSaveString(RedisDirGameState..gameType,RedisKeyGameState..tableId, value)
+    RedisSaveString(RedisDirGameState..ServerIP_Port.."_ID_"..gameType,RedisKeyGameState..tableId, zJson.encode(state))
 end
 
+function RedisDelGameState(gameType,tableId)         -- 清理掉桌子的运行状态
+    RedisDelKey(RedisDirGameState..ServerIP_Port.."_ID_"..gameType,RedisKeyGameState..tableId)
+end
+
+
+----------------------------保存桌子状态信息-----------------------------

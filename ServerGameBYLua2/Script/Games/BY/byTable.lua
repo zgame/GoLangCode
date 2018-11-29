@@ -13,7 +13,6 @@ require("user")
 local CMD_Game_pb = require("CMD_Game_pb")
 
 ByTable = {}
-
 function ByTable:New(tableId,gameTypeId)
     c = {
         GameID = gameTypeId,
@@ -65,30 +64,30 @@ function ByTable:RunTable()
             for k, fish in pairs(self.FishArray) do
                 fish:FishRun(self)              --遍历所有鱼，并且run
             end
+
+            -- 记录桌子的运行状态
+            if now - self.LastRunTime > 3000 then
+                local state = {}
+                state["FishNum"] = self:GetFishNum()        --当前有多少条鱼
+                state["BulletNum"] = self:GetBulletNum()    --当前有多少子弹
+                state["SeatArray"] = GetTableLen(self.UserSeatArray)    --当前有多少玩家
+                RedisSaveGameState(self.GameID, self.TableID, state)
+                self.LastRunTime = GetOsTimeMillisecond()
+            end
+            -- 检查玩家的情况，如果玩家长期离线，那么t掉，没人就清空桌子
             for k, player in pairs(self.UserSeatArray) do
                 if player.NetWorkState == false then
-                    if now - player.NetWorkCloseTimer > 1000 then
+                    if now - player.NetWorkCloseTimer > ConstPlayerNetworkWaitTime then
                         -- 玩家长时间断线，t掉吧
                         self:PlayerStandUp(player.ChairID,player)
                         --print("长时间断线， t掉这个玩家",player.User.UserId)
                     end
                 end
             end
-
-            if now - self.LastRunTime > 3000 then
-                local state = {}
-                state["FishNum"] = self:GetFishNum()
-                state["BulletNum"] = self:GetBulletNum()
-                state["SeatArray"] = GetTableLen(self.UserSeatArray)
-                RedisSaveGameState(self.GameID, self.TableID, state)
-                --print(self.TableID.."当前有多少条鱼", self:GetFishNum())
-                --print(self.TableID.."当前有多少子弹", self:GetBulletNum())
-                --print(self.TableID.."当前有多少玩家", GetTableLen(self.UserSeatArray))
-                self.LastRunTime = GetOsTimeMillisecond()
-            end
         end
     end
-    FindGoRoutineAndRegisterTableRun(RunTable)    -- 注册开始一个新的协程
+    local game = GetGameByID(self.GameID)
+    game:FindGoRoutineAndRegisterTableRun(self.TableID ,RunTable)    -- 注册开始一个新的协程
 end
 
 function ByTable:InitTable()
@@ -220,7 +219,7 @@ end
 ----玩家离开椅子
 function ByTable:PlayerStandUp(seatID,player)
     local game = GetGameByID(player.GameType)
-    AllPlayerList[player.User.UserId] = nil      -- 清理掉游戏管理的玩家总列表
+    AllPlayerList[player.User.UserId] = nil         -- 清理掉游戏管理的玩家总列表
     self.UserSeatArray[seatID] = nil                -- 清理掉桌子的玩家列表
     player.TableID = TABLE_CHAIR_NOBODY
     player.ChairID = TABLE_CHAIR_NOBODY
@@ -230,7 +229,7 @@ function ByTable:PlayerStandUp(seatID,player)
     --如果是空桌子的话，清理一下桌子
     if self:CheckTableEmpty() then
         self:ClearTable()
-
+        RedisDelGameState(self.GameID, self.TableID)   -- 把记录桌子状态的redis删掉
         game:ReleaseTableByUID(self.TableID)    --回收桌子
     end
 end
@@ -416,12 +415,13 @@ end
 function ByTable:SendMsgToAllUsers(mainCmd,subCmd,sendCmd)
     for k,player in pairs(self.UserSeatArray) do
         if player ~= nil and player.IsRobot == false and player.NetWorkState then
-            local result = LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
-            if not result then
-                -- 发送失败了，玩家网络中断了
-                player.NetWorkState = false
-                player.NetWorkCloseTimer = GetOsTimeMillisecond()
-            end
+             LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
+            --local result = LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
+            --if not result then
+            --    -- 发送失败了，玩家网络中断了
+            --    player.NetWorkState = false
+            --    player.NetWorkCloseTimer = GetOsTimeMillisecond()
+            --end
         end
     end
 end

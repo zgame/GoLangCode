@@ -10,7 +10,6 @@
 --------------------------------------------------------------------------------------
 
 Player = {}
-
 function Player:New(user)
     c = {
         User = user,  -- user数据
@@ -30,3 +29,4 @@ function Player:New(user)
     self.__index = self
     return c
 end
+
