@@ -173,8 +173,11 @@ func (a *MyServer) OnClose() {
 	//	a.myLua.L.Close() // 关闭lua调用
 
 
-	// 连接关闭了， 通知lua， 这个玩家网络中断了
-	a.myLua.GoCallLuaLogicInt("GoCallLuaPlayerNetworkBroken",a.UserId)
+
+	if a.UserId > 0 {
+		// 连接关闭了， 通知lua， 这个玩家网络中断了
+		a.myLua.GoCallLuaLogicInt("GoCallLuaPlayerNetworkBroken", a.UserId)
+	}
 
 	// 清理掉一些调用关系
 	luaConnectMyServer[a.ServerId] = nil
