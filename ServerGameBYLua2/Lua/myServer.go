@@ -203,13 +203,13 @@ func (a *MyServer) RemoteAddr() net.Addr {
 	return a.conn.RemoteAddr()
 }
 
-func (a *MyServer) Close() {
-	a.conn.Close()
-}
-
-func (a *MyServer) Destroy() {
-	a.conn.Destroy()
-}
+//func (a *MyServer) Close() {
+//	a.conn.Close()
+//}
+//
+//func (a *MyServer) Destroy() {
+//	a.conn.Destroy()
+//}
 //
 //func (a *MyServer) UserData() interface{} {
 //	return a.userData

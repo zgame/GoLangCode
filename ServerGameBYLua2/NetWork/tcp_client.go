@@ -28,7 +28,7 @@ type TCPClient struct {
 	MinMsgLen    uint32
 	MaxMsgLen    uint32
 	LittleEndian bool
-	msgParser    *MsgParser
+	//msgParser    *MsgParser
 }
 
 func (client *TCPClient) Start() {
@@ -109,7 +109,7 @@ reconnect:
 	client.conns[conn] = struct{}{}
 	client.Unlock()
 
-	tcpConn := newTCPConn(conn, client.PendingWriteNum, client.msgParser)
+	tcpConn := newTCPConn(conn, client.PendingWriteNum)
 	agent := client.NewAgent(tcpConn)
 	agent.Run()
 

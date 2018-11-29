@@ -27,7 +27,7 @@ type TCPServer struct {
 	MinMsgLen    uint32
 	MaxMsgLen    uint32
 	LittleEndian bool
-	msgParser    *MsgParser
+	//msgParser    *MsgParser
 }
 
 func (server *TCPServer) Start() {
@@ -101,7 +101,7 @@ func (server *TCPServer) run() {
 
 		server.wgConns.Add(1)
 
-		tcpConn := newTCPConn(conn, server.PendingWriteNum, nil)		// 建立新连接
+		tcpConn := newTCPConn(conn, server.PendingWriteNum)		// 建立新连接
 		agent := server.NewAgent(tcpConn)
 		go func() {
 			agent.Run()
