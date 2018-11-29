@@ -1,4 +1,4 @@
-package main
+package _const
 
 //////////# 主命令定义
 const MAIN_CMD_ID = 1100

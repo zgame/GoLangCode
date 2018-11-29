@@ -1,5 +1,5 @@
 
-package main
+package _const
 
 const (
 	//# 宝石迷城

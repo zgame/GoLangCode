@@ -1,5 +1,5 @@
 
-package main
+package _const
 
 const (
 	//# 消息类别 = 必须写在DG_MAX之前

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-
+	. "./const"
 )
 
 // 处理单个包内容

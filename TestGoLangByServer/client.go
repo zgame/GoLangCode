@@ -10,7 +10,7 @@ import (
 	"log"
 	"github.com/golang/protobuf/proto"
 	"./CMD"
-
+	. "./const"
 	"time"
 	"sync"
 )

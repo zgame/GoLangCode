@@ -1,5 +1,5 @@
 
-package main
+package _const
 
 const (
 	SUB_C_MainGameStart   = 700 //# 水浒传开始摇奖

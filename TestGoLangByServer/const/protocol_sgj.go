@@ -1,4 +1,4 @@
-package main
+package _const
 
 const (
 	SUB_C_REQ_BANKER = 600 //# 申请上庄

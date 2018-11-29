@@ -1,7 +1,7 @@
 package main
 import "github.com/golang/protobuf/proto"
 import (
-	//. "./constd"
+	. "./const"
 	"fmt"
 	"./CMD"
 	"./proto_global"
