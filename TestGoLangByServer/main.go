@@ -28,6 +28,7 @@ func checkPanic(e error) {
 var GameServerAddress string
 var GameServerWebSocketAddress string
 var ShowLog int
+var IsWebSocket bool
 
 // 程序入口
 func main() {
@@ -44,6 +45,7 @@ func main() {
 	ClientStart,err   := f.Section("Server").Key("ClientStart").Int()
 	ClientEnd ,err   := f.Section("Server").Key("ClientEnd").Int()
 	ShowLog ,err   = f.Section("Server").Key("ShowLog").Int()
+	IsWebSocket ,err   = f.Section("Server").Key("IsWebSocket").Bool()
 
 
 
@@ -58,7 +60,7 @@ func main() {
 
 	fmt.Println("max conn start :", ClientStart, "--------", ClientEnd)
 
-	StartClient(ClientEnd-ClientStart, true)
+	StartClient(ClientEnd-ClientStart, IsWebSocket)
 
 	//
 	//w := sync.WaitGroup{}

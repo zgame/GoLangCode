@@ -126,6 +126,8 @@ func (tcpConn *TCPConn) ReadMsg() ([]byte, int, error) {
 }
 
 func (tcpConn *TCPConn) WriteMsg(args ...[]byte) error {
+	//tcpConn.Lock()
+	//defer tcpConn.Unlock()
 	//return tcpConn.msgParser.Write(tcpConn, args...)
 	_, err :=tcpConn.conn.Write(args[0])
 	return err

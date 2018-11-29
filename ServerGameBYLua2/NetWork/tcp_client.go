@@ -18,7 +18,7 @@ type TCPClient struct {
 	ConnectInterval time.Duration
 	PendingWriteNum int
 	AutoReconnect   bool
-	NewAgent        func(*TCPConn) Agent
+	NewAgent        func(*TCPConn,int) Agent
 	conns           ConnSet
 	wg              sync.WaitGroup
 	closeFlag       bool
@@ -38,7 +38,7 @@ func (client *TCPClient) Start() {
 	for i := 0; i < client.ConnNum; i++ {
 		client.wg.Add(1)
 		//fmt.Println("for")
-		go client.connect()
+		go client.connect(i)
 	}
 }
 
@@ -83,15 +83,15 @@ func (client *TCPClient) dial() net.Conn {
 			return conn
 		}
 
-		fmt.Printf("connect to %v error: %v", client.Addr, err)
+		fmt.Printf("connect to %v error: %v \n", client.Addr, err)
 		time.Sleep(client.ConnectInterval)
 		continue
 	}
 }
 
-func (client *TCPClient) connect() {
+func (client *TCPClient) connect(index int) {
 
-	fmt.Println("开始连接...")
+	//fmt.Println("开始连接...")
 	defer client.wg.Done()
 
 reconnect:
@@ -110,7 +110,7 @@ reconnect:
 	client.Unlock()
 
 	tcpConn := newTCPConn(conn, client.PendingWriteNum)
-	agent := client.NewAgent(tcpConn)
+	agent := client.NewAgent(tcpConn,index)
 	agent.Run()
 
 	// cleanup

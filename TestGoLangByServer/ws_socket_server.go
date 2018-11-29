@@ -22,7 +22,7 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 		client.LenMsgLen = 4
 		client.MaxMsgLen = math.MaxUint32
 		client.NewAgent = func(conn *NetWork.TCPConn,index int) NetWork.Agent {
-			a := &Client{Conn: conn, Index:index}
+			a := &Client{Conn: conn,Index:index}
 			return a
 		}
 
@@ -41,8 +41,8 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 		wsclient.PendingWriteNum = 100
 		wsclient.HandshakeTimeout = 10 * time.Second
 		wsclient.MaxMsgLen = math.MaxUint32
-		wsclient.NewAgent = func(conn *NetWork.WSConn) NetWork.Agent {
-			a := &Client{Conn: conn}
+		wsclient.NewAgent = func(conn *NetWork.WSConn,index int) NetWork.Agent {
+			a := &Client{Conn: conn, Index:index}
 			return a
 		}
 
@@ -77,13 +77,12 @@ func (a *Client)init()  {
 
 func (a *Client) Run() {
 	//a.WriteMsg([]byte("我是客户端哟"))
-
 	a.init()
 
 	for {
 		buf,bufLen, err := a.Conn.ReadMsg()
 		if err != nil {
-			fmt.Println("跟对方的连接中断了\n")
+			fmt.Println("跟对方的连接中断了")
 			break
 		}
 		//if err != nil && err != io.EOF {  //io.EOF在网络编程中表示对端把链接关闭了。

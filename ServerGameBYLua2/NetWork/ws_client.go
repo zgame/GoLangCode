@@ -23,7 +23,7 @@ type WSClient struct {
 	MaxMsgLen        uint32
 	HandshakeTimeout time.Duration
 	AutoReconnect    bool
-	NewAgent         func(*WSConn) Agent
+	NewAgent         func(*WSConn,int) Agent
 	dialer           websocket.Dialer
 	conns            WebsocketConnSet
 	wg               sync.WaitGroup
@@ -35,7 +35,7 @@ func (client *WSClient) Start() {
 
 	for i := 0; i < client.ConnNum; i++ {
 		client.wg.Add(1)
-		go client.connect()
+		go client.connect(i)
 	}
 }
 
@@ -84,13 +84,13 @@ func (client *WSClient) dial() *websocket.Conn {
 			return conn
 		}
 
-		fmt.Printf("connect to %v error: %v", client.Addr, err)
+		fmt.Printf("connect to %v error: %v \n", client.Addr, err)
 		time.Sleep(client.ConnectInterval)
 		continue
 	}
 }
 
-func (client *WSClient) connect() {
+func (client *WSClient) connect(index int) {
 	defer client.wg.Done()
 reconnect:
 	conn := client.dial()
@@ -110,7 +110,7 @@ reconnect:
 	client.Unlock()
 
 	wsConn := newWSConn(conn, client.PendingWriteNum, client.MaxMsgLen)
-	agent := client.NewAgent(wsConn)
+	agent := client.NewAgent(wsConn,index)
 	agent.Run()
 
 	// cleanup

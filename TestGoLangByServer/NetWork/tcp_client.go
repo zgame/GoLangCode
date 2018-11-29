@@ -39,6 +39,7 @@ func (client *TCPClient) Start() {
 		client.wg.Add(1)
 		//fmt.Println("for")
 		go client.connect(i)
+		//time.Sleep(time.Millisecond * 10)
 	}
 }
 
