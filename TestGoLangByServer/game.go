@@ -113,10 +113,12 @@ func (this *Client)EnterScence() {
 		ClientVersion:&client_version,
 	}
 	data, _ := proto.Marshal(sendCmd)
-	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_GF_FRAME, SUB_GF_GAME_OPTION, uint16(size),uint16(this.SendTokenID))
+	//size := len(data)
+	//bufferT := getSendTcpHeaderData(MDM_GF_FRAME, SUB_GF_GAME_OPTION, uint16(size),uint16(this.SendTokenID))
+	//this.SendTokenID++
+	//this.Send(bufferT, data)
+	this.Send(string(data),MDM_GF_FRAME, SUB_GF_GAME_OPTION)
 	this.SendTokenID++
-	this.Send(bufferT, data)
 }
 
 // 更新游戏状态
@@ -290,10 +292,13 @@ func (this *Client)do_fire() {
 		IsBroadcast:&is_broadcast,
 	}
 	data, _ := proto.Marshal(sendCmd)
-	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_USER_FIRE, uint16(size),uint16(this.SendTokenID))
+	//size := len(data)
+	//bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_USER_FIRE, uint16(size),uint16(this.SendTokenID))
+	//this.SendTokenID++
+	//this.Send(bufferT, data)
+
+	this.Send(string(data),MDM_GF_GAME, SUB_C_USER_FIRE)
 	this.SendTokenID++
-	this.Send(bufferT, data)
 	//fmt.Println("发子弹")
 	this.SendMsgTime = this.GetOsTime()
 
@@ -315,10 +320,11 @@ func (this *Client)do_catch(bullet *BulletObj) {
 		ChairId:&chair_id,
 	}
 	data, _ := proto.Marshal(sendCmd)
-	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_CATCH_FISH, uint16(size),uint16(this.SendTokenID))
+	//size := len(data)
+	//bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_CATCH_FISH, uint16(size),uint16(this.SendTokenID))
+
+	this.Send(string(data),MDM_GF_GAME, SUB_C_CATCH_FISH)
 	this.SendTokenID++
-	this.Send(bufferT, data)
 	//fmt.Println("申请捕鱼",fish_uid,bullet_id,chair_id)
 }
 
@@ -399,9 +405,9 @@ func (this *Client)handleDrawAlm(buf []byte, bufferSize int){
 	//fmt.Printf("%s", dataJ)
 	fmt.Printf("----------------获取救济金,------------%d", this.Index)
 
-	_, err = this.Conn.Write(getSendTcpHeaderData(MDM_GF_GAME, SUB_C_GET_ALMS, 0,uint16(this.SendTokenID))) //发送注册成为客户端请求
-	this.SendTokenID++
-	checkError(err)
+	//_, err = this.Conn.Write(getSendTcpHeaderData(MDM_GF_GAME, SUB_C_GET_ALMS, 0,uint16(this.SendTokenID))) //发送注册成为客户端请求
+	//this.SendTokenID++
+	//checkError(err)
 }
 
 

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	. "./const"
+	"./NetWork"
 )
 
 // 处理单个包内容
@@ -10,7 +11,7 @@ func (this *Client)handlerRead(buf []byte) int {
 	//var err error
 	//fmt.Printf("Receive buf: %x\n",buf)
 
-	if len(buf)< TCPHeaderSize {		// 接受不全，那么缓存
+	if len(buf)< NetWork.TCPHeaderSize {		// 接受不全，那么缓存
 		//fmt.Printf("数据包头部小于 10 : %x   \n",buf)
 		this.ReceiveBuf = buf
 		//str:= fmt.Sprintf("%d数据包头部小于 10 : %x   ",this.Index,buf)
@@ -18,7 +19,7 @@ func (this *Client)handlerRead(buf []byte) int {
 		return 0
 	}
 
-	headFlag, msg_id, sub_msg_id, bufferSize, _, msgSize := dealRecvTcpDeaderData(buf)
+	headFlag, msg_id, sub_msg_id, bufferSize, _, msgSize := NetWork.DealRecvTcpDeaderData(buf)
 
 	if headFlag != uint8(254){
 		str:= fmt.Sprintf("%d数据包头部判断不正确 %x",this.Index, buf)
@@ -26,7 +27,7 @@ func (this *Client)handlerRead(buf []byte) int {
 		return -1 			// 数据包格式校验不正确
 	}
 
-	offset := TCPHeaderSize
+	offset := NetWork.TCPHeaderSize
 
 	//if msgSize > 200 {
 	//	str:= fmt.Sprintf("%d错误消息%d",this.Index,msgSize)

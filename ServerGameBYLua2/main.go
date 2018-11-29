@@ -238,7 +238,7 @@ func NetWorkServerStart()  {
 		// websocket 服务器开启---------------------------------
 		wsServer = new(NetWork.WSServer)
 		wsServer.Addr = WebSocketAddress + ":"+strconv.Itoa(WebSocketPort)
-		//fmt.Println("websocket 绑定："+ wsServer.Addr)
+		fmt.Println("websocket 绑定："+ wsServer.Addr)
 		wsServer.MaxConnNum = 2000
 		wsServer.PendingWriteNum = 100
 		wsServer.MaxMsgLen = 4096
@@ -256,7 +256,7 @@ func NetWorkServerStart()  {
 		// socket 服务器开启----------------------------------
 		server = new(NetWork.TCPServer)
 		server.Addr = SocketAddress +":"+strconv.Itoa(SocketPort)
-		//fmt.Println("socket 绑定："+ server.Addr)
+		fmt.Println("socket 绑定："+ server.Addr)
 		server.MaxConnNum = int(math.MaxInt32)
 		server.PendingWriteNum = 100
 		//server.LenMsgLen = 4
@@ -316,44 +316,10 @@ func TimerCommonLogicStart() {
 	})
 
 }
-//func StartMultiThreadChannelPlayerToGameManager()  {
-//
-//	//开始开启监听线程，监听玩家消息，进行线程间通信
-//	go func() {
-//		for {
-//			GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
-//		}
-//	}()
-//
-//}
+
 
 ////----------------------------------------------------桌子逻辑部分-------------------------------------------------------------------
 //
-//// 一次性创建好多个协程给lua的游戏使用，GoroutineMax的数量跟cpu有几个核数量一样效率比较高
-//func CreateGoroutineForLuaGameTable() {
-//
-//	GoroutineTableLua = make([]*Lua.MyLua,GoroutineMax+1)
-//	GoroutineTableLuaLuaReloadTime = make([]int,GoroutineMax+1)
-//
-//	for i:=1;i<= GoroutineMax;i++{
-//		GoroutineTableLua[i] = Lua.NewMyLua()
-//		GoroutineTableLua[i].Init() // 绑定lua脚本
-//		//Lua.GoCallLuaTest(GameManagerLua.L,1)
-//		GoroutineTableLuaLuaReloadTime[i] = GlobalVar.LuaReloadTime
-//
-//		GoroutineTableLua[i].GoCallLuaLogicInt("GoCallLuaSetGoRoutineMax", GoroutineMax)	// 把上限传递给lua
-//
-//		// run tables
-//		go func(index int) {
-//			for {
-//				functionName := "GoCallLuaGoRoutineForLuaGameTable"+strconv.Itoa(index)
-//				//fmt.Println("",functionName)
-//				GoroutineTableLua[i].GoCallLuaLogic(functionName) 		// 给lua的桌子用的 n个协程函数
-//				time.Sleep(time.Millisecond * 1000)		//给其他协程让出1秒的时间， 这个可以后期调整
-//			}
-//		}(i)
-//	}
-//}
 //// 检查通用逻辑部分的lua是否需要更新
 //func GoroutineTableLuaReloadCheck() {
 //	for i:=1;i<= GoroutineMax;i++ {

@@ -53,11 +53,14 @@ func (this *Client)LoginSend() {
 		DeviceType:[]byte("virtual"),
 	}
 	data, _ := proto.Marshal(sendCmd)
-	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_MB_LOGON, SUB_MB_GUESTLOGIN, uint16(size),uint16(this.SendTokenID))  // size要增加一个token的位置
-	this.SendTokenID++
+	//size := len(data)
+	//bufferT := getSendTcpHeaderData(MDM_MB_LOGON, SUB_MB_GUESTLOGIN, uint16(size),uint16(this.SendTokenID))  // size要增加一个token的位置
+	//this.SendTokenID++
+	//
+	//this.Send(bufferT, data)
 
-	this.Send(bufferT, data)
+	this.Send(string(data),MDM_MB_LOGON, SUB_MB_GUESTLOGIN)
+	this.SendTokenID++
 }
 
 func (this *Client)handleLoginSucess(buf []byte, bufferSize int){
@@ -113,10 +116,13 @@ func (this *Client)loginCS() {
 		Token:&token,
 	}
 	data, _ := proto.Marshal(sendCmd)
-	size := len(data)
-	bufferT := getSendTcpHeaderData(MAIN_CHAT_CMD, SUB_C_LOGIN, uint16(size),uint16(this.SendTokenID))
+	//size := len(data)
+	//bufferT := getSendTcpHeaderData(MAIN_CHAT_CMD, SUB_C_LOGIN, uint16(size),uint16(this.SendTokenID))
+	//this.SendTokenID++
+	//this.Send(bufferT, data)
+
+	this.Send(string(data),MAIN_CHAT_CMD, SUB_C_LOGIN)
 	this.SendTokenID++
-	this.Send(bufferT, data)
 }
 
 // 登录聊天服务器结果
@@ -224,11 +230,13 @@ func (this *Client)loginGS() {
 		CannonMulriple:&cannon_mulriple,
 	}
 	data, _ := proto.Marshal(sendCmd)
-	size := len(data)
-	bufferT := getSendTcpHeaderData(MDM_GR_LOGON, SUB_GR_LOGON_USERID, uint16(size),uint16(this.SendTokenID))
+	//size := len(data)
+	//bufferT := getSendTcpHeaderData(MDM_GR_LOGON, SUB_GR_LOGON_USERID, uint16(size),uint16(this.SendTokenID))
+	//this.SendTokenID++
+	//
+	//this.Send(bufferT, data)
+	this.Send(string(data),MDM_GR_LOGON, SUB_GR_LOGON_USERID)
 	this.SendTokenID++
-
-	this.Send(bufferT, data)
 }
 
 // gs 登录成功

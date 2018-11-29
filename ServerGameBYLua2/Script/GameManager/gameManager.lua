@@ -58,10 +58,12 @@ end
 
 -- go通知lua玩家掉线了
 function GoCallLuaPlayerNetworkBroken(uid)
-    print(uid.."  掉线了")
+    print(uid .. "  掉线了")
     local player = GetPlayerByUID(uid)
-    player.NetWorkState = false
-    player.NetWorkCloseTimer = GetOsTimeMillisecond()
+    if player ~= nil then
+        player.NetWorkState = false
+        player.NetWorkCloseTimer = GetOsTimeMillisecond()
+    end
 end
 
 

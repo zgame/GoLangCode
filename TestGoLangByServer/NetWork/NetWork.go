@@ -54,7 +54,7 @@ import (
 
 // lua 使用的是下面的方法
 // 把要发送出去的proto buf -- data， 错误消息 msg， 命令，组合成buffer，准备发送
-func DealSendData(data string, msg string, mainCmd int, subCmd int, token int) []byte {
+func DealSendData(data string, msg string, mainCmd int, subCmd int,token int) []byte {
 	// 组合一下str
 	protoData := []byte(data)
 	protoDataSize := len(protoData)
@@ -63,7 +63,7 @@ func DealSendData(data string, msg string, mainCmd int, subCmd int, token int) [
 	msgSize := len(msgData)
 
 	// 生成数据包头部信息
-	bufferHead := GetSendTcpHeaderData(uint16(mainCmd), uint16(subCmd), uint16(protoDataSize), uint16(msgSize), uint16(token))
+	bufferHead := GetSendTcpHeaderData(uint16(mainCmd), uint16(subCmd), uint16(protoDataSize), uint16(msgSize),uint16(token))
 	headSize := len(bufferHead)
 	// 发送最后数据包
 	bufferEnd := make([]byte, protoDataSize+headSize+msgSize)

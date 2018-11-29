@@ -60,7 +60,7 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 
 	// lua传递过来之后， 立即开启一个新的协程去专门做发送工作
 	go func() {
-		bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd)
+		bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd,0)		// token始终是0，服务器不用发token
 		//_, err := Conn.Write(bufferEnd)
 		//log.CheckError(err)
 
