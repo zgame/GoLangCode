@@ -301,11 +301,7 @@ func (this *Client)do_fire() {
 	this.ShowMsgFire ++
 	//fmt.Println("发子弹")
 
- 
-
-
-
-}
+ }
 
 func (this *Client)do_catch(bullet *BulletObj) {
 	this.ShowMsgCatchFish++

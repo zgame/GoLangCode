@@ -15,7 +15,13 @@ import (
 // myServer其实是一个个连接单独处理的模块
 //-----------------------------------------------------------------------------------
 
-var MyServerUUID = 0
+var MyServerUUID = 0		// 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
+var StaticDataPackageHeadLess = 0  // 统计信息，数据包 头部数据不全
+var StaticDataPackageProtoDataLess = 0  // 统计信息，数据包 pb数据不全
+var StaticDataPackagePasteNum = 0   // 统计信息，拼接次数
+var StaticDataPackagePasteSuccess = 0   // 统计信息，成功拼接后，解析成功
+var StaticDataPackageHeadFlagError = 0   // 统计信息，数据包头部标识不正确
+
 
 
 type MyServer struct {
@@ -74,16 +80,20 @@ func (a *MyServer) Run() {
 		//GlobalVar.Mutex.Lock()
 		for {
 			if a.ReceiveBuf !=nil {		// 如果上次有没有接收完整的包，那么合并一下
-				//str:= fmt.Sprintf("%d上次buf: %x ", this.Index,this.ReceiveBuf)
-				//this.Zlog(str)
-				//str= fmt.Sprintf("%d本次buf: %x ", this.Index,buf)
-				//this.Zlog(str)
+				//str:= fmt.Sprintf("%d上次buf: %x ", a.UserId,a.ReceiveBuf)
+				//log.PrintLogger(str)
+				//str= fmt.Sprintf("%d本次buf: %x ", a.UserId,buf)
+				//log.PrintLogger(str)
 
 				buf2 := make([]byte,len(a.ReceiveBuf)+bufLen)		//缓存从新组合包
 				copy(buf2, a.ReceiveBuf)
 				copy(buf2[len(a.ReceiveBuf):],buf[:bufLen])
-				//str= fmt.Sprintf("%d合并后buf2: %x ", this.Index,buf2)
-				//this.Zlog(str)
+				//str= fmt.Sprintf("%d合并后buf2: %x ", a.UserId,buf2)
+				//log.PrintLogger(str)
+				GlobalVar.Mutex.Lock()
+				StaticDataPackagePasteNum++
+				GlobalVar.Mutex.Unlock()
+
 				buf = buf2
 				bufLen= len(buf2)
 			}
@@ -98,8 +108,11 @@ func (a *MyServer) Run() {
 					break 	// 数据不全， 继续接收数据
 			}else if bufHeadTemp > 0 {				// 解析完成
 				if a.ReceiveBuf != nil {			// 如果是拼接包，清理一下
-					//str := fmt.Sprintf("%d 拼接后成功解析%x", this.Index, buf)
-					//this.Zlog(str)
+					//str := fmt.Sprintf("%d 拼接后成功解析%x", a.UserId, buf)
+					//log.PrintLogger(str)
+					GlobalVar.Mutex.Lock()
+					StaticDataPackagePasteSuccess ++
+					GlobalVar.Mutex.Unlock()
 					a.ReceiveBuf = nil
 				}
 			}else if bufHeadTemp == -1 {
@@ -124,7 +137,12 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	//fmt.Printf("buf......%x",buf)
 	//-----------------------------头部数据不完整----------------------------
 	if len(buf)< NetWork.TCPHeaderSize {
-		fmt.Printf("数据包头部数据不全 : %x \n",buf)
+		//str:= fmt.Sprintf("%d数据包头部数据不全 : %x \n",a.UserId,buf)
+		//log.PrintLogger(str)
+		GlobalVar.Mutex.Lock()
+		StaticDataPackageHeadLess ++
+		GlobalVar.Mutex.Unlock()
+
 		a.ReceiveBuf = buf			// 接受不全，那么缓存
 		return 0
 	}
@@ -134,8 +152,11 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 
 	//-----------------------------头部信息错误----------------------------
 	if headFlag != uint8(254){
-		str:= fmt.Sprintf("%d数据包头部判断不正确 %x",a.UserId, buf)
+		str:= fmt.Sprintf("%d 数据包头部标识不正确 %x",a.UserId, buf)
 		log.PrintLogger(str)
+		GlobalVar.Mutex.Lock()
+		StaticDataPackageHeadFlagError ++
+		GlobalVar.Mutex.Unlock()
 		return -1 			// 数据包格式校验不正确
 	}
 	//-----------------------------数据包重复----------------------------
@@ -160,7 +181,11 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 
 	//-----------------------------proto buffer 内容不完整----------------------------
 	if len(buf) < offset + int(bufferSize) + int(msgSize){
-		//fmt.Printf("数据包格式不正确buflen%d,bufferSize%d,%x  \n",len(buf),int(bufferSize),buf)
+		//str:= fmt.Sprintf("%d数据包格式不正确buflen%d,bufferSize%d,%x  \n", a.UserId,len(buf),int(bufferSize),buf)
+		//log.PrintLogger(str)
+		GlobalVar.Mutex.Lock()
+		StaticDataPackageProtoDataLess ++
+		GlobalVar.Mutex.Unlock()
 		a.ReceiveBuf = buf			// 接受不全，那么缓存
 		return  0 //int(bufferSize) + offset
 	}
@@ -201,6 +226,10 @@ func (a *MyServer) OnClose() {
 
 // ---------------------发送数据到网络-------------------------
 func (a *MyServer) WriteMsg(msg ... []byte) bool{
+	if a == nil ||  a.conn == nil{
+		log.PrintLogger("myserver 当前连接已经关闭, 不发送了")
+		return false
+	}
 
 	a.Mutex.Lock()
 	err := a.conn.WriteMsg(msg...)		// 本连接在发送的时候加锁

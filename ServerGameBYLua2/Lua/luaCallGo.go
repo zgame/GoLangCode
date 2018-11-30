@@ -59,7 +59,7 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	msg := L.ToString(6)
 
 	// lua传递过来之后， 立即开启一个新的协程去专门做发送工作
-	go func() {
+	//go func() {
 		bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd,0)		// token始终是0，服务器不用发token
 		//_, err := Conn.Write(bufferEnd)
 		//log.CheckError(err)
@@ -73,7 +73,7 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 			// 给其他玩家发送消息
 			GetMyServerByUID(userId).WriteMsg(bufferEnd)
 		}
-	}()
+	//}()
 
 	//L.Push(lua.LBool(result))		 /* push result */
 	//fmt.Println("lua send :" + str)
