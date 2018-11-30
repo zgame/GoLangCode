@@ -65,6 +65,7 @@ function ReloadAll()
     reloadFile("Script/Utils/Random")
     reloadFile("Script/Utils/Time")
     reloadFile("Script/Utils/zTable")
+    reloadFile("Script/Utils/zRedis")
 
 
     -- main

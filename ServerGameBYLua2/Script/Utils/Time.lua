@@ -13,3 +13,11 @@ end
 function GetOsDateNow()
     return os.date("%Y-%m-%d %H:%M:%S",os.time())
 end
+
+function GetOsDayNow()
+    return os.date("%Y-%m-%d",os.time())
+end
+
+function GetOsDateTimeNow()
+    return os.date("%H：%M：%S",os.time())
+end

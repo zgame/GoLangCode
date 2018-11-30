@@ -65,7 +65,7 @@ function SevLoginGSGuest(serverId,buf)
 
     --RedisSavePlayer(MyUser)           -- redis 数据库 save
     --local user = RedisGetPlayer(UserId)   -- redis load
-
+    --printTable(user)
 
 
     --local player = Player:New(MyUser)
