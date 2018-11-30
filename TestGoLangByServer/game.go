@@ -6,7 +6,6 @@ import (
 	"./CMD"
 	"time"
 	"math/rand"
-	"strconv"
 	. "./const"
 )
 // -------------------------------------子弹 和 鱼-------------------------------------------
@@ -118,7 +117,7 @@ func (this *Client)EnterScence() {
 	//this.SendTokenID++
 	//this.Send(bufferT, data)
 	this.Send(string(data),MDM_GF_FRAME, SUB_GF_GAME_OPTION)
-	this.SendTokenID++
+
 }
 
 // 更新游戏状态
@@ -266,6 +265,7 @@ func (this *Client)do_fire() {
 	//this.select_fish()
 	//fmt.Println("do fire")
 
+
 	if this.Fish_id <=0 {
 		return
 	}
@@ -298,16 +298,17 @@ func (this *Client)do_fire() {
 	//this.Send(bufferT, data)
 
 	this.Send(string(data),MDM_GF_GAME, SUB_C_USER_FIRE)
-	this.SendTokenID++
+	this.ShowMsgFire ++
 	//fmt.Println("发子弹")
-	this.SendMsgTime = this.GetOsTime()
 
+ 
 
 
 
 }
 
 func (this *Client)do_catch(bullet *BulletObj) {
+	this.ShowMsgCatchFish++
 	fish_uid :=  uint32(bullet.fish_id)
 	bullet_id := uint32(bullet.bullet_id)
 	bullet_temp_id := uint32(bullet.bullet_local_id)
@@ -324,18 +325,15 @@ func (this *Client)do_catch(bullet *BulletObj) {
 	//bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_CATCH_FISH, uint16(size),uint16(this.SendTokenID))
 
 	this.Send(string(data),MDM_GF_GAME, SUB_C_CATCH_FISH)
-	this.SendTokenID++
+
 	//fmt.Println("申请捕鱼",fish_uid,bullet_id,chair_id)
 }
 
 
 // #处理子弹消息,
 func (this *Client)handleUserFire(buf []byte, bufferSize int){
-	if this.ShowMsgSendTime {
-		now := this.GetOsTime()
-		end := now - this.SendMsgTime
-		fmt.Println("消息间隔时间：" + strconv.Itoa(int(end)) + "毫秒")
-	}
+	//fmt.Println("处理子弹消息")
+	this.ShowMsgReFire ++
 
 	protocolBuffer := buf
 	msg := &CMD.CMD_S_USER_FIRE{}
@@ -363,6 +361,8 @@ func (this *Client)handleUserFire(buf []byte, bufferSize int){
 
 // #捕获鱼
 func (this *Client)handleCatchFish(buf []byte, bufferSize int){
+	this.ShowMsgReCatchFish ++
+
 	protocolBuffer := buf
 	msg := &CMD.CMD_S_CATCH_FISH{}
 	err := proto.Unmarshal(protocolBuffer, msg)

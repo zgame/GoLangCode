@@ -110,6 +110,8 @@ func (tcpConn *TCPConn) RemoteAddr() net.Addr {
 }
 
 func (tcpConn *TCPConn) ReadMsg() ([]byte, int, error) {
+	//tcpConn.Lock()
+	//defer tcpConn.Unlock()
 	//return tcpConn.msgParser.Read(tcpConn)
 	msgData := make([]byte, 1024*1)
 	//if _, err := io.ReadFull(tcpConn.conn, msgData); err != nil {

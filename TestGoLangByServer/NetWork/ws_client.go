@@ -30,6 +30,9 @@ type WSClient struct {
 	closeFlag        bool
 }
 
+func (client *WSClient) Number() int{
+	return len(client.conns)
+}
 func (client *WSClient) Start() {
 	client.init()
 

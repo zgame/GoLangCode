@@ -6,13 +6,20 @@ import (
 	"fmt"
 	"./NetWork"
 	//"io"
+	. "./const"
+	"sync"
 )
+var clients []*NetWork.TCPClient
+var wsclients []*NetWork.WSClient
+var receiveMsgNum int
+var sendMsgNum int
+var Mutex sync.Mutex
 
 func StartClient(ConnNum int , IsWebSocket bool) {
 	//IsWebSocket := false
 	if !IsWebSocket {
 		// socket client----------------------------------------------------------
-		var clients []*NetWork.TCPClient
+
 
 		client := new(NetWork.TCPClient)
 		client.Addr = GameServerAddress
@@ -32,7 +39,7 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 	}
 	if IsWebSocket{
 		// websocket client------------------------------------------------------------------
-		var wsclients []*NetWork.WSClient
+
 
 		wsclient := new(NetWork.WSClient)
 		wsclient.Addr = GameServerWebSocketAddress
@@ -72,6 +79,25 @@ func (a *Client)init()  {
 	a.Gameinfo = a.Gameinfo.New()
 	a.loginGS()
 
+	go func() {
+		for {
+			a.GameAI()
+			time.Sleep(time.Millisecond * 200)
+
+		}
+	}()
+	go func() {
+		for {
+			if !a.StartAI{
+				time.Sleep(time.Millisecond * 100)
+				continue
+			}
+			a.SendMsgTime = a.GetOsTime()
+			a.Send("",MDM_GF_GAME, SUB_S_BOSS_COME)
+			time.Sleep(time.Millisecond * 2000)
+
+		}
+	}()
 }
 
 
@@ -80,9 +106,12 @@ func (a *Client) Run() {
 	a.init()
 
 	for {
+		//a.CMutex.Lock()
 		buf,bufLen, err := a.Conn.ReadMsg()
+		//a.CMutex.Unlock()
+
 		if err != nil {
-			fmt.Println("跟对方的连接中断了")
+			fmt.Println("跟对方的连接中断了", a.Index)
 			break
 		}
 		//if err != nil && err != io.EOF {  //io.EOF在网络编程中表示对端把链接关闭了。
@@ -137,9 +166,9 @@ func (a *Client) Run() {
 			}
 		}
 
-		time.Sleep(time.Millisecond * 200)
-		a.GameAI()
+
 	}
+
 }
 
 func (a *Client) OnClose() {

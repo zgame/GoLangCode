@@ -31,6 +31,10 @@ type TCPClient struct {
 	//msgParser    *MsgParser
 }
 
+func (client *TCPClient) Number() int{
+	return len(client.conns)
+}
+
 func (client *TCPClient) Start() {
 	//fmt.Println("start")
 	client.init()

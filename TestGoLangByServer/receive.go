@@ -4,6 +4,7 @@ import (
 	"fmt"
 	. "./const"
 	"./NetWork"
+	"strconv"
 )
 
 // 处理单个包内容
@@ -12,7 +13,7 @@ func (this *Client)handlerRead(buf []byte) int {
 	//fmt.Printf("Receive buf: %x\n",buf)
 
 	if len(buf)< NetWork.TCPHeaderSize {		// 接受不全，那么缓存
-		//fmt.Printf("数据包头部小于 10 : %x   \n",buf)
+		fmt.Printf("数据包头部小于 10 : %x   \n",buf)
 		this.ReceiveBuf = buf
 		//str:= fmt.Sprintf("%d数据包头部小于 10 : %x   ",this.Index,buf)
 		//this.Zlog(str)
@@ -43,29 +44,30 @@ func (this *Client)handlerRead(buf []byte) int {
 		//fmt.Printf("出现数据包异常buflen=%d,bufferSize=%d,  msgSize=%d  %x  \n",len(buf),int(bufferSize),int(msgSize)buf)
 		//str:= fmt.Sprintf("%d出现数据包异常buflen=%d,bufferSize=%d,  msgSize=%d  %x  ",this.Index,len(buf),int(bufferSize),int(msgSize),buf)
 		//this.Zlog(str)
-		//this.Zlog("出现数据包异常buflen=" +strconv.Itoa(len(buf))  +"bufferSize="+ strconv.Itoa(int(bufferSize)) +"msgSize="+strconv.Itoa(int(msgSize))+"buf="+string(this.ReceiveBuf))
+		this.Zlog("出现数据包异常buflen=" +strconv.Itoa(len(buf))  +"bufferSize="+ strconv.Itoa(int(bufferSize)) +"msgSize="+strconv.Itoa(int(msgSize))+"buf="+string(this.ReceiveBuf))
 		return  0 //int(bufferSize) + offset + int(msgSize)
 	}
 	//if ver > 0{
 	//	offset = 12		// version == 1 的时候， 加了一个token
 	//}
 
-	if msgSize >0 {
-		//fmt.Println("有错误提示了")
-		//msgBuffer := buf[offset + int(bufferSize):offset + int(bufferSize)+ int(msgSize)]
-		//fmt.Println(string(msgBuffer))
-		return int(bufferSize) + offset + int(msgSize)
-	}
+	//if msgSize >0 {
+	//	//fmt.Println("有错误提示了")
+	//	//msgBuffer := buf[offset + int(bufferSize):offset + int(bufferSize)+ int(msgSize)]
+	//	//fmt.Println(string(msgBuffer))
+	//	return int(bufferSize) + offset + int(msgSize)
+	//}
 
 	//----------------------------解析 proto buffer-----------------------------------
 	finalBuffer := buf[offset:offset + int(bufferSize)]
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
-	//fmt.Println("")
+	//fmt.Println("msg_id",msg_id,"sub_msg_id",sub_msg_id)
 
 	//# -----------------login server msg-----------------
 	if msg_id == MDM_MB_LOGON {
 		if sub_msg_id == SUB_MB_LOGON_SUCCESS {
 			this.handleLoginSucess(finalBuffer,int(bufferSize))
+			fmt.Println("login登录成功 ------ ", this.Index)
 		} else if sub_msg_id == SUB_MB_LOGON_FAILURE {
 			this.handleLoginFailed(finalBuffer,int(bufferSize))
 		} else if sub_msg_id == SUB_MB_LOGON_FINISH {
@@ -123,7 +125,7 @@ func (this *Client)handlerRead(buf []byte) int {
 		} else if sub_msg_id == SUB_GR_LOGON_SUCCESS {
 			this.handleLoginSucessGs(finalBuffer,int(bufferSize))
 		} else if sub_msg_id == SUB_GR_LOGON_FINISH {
-			//fmt.Println("游戏服务器登录完成 ------")
+			fmt.Println("游戏服务器登录完成 ------")
 
 			//  开始进入场景
 			//fmt.Println("开始发送进入场景",this.User.user_id)
@@ -152,7 +154,6 @@ func (this *Client)handlerRead(buf []byte) int {
 
 
 
-
 			this.StartAI = true
 
 		} else if sub_msg_id == SUB_S_OTHER_ENTER_SCENE {
@@ -161,17 +162,47 @@ func (this *Client)handlerRead(buf []byte) int {
 			this.handleSceneFish(finalBuffer,int(bufferSize))			//# 新生成鱼
 		}else if sub_msg_id == SUB_S_DISTRIBUTE_FISH {
 			this.handleNewFish(finalBuffer,int(bufferSize))			//# 新生成鱼
+			//fmt.Println("新生成鱼 ------ ", this.Index)
 
 			//------------------捕鱼----------------------
 		}else if sub_msg_id == SUB_S_USER_FIRE {
 			this.handleUserFire(finalBuffer,int(bufferSize))			// 开火
+			//fmt.Println("开火收到 ------ ", this.Index)
 		}else if sub_msg_id == SUB_S_CATCH_FISH {
 			this.handleCatchFish(finalBuffer,int(bufferSize))			//	抓鱼
+			//fmt.Println("抓鱼收到 ------ ", this.Index)
 		}else if sub_msg_id == SUB_S_START_ALMS {
 			this.handleDrawAlm(finalBuffer,int(bufferSize))			//# alms
+		}else if sub_msg_id == SUB_S_BOSS_COME {
+			// 统计网络延迟用
+			if this.ShowMsgSendTime {
+				now := this.GetOsTime()
+				end := now - this.SendMsgTime
+				fmt.Printf("消息间隔时间：%d毫秒|  发子弹  %d  收子弹  %d  打鱼  %d  打到鱼  %d  ",int(end),this.ShowMsgFire,this.ShowMsgReFire,this.ShowMsgCatchFish ,this.ShowMsgReCatchFish)
+
+				if IsWebSocket{
+					fmt.Println("当前在线人数 socket 0","wsocket",wsclients[0].Number(), "发送消息" ,strconv.Itoa(sendMsgNum), "接收消息", strconv.Itoa(receiveMsgNum))
+				}else{
+					fmt.Println("当前在线人数 socket",clients[0].Number(),"wsocket 0", "发送消息" ,strconv.Itoa(sendMsgNum), "接收消息", strconv.Itoa(receiveMsgNum))
+				}
+
+				this.ShowMsgFire = 0
+				this.ShowMsgReFire= 0
+				this.ShowMsgCatchFish=0
+				this.ShowMsgReCatchFish=0
+
+				//Mutex.Lock()
+				sendMsgNum = 0
+				receiveMsgNum =0
+				//Mutex.Unlock()
+			}
 		}
 	}
 
+
+	Mutex.Lock()
+	receiveMsgNum++
+	Mutex.Unlock()
 
 	return offset + int(bufferSize) + int(msgSize)
 }

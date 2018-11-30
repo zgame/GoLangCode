@@ -60,7 +60,7 @@ func (this *Client)LoginSend() {
 	//this.Send(bufferT, data)
 
 	this.Send(string(data),MDM_MB_LOGON, SUB_MB_GUESTLOGIN)
-	this.SendTokenID++
+	//this.SendTokenID++
 }
 
 func (this *Client)handleLoginSucess(buf []byte, bufferSize int){
@@ -122,7 +122,7 @@ func (this *Client)loginCS() {
 	//this.Send(bufferT, data)
 
 	this.Send(string(data),MAIN_CHAT_CMD, SUB_C_LOGIN)
-	this.SendTokenID++
+	//this.SendTokenID++
 }
 
 // 登录聊天服务器结果
@@ -236,7 +236,7 @@ func (this *Client)loginGS() {
 	//
 	//this.Send(bufferT, data)
 	this.Send(string(data),MDM_GR_LOGON, SUB_GR_LOGON_USERID)
-	this.SendTokenID++
+	//this.SendTokenID++
 }
 
 // gs 登录成功

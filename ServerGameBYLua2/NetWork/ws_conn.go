@@ -101,6 +101,9 @@ func (wsConn *WSConn) RemoteAddr() net.Addr {
 
 // goroutine not safe
 func (wsConn *WSConn) ReadMsg() ([]byte, int,error) {
+	//wsConn.Lock()
+	//defer wsConn.Unlock()
+
 	_, b, err := wsConn.conn.ReadMessage()
 	Len:= len(b)
 	return b, Len,err
@@ -109,8 +112,8 @@ func (wsConn *WSConn) ReadMsg() ([]byte, int,error) {
 
 // args must not be modified by the others goroutines
 func (wsConn *WSConn) WriteMsg(args ...[]byte) error {
-	wsConn.Lock()
-	defer wsConn.Unlock()
+	//wsConn.Lock()
+	//defer wsConn.Unlock()
 	//if wsConn.closeFlag {
 	//	return nil
 	//}

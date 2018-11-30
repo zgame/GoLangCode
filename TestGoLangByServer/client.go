@@ -12,9 +12,9 @@ import (
 	//"./CMD"
 	//. "./const"
 	"time"
-	"sync"
 	//"bytes"
 	//"encoding/binary"
+	"sync"
 )
 
 type Client struct {
@@ -35,15 +35,21 @@ type Client struct {
 	ShowLog uint64 			//打鱼的记录
 	SendMsgTime int64	// 发送消息时间
 	ShowMsgSendTime bool  // 是否显示
+	ShowMsgFire int64  // 子弹平均发多少颗
+	ShowMsgReFire int64  // 子弹平均回复多少颗
+	ShowMsgCatchFish int64  // 打多少条鱼了
+	ShowMsgReCatchFish int64  // 打多少条鱼了
+
 
 	ReceiveBuf []byte
+	CMutex sync.Mutex		// 用来保证发送和接收的线程安全的
 }
 
 func (this *Client) quit() {
 	this.Conn.Close()
 }
 
-var Mutex sync.Mutex
+
 
 //--------------------------------------------------------------------------------------------------
 // 接受数据包逻辑
@@ -155,12 +161,18 @@ func (this *Client) Send(data string, mainCmd int, subCmd int) {
 	//copy(bufferEnd, bufferH)
 	//copy(bufferEnd[headSize:], bufferEncryp)
 	//
-	////Mutex.Lock()
 	//_, err := this.Conn.Write(bufferEnd)
-	//Mutex.Unlock()
+	Mutex.Lock()
+	sendMsgNum++
+	Mutex.Unlock()
+
 
 	bufferEnd := NetWork.DealSendData(data , "" , mainCmd , subCmd ,int(this.SendTokenID))
-	this.WriteMsg(bufferEnd)
+
+	this.CMutex.Lock()
+	this.WriteMsg(bufferEnd)		// 这里要加锁，因为多个线程可能同时进行发送消息
+	this.SendTokenID++
+	this.CMutex.Unlock()
 	//checkError(err)
 
 

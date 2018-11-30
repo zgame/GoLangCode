@@ -190,3 +190,11 @@ function SevEnterScene(userId, buf)
     --end
 --    print("同步一下渔场的所有鱼")
 end
+
+
+
+
+--- 客户端用来统计消息传递的时间
+function HandleStaticsNetWorkTime(UserId)
+    LuaNetWorkSendToUser(UserId,MDM_GF_GAME, SUB_S_BOSS_COME,nil,nil)
+end

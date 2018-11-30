@@ -118,6 +118,10 @@ function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
         elseif subMsgId == SUB_C_CATCH_FISH  then
             --print("*************客户端抓鱼***************** ",userId)
             HandleCatchFish(userId,data)
+
+        elseif subMsgId == SUB_S_BOSS_COME  then
+            --print("*************暂时用来统计消息的返回时间***************** ",userId)
+            HandleStaticsNetWorkTime(userId)
         end
     end
 end

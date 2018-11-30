@@ -6,6 +6,7 @@ import (
 	"bufio"
 	"github.com/yuin/gopher-lua/parse"
 	"fmt"
+	"../GlobalVar"
 )
 //--------------------------------------------------------------------------------
 // lua的接口，包含热更新
@@ -38,11 +39,17 @@ func InitGlobalVar() {
 
 // 通过lua堆栈找到对应的是哪个myServer
 func GetMyServerByLSate(id int) *MyServer {
-	return luaConnectMyServer[id]
+	GlobalVar.RWMutex.RLock()
+	re := luaConnectMyServer[id]		// 这是全局变量，所以要加锁， 读写都要加
+	GlobalVar.RWMutex.RUnlock()
+	return re
 }
 // 通过 user id 找到对应的是哪个myServer
 func GetMyServerByUID(uid int) *MyServer {
-	return luaUIDConnectMyServer[uid]
+	GlobalVar.RWMutex.RLock()
+	re:= luaUIDConnectMyServer[uid]			// 这是全局变量，所以要加锁， 读写都要加
+	GlobalVar.RWMutex.RUnlock()
+	return re
 }
 
 
