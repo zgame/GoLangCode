@@ -60,7 +60,7 @@ function LuaNetWorkSendToUser(userId,msgId,subMsgId,sendCmd,err)
         ZswLogShowSendMsgNum = ZswLogShowSendMsgNum + 1       -- 没到一秒就加数量
     end
 
-    luaCallGoNetWorkSend(userId,0,msgId,subMsgId,buffer,err)       -- 返回结果 true 发送成功  false 发送失败
+    return luaCallGoNetWorkSend(userId,0,msgId,subMsgId,buffer,err)       -- 返回结果 true 发送成功  false 发送失败
 end
 
 

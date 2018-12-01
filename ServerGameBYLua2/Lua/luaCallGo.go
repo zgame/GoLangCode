@@ -60,24 +60,24 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 
 	// lua传递过来之后， 立即开启一个新的协程去专门做发送工作
 	//go func() {
-		bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd,0)		// token始终是0，服务器不用发token
-		//_, err := Conn.Write(bufferEnd)
-		//log.CheckError(err)
+	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
+	//_, err := Conn.Write(bufferEnd)
+	//log.CheckError(err)
 
-		//var result bool
-		// 发送出去
-		if userId == 0 {
-			// 给玩家自己回复消息
-			GetMyServerByLSate(serverId).WriteMsg(bufferEnd)
-		}else{
-			// 给其他玩家发送消息
-			GetMyServerByUID(userId).WriteMsg(bufferEnd)
-		}
+	var result bool
+	// 发送出去
+	if userId == 0 {
+		// 给玩家自己回复消息
+		result = GetMyServerByLSate(serverId).WriteMsg(bufferEnd)
+	} else {
+		// 给其他玩家发送消息
+		result = GetMyServerByUID(userId).WriteMsg(bufferEnd)
+	}
 	//}()
 
-	//L.Push(lua.LBool(result))		 /* push result */
+	L.Push(lua.LBool(result))		 /* push result */
 	//fmt.Println("lua send :" + str)
-	return 0 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
+	return 1 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
 }
 
 

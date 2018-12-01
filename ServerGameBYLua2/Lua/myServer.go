@@ -135,7 +135,7 @@ func (a *MyServer) Run() {
 				}
 			}else if bufHeadTemp == -1 {
 				a.ReceiveBuf = nil
-				break 		//数据包不正确，放弃
+				return 		//数据包不正确，放弃连接
 			}
 			if bufHead >= bufLen{
 				break		// 处理完毕，继续接收
@@ -176,7 +176,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 		GlobalVar.Mutex.Lock()
 		StaticDataPackageHeadFlagError ++
 		GlobalVar.Mutex.Unlock()
-		return 0 			// 数据包格式校验不正确
+		return -1 			// 数据包格式校验不正确
 	}
 	//-----------------------------数据包重复----------------------------
 	if int(tokenId) > a.TokenId{
@@ -213,7 +213,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
 	if endData!= uint8(NetWork.TCPEnd){		// EE
 		log.WritefLogger("%d数据包尾部判断不正确 %x ",a.UserId, buf)
-		return 0
+		return -1
 	}
 
 	//-----------------------------取出proto buffer的内容----------------------------

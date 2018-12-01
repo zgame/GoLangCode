@@ -9,6 +9,7 @@ import (
 	"time"
 	"github.com/go-ini/ini"
 	"runtime"
+	"flag"
 )
 
 
@@ -26,7 +27,10 @@ func checkPanic(e error) {
 }
 
 var GameServerAddress string
-var GameServerWebSocketAddress string
+//var GameServerWebSocketAddress string
+var WebSocketPort int
+var SocketPort int
+
 var ShowLog int
 var IsWebSocket bool
 
@@ -39,27 +43,33 @@ func main() {
 		fmt.Println("配置文件出错")
 		return
 	}
+
+
+
 	//LoginServer := f.Section("Server").Key("LoginServer").Value()
 	GameServerAddress = f.Section("Server").Key("GameServerAddress").Value()
-	GameServerWebSocketAddress = f.Section("Server").Key("GameServerWebSocketAddress").Value()
+	//GameServerWebSocketAddress = f.Section("Server").Key("GameServerWebSocketAddress").Value()
 	ClientStart,err   := f.Section("Server").Key("ClientStart").Int()
 	ClientEnd ,err   := f.Section("Server").Key("ClientEnd").Int()
 	ShowLog ,err   = f.Section("Server").Key("ShowLog").Int()
 	IsWebSocket ,err   = f.Section("Server").Key("IsWebSocket").Bool()
 
+	// -------------------------读取命令行参数--------------------------
+	wsPort := flag.Int("WebSocketPort", 0, "")
+	sPort := flag.Int("SocketPort", 0, "")
+	flag.Parse()
+	WebSocketPort = *wsPort
+	SocketPort = *sPort
 
+	if WebSocketPort == 0 || SocketPort == 0 {
 
-	//addr := LoginServer
-	//tcpAddr, _ := net.ResolveTCPAddr("tcp", addr)
-
-	//num := ClientNum					// 压测客户端数量
-
-	//if len(os.Args) > 1 {
-	//	num, _ = strconv.Atoi(os.Args[1])		// 或者是命令行输入数量
-	//}
+		for{
+			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123")
+			time.Sleep(time.Second)
+		}
+	}
 
 	fmt.Println("max conn start :", ClientStart, "--------", ClientEnd)
-
 	StartClient(ClientEnd-ClientStart, IsWebSocket)
 
 	//

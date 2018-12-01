@@ -415,13 +415,13 @@ end
 function ByTable:SendMsgToAllUsers(mainCmd,subCmd,sendCmd)
     for k,player in pairs(self.UserSeatArray) do
         if player ~= nil and player.IsRobot == false and player.NetWorkState then
-             LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
-            --local result = LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
-            --if not result then
-            --    -- 发送失败了，玩家网络中断了
-            --    player.NetWorkState = false
-            --    player.NetWorkCloseTimer = GetOsTimeMillisecond()
-            --end
+             --LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
+            local result = LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
+            if not result then
+                -- 发送失败了，玩家网络中断了
+                player.NetWorkState = false
+                player.NetWorkCloseTimer = GetOsTimeMillisecond()
+            end
         end
     end
 end

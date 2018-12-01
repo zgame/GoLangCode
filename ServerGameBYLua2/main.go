@@ -38,10 +38,11 @@ var server *NetWork.TCPServer
 
 var WebSocketServer bool	// websocket 开启
 var SocketServer bool		// socket 开启
+
 var WebSocketPort int
 var SocketPort int
-var SocketAddress string		// SocketAddress 服务器地址
-var WebSocketAddress string		// WebSocketAddress 服务器地址
+var ServerAddress string    // ServerAddress 服务器地址
+//var WebSocketAddress string // WebSocketAddress 服务器地址
 
 
 var RedisAddress string		// redis 服务器地址
@@ -189,22 +190,23 @@ func initSetting()  {
 	flag.Parse()
 	WebSocketPort = *wsPort
 	SocketPort = *sPort
-	//-------------------------------------------------------------------
-	if WebSocketPort == 0 {
-		WebSocketPort, err = f.Section("Server").Key("WebSocketPort").Int()
-	}
-	if SocketPort == 0 {
-		fmt.Println("Warning!!!! You sould write arguments like : -WebSocketPort=8089 -SocketPort=8124")
-		SocketPort, err = f.Section("Server").Key("SocketPort").Int()
-	}
 	fmt.Println("WebSocketPort=",WebSocketPort,"SocketPort=",SocketPort)
+	//-------------------------------------------------------------------
+	//if WebSocketPort == 0 {
+	//	WebSocketPort, err = f.Section("Server").Key("WebSocketPort").Int()
+	//}
+	//if SocketPort == 0 {
+	//	fmt.Println("Warning!!!! You sould write arguments like : -WebSocketPort=8089 -SocketPort=8124")
+	//	SocketPort, err = f.Section("Server").Key("SocketPort").Int()
+	//}
+
 	log.ShowLog,err  = f.Section("Server").Key("ShowLog").Bool()
 	WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
 	SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
 	RedisAddress = f.Section("Server").Key("RedisAddress").String()
 	RedisPass = f.Section("Server").Key("RedisPass").String()
-	SocketAddress = f.Section("Server").Key("SocketAddress").String()
-	WebSocketAddress = f.Section("Server").Key("WebSocketAddress").String()
+	ServerAddress = f.Section("Server").Key("ServerAddress").String()
+	//WebSocketAddress = f.Section("Server").Key("WebSocketAddress").String()
 	//GoroutineMax ,err  = f.Section("Server").Key("GoroutineMax").Int()
 	log.CheckError(err)
 }
@@ -237,7 +239,7 @@ func NetWorkServerStart()  {
 	if WebSocketServer {
 		// websocket 服务器开启---------------------------------
 		wsServer = new(NetWork.WSServer)
-		wsServer.Addr = WebSocketAddress + ":"+strconv.Itoa(WebSocketPort)
+		wsServer.Addr = ServerAddress + ":"+strconv.Itoa(WebSocketPort)
 		fmt.Println("websocket 绑定："+ wsServer.Addr)
 		wsServer.MaxConnNum = int(math.MaxInt32)
 		wsServer.PendingWriteNum = 100
@@ -255,7 +257,7 @@ func NetWorkServerStart()  {
 	if SocketServer{
 		// socket 服务器开启----------------------------------
 		server = new(NetWork.TCPServer)
-		server.Addr = SocketAddress +":"+strconv.Itoa(SocketPort)
+		server.Addr = ServerAddress +":"+strconv.Itoa(SocketPort)
 		fmt.Println("socket 绑定："+ server.Addr)
 		server.MaxConnNum = int(math.MaxInt32)
 		server.PendingWriteNum = 100
@@ -277,7 +279,7 @@ func GameManagerInit() {
 	GameManagerLua.Init() // 绑定lua脚本
 	//Lua.GoCallLuaTest(GameManagerLua.L,1)
 	GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
-	GameManagerLua.GoCallLuaSetVar("ServerIP_Port", SocketAddress + "_" + strconv.Itoa(SocketPort)) 	//把服务器地址传递给lua
+	GameManagerLua.GoCallLuaSetVar("ServerIP_Port", ServerAddress+ "_" + strconv.Itoa(SocketPort)) //把服务器地址传递给lua
 
 }
 

@@ -8,6 +8,7 @@ import (
 	//"io"
 	. "./const"
 	"sync"
+	"strconv"
 )
 var clients []*NetWork.TCPClient
 var wsclients []*NetWork.WSClient
@@ -31,7 +32,7 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 
 
 		client := new(NetWork.TCPClient)
-		client.Addr = GameServerAddress
+		client.Addr = GameServerAddress+":"+ strconv.Itoa(SocketPort)
 		client.ConnNum = ConnNum
 		client.ConnectInterval = 3 * time.Second
 		client.PendingWriteNum = 100
@@ -42,7 +43,7 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 			return a
 		}
 
-		fmt.Println("开始连接", GameServerAddress)
+		fmt.Println("开始连接", client.Addr)
 		client.Start()
 		clients = append(clients, client)
 	}
@@ -51,7 +52,7 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 
 
 		wsclient := new(NetWork.WSClient)
-		wsclient.Addr = GameServerWebSocketAddress
+		wsclient.Addr = "ws://"+GameServerAddress+":"+ strconv.Itoa(WebSocketPort)+"/"
 		wsclient.ConnNum = ConnNum
 		wsclient.ConnectInterval = 3 * time.Second
 		wsclient.PendingWriteNum = 100
@@ -62,7 +63,7 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 			return a
 		}
 
-		fmt.Println("开始连接",GameServerWebSocketAddress)
+		fmt.Println("开始连接",wsclient.Addr)
 		wsclient.Start()
 		wsclients = append(wsclients, wsclient)
 	}
