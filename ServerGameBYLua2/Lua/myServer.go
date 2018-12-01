@@ -9,6 +9,8 @@ import (
 	"time"
 	"math"
 	"sync"
+	"strconv"
+	"runtime"
 )
 
 // ----------------------------服务器处理的统一接口----------------------------------
@@ -22,8 +24,12 @@ var StaticDataPackagePasteNum = 0   // 统计信息，拼接次数
 var StaticDataPackagePasteSuccess = 0   // 统计信息，成功拼接后，解析成功
 var StaticDataPackageHeadFlagError = 0   // 统计信息，数据包头部标识不正确
 
+var luaConnectMyServer map[int]*MyServer    // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
+var luaUIDConnectMyServer map[int]*MyServer // 将uid跟连接句柄进行哈希
 
 
+
+// MyServer是每个客户端的连接
 type MyServer struct {
 	conn NetWork.Conn			// 对应的每个玩家的连接
 	myLua     *MyLua			// 处理该玩家的lua脚本
@@ -36,6 +42,18 @@ type MyServer struct {
 	Mutex sync.Mutex			// 连接自己的锁主要用于防止发送时候产生的线程不安全
 }
 
+// 这是用来统计所有连接数量，及连接包不全的缓存大小
+func GetAllConnectMsg() string  {
+	connNum := 0
+	GlobalVar.RWMutex.RLock()
+	for _,v := range luaConnectMyServer{
+		if v!=nil {
+			connNum += len(v.ReceiveBuf)
+		}
+	}
+	GlobalVar.RWMutex.RUnlock()
+	return "所有连接数量："+ strconv.Itoa(len(luaConnectMyServer)) + "  所有包不全缓存大小:" + strconv.Itoa(connNum)
+}
 
 
 // 分配一个玩家处理逻辑模块的内存
@@ -102,7 +120,7 @@ func (a *MyServer) Run() {
 			bufTemp := buf[bufHead:bufLen]         //要处理的buffer
 			bufHeadTemp := a.HandlerRead(bufTemp) //处理结束之后返回，接下来要开始的范围
 			bufHead += bufHeadTemp
-			time.Sleep(time.Millisecond * 1)
+			time.Sleep(time.Millisecond * 5)
 			//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
 			if bufHeadTemp == 0 {
 					break 	// 数据不全， 继续接收数据
@@ -147,24 +165,25 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 		return 0
 	}
 	//-----------------------------解析头部信息----------------------------
-	offset := NetWork.TCPHeaderSize
-	headFlag,msgId, subMsgId, bufferSize, tokenId ,msgSize := NetWork.DealRecvTcpDeaderData(buf)
+
+	headFlag,msgId, subMsgId, bufferSize, tokenId ,msgSize := NetWork.DealRecvTcpHeaderData(buf)
+	BufAllSize := NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize) + 1    // 整个数据包长度，末尾有标示位
 
 	//-----------------------------头部信息错误----------------------------
 	if headFlag != uint8(254){
-		str:= fmt.Sprintf("%d 数据包头部标识不正确 %x",a.UserId, buf)
-		log.PrintLogger(str)
+		log.WritefLogger("%d 数据包头部标识不正确 %x",a.UserId, buf)
+
 		GlobalVar.Mutex.Lock()
 		StaticDataPackageHeadFlagError ++
 		GlobalVar.Mutex.Unlock()
-		return -1 			// 数据包格式校验不正确
+		return 0 			// 数据包格式校验不正确
 	}
 	//-----------------------------数据包重复----------------------------
 	if int(tokenId) > a.TokenId{
 		a.TokenId = int(tokenId)		// 记录当前最后接收的数据包编号，防止重复
 	}else{
 		//log.PrintLogger( strconv.Itoa(a.UserId)+" 出现重复的数据包,包id："+ strconv.Itoa(int(tokenId)))
-		return int(bufferSize) + offset + int(msgSize)  // 如果重复，那么跳过解析这个数据包
+		return BufAllSize  // 如果重复，那么跳过解析这个数据包
 	}
 
 	//fmt.Println("len(buf)",len(buf))
@@ -176,11 +195,11 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 		//fmt.Println("有错误提示了")
 		//msgBuffer := buf[offset + int(bufferSize):offset + int(bufferSize)+ int(msgSize)]
 		//fmt.Println(string(msgBuffer))
-		return int(bufferSize) + offset + int(msgSize)
+		return BufAllSize
 	}
 
 	//-----------------------------proto buffer 内容不完整----------------------------
-	if len(buf) < offset + int(bufferSize) + int(msgSize){
+	if len(buf) < BufAllSize{
 		//str:= fmt.Sprintf("%d数据包格式不正确buflen%d,bufferSize%d,%x  \n", a.UserId,len(buf),int(bufferSize),buf)
 		//log.PrintLogger(str)
 		GlobalVar.Mutex.Lock()
@@ -190,13 +209,20 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 		return  0 //int(bufferSize) + offset
 	}
 
+	// ------------------------数据包尾部的判断----------------------
+	endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
+	if endData!= uint8(NetWork.TCPEnd){		// EE
+		log.WritefLogger("%d数据包尾部判断不正确 %x ",a.UserId, buf)
+		return 0
+	}
+
 	//-----------------------------取出proto buffer的内容----------------------------
-	finalBuffer := buf[offset:offset + int(bufferSize)]
+	finalBuffer := buf[NetWork.TCPHeaderSize:NetWork.TCPHeaderSize + int(bufferSize)]
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
 	//fmt.Println("")
 
 	a.myLua.GoCallLuaNetWorkReceive( a.ServerId,  a.UserId,int(msgId),int(subMsgId),string(finalBuffer))		// 把收到的数据传递给lua进行处理
-	return int(bufferSize) + offset + int(msgSize)
+	return BufAllSize
 
 }
 
@@ -218,9 +244,13 @@ func (a *MyServer) OnClose() {
 
 	// 清理掉一些调用关系
 	GlobalVar.RWMutex.Lock()
-	luaConnectMyServer[a.ServerId] = nil
-	luaUIDConnectMyServer[a.UserId] = nil
+	delete(luaConnectMyServer, a.ServerId)
+	delete(luaUIDConnectMyServer, a.UserId)
+	//luaConnectMyServer[a.ServerId] = nil
+	//luaUIDConnectMyServer[a.UserId] = nil
 	GlobalVar.RWMutex.Unlock()
+
+	runtime.GC()
 
 }
 
@@ -275,7 +305,7 @@ func (a *MyServer) Init() {
 
 	GlobalVar.RWMutex.Lock()
 	if luaConnectMyServer[a.ServerId] != nil {
-		fmt.Println("luaConnectMyServer  已经有了, map重复了", a.ServerId,  a.UserId)
+		log.PrintfLogger("luaConnectMyServer  已经有了, map重复了", a.ServerId,  a.UserId)
 	}
 	luaConnectMyServer[a.ServerId] = a
 	GlobalVar.RWMutex.Unlock()

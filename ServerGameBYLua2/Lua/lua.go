@@ -15,8 +15,6 @@ import (
 //var GameManagerReceiveCh chan lua.LValue		// 这是每个玩家线程跟主线程之间的通信用channel
 //var GameManagerSendCh chan lua.LValue			// 这是主线程给每个玩家线程跟之间的通信用channel
 
-var luaConnectMyServer map[int]*MyServer    // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
-var luaUIDConnectMyServer map[int]*MyServer // 将uid跟连接句柄进行哈希
 
 type MyLua struct {
 	L *lua.LState

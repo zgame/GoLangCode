@@ -23,12 +23,36 @@ func CheckError(e error) bool{
 	return false
 }
 
+// 输出字符串日志，带显示出控制台
 func PrintLogger(str string) {
-	file, _ := os.OpenFile("Logger.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
-	logger := log.New(file, "", log.LstdFlags)
-	logger.Println("[Log:]", str)
+	_logger(str)
+	if ShowLog{
+		fmt.Println("Log："+str)
+	}
+}
+// 输出字符串日志
+func WriteLogger(str string) {
+	_logger(str)
+}
+
+// 输出字符串日志
+func WritefLogger(format string, a ...interface{}) {
+	str:= fmt.Sprintf(format,a...)
+	_logger(str)
+}
+
+// 格式化字符串日志，带显示出控制台
+func PrintfLogger(format string, a...interface{})  {
+	str:= fmt.Sprintf(format,a...)
+	_logger(str)
 	if ShowLog{
 		fmt.Println("Log："+str)
 	}
 }
 
+// 内部函数
+func _logger(str string)  {
+	file, _ := os.OpenFile("Logger.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
+	logger := log.New(file, "", log.LstdFlags)
+	logger.Println("[Log:]", str)
+}

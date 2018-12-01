@@ -15,6 +15,15 @@ var receiveMsgNum int
 var sendMsgNum int
 var Mutex sync.Mutex
 
+
+var StaticDataPackageHeadLess = 0  // 统计信息，数据包 头部数据不全
+var StaticDataPackageProtoDataLess = 0  // 统计信息，数据包 pb数据不全
+var StaticDataPackagePasteNum = 0   // 统计信息，拼接次数
+var StaticDataPackagePasteSuccess = 0   // 统计信息，成功拼接后，解析成功
+var StaticDataPackageHeadFlagError = 0   // 统计信息，数据包头部标识不正确
+
+
+
 func StartClient(ConnNum int , IsWebSocket bool) {
 	//IsWebSocket := false
 	if !IsWebSocket {
@@ -134,6 +143,10 @@ func (a *Client) Run() {
 				//str= fmt.Sprintf("%d本次buf: %x ", this.Index,buf)
 				//this.Zlog(str)
 
+				a.CMutex.Lock()
+				StaticDataPackagePasteNum++
+				a.CMutex.Unlock()
+
 				buf2 := make([]byte,len(a.ReceiveBuf)+bufLen)		//缓存从新组合包
 				copy(buf2, a.ReceiveBuf)
 				copy(buf2[len(a.ReceiveBuf):],buf[:bufLen])
@@ -155,6 +168,10 @@ func (a *Client) Run() {
 				if a.ReceiveBuf != nil {			// 如果是拼接包，清理一下
 					//str := fmt.Sprintf("%d 拼接后成功解析%x", this.Index, buf)
 					//this.Zlog(str)
+					a.CMutex.Lock()
+					StaticDataPackagePasteSuccess++
+					a.CMutex.Unlock()
+
 					a.ReceiveBuf = nil
 				}
 			}else if bufHeadTemp == -1 {

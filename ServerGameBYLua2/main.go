@@ -297,7 +297,9 @@ func GameManagerLuaReloadCheck() {
 func TimerCommonLogicStart() {
 	// 创建计时器，定期去run公共逻辑
 	ztimer.TimerCheckUpdate(func() {
-		fmt.Printf("服务器状态: 头部不全：%d  数据不全%d   拼接次数 %d  成功%d    标识错误%d\n" , Lua.StaticDataPackageHeadLess, Lua.StaticDataPackageProtoDataLess, Lua.StaticDataPackagePasteNum  ,Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError)
+		log.PrintfLogger("头部不全：%d  数据不全%d   拼接次数 %d  成功%d    标识错误%d   -- 服务器状态：%s " ,
+			Lua.StaticDataPackageHeadLess, Lua.StaticDataPackageProtoDataLess, Lua.StaticDataPackagePasteNum  ,Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, Lua.GetAllConnectMsg())
+		runtime.GC()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
 	}, 5)
 

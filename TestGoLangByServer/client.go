@@ -243,11 +243,25 @@ func checkError(e error) {
 		logger.Println("...error:...",e.Error())
 	}
 }
-func (this *Client)Zlog(s string)  {
+func (this *Client)Zlog(s string, print bool)  {
 	file, _ := os.OpenFile("Log.log",os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
 	logger := log.New(file, "", log.LstdFlags)
-	logger.Println("[Log]",s)
-	fmt.Println(s)
+	logger.Println("[Log] ",s)
+	if print {
+		fmt.Println(s)
+	}
+}
+
+// 记录，并且显示
+func (this *Client)Zlogf(format string, a ...interface{})   {
+	str:=fmt.Sprintf(format,a...)
+	this.Zlog(str,true)
+}
+
+// 记录，但是不显示
+func (this *Client)Zlogfw(format string, a ...interface{})   {
+	str:=fmt.Sprintf(format,a...)
+	this.Zlog(str,false)
 }
 
 func (this *Client)GetOsTime()  int64{
@@ -280,7 +294,7 @@ func (this *Client)GetOsTime()  int64{
 //	var hh TCPHeader
 //	buf1 := bytes.NewBuffer(msg[:TCPHeaderSize])
 //	binary.Read(buf1,binary.LittleEndian,&hh)
-//	HeadFlag := hh.DateKind
+//	HeadFlag := hh.DateStart
 //	bufferSize := hh.PackSize
 //	subCmd := hh.SubCMDID
 //	mainCmd := hh.MainCMDID
