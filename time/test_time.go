@@ -30,6 +30,8 @@ func main()  {
 	t8 := t1.Format("2006-01-02 15:04:05")		//2018-04-22 14:32:05
 	fmt.Println(t8)
 
+
+
 	t9 := time.Date(2017,2,4,5,7,8,0,time.Local)	//2017-02-04 05:07:08 +0800 CST
 	fmt.Println(t9)
 
@@ -43,11 +45,17 @@ func main()  {
 	}
 	fmt.Println(t10)
 
+	t11 := t1.Format("2006-01-02")		//2018-04-22 14:32:05
+	fmt.Println(t11)
+
+
 	for {
 		tt := time.Now().UnixNano() / int64(time.Millisecond)
 		fmt.Println("", tt)
 		time.Sleep(time.Millisecond * 100)
 	}
+
+
 
 
 }

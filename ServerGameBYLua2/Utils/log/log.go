@@ -4,6 +4,7 @@ import (
 	"os"
 	"log"
 	"fmt"
+	"time"
 )
 
 //--------------------------------------------------------------------------------------------------
@@ -52,7 +53,37 @@ func PrintfLogger(format string, a...interface{})  {
 
 // 内部函数
 func _logger(str string)  {
-	file, _ := os.OpenFile("Logger.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
+	logDir := "Logs"
+	exist, err := PathExists(logDir)
+	if err != nil {
+		fmt.Printf("get Logs/ dir error![%v]\n", err)
+		return
+	}
+	if !exist {
+		err := os.Mkdir(logDir, os.ModePerm)
+		if err != nil {
+			fmt.Printf("mkdir %s failed![%v]\n", logDir, err)
+		} else {
+			fmt.Printf("mkdir %s success!\n", logDir)
+		}
+	}
+
+	t1:=time.Now()
+	t11 := t1.Format("2006-01-02")
+
+	file, _ := os.OpenFile(logDir+"/Logger_"+t11+".log", os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
 	logger := log.New(file, "", log.LstdFlags)
 	logger.Println("[Log:]", str)
+}
+
+// 判断文件夹是否存在
+func PathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }
