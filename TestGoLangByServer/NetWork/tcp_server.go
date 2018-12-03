@@ -114,7 +114,7 @@ func (server *TCPServer) run() {
 			agent.OnClose()
 
 			server.wgConns.Done()
-			fmt.Println("当前连接数量为：",len(server.conns))
+			//fmt.Println("当前连接数量为：",len(server.conns))
 		}()
 	}
 }

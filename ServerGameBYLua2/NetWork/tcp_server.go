@@ -18,7 +18,7 @@ type TCPServer struct {
 	NewAgent        func(*TCPConn) Agent
 	ln              net.Listener
 	conns           ConnSet
-	mutexConns      sync.Mutex
+	mutexConns      sync.Mutex		// 互斥锁， 用在保持多线程对map的操作安全上
 	wgLn            sync.WaitGroup
 	wgConns         sync.WaitGroup
 

@@ -36,7 +36,7 @@ type WSHandler struct {
 	newAgent        func(*WSConn) Agent		// 代理回调，提供run函数，保存conn
 	upgrader        websocket.Upgrader
 	conns           WebsocketConnSet
-	mutexConns      sync.Mutex
+	mutexConns      sync.Mutex				// 互斥锁， 用在保持多线程对map的操作安全上
 	wg              sync.WaitGroup
 }
 
