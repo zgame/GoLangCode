@@ -103,7 +103,6 @@ func (wsConn *WSConn) RemoteAddr() net.Addr {
 func (wsConn *WSConn) ReadMsg() ([]byte, int,error) {
 	//wsConn.Lock()
 	//defer wsConn.Unlock()
-
 	_, b, err := wsConn.conn.ReadMessage()
 	Len:= len(b)
 	return b, Len,err

@@ -31,6 +31,10 @@ type TCPClient struct {
 	//msgParser    *MsgParser
 }
 
+func (client *TCPClient) Number() int{
+	return len(client.conns)
+}
+
 func (client *TCPClient) Start() {
 	//fmt.Println("start")
 	client.init()
@@ -39,6 +43,7 @@ func (client *TCPClient) Start() {
 		client.wg.Add(1)
 		//fmt.Println("for")
 		go client.connect(i)
+		//time.Sleep(time.Millisecond * 10)
 	}
 }
 
