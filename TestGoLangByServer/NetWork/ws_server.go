@@ -36,7 +36,7 @@ type WSHandler struct {
 	newAgent        func(*WSConn) Agent		// 代理回调，提供run函数，保存conn
 	upgrader        websocket.Upgrader
 	conns           WebsocketConnSet
-	mutexConns      sync.Mutex
+	mutexConns      sync.Mutex				// 互斥锁， 用在保持多线程对map的操作安全上
 	wg              sync.WaitGroup
 }
 
@@ -84,7 +84,7 @@ func (handler *WSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	delete(handler.conns, conn)			// 去掉当前连接列表中这个连接
 	handler.mutexConns.Unlock()
 	agent.OnClose()						// 关闭代理
-	fmt.Println("当前连接数量为：",len(handler.conns))
+	//fmt.Println("当前连接数量为：",len(handler.conns))
 
 }
 

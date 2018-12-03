@@ -14,9 +14,9 @@ func (this *Client)handlerRead(buf []byte) int {
 	//------------------------头部判断----------------------
 	if len(buf)< NetWork.TCPHeaderSize {		// 接受不全，那么缓存
 		//fmt.Printf("数据包头部小于 10 : %x   \n",buf)
-		this.CMutex.Lock()
+		GlobalMutex.Lock()
 		StaticDataPackageHeadLess++
-		this.CMutex.Unlock()
+		GlobalMutex.Unlock()
 
 		this.ReceiveBuf = buf
 		//str:= fmt.Sprintf("%d数据包头部小于 10 : %x   ",this.Index,buf)
@@ -28,9 +28,9 @@ func (this *Client)handlerRead(buf []byte) int {
 	headFlag, msg_id, sub_msg_id, bufferSize, _, msgSize := NetWork.DealRecvTcpHeaderData(buf)
 
 	if headFlag != uint8(254){		// FE
-		this.CMutex.Lock()
+		GlobalMutex.Lock()
 		StaticDataPackageHeadFlagError++
-		this.CMutex.Unlock()
+		GlobalMutex.Unlock()
 		this.Zlogfw("%d数据包头部判断不正确 %x ",this.Index, buf)
 		//this.Zlog(str)
 		return 0 			// 数据包格式校验不正确
@@ -54,9 +54,9 @@ func (this *Client)handlerRead(buf []byte) int {
 		//str:= fmt.Sprintf("%d出现数据包异常buflen=%d,bufferSize=%d,  msgSize=%d  %x  ",this.Index,len(buf),int(bufferSize),int(msgSize),buf)
 		//this.Zlog(str)
 		//this.Zlog("数据包不完整buflen=" +strconv.Itoa(len(buf))  +"bufferSize="+ strconv.Itoa(int(bufferSize)) +"msgSize="+strconv.Itoa(int(msgSize))+"buf="+string(this.ReceiveBuf))
-		this.CMutex.Lock()
+		GlobalMutex.Lock()
 		StaticDataPackageProtoDataLess++
-		this.CMutex.Unlock()
+		GlobalMutex.Unlock()
 		return  0 //int(bufferSize) + offset + int(msgSize)
 	}
 	//if ver > 0{
@@ -213,18 +213,18 @@ func (this *Client)handlerRead(buf []byte) int {
 				this.ShowMsgCatchFish=0
 				this.ShowMsgReCatchFish=0
 
-				//Mutex.Lock()
+				//GlobalMutex.Lock()
 				sendMsgNum = 0
 				receiveMsgNum =0
-				//Mutex.Unlock()
+				//GlobalMutex.Unlock()
 			}
 		}
 	}
 
 
-	Mutex.Lock()
+	GlobalMutex.Lock()
 	receiveMsgNum++
-	Mutex.Unlock()
+	GlobalMutex.Unlock()
 
 	return BufAllSize
 }

@@ -76,7 +76,7 @@ func main() {
 	//w := sync.WaitGroup{}
 	//for i := ClientStart; i < ClientEnd; i++ {
 	//	w.Add(1)
-	//	//Mutex.Lock()
+	//	//GlobalMutex.Lock()
 	//	go func(i int) {
 	//		defer w.Done()
 	//
@@ -102,7 +102,7 @@ func main() {
 	//		startClient(clients)
 	//
 	//	}(i)
-	//	//Mutex.Unlock()
+	//	//GlobalMutex.Unlock()
 	//	time.Sleep(time.Millisecond * 50)
 	//}
 	//

@@ -12,9 +12,9 @@ import (
 )
 var clients []*NetWork.TCPClient
 var wsclients []*NetWork.WSClient
-var receiveMsgNum int
-var sendMsgNum int
-var Mutex sync.Mutex
+var receiveMsgNum int		// 接收包数量
+var sendMsgNum int			// 发送包的数量
+var GlobalMutex sync.Mutex // 全局互斥锁
 
 
 var StaticDataPackageHeadLess = 0  // 统计信息，数据包 头部数据不全
@@ -116,9 +116,9 @@ func (a *Client) Run() {
 	a.init()
 
 	for {
-		//a.CMutex.Lock()
+		//a.ClientMutex.Lock()
 		buf,bufLen, err := a.Conn.ReadMsg()
-		//a.CMutex.Unlock()
+		//a.ClientMutex.Unlock()
 
 		if err != nil {
 			fmt.Println("跟对方的连接中断了", a.Index)
@@ -144,9 +144,9 @@ func (a *Client) Run() {
 				//str= fmt.Sprintf("%d本次buf: %x ", this.Index,buf)
 				//this.Zlog(str)
 
-				a.CMutex.Lock()
+				GlobalMutex.Lock()
 				StaticDataPackagePasteNum++
-				a.CMutex.Unlock()
+				GlobalMutex.Unlock()
 
 				buf2 := make([]byte,len(a.ReceiveBuf)+bufLen)		//缓存从新组合包
 				copy(buf2, a.ReceiveBuf)
@@ -169,9 +169,9 @@ func (a *Client) Run() {
 				if a.ReceiveBuf != nil {			// 如果是拼接包，清理一下
 					//str := fmt.Sprintf("%d 拼接后成功解析%x", this.Index, buf)
 					//this.Zlog(str)
-					a.CMutex.Lock()
+					GlobalMutex.Lock()
 					StaticDataPackagePasteSuccess++
-					a.CMutex.Unlock()
+					GlobalMutex.Unlock()
 
 					a.ReceiveBuf = nil
 				}

@@ -15,7 +15,7 @@ import (
 
 
 type WSClient struct {
-	sync.Mutex
+	sync.Mutex			// 互斥锁 ，作用就是用来防止多线程的map冲突,  conns 读写操作的时候用
 	Addr             string
 	ConnNum          int
 	ConnectInterval  time.Duration

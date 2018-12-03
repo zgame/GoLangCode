@@ -12,9 +12,8 @@ import (
 	//"./CMD"
 	//. "./const"
 	"time"
-	//"bytes"
-	//"encoding/binary"
-	"sync"
+
+
 )
 
 type Client struct {
@@ -41,8 +40,8 @@ type Client struct {
 	ShowMsgReCatchFish int64  // 打多少条鱼了
 
 
-	ReceiveBuf []byte
-	CMutex sync.Mutex		// 用来保证发送和接收的线程安全的
+	ReceiveBuf  []byte
+	//ClientMutex sync.Mutex // 用来保证发送和接收的线程安全的
 }
 
 func (this *Client) quit() {
@@ -60,7 +59,7 @@ func (this *Client) quit() {
 //		return false
 //	}
 //
-//	//Mutex.Lock()
+//	//GlobalMutex.Lock()
 //	buf := make([]byte,1024 * 1) //定义一个切片的长度是1024 * 8
 //	bufLen,err := this.Conn.Read(buf)
 //
@@ -69,7 +68,7 @@ func (this *Client) quit() {
 //	//buf,err:= ioutil.ReadAll(this.Conn)
 //	//bufLen:= len(buf)
 //
-//	//Mutex.Unlock()
+//	//GlobalMutex.Unlock()
 //
 //	if err != nil && err != io.EOF {  //io.EOF在网络编程中表示对端把链接关闭了。
 //		fmt.Println("接收时候对方服务器链接关闭了！")
@@ -162,17 +161,17 @@ func (this *Client) Send(data string, mainCmd int, subCmd int) {
 	//copy(bufferEnd[headSize:], bufferEncryp)
 	//
 	//_, err := this.Conn.Write(bufferEnd)
-	Mutex.Lock()
+	GlobalMutex.Lock()
 	sendMsgNum++
-	Mutex.Unlock()
+	GlobalMutex.Unlock()
 
 
 	bufferEnd := NetWork.DealSendData(data , "" , mainCmd , subCmd ,int(this.SendTokenID))
 
-	this.CMutex.Lock()
+	//this.ClientMutex.Lock()
 	this.WriteMsg(bufferEnd)		// 这里要加锁，因为多个线程可能同时进行发送消息
 	this.SendTokenID++
-	this.CMutex.Unlock()
+	//this.ClientMutex.Unlock()
 	//checkError(err)
 
 
