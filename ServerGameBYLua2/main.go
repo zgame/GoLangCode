@@ -310,7 +310,7 @@ func TimerCommonLogicStart() {
 		GameManagerLua.GoCallLuaLogic("GoCallLuaSaveServerState") // 保存服务器的状态
 	}, 60)
 
-	// 创建计时器，定期去run公共逻辑
+	// 创建计时器，定期去更新
 	ztimer.TimerCheckUpdate(func() {
 		// 定期更新后台的配置数据
 		UpdateDBSetting()

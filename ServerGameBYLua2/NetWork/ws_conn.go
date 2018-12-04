@@ -39,7 +39,7 @@ func newWSConn(conn *websocket.Conn, pendingWriteNum int, maxMsgLen uint32) *WSC
 
 			err := conn.WriteMessage(websocket.BinaryMessage, b)
 			if err != nil {
-				fmt.Println("conn.WriteMessage    Error", err.Error())
+				//fmt.Println("conn.WriteMessage    Error", err.Error())
 				break
 			}
 		}

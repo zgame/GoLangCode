@@ -36,7 +36,7 @@ func newTCPConn(conn net.Conn, pendingWriteNum int) *TCPConn {
 
 			_, err := conn.Write(b)
 			if err != nil {
-				fmt.Println("tcpConn.writeChan   Error", err.Error())
+				//fmt.Println("tcpConn.writeChan   Error", err.Error())
 				break
 			}
 		}
