@@ -6,7 +6,9 @@
 
 
 require("gameFire")
-require("gameLogin")
+require("gameEnter")
+require("LoginServer")
+require("Statistic")
 
 local ZswLogShowSendMsgNum = 0        -- 发送数量
 local ZswLogShowSendMsgLastTime = 0   -- 发送时间
