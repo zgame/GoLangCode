@@ -254,6 +254,7 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 		//}
 
 		this.Fish_id = int(v.GetUid())
+		this.do_fire()
 	}
 
 }

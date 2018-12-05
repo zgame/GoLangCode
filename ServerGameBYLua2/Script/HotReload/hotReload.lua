@@ -53,8 +53,10 @@ function ReloadAll()
 
     -- NetWork
     reloadFile("Script/NetWork/network")
-    reloadFile("Script/NetWork/gameLogin")
+    reloadFile("Script/NetWork/LoginServer")
     reloadFile("Script/NetWork/gameFire")
+    reloadFile("Script/NetWork/gameEnter")
+    reloadFile("Script/NetWork/Statistic")
 
     -- Protocol
 --    reloadFile("Script/Protocol/build/CMD_Game_pb")

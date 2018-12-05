@@ -105,12 +105,12 @@ function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
     elseif msgId == MDM_GR_LOGON  then
         if subMsgId == SUB_GR_LOGON_USERID  then
 --            print("**************游客登录游戏服申请******************* ")     ----这里是原来的登录， 主要是返回客户端玩家的一些数据
-            SevLoginGSGuest(serverId,data)
+            SevLoginGSGuest(serverId,data)      -- 返回给客户端，玩家的数据，用来显示的
 
         end
     elseif msgId == MDM_GF_FRAME  then
         if subMsgId == SUB_GF_GAME_OPTION  then
---            print("**************游游客进入大厅申请***************** ",userId)      ---- 这里是玩家申请登录游戏的类型，进入游戏房间， 分配桌子坐下开始玩 , 客户端需要申请房间的类型
+--            print("**************游游客进入游戏房间申请***************** ",userId)      ---- 这里是玩家申请登录游戏的类型，进入游戏房间， 分配桌子坐下开始玩 , 客户端需要申请房间的类型
             SevEnterScene(userId,data)
         end
     elseif msgId == MDM_GF_GAME  then

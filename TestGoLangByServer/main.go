@@ -70,7 +70,7 @@ func main() {
 	}
 
 	fmt.Println("max conn start :", ClientStart, "--------", ClientEnd)
-	StartClient(ClientEnd-ClientStart, IsWebSocket)
+	StartClient(ClientStart,ClientEnd, IsWebSocket)
 
 	//
 	//w := sync.WaitGroup{}

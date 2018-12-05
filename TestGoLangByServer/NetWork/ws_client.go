@@ -33,10 +33,10 @@ type WSClient struct {
 func (client *WSClient) Number() int{
 	return len(client.conns)
 }
-func (client *WSClient) Start() {
+func (client *WSClient) Start(start int ,end int) {
 	client.init()
 
-	for i := 0; i < client.ConnNum; i++ {
+	for i := start; i < end; i++ {
 		client.wg.Add(1)
 		go client.connect(i)
 	}

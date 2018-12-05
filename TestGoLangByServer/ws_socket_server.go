@@ -25,7 +25,7 @@ var StaticDataPackageHeadFlagError = 0   // 统计信息，数据包头部标识
 
 
 
-func StartClient(ConnNum int , IsWebSocket bool) {
+func StartClient(start int ,end int, IsWebSocket bool) {
 	GlobalClients = make(map[*Client]interface{},0)
 	//IsWebSocket := false
 	if !IsWebSocket {
@@ -34,9 +34,9 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 
 		client := new(NetWork.TCPClient)
 		client.Addr = GameServerAddress+":"+ strconv.Itoa(SocketPort)
-		client.ConnNum = ConnNum
+		client.ConnNum = 1  //废了
 		client.ConnectInterval = 3 * time.Second
-		client.PendingWriteNum = 1024 	// 发送缓冲区
+		client.PendingWriteNum = 100 	// 发送缓冲区
 		client.LenMsgLen = 4
 		client.MaxMsgLen = math.MaxUint32
 		client.NewAgent = func(conn *NetWork.TCPConn,index int) NetWork.Agent {
@@ -45,7 +45,7 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 		}
 
 		fmt.Println("开始连接", client.Addr)
-		client.Start()
+		client.Start(start  ,end )
 		clients = append(clients, client)
 	}
 	if IsWebSocket{
@@ -54,9 +54,9 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 
 		wsclient := new(NetWork.WSClient)
 		wsclient.Addr = "ws://"+GameServerAddress+":"+ strconv.Itoa(WebSocketPort)+"/"
-		wsclient.ConnNum = ConnNum
+		wsclient.ConnNum = 1
 		wsclient.ConnectInterval = 3 * time.Second
-		wsclient.PendingWriteNum = 1024 	// 发送缓冲区
+		wsclient.PendingWriteNum = 100 	// 发送缓冲区
 		wsclient.HandshakeTimeout = 10 * time.Second
 		wsclient.MaxMsgLen = math.MaxUint32
 		wsclient.NewAgent = func(conn *NetWork.WSConn,index int) NetWork.Agent {
@@ -65,7 +65,7 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 		}
 
 		fmt.Println("开始连接",wsclient.Addr)
-		wsclient.Start()
+		wsclient.Start(start  ,end )
 		wsclients = append(wsclients, wsclient)
 	}
 
@@ -95,13 +95,13 @@ func (a *Client)init()  {
 	a.Gameinfo = a.Gameinfo.New()
 	a.loginGS()
 
-	go func() {
-		for {
-			a.GameAI()
-			time.Sleep(time.Millisecond * 200)
-
-		}
-	}()
+	//go func() {
+	//	for {
+	//		a.GameAI()
+	//		time.Sleep(time.Millisecond * 200)
+	//
+	//	}
+	//}()
 	if a.ShowMsgSendTime {
 		go func() {
 			for {

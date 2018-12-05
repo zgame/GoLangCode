@@ -2165,3 +2165,117 @@
 2018/12/05 13:16:54 [Log:] ------------------start reload all---------------------------
 2018/12/05 13:16:54 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
 2018/12/05 13:16:59 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:30:04 [Log:] ========Game Server Start ....========
+2018/12/05 17:30:04 [Log:] --------------StartGamesServers  End--------------------------
+2018/12/05 17:30:04 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:30:09 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:30:14 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:30:14 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:30:57 [Log:] ========Game Server Start ....========
+2018/12/05 17:30:57 [Log:] --------------StartGamesServers  End--------------------------
+2018/12/05 17:30:57 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:31:02 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：86  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 181 cpu 4  
+2018/12/05 17:31:07 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：100  所有包不全缓存大小:0 用户正常发送消息数量 99  正常接收  99 每秒5发送 8826  每5秒接收 2601  goroutine数量 209 cpu 4  
+2018/12/05 17:31:07 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:31:12 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：100  所有包不全缓存大小:0 用户正常发送消息数量 100  正常接收  100 每秒5发送 17370  每5秒接收 4766  goroutine数量 209 cpu 4  
+2018/12/05 17:31:17 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：100  所有包不全缓存大小:0 用户正常发送消息数量 100  正常接收  100 每秒5发送 18276  每5秒接收 5551  goroutine数量 209 cpu 4  
+2018/12/05 17:31:17 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:31:22 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：100  所有包不全缓存大小:0 用户正常发送消息数量 100  正常接收  100 每秒5发送 22693  每5秒接收 6184  goroutine数量 209 cpu 4  
+2018/12/05 17:31:27 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:31:27 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：100  所有包不全缓存大小:0 用户正常发送消息数量 100  正常接收  100 每秒5发送 27147  每5秒接收 7810  goroutine数量 209 cpu 4  
+2018/12/05 17:31:32 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：100  所有包不全缓存大小:0 用户正常发送消息数量 100  正常接收  100 每秒5发送 30755  每5秒接收 8785  goroutine数量 209 cpu 4  
+2018/12/05 17:31:37 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：100  所有包不全缓存大小:0 用户正常发送消息数量 100  正常接收  100 每秒5发送 26075  每5秒接收 7830  goroutine数量 209 cpu 4  
+2018/12/05 17:31:37 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57833: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57777: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57744: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57747: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57792: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57801: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57815: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57821: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57784: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57816: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57767: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57827: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57818: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57809: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57775: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57812: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57783: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57742: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57789: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57819: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57813: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57743: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57806: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57794: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57765: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57733: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57802: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57779: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57808: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57736: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57732: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57735: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57758: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57800: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57810: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57751: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57796: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57756: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57822: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57790: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57755: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57737: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57738: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57740: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57739: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57761: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57741: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57748: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57752: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57729: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57745: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57799: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57825: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57805: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57774: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57795: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57817: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57814: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57778: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57826: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57769: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57846: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57788: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57845: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57754: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57772: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57749: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57773: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57820: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57760: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57791: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57807: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57730: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:40 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.63:8123->172.16.140.63:57734: wsasend: An established connection was aborted by the software in your host machine.
+2018/12/05 17:31:42 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:31:47 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:31:47 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:31:52 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:31:57 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:31:57 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:32:02 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:32:07 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:32:07 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:32:12 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:32:17 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:32:17 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:32:22 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:32:27 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:32:27 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:32:32 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:32:37 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  
+2018/12/05 17:32:37 [Log:] ------------------start reload all---------------------------
+2018/12/05 17:32:42 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 9 cpu 4  

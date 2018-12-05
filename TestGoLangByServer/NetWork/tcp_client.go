@@ -35,11 +35,11 @@ func (client *TCPClient) Number() int{
 	return len(client.conns)
 }
 
-func (client *TCPClient) Start() {
+func (client *TCPClient) Start(start int ,end int) {
 	//fmt.Println("start")
 	client.init()
 
-	for i := 0; i < client.ConnNum; i++ {
+	for i := start; i < end; i++ {
 		client.wg.Add(1)
 		//fmt.Println("for")
 		go client.connect(i)
