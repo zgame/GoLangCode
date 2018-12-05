@@ -90,7 +90,7 @@ func GetStringFromRedis(dir string,key string) string {
 		//}
 		return string(ret.([]byte))
 	}else{
-		fmt.Println("获取到数据为空")
+		//fmt.Println("获取到数据为空")
 		return ""
 	}
 

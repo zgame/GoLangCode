@@ -11,7 +11,7 @@ function RedisSaveString(dir,key,value)
 end
 
 function RedisGetString(dir,key)
-    return luaCallGoRedisGetString(dir,key)
+    return luaCallGoRedisGetString(dir,key)     -- 这里返回的都是string，其他格式要自己转一下
 end
 
 function RedisDelKey(dir,key)
@@ -20,6 +20,7 @@ end
 
 -----------------------DIR-------------------------
 local RedisDirAllPlayers = "BY_AllPlayers:"                         -- 所有玩家列表
+local RedisDirAllPlayersLogin = "BY_AllPlayers_OpenId_Uid:"                         -- 所有玩家登录列表
 local RedisDirServerState = "BY_ServerState:"         -- 各个服务器状态 多少个桌子，多少玩家在线， 网络情况，1分钟记录一次，永久记忆
 local RedisDirGameState = "BY_GameState:"                          -- 当前各个服务器，各个游戏的状态，多少鱼，多少子弹，多少椅子有人
 
@@ -27,11 +28,20 @@ local RedisDirGameState = "BY_GameState:"                          -- 当前各�
 
 ----------------------------玩家信息-----------------------------
 function RedisSavePlayer(User)
-    RedisSaveString(RedisDirAllPlayers..User.UserId,RedisKeyPlayer..User.UserId, zJson.encode(User))
+    RedisSaveString(RedisDirAllPlayers..User.UserId,User.UserId, zJson.encode(User))
 end
 
 function RedisGetPlayer(uid)
     return  zJson.decode(RedisGetString(RedisDirAllPlayers..uid, uid))
+end
+
+----------------------------玩家登录信息-----------------------------
+function RedisSavePlayerLogin(openId,Uid)
+    RedisSaveString(RedisDirAllPlayersLogin..openId,openId, Uid)
+end
+
+function RedisGetPlayerLogin(openId)
+    return  RedisGetString(RedisDirAllPlayersLogin..openId, openId)     -- 返回Uid
 end
 
 ----------------------------保存服务器状态信息-----------------------------

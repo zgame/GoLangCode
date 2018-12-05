@@ -12,6 +12,41 @@ function SevLoginGSGuest(serverId,buf)
 
     --print("gamekind id: ".. msg.kind_id)
     --print("user_id id: ".. msg.user_id)
+    --print("machine_id : ".. msg.machine_id)
+
+    local MyUser
+    local openId = msg.machine_id
+    local UserId = RedisGetPlayerLogin(openId)
+    if UserId == "" then
+        print("没有账号，创建一个")
+        UserId = GetLastUserID()
+        MyUser = User:New()
+        MyUser.FaceId = 0
+        MyUser.Gender = 0
+        MyUser.UserId = UserId
+        MyUser.GameId = 320395999
+        MyUser.Exp = 254
+        MyUser.Loveliness = 0
+        MyUser.Score = 100000009
+        MyUser.NickName = "玩家"..MyUser.UserId
+        MyUser.Level = 1
+        MyUser.VipLevel = 0
+        MyUser.AccountLevel = 3
+        MyUser.SiteLevel = 0
+        MyUser.CurLevelExp = 0
+        MyUser.NextLevelExp = 457
+        MyUser.PayTotal = 0
+        MyUser.Diamond = 29
+        MyUser.OpenId = openId
+        RedisSavePlayerLogin(openId,UserId)
+        RedisSavePlayer(MyUser)           -- redis 数据库 save
+    else
+        print("有账号，那么取出账号的信息")
+        UserId = tonumber(UserId)       -- 这里需要转一下到数字
+        MyUser = RedisGetPlayer(UserId)   -- redis load
+    end
+
+    printTable(MyUser)
     --MyGameType = msg.kind_id
     --if MyGame == nil then
     --    Logger("请求登录游戏类型不正确"..msg.kind_id)
@@ -27,27 +62,7 @@ function SevLoginGSGuest(serverId,buf)
     --local result = MultiThreadChannelGameManagerToPlayer("GetLastUserID",nil)    -- 申请分配一个桌子， 返回的数据中带有桌子和椅子的id了
     --print("分配uid", result.UserId)
 
-    local UserId = GetLastUserID()
 
-    local MyUser = User:New()
-    ------ 以后增加判断，先读数据库，如果没有，创建新的玩家，如果有，读数据库
-    --
-    MyUser.FaceId = 0
-    MyUser.Gender = 0
-    MyUser.UserId = UserId
-    MyUser.GameId = 320395999
-    MyUser.Exp = 254
-    MyUser.Loveliness = 0
-    MyUser.Score = 100000009
-    MyUser.NickName = "玩家"..MyUser.UserId
-    MyUser.Level = 1
-    MyUser.VipLevel = 0
-    MyUser.AccountLevel = 3
-    MyUser.SiteLevel = 0
-    MyUser.CurLevelExp = 0
-    MyUser.NextLevelExp = 457
-    MyUser.PayTotal = 0
-    MyUser.Diamond = 29
 
     --RedisSavePlayer(MyUser)           -- redis 数据库 save
     --local user = RedisGetPlayer(UserId)   -- redis load

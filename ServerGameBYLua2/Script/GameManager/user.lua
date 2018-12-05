@@ -26,6 +26,7 @@ function User:New()
         NextLevelExp = 0, --  # 下一等级经验
         PayTotal = 0, --  # 充值总金额
         Diamond = 0, --  # 钻石数量
+        OpenId = "",  -- # 玩家的渠道账号，或者mac地址
     }
     setmetatable(c, self)
     self.__index = self
