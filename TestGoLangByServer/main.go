@@ -117,14 +117,36 @@ func main() {
 	//fmt.Println("-----------------------------------------------------")
 
 	for{
-		select {
-
-		}
+		GetStaticPrint()
 		time.Sleep(time.Second)
 	}
-
-
 }
+
+func GetStaticPrint()  {
+	successSendClients := 0
+	successRecClients := 0
+	successSendMsg := 0
+	successRecMsg := 0
+
+	GlobalMutex.Lock()
+	for k,_:=range GlobalClients{
+		if k.SendMsgNum>0{
+			successSendClients++
+			successSendMsg += k.SendMsgNum
+			k.SendMsgNum = 0
+		}
+		if k.ReceiveMsgNum>0{
+			successRecClients ++
+			successRecMsg += k.ReceiveMsgNum
+			k.ReceiveMsgNum = 0
+		}
+
+	}
+	GlobalMutex.Unlock()
+	fmt.Printf("用户正常发送消息数量 %d  正常接收  %d 每秒发送 %d  每秒接收 %d  goroutine数量 %d \n",   successSendClients, successRecClients, successSendMsg , successRecMsg,  runtime.NumGoroutine())
+}
+
+
 //func startClient(c *Client) {
 //	//var e error
 //	for {
@@ -170,3 +192,18 @@ func main() {
 //	//fmt.Println("发送登录游戏服务器完成")
 //	startClient(c)
 //}
+
+
+func TimerCheckUpdate(f func(), timer time.Duration)  {
+	go func() {
+		tickerCheckUpdateData := time.NewTicker(time.Second * timer)
+		defer tickerCheckUpdateData.Stop()
+
+		for {
+			select {
+			case <-tickerCheckUpdateData.C:
+				f()
+			}
+		}
+	}()
+}

@@ -49,6 +49,10 @@ func main()  {
 	fmt.Println(t11)
 
 
+	t12,_,_ := t1.Clock()   //hour, min, sec
+	fmt.Println(t12)
+
+
 	for {
 		tt := time.Now().UnixNano() / int64(time.Millisecond)
 		fmt.Println("", tt)

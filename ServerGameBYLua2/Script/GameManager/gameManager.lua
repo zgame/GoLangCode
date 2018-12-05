@@ -29,6 +29,8 @@ function GoCallLuaStartGamesServers()
     --AddGame("满贯捕鱼2", GameTypeBY2)
     --AddGame("满贯捕鱼3", GameTypeBY3)
 
+    SetNewTimer("NewTimerBy2Second",2)      -- lua 自己设定计时器
+    SetNewClockTimer("NewTimerByAfternoon4", 16)    -- lua 自己设定的固定时间定时器，  16:00
     Logger("--------------StartGamesServers  End--------------------------")
 end
 

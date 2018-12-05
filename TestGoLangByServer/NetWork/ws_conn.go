@@ -5,7 +5,7 @@ import (
 	//"github.com/name5566/leaf/log"
 	"net"
 	"sync"
-	"fmt"
+	"../log"
 )
 
 //---------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ func newWSConn(conn *websocket.Conn, pendingWriteNum int, maxMsgLen uint32) *WSC
 
 			err := conn.WriteMessage(websocket.BinaryMessage, b)
 			if err != nil {
-				fmt.Println("conn.WriteMessage    Error", err.Error())
+				log.PrintfLogger("conn.WriteMessage    Error %s", err.Error())
 				break
 			}
 		}
@@ -86,7 +86,7 @@ func (wsConn *WSConn) Close() {
 //将byte数组写入到websocket发送
 func (wsConn *WSConn) doWrite(b []byte) {
 	if len(wsConn.writeChan) == cap(wsConn.writeChan) {
-		fmt.Println("close conn: channel full")
+		log.PrintfLogger("发送数据包的缓冲区已经满了，关闭该连接!!!")
 		wsConn.doDestroy()
 		return
 	}

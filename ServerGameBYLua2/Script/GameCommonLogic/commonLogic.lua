@@ -46,3 +46,13 @@ function GoCallLuaCommonLogic12clock()
 end
 
 
+-- 自己设定的新的计时器
+function NewTimerBy2Second()
+    --print("这是lua自己设定的定时器")
+end
+
+-- 自己设定的固定时间计时器
+function NewTimerByAfternoon4()
+    print("这是lua自己设定的下午4点的定时器")
+end
+

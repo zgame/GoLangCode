@@ -10,14 +10,28 @@ function GetOsTimeMillisecond()
     return luaCallGoGetOsTimeMillisecond()
 end
 
+--- 获取时间来显示
 function GetOsDateNow()
     return os.date("%Y-%m-%d %H:%M:%S",os.time())
 end
 
+--- 获取今天来显示
 function GetOsDayNow()
     return os.date("%Y-%m-%d",os.time())
 end
 
+--- 获取现在的时间来显示
 function GetOsDateTimeNow()
     return os.date("%H：%M：%S",os.time())
+end
+
+--- 自己设定定时器 回调函数的名字 和 间隔秒数
+function SetNewTimer(funcName,timer)
+    -- funcName is string
+    luaCallGoCreateNewTimer(funcName,timer)
+end
+
+--- 自己设定固定时间触发器  回调函数名字 和 触发的时间24小时制
+function SetNewClockTimer(funcName,clock)
+    luaCallGoCreateNewClockTimer(funcName,clock)
 end

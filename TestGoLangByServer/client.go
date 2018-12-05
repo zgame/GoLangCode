@@ -2,8 +2,7 @@ package main
 
 import (
 	"./NetWork"
-	//"encoding/binary"
-	"fmt"
+
 	//"io"
 	//"bytes"
 	"os"
@@ -13,7 +12,7 @@ import (
 	//. "./const"
 	"time"
 
-
+	"sync"
 )
 
 type Client struct {
@@ -41,7 +40,12 @@ type Client struct {
 
 
 	ReceiveBuf  []byte
-	//ClientMutex sync.Mutex // 用来保证发送和接收的线程安全的
+	ClientMutex sync.Mutex // 用来保证发送和接收的线程安全的
+
+	ReceiveMsgNum int		// 接收包数量
+	SendMsgNum int			// 发送包的数量
+	SuccessBuf []byte
+	LastBuf []byte
 }
 
 func (this *Client) quit() {
@@ -86,15 +90,15 @@ func (this *Client) quit() {
 //	for {
 //		if this.ReceiveBuf !=nil {
 //			//str:= fmt.Sprintf("%d上次buf: %x ", this.Index,this.ReceiveBuf)
-//			//this.Zlog(str)
+//			//this.PrintLogger(str)
 //			//str= fmt.Sprintf("%d本次buf: %x ", this.Index,buf)
-//			//this.Zlog(str)
+//			//this.PrintLogger(str)
 //
 //			buf2 := make([]byte,len(this.ReceiveBuf)+bufLen)		//缓存从新组合包
 //			copy(buf2, this.ReceiveBuf)
 //			copy(buf2[len(this.ReceiveBuf):],buf[:bufLen])
 //			//str= fmt.Sprintf("%d合并后buf2: %x ", this.Index,buf2)
-//			//this.Zlog(str)
+//			//this.PrintLogger(str)
 //			buf = buf2
 //			bufLen= len(buf2)
 //		}
@@ -110,7 +114,7 @@ func (this *Client) quit() {
 //		}else if bufHeadTemp > 0 {				// 解析完成
 //			if this.ReceiveBuf != nil {			// 如果是拼接包，清理一下
 //				//str := fmt.Sprintf("%d 拼接后成功解析%x", this.Index, buf)
-//				//this.Zlog(str)
+//				//this.PrintLogger(str)
 //				this.ReceiveBuf = nil
 //			}
 //		}else if bufHeadTemp == -1 {
@@ -162,16 +166,16 @@ func (this *Client) Send(data string, mainCmd int, subCmd int) {
 	//
 	//_, err := this.Conn.Write(bufferEnd)
 	GlobalMutex.Lock()
-	sendMsgNum++
+	this.SendMsgNum++
 	GlobalMutex.Unlock()
 
 
 	bufferEnd := NetWork.DealSendData(data , "" , mainCmd , subCmd ,int(this.SendTokenID))
 
-	//this.ClientMutex.Lock()
+	this.ClientMutex.Lock()
 	this.WriteMsg(bufferEnd)		// 这里要加锁，因为多个线程可能同时进行发送消息
 	this.SendTokenID++
-	//this.ClientMutex.Unlock()
+	this.ClientMutex.Unlock()
 	//checkError(err)
 
 
@@ -242,26 +246,7 @@ func checkError(e error) {
 		logger.Println("...error:...",e.Error())
 	}
 }
-func (this *Client)Zlog(s string, print bool)  {
-	file, _ := os.OpenFile("Log.log",os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
-	logger := log.New(file, "", log.LstdFlags)
-	logger.Println("[Log] ",s)
-	if print {
-		fmt.Println(s)
-	}
-}
 
-// 记录，并且显示
-func (this *Client)Zlogf(format string, a ...interface{})   {
-	str:=fmt.Sprintf(format,a...)
-	this.Zlog(str,true)
-}
-
-// 记录，但是不显示
-func (this *Client)Zlogfw(format string, a ...interface{})   {
-	str:=fmt.Sprintf(format,a...)
-	this.Zlog(str,false)
-}
 
 func (this *Client)GetOsTime()  int64{
 	return time.Now().UnixNano() / int64(time.Millisecond)

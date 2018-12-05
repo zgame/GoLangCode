@@ -63,6 +63,20 @@ func main() {
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
+	fmt.Println("------------------首先读取命令行参数---------------------------")
+	wsPort := flag.Int("WebSocketPort", 0, "")
+	sPort := flag.Int("SocketPort", 0, "")
+	flag.Parse()
+	WebSocketPort = *wsPort
+	SocketPort = *sPort
+	fmt.Println("WebSocketPort=",WebSocketPort,"SocketPort=",SocketPort)
+	if WebSocketPort==0 || SocketPort==0{
+		for{
+			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123")
+			time.Sleep(time.Second)
+		}
+	}
+	log.ServerPort = SocketPort		// 传递给log日志，让日志记录的时候区分服务器端口
 	fmt.Println("-------------------读取本地配置文件---------------------------")
 	initSetting()
 
@@ -151,14 +165,14 @@ func main() {
 		//	// 定期更新后台的配置数据
 		//	UpdateDBSetting()
 		//}
-		start:= ztimer.GetOsTimeMillisecond()
+		//start:= ztimer.GetOsTimeMillisecond()
 		//GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
 		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 给lua的桌子用的 n个协程函数
 		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
-		end:= ztimer.GetOsTimeMillisecond()
-		if end - start > 120 {
+		//end:= ztimer.GetOsTimeMillisecond()
+		//if end - start > 120 {
 			//fmt.Println("一个循环用时", end-start)
-		}
+		//}
 	}
 
 
@@ -184,13 +198,7 @@ func initSetting()  {
 		fmt.Println("读取配置文件出错")
 		return
 	}
-	// -------------------------首先读取命令行参数--------------------------
-	wsPort := flag.Int("WebSocketPort", 0, "")
-	sPort := flag.Int("SocketPort", 0, "")
-	flag.Parse()
-	WebSocketPort = *wsPort
-	SocketPort = *sPort
-	fmt.Println("WebSocketPort=",WebSocketPort,"SocketPort=",SocketPort)
+
 	//-------------------------------------------------------------------
 	//if WebSocketPort == 0 {
 	//	WebSocketPort, err = f.Section("Server").Key("WebSocketPort").Int()
@@ -242,7 +250,7 @@ func NetWorkServerStart()  {
 		wsServer.Addr = ServerAddress + ":"+strconv.Itoa(WebSocketPort)
 		fmt.Println("websocket 绑定："+ wsServer.Addr)
 		wsServer.MaxConnNum = int(math.MaxInt32)
-		wsServer.PendingWriteNum = 100
+		wsServer.PendingWriteNum = 1024			// 发送区缓存
 		wsServer.MaxMsgLen = 4096
 		wsServer.HTTPTimeout = 10 * time.Second
 		wsServer.CertFile = ""
@@ -260,7 +268,7 @@ func NetWorkServerStart()  {
 		server.Addr = ServerAddress +":"+strconv.Itoa(SocketPort)
 		fmt.Println("socket 绑定："+ server.Addr)
 		server.MaxConnNum = int(math.MaxInt32)
-		server.PendingWriteNum = 100
+		server.PendingWriteNum = 1024		// 发送区缓存
 		server.LenMsgLen = 4
 		server.MaxMsgLen = math.MaxUint32
 		server.NewAgent = func(conn *NetWork.TCPConn) NetWork.Agent {
@@ -278,6 +286,8 @@ func GameManagerInit() {
 
 	GameManagerLua.Init() // 绑定lua脚本
 	//Lua.GoCallLuaTest(GameManagerLua.L,1)
+
+	Lua.GameManagerLuaHandle = GameManagerLua  // 把句柄传递给lua保存一份
 	GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
 	GameManagerLua.GoCallLuaSetVar("ServerIP_Port", ServerAddress+ "_" + strconv.Itoa(SocketPort)) //把服务器地址传递给lua
 
@@ -301,6 +311,9 @@ func TimerCommonLogicStart() {
 	ztimer.TimerCheckUpdate(func() {
 		log.PrintfLogger("[%s] 头部不全：%d  数据不全%d   拼接次数 %d  成功%d    标识错误%d   -- 服务器状态：%s " , ServerAddress + ":"+strconv.Itoa(SocketPort),
 			Lua.StaticDataPackageHeadLess, Lua.StaticDataPackageProtoDataLess, Lua.StaticDataPackagePasteNum  ,Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, Lua.GetAllConnectMsg())
+
+
+
 		runtime.GC()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
 	}, 5)
@@ -316,7 +329,7 @@ func TimerCommonLogicStart() {
 		UpdateDBSetting()
 	}, 10)  // 60秒
 
-	ztimer.TimerClock12(func() { // 创建计时器，夜里12点触发
+	ztimer.TimerClock0(func() { // 创建计时器，夜里12点触发
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
 	})
 

@@ -5,12 +5,14 @@ import (
 	"log"
 	"fmt"
 	"time"
+	"strconv"
 )
 
 //--------------------------------------------------------------------------------------------------
 // 错误日志处理
 //--------------------------------------------------------------------------------------------------
 var ShowLog bool
+var ServerPort int
 func CheckError(e error) bool{
 	if e!=nil{
 		file, _ := os.OpenFile("error.log",os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
@@ -31,12 +33,12 @@ func PrintLogger(str string) {
 		fmt.Println("Log："+str)
 	}
 }
-// 输出字符串日志
+// 输出字符串日志， 不在控制台显示
 func WriteLogger(str string) {
 	_logger(str)
 }
 
-// 输出字符串日志
+// 输出字符串日志， 不在控制台显示
 func WritefLogger(format string, a ...interface{}) {
 	str:= fmt.Sprintf(format,a...)
 	_logger(str)
@@ -53,7 +55,7 @@ func PrintfLogger(format string, a...interface{})  {
 
 // 内部函数
 func _logger(str string)  {
-	go func() {
+	//go func() {
 		// 判断一下目录， 如果没有目录就创建出来
 		logDir := "Logs"
 		exist, err := PathExists(logDir)
@@ -74,10 +76,10 @@ func _logger(str string)  {
 		t1:=time.Now()
 		t11 := t1.Format("2006-01-02")
 
-		file, _ := os.OpenFile(logDir+"/Logger_"+t11+".log", os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
+		file, _ := os.OpenFile(logDir+"/Logger_"+t11+"_" + strconv.Itoa(ServerPort) +".log", os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
 		logger := log.New(file, "", log.LstdFlags)
 		logger.Println("[Log:]", str)
-	}()
+	//}()
 
 }
 

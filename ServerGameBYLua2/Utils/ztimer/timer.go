@@ -21,14 +21,25 @@ func TimerCheckUpdate(f func(), timer time.Duration)  {
 
 
 // 夜里12点触发的计时器， 这里启动的时候也是要检查一次的
-func TimerClock12(f func()) {
+func TimerClock0(f func()) {
+	TimerClock(f,0)
+}
+
+// 到时间触发的计时器
+func TimerClock(f func(),clock int) {
 	go func() {
 		for {
-			//f()
+			var next time.Time
 			now := time.Now()
-			// 计算下一个零点
-			next := now.Add(time.Hour * 24)
-			next = time.Date(next.Year(), next.Month(), next.Day(), 0, 0, 0, 0, next.Location())
+			clockNow,_,_ := now.Clock()		//现在几点了
+			// 计算下一个时间点
+			if clockNow >= clock{
+				// 现在的时间已经过了，那么就等明天吧
+				next = now.Add(time.Hour * 24)
+			}else {
+				next = now
+			}
+			next = time.Date(next.Year(), next.Month(), next.Day(), clock, 0, 0, 0, next.Location())
 			t := time.NewTimer(next.Sub(now))
 			<-t.C
 			f()

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	. "./const"
 	"./NetWork"
+	"./log"
 )
 
 // 处理单个包内容
@@ -11,16 +12,17 @@ func (this *Client)handlerRead(buf []byte) int {
 	//var err error
 	//fmt.Printf("Receive buf: %x\n",buf)
 
+
 	//------------------------头部判断----------------------
 	if len(buf)< NetWork.TCPHeaderSize {		// 接受不全，那么缓存
-		//fmt.Printf("数据包头部小于 10 : %x   \n",buf)
+		log.PrintfLogger("数据包头部小于 10 : %x   \n",buf)
 		GlobalMutex.Lock()
 		StaticDataPackageHeadLess++
 		GlobalMutex.Unlock()
 
 		this.ReceiveBuf = buf
 		//str:= fmt.Sprintf("%d数据包头部小于 10 : %x   ",this.Index,buf)
-		//this.Zlog(str)
+		//this.PrintLogger(str)
 		return 0
 	}
 
@@ -31,9 +33,9 @@ func (this *Client)handlerRead(buf []byte) int {
 		GlobalMutex.Lock()
 		StaticDataPackageHeadFlagError++
 		GlobalMutex.Unlock()
-		this.Zlogfw("%d数据包头部判断不正确 %x ",this.Index, buf)
-		//this.Zlog(str)
-		return 0 			// 数据包格式校验不正确
+		log.WritefLogger("%d数据包头部判断不正确 %x ",this.Index, buf)
+		//this.PrintLogger(str)
+		return -1 			// 数据包格式校验不正确
 	}
 
 	//offset := NetWork.TCPHeaderSize
@@ -41,7 +43,7 @@ func (this *Client)handlerRead(buf []byte) int {
 
 	//if msgSize > 200 {
 	//	str:= fmt.Sprintf("%d错误消息%d",this.Index,msgSize)
-	//	this.Zlog(str)
+	//	this.PrintLogger(str)
 	//}
 
 	//fmt.Println("len(buf)",len(buf))
@@ -52,8 +54,8 @@ func (this *Client)handlerRead(buf []byte) int {
 		this.ReceiveBuf = buf
 		//fmt.Printf("出现数据包异常buflen=%d,bufferSize=%d,  msgSize=%d  %x  \n",len(buf),int(bufferSize),int(msgSize)buf)
 		//str:= fmt.Sprintf("%d出现数据包异常buflen=%d,bufferSize=%d,  msgSize=%d  %x  ",this.Index,len(buf),int(bufferSize),int(msgSize),buf)
-		//this.Zlog(str)
-		//this.Zlog("数据包不完整buflen=" +strconv.Itoa(len(buf))  +"bufferSize="+ strconv.Itoa(int(bufferSize)) +"msgSize="+strconv.Itoa(int(msgSize))+"buf="+string(this.ReceiveBuf))
+		//this.PrintLogger(str)
+		//this.PrintLogger("数据包不完整buflen=" +strconv.Itoa(len(buf))  +"bufferSize="+ strconv.Itoa(int(bufferSize)) +"msgSize="+strconv.Itoa(int(msgSize))+"buf="+string(this.ReceiveBuf))
 		GlobalMutex.Lock()
 		StaticDataPackageProtoDataLess++
 		GlobalMutex.Unlock()
@@ -63,19 +65,19 @@ func (this *Client)handlerRead(buf []byte) int {
 	//	offset = 12		// version == 1 的时候， 加了一个token
 	//}
 
+
+	// ------------------------数据包尾部的判断----------------------
+	endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
+	if endData!= uint8(NetWork.TCPEnd){		// EE
+		log.WritefLogger("%d数据包尾部判断不正确 %x ",this.Index, buf)
+		return -1
+	}
 	// ------------------------错误提示的判断----------------------
 	if msgSize >0 {
 		//fmt.Println("有错误提示了")
 		//msgBuffer := buf[offset + int(bufferSize):offset + int(bufferSize)+ int(msgSize)]
 		//fmt.Println(string(msgBuffer))
 		return BufAllSize
-	}
-
-	// ------------------------数据包尾部的判断----------------------
-	endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
-	if endData!= uint8(NetWork.TCPEnd){		// EE
-		this.Zlogfw("%d数据包尾部判断不正确 %x ",this.Index, buf)
-		return 0
 	}
 
 
@@ -200,12 +202,12 @@ func (this *Client)handlerRead(buf []byte) int {
 			if this.ShowMsgSendTime {
 				now := this.GetOsTime()
 				end := now - this.SendMsgTime
-				this.Zlogf("消息间隔时间：%d毫秒|  发子弹  %d  收子弹  %d  打鱼  %d  打到鱼  %d  头部不全 %d   数据包不全  %d  粘贴数量 %d  粘贴成功  %d  头部信息错误  %d  发送消息 %d  接收消息 %d",
-					int(end),this.ShowMsgFire,this.ShowMsgReFire,this.ShowMsgCatchFish ,this.ShowMsgReCatchFish,StaticDataPackageHeadLess,StaticDataPackageProtoDataLess,StaticDataPackagePasteNum,StaticDataPackagePasteSuccess,StaticDataPackageHeadFlagError,sendMsgNum,  receiveMsgNum)
+				log.PrintfLogger("消息间隔时间：%d毫秒|  发子弹  %d  收子弹  %d  打鱼  %d  打到鱼  %d  头部不全 %d   数据包不全  %d  粘贴数量 %d  粘贴成功  %d  头部信息错误  %d  ",
+					int(end),this.ShowMsgFire,this.ShowMsgReFire,this.ShowMsgCatchFish ,this.ShowMsgReCatchFish,StaticDataPackageHeadLess,StaticDataPackageProtoDataLess,StaticDataPackagePasteNum,StaticDataPackagePasteSuccess,StaticDataPackageHeadFlagError)
 				if IsWebSocket{
-					this.Zlogf(" 当前在线人数 socket 0 wsocket %d " ,wsclients[0].Number())
+					log.PrintfLogger(" 当前在线人数 socket 0 wsocket %d " ,wsclients[0].Number())
 				}else{
-					this.Zlogf(" 当前在线人数 socket %d wsocket 0  " ,clients[0].Number())
+					log.PrintfLogger(" 当前在线人数 socket %d wsocket 0  " ,clients[0].Number())
 				}
 
 				this.ShowMsgFire = 0
@@ -214,17 +216,18 @@ func (this *Client)handlerRead(buf []byte) int {
 				this.ShowMsgReCatchFish=0
 
 				//GlobalMutex.Lock()
-				sendMsgNum = 0
-				receiveMsgNum =0
+				//sendMsgNum = 0
+				//receiveMsgNum =0
 				//GlobalMutex.Unlock()
 			}
 		}
 	}
 
 
-	GlobalMutex.Lock()
-	receiveMsgNum++
-	GlobalMutex.Unlock()
+	//GlobalMutex.Lock()
+	this.ReceiveMsgNum++
+	//GlobalMutex.Unlock()
+	this.SuccessBuf = buf 	// 记录最后一次成功的buf
 
 	return BufAllSize
 }

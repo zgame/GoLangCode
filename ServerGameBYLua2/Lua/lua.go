@@ -14,6 +14,7 @@ import (
 
 //var GameManagerReceiveCh chan lua.LValue		// 这是每个玩家线程跟主线程之间的通信用channel
 //var GameManagerSendCh chan lua.LValue			// 这是主线程给每个玩家线程跟之间的通信用channel
+var GameManagerLuaHandle *MyLua		// 主线程的lua句柄
 
 
 type MyLua struct {

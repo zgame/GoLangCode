@@ -128,6 +128,7 @@ func DealRecvTcpEndData(msg []byte) uint8  {
 // 00 0000 0700 0700 6900 0000 0a05082f10970100000007000700690000000a050830109801000000070007006
 // 0 - msgSize - size -  maincmd - childcmd - 0
 //---------------------------------------------------------------
+// fe 0000 1600 0700 6a00 b204 08dfff98e005150000
 
 func GetSendTcpHeaderData(maincmd uint16, childcmd uint16, size uint16, msgSize uint16, token uint16) []byte {
 

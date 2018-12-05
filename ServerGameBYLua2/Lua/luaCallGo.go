@@ -6,6 +6,7 @@ import (
 	"../Utils/ztimer"
 	"../Utils/zRedis"
 	"../NetWork"
+	"time"
 )
 
 //--------------------------------------------------------------------------------
@@ -21,6 +22,8 @@ func (m *MyLua)InitResister() {
 	m.L.SetGlobal("luaCallGoNetWorkSend", m.L.NewFunction(luaCallGoNetWorkSend))		//注册到lua 网络发送函数
 	m.L.SetGlobal("luaCallGoPrintLogger", m.L.NewFunction(luaCallGoPrintLogger))		//注册到lua 日志打印
 	m.L.SetGlobal("luaCallGoGetOsTimeMillisecond", m.L.NewFunction(luaCallGoGetOsTimeMillisecond))		//注册到lua 获取毫秒时间
+	m.L.SetGlobal("luaCallGoCreateNewTimer", m.L.NewFunction(luaCallGoCreateNewTimer))		//注册到lua 设置定时器
+	m.L.SetGlobal("luaCallGoCreateNewClockTimer", m.L.NewFunction(luaCallGoCreateNewClockTimer))		//注册到lua 设置定时器，固定时间
 	m.L.SetGlobal("luaCallGoResisterUID", m.L.NewFunction(luaCallGoResisterUID))		//注册到lua 将uid注册到列表中
 	m.L.SetGlobal("luaCallGoRedisSaveString", m.L.NewFunction(luaCallGoRedisSaveString))		//注册到lua redis save
 	m.L.SetGlobal("luaCallGoRedisGetString", m.L.NewFunction(luaCallGoRedisGetString))		//注册到lua redis load
@@ -81,27 +84,49 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 }
 
 
+// user id 要注册，方便以后查询
+func luaCallGoResisterUID(L * lua.LState) int  {
+	uid := L.ToNumber(1)                        // 玩家uid
+	serverId := L.ToNumber(2)                   //
+	server := GetMyServerByLSate(int(serverId)) // my server
+	luaUIDConnectMyServer[int(uid)] = server    // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
+	server.UserId = int(uid)                    // 保存uid
+	return 0
+}
+
+
+//--------------------------------Utils-------------------------------------
 // lua的日志处理
 func luaCallGoPrintLogger(L * lua.LState) int  {
 	str := L.ToString(1)
 	log.PrintLogger(str)
 	return 0
 }
-//
-//// lua 创建一个go协程
-//func luaCallGoCreateGoroutine(L * lua.LState) int  {
-//	funcName := L.ToString(1)
-//	go func() {
-//		if err := L.CallByParam(lua.P{
-//			Fn: L.GetGlobal(funcName),		// lua的函数名字
-//			NRet: 0,
-//			Protect: true,
-//		}); err != nil {		// 参数
-//			fmt.Println("luaCallGoCreateGoroutine error :",err.Error())
-//		}
-//	}()
-//	return 0
-//}
+
+// lua 创建一个计时器
+func luaCallGoCreateNewTimer(L * lua.LState) int  {
+	funcName := L.ToString(1)	// 定期调用函数名字
+	time1 := L.ToInt(2) 			// 时间，秒
+
+	ztimer.TimerCheckUpdate(func() {
+		GameManagerLuaHandle.GoCallLuaLogic(funcName) //定时调用函数
+	},  time.Duration(time1) )
+
+
+	return 0
+}
+
+// lua 创建一个到固定时间触发器
+func luaCallGoCreateNewClockTimer(L * lua.LState) int  {
+	funcName := L.ToString(1)	// 定期调用函数名字
+	clock := L.ToInt(2) 			// 时间，几点，24小时制
+
+	ztimer.TimerClock(func() {
+		GameManagerLuaHandle.GoCallLuaLogic(funcName) //定时调用函数
+	},  clock )
+
+	return 0
+}
 
 // 获取毫秒级系统时间
 func luaCallGoGetOsTimeMillisecond(L *lua.LState) int {
@@ -109,16 +134,9 @@ func luaCallGoGetOsTimeMillisecond(L *lua.LState) int {
 	return 1
 }
 
-// user id 要注册，方便以后查询
-func luaCallGoResisterUID(L * lua.LState) int  {
-	uid := L.ToNumber(1)                        // 玩家uid
-	serverId := L.ToNumber(2)                   // 玩家uid
-	server := GetMyServerByLSate(int(serverId)) // my server
-	luaUIDConnectMyServer[int(uid)] = server    // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
-	server.UserId = int(uid)                    // 保存uid
-	return 0
-}
 
+
+//--------------------------------Redis-------------------------------------
 // redis set value
 func  luaCallGoRedisSaveString(L * lua.LState) int  {
 	dir := L.ToString(1)

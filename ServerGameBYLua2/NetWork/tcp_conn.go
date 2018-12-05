@@ -4,7 +4,7 @@ import (
 	//"github.com/name5566/leaf/log"
 	"net"
 	"sync"
-	"fmt"
+	"../Utils/log"
 )
 
 //---------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ func newTCPConn(conn net.Conn, pendingWriteNum int) *TCPConn {
 
 			_, err := conn.Write(b)
 			if err != nil {
-				//fmt.Println("tcpConn.writeChan   Error", err.Error())
+				log.PrintfLogger("tcpConn.writeChan Error 发送数据出错 %s", err.Error())
 				break
 			}
 		}
@@ -81,7 +81,7 @@ func (tcpConn *TCPConn) Close() {
 
 func (tcpConn *TCPConn) doWrite(b []byte) {
 	if len(tcpConn.writeChan) == cap(tcpConn.writeChan) {
-		fmt.Println("close conn: channel full")
+		log.PrintfLogger("发送数据包的缓冲区已经满了，关闭该连接!!!")
 		tcpConn.doDestroy()
 		return
 	}

@@ -9,13 +9,13 @@ import (
 	. "./const"
 	"sync"
 	"strconv"
+	"./log"
 )
 var clients []*NetWork.TCPClient
 var wsclients []*NetWork.WSClient
-var receiveMsgNum int		// 接收包数量
-var sendMsgNum int			// 发送包的数量
-var GlobalMutex sync.Mutex // 全局互斥锁
 
+var GlobalMutex sync.Mutex // 全局互斥锁
+var GlobalClients map[*Client] interface{}  // 全局client
 
 var StaticDataPackageHeadLess = 0  // 统计信息，数据包 头部数据不全
 var StaticDataPackageProtoDataLess = 0  // 统计信息，数据包 pb数据不全
@@ -26,6 +26,7 @@ var StaticDataPackageHeadFlagError = 0   // 统计信息，数据包头部标识
 
 
 func StartClient(ConnNum int , IsWebSocket bool) {
+	GlobalClients = make(map[*Client]interface{},0)
 	//IsWebSocket := false
 	if !IsWebSocket {
 		// socket client----------------------------------------------------------
@@ -35,7 +36,7 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 		client.Addr = GameServerAddress+":"+ strconv.Itoa(SocketPort)
 		client.ConnNum = ConnNum
 		client.ConnectInterval = 3 * time.Second
-		client.PendingWriteNum = 100
+		client.PendingWriteNum = 1024 	// 发送缓冲区
 		client.LenMsgLen = 4
 		client.MaxMsgLen = math.MaxUint32
 		client.NewAgent = func(conn *NetWork.TCPConn,index int) NetWork.Agent {
@@ -55,7 +56,7 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 		wsclient.Addr = "ws://"+GameServerAddress+":"+ strconv.Itoa(WebSocketPort)+"/"
 		wsclient.ConnNum = ConnNum
 		wsclient.ConnectInterval = 3 * time.Second
-		wsclient.PendingWriteNum = 100
+		wsclient.PendingWriteNum = 1024 	// 发送缓冲区
 		wsclient.HandshakeTimeout = 10 * time.Second
 		wsclient.MaxMsgLen = math.MaxUint32
 		wsclient.NewAgent = func(conn *NetWork.WSConn,index int) NetWork.Agent {
@@ -82,6 +83,11 @@ func StartClient(ConnNum int , IsWebSocket bool) {
 //}
 
 func (a *Client)init()  {
+	GlobalMutex.Lock()
+	GlobalClients[a]=a
+	GlobalMutex.Unlock()
+
+
 	if a.Index == 0{
 		a.ShowMsgSendTime = true	// 第一个才显示
 	}
@@ -96,18 +102,20 @@ func (a *Client)init()  {
 
 		}
 	}()
-	go func() {
-		for {
-			if !a.StartAI{
-				time.Sleep(time.Millisecond * 100)
-				continue
-			}
-			a.SendMsgTime = a.GetOsTime()
-			a.Send("",MDM_GF_GAME, SUB_S_BOSS_COME)
-			time.Sleep(time.Millisecond * 2000)
+	if a.ShowMsgSendTime {
+		go func() {
+			for {
+				if !a.StartAI {
+					time.Sleep(time.Millisecond * 100)
+					continue
+				}
+				a.SendMsgTime = a.GetOsTime()
+				a.Send("", MDM_GF_GAME, SUB_S_BOSS_COME)
+				time.Sleep(time.Millisecond * 2000)
 
-		}
-	}()
+			}
+		}()
+	}
 }
 
 
@@ -121,7 +129,7 @@ func (a *Client) Run() {
 		//a.ClientMutex.Unlock()
 
 		if err != nil {
-			fmt.Println("跟对方的连接中断了", a.Index)
+			log.PrintfLogger("跟对方的连接中断了 %d", a.Index)
 			break
 		}
 		//if err != nil && err != io.EOF {  //io.EOF在网络编程中表示对端把链接关闭了。
@@ -132,7 +140,7 @@ func (a *Client) Run() {
 		//	return false
 		//}
 		if bufLen <= 0{
-			fmt.Println("收到的数据为空！", bufLen)
+			log.PrintfLogger("收到的数据为空！ %d", bufLen)
 			break
 		}
 		bufHead := 0
@@ -140,9 +148,9 @@ func (a *Client) Run() {
 		for {
 			if a.ReceiveBuf !=nil {
 				//str:= fmt.Sprintf("%d上次buf: %x ", this.Index,this.ReceiveBuf)
-				//this.Zlog(str)
+				//this.PrintLogger(str)
 				//str= fmt.Sprintf("%d本次buf: %x ", this.Index,buf)
-				//this.Zlog(str)
+				//this.PrintLogger(str)
 
 				GlobalMutex.Lock()
 				StaticDataPackagePasteNum++
@@ -152,7 +160,7 @@ func (a *Client) Run() {
 				copy(buf2, a.ReceiveBuf)
 				copy(buf2[len(a.ReceiveBuf):],buf[:bufLen])
 				//str= fmt.Sprintf("%d合并后buf2: %x ", this.Index,buf2)
-				//this.Zlog(str)
+				//this.PrintLogger(str)
 				buf = buf2
 				bufLen= len(buf2)
 			}
@@ -168,7 +176,7 @@ func (a *Client) Run() {
 			}else if bufHeadTemp > 0 {				// 解析完成
 				if a.ReceiveBuf != nil {			// 如果是拼接包，清理一下
 					//str := fmt.Sprintf("%d 拼接后成功解析%x", this.Index, buf)
-					//this.Zlog(str)
+					//this.PrintLogger(str)
 					GlobalMutex.Lock()
 					StaticDataPackagePasteSuccess++
 					GlobalMutex.Unlock()
@@ -176,10 +184,16 @@ func (a *Client) Run() {
 					a.ReceiveBuf = nil
 				}
 			}else if bufHeadTemp == -1 {
-				break 		//数据包不正确，放弃
+				log.PrintfLogger("最后一次成功的buf：%x  bufHeadTemp%d  bufHead %d",a.SuccessBuf , bufHeadTemp, bufHead)
+				log.PrintfLogger("最后一次接收的buf：%x  len:%d",a.LastBuf, len(a.LastBuf))
+				return 		//数据包不正确，关闭连接
 			}
 
 			if bufHead >= bufLen {
+				a.LastBuf = buf[:bufLen]		//记录上次接收buf
+				if bufHead > bufLen{
+					log.PrintfLogger(" %d bufHead  %d > bufLen %d  bufHeadTemp %d  buf：%x", a.Index, bufHead ,  bufHeadTemp ,bufLen,buf[:bufLen])
+				}
 				break //解析结束，等待下一次继续接受
 			}
 		}
@@ -190,7 +204,11 @@ func (a *Client) Run() {
 }
 
 func (a *Client) OnClose() {
+	GlobalMutex.Lock()
+	delete(GlobalClients,a)
+	GlobalMutex.Unlock()
 
+	//PrintfLogger("%d 下线了", a.Index)
 }
 
 func (a *Client) WriteMsg(msg... []byte) {
