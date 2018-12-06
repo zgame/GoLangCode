@@ -24,7 +24,6 @@ var StaticDataPackagePasteSuccess = 0   // 统计信息，成功拼接后，解�
 var StaticDataPackageHeadFlagError = 0   // 统计信息，数据包头部标识不正确
 
 
-
 func StartClient(start int ,end int, IsWebSocket bool) {
 	GlobalClients = make(map[*Client]interface{},0)
 	//IsWebSocket := false
@@ -35,8 +34,8 @@ func StartClient(start int ,end int, IsWebSocket bool) {
 		client := new(NetWork.TCPClient)
 		client.Addr = GameServerAddress+":"+ strconv.Itoa(SocketPort)
 		client.ConnNum = 1  //废了
-		client.ConnectInterval = 3 * time.Second
-		client.PendingWriteNum = 100 	// 发送缓冲区
+		client.ConnectInterval = 3 * time.Second	// 客户端自动重连
+		client.PendingWriteNum = 1 	// 发送缓冲区
 		client.LenMsgLen = 4
 		client.MaxMsgLen = math.MaxUint32
 		client.NewAgent = func(conn *NetWork.TCPConn,index int) NetWork.Agent {
@@ -55,8 +54,8 @@ func StartClient(start int ,end int, IsWebSocket bool) {
 		wsclient := new(NetWork.WSClient)
 		wsclient.Addr = "ws://"+GameServerAddress+":"+ strconv.Itoa(WebSocketPort)+"/"
 		wsclient.ConnNum = 1
-		wsclient.ConnectInterval = 3 * time.Second
-		wsclient.PendingWriteNum = 100 	// 发送缓冲区
+		wsclient.ConnectInterval = 3 * time.Second// 客户端自动重连
+		wsclient.PendingWriteNum = 1 	// 发送缓冲区
 		wsclient.HandshakeTimeout = 10 * time.Second
 		wsclient.MaxMsgLen = math.MaxUint32
 		wsclient.NewAgent = func(conn *NetWork.WSConn,index int) NetWork.Agent {
