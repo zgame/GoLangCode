@@ -136,3 +136,7 @@ func (tcpConn *TCPConn) WriteMsg(args ...[]byte) error {
 	tcpConn.Write(args[0])
 	return nil
 }
+
+func (tcpConn *TCPConn) GetWriteChanCap() int {
+	return  len(tcpConn.writeChan)
+}

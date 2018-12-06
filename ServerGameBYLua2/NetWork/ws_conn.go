@@ -150,3 +150,6 @@ func (wsConn *WSConn) WriteMsg(args ...[]byte) error {
 
 	return nil
 }
+func (wsConn *WSConn) GetWriteChanCap() int {
+	return  len(wsConn.writeChan)
+}

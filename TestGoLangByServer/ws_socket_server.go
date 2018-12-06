@@ -35,7 +35,7 @@ func StartClient(start int ,end int, IsWebSocket bool) {
 		client.Addr = GameServerAddress+":"+ strconv.Itoa(SocketPort)
 		client.ConnNum = 1  //废了
 		client.ConnectInterval = 3 * time.Second	// 客户端自动重连
-		client.PendingWriteNum = 1 	// 发送缓冲区
+		client.PendingWriteNum = 100 	// 发送缓冲区
 		client.LenMsgLen = 4
 		client.MaxMsgLen = math.MaxUint32
 		client.NewAgent = func(conn *NetWork.TCPConn,index int) NetWork.Agent {
@@ -55,7 +55,7 @@ func StartClient(start int ,end int, IsWebSocket bool) {
 		wsclient.Addr = "ws://"+GameServerAddress+":"+ strconv.Itoa(WebSocketPort)+"/"
 		wsclient.ConnNum = 1
 		wsclient.ConnectInterval = 3 * time.Second// 客户端自动重连
-		wsclient.PendingWriteNum = 1 	// 发送缓冲区
+		wsclient.PendingWriteNum = 100 	// 发送缓冲区
 		wsclient.HandshakeTimeout = 10 * time.Second
 		wsclient.MaxMsgLen = math.MaxUint32
 		wsclient.NewAgent = func(conn *NetWork.WSConn,index int) NetWork.Agent {

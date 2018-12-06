@@ -11,7 +11,10 @@ ServerStateSendNum = 0      -- 平均网络发送包数量
 ServerStateReceiveNum = 0   -- 平均网络接收包数量
 
 
-
+ZswLogShowSendMsgNum = 0        -- 发送数量
+ZswLogShowSendMsgLastTime = 0   -- 发送时间
+ZswLogShowReceiveMsgNum = 0     -- 接收数量
+ZswLogShowReceiveLastTime = 0      -- 接收时间
 
 
 

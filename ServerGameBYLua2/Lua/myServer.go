@@ -55,10 +55,13 @@ func GetAllConnectMsg() string  {
 	successRecClients := 0
 	successSendMsg := 0
 	successRecMsg := 0
+	WriteChan := 0
+	AllConnect :=0
 
 	GlobalVar.RWMutex.RLock()
 	for _,v := range luaConnectMyServer{
 		if v!=nil {
+			AllConnect ++
 			connNum += len(v.ReceiveBuf)
 			if v.SendMsgNum>0{
 				successSendClients++
@@ -70,11 +73,15 @@ func GetAllConnectMsg() string  {
 				successRecMsg += v.ReceiveMsgNum
 				v.ReceiveMsgNum = 0
 			}
+			WriteChan += v.conn.GetWriteChanCap()
 		}
 	}
+	//if AllConnect>0{
+	//	WriteChan = WriteChan/AllConnect
+	//}
 	GlobalVar.RWMutex.RUnlock()
-	str:=fmt.Sprintf(" 用户正常发送消息数量 %d  正常接收  %d 每秒5发送 %d  每5秒接收 %d  goroutine数量 %d cpu %d ",   successSendClients, successRecClients, successSendMsg , successRecMsg, runtime.NumGoroutine(),runtime.NumCPU())
-	return "所有连接数量："+ strconv.Itoa(len(luaConnectMyServer)) + "  所有包不全缓存大小:" + strconv.Itoa(connNum) + str
+	str:=fmt.Sprintf(" 用户正常发送消息数量 %d  正常接收  %d 每秒5发送 %d  每5秒接收 %d  goroutine数量 %d cpu %d  发送缓存平均占用%d",   successSendClients, successRecClients, successSendMsg , successRecMsg, runtime.NumGoroutine(),runtime.NumCPU(), WriteChan)
+	return "所有连接数量："+ strconv.Itoa(AllConnect) + "  所有包不全缓存大小:" + strconv.Itoa(connNum) + str
 }
 
 

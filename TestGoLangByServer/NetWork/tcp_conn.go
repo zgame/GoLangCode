@@ -131,12 +131,15 @@ func (tcpConn *TCPConn) ReadMsg() ([]byte, int, error) {
 func (tcpConn *TCPConn) WriteMsg(args ...[]byte) error {
 
 	//return tcpConn.msgParser.Write(tcpConn, args...)
-	//_, err :=tcpConn.conn.Write(args[0])
-	//if err != nil {
-	//	log.PrintfLogger("TCPConn .写入错误 %s", err.Error())
-	//	return err
-	//}
+	_, err :=tcpConn.conn.Write(args[0])
+	if err != nil {
+		log.PrintfLogger("TCPConn .写入错误 %s", err.Error())
+		return err
+	}
 
-	tcpConn.Write(args[0])
+	//tcpConn.Write(args[0])
 	return nil
+}
+func (tcpConn *TCPConn) GetWriteChanCap() int {
+	return  len(tcpConn.writeChan)
 }

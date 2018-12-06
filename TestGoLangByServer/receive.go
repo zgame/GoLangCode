@@ -15,7 +15,7 @@ func (this *Client)handlerRead(buf []byte) int {
 
 	//------------------------头部判断----------------------
 	if len(buf)< NetWork.TCPHeaderSize {		// 接受不全，那么缓存
-		log.PrintfLogger("数据包头部小于 10 : %x   ",buf)
+		//log.PrintfLogger("数据包头部小于 10 : %x   ",buf)
 		GlobalMutex.Lock()
 		StaticDataPackageHeadLess++
 		GlobalMutex.Unlock()

@@ -5,15 +5,9 @@
 ---
 
 
-require("gameFire")
-require("gameEnter")
-require("LoginServer")
-require("Statistic")
 
-local ZswLogShowSendMsgNum = 0        -- 发送数量
-local ZswLogShowSendMsgLastTime = 0   -- 发送时间
-local ZswLogShowReceiveMsgNum = 0     -- 接收数量
-local ZswLogShowReceiveLastTime = 0      -- 接收时间
+
+
 ----------------------------------------------------------------------
 ---发送消息
 ----------------------------------------------------------------------

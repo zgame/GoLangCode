@@ -4,6 +4,10 @@
 --- DateTime: 2018/10/12 15:00
 ---
 
+-------------------------------------热更新----------------------------------------
+--- 热更新文件列表
+-----------------------------------------------------------------------------
+
 
 local function reloadFile(module_name)
     package.loaded[module_name] = nil
@@ -22,9 +26,14 @@ function ReloadAll()
     -- CSV
     reloadFile("Script/CSV/mgby_fish_sever")
 
+    -- Protocol
+    reloadFile("Script/Protocol/build/CMD_Game_pb")
+    reloadFile("Script/Protocol/build/CMD_GameServer_pb")
+
     -- Const
     reloadFile("Script/Const/Const")
     reloadFile("Script/Const/Excel")
+    reloadFile("Script/Const/Proto")
     reloadFile("Script/Const/protocol_cs")
     reloadFile("Script/Const/protocol_gs")
     reloadFile("Script/Const/protocol_ls")
@@ -50,29 +59,24 @@ function ReloadAll()
     reloadFile("Script/Games/BY/byTable")
 
     -- GameManager
-    reloadFile("Script/GameManager/gameManager")
-    reloadFile("Script/GameManager/games")
     reloadFile("Script/GameManager/player")
     reloadFile("Script/GameManager/user")
+    reloadFile("Script/GameManager/games")
+    reloadFile("Script/GameManager/gameManager")
 
 
     -- GlobalVar    -- 注意事项： 因为这里有游戏的全局变量，所以不能reload
 
-
     -- NetWork
-    reloadFile("Script/NetWork/network")
     reloadFile("Script/NetWork/LoginServer")
     reloadFile("Script/NetWork/gameFire")
     reloadFile("Script/NetWork/gameEnter")
     reloadFile("Script/NetWork/Statistic")
-
-    -- Protocol
---    reloadFile("Script/Protocol/build/CMD_Game_pb")
---    reloadFile("Script/Protocol/build/CMD_GameServer_pb")
+    reloadFile("Script/NetWork/network")
 
 
     -- main
-    reloadFile("Script/server")
+    --reloadFile("Script/server")
 
 
 end

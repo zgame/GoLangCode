@@ -4,6 +4,11 @@
 --- DateTime: 2018/11/1 14:34
 ---
 
+-------------------------------------说明----------------------------------------
+---本文件是服务器启动的时候加载使用
+-----------------------------------------------------------------------------
+
+
 -------------------------------------CSV----------------------------------------
 package.path = "Script/CSV/?.lua;"..package.path
 --data_csv1 = require("mgby_fish_sever")
@@ -17,7 +22,7 @@ package.path = "Script/Protocol/protobuf/?.lua;"..package.path
 --require("protocol_test")
 --Logger("protocol buffer ok")
 
--------------------------------------system----------------------------------------
+-------------------------------------Const----------------------------------------
 
 package.path = "Script/NetWork/?.lua;"..package.path
 package.path = "Script/GameCommonLogic/?.lua;"..package.path
@@ -35,7 +40,7 @@ require("protocol_gs")
 require("protocol_ls")
 
 
-
+-------------------------------------Const----------------------------------------
 require("commonLogic")
 require("hotReload")
 require("Time")
@@ -45,16 +50,29 @@ require("zTable")
 require("zRedis")
 
 --Logger("system ok")
+-------------------------------------NetWork----------------------------------------
 
-
-require("multiThreadChannel")
+--require("multiThreadChannel")
+require("gameFire")
+require("gameEnter")
+require("LoginServer")
+require("Statistic")
 require("network")
+
 -------------------------------------GameManager----------------------------------------
 
 require("globalVar")
 require("player")
 require("user")
+
+package.path = "Script/Games/BY/?.lua;"..package.path
+require("byBullet")
+require("byFish")
+require("byFishDistribute")
+require("byTable")
+
+require("games")
 require("gameManager")
 
 
-
+--print(FishServerExcel["101"].type)
