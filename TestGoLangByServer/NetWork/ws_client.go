@@ -36,7 +36,7 @@ func (client *WSClient) Number() int{
 func (client *WSClient) Start(start int ,end int) {
 	client.init()
 
-	for i := start; i < end; i++ {
+	for i := start; i <= end; i++ {
 		client.wg.Add(1)
 		go client.connect(i)
 	}

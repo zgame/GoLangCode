@@ -107,16 +107,17 @@ func (a *MyServer) Run() {
 
 	a.Init()
 	for {
+
 		//a.GlobalMutex.Lock()
 		buf,bufLen, err := a.conn.ReadMsg()
 		//a.GlobalMutex.Unlock()
 		//panic(strconv.Itoa(a.UserId)+"出现严重错误"+strconv.Itoa(a.ServerId))
-		if r := recover(); r != nil {
-			fmt.Printf("panic的内容%v\n", r)
-		}
+		//if r := recover(); r != nil {
+		//	fmt.Printf("panic的内容%v\n", r)
+		//}
 
 		if err != nil {
-			//log.WritefLogger("跟对方的连接中断了")
+			log.PrintfLogger("跟对方的连接中断了")
 			// 中断网络连接，关闭网络连接，关闭lua
 			break
 		}
@@ -137,9 +138,9 @@ func (a *MyServer) Run() {
 			copy(buf2[len(a.ReceiveBuf):],buf[:bufLen])
 			//str= fmt.Sprintf("%d合并后buf2: %x ", a.UserId,buf2)
 			//log.PrintLogger(str)
-			GlobalVar.GlobalMutex.Lock()
+			//GlobalVar.GlobalMutex.Lock()
 			StaticDataPackagePasteNum++
-			GlobalVar.GlobalMutex.Unlock()
+			//GlobalVar.GlobalMutex.Unlock()
 
 			buf = buf2
 			bufLen= len(buf2)
@@ -161,9 +162,9 @@ func (a *MyServer) Run() {
 					//log.PrintLogger(str)
 					a.ReceiveBuf = nil
 
-					GlobalVar.GlobalMutex.Lock()
+					//GlobalVar.GlobalMutex.Lock()
 					StaticDataPackagePasteSuccess ++
-					GlobalVar.GlobalMutex.Unlock()
+					//GlobalVar.GlobalMutex.Unlock()
 				}
 			}else if bufHeadTemp == -1 {
 				a.ReceiveBuf = nil
@@ -201,9 +202,9 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	if len(buf)< NetWork.TCPHeaderSize {
 		//str:= fmt.Sprintf("%d数据包头部数据不全 : %x \n",a.UserId,buf)
 		//log.PrintLogger(str)
-		GlobalVar.GlobalMutex.Lock()
+		//GlobalVar.GlobalMutex.Lock()
 		StaticDataPackageHeadLess ++
-		GlobalVar.GlobalMutex.Unlock()
+		//GlobalVar.GlobalMutex.Unlock()
 
 		return 0
 	}
@@ -216,9 +217,9 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	if headFlag != uint8(254){
 		log.WritefLogger("%d 数据包头部标识不正确 %x",a.UserId, buf)
 
-		GlobalVar.GlobalMutex.Lock()
+		//GlobalVar.GlobalMutex.Lock()
 		StaticDataPackageHeadFlagError ++
-		GlobalVar.GlobalMutex.Unlock()
+		//GlobalVar.GlobalMutex.Unlock()
 		return -1 			// 数据包格式校验不正确
 	}
 
@@ -239,9 +240,9 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	if len(buf) < BufAllSize{
 		//str:= fmt.Sprintf("%d数据包格式不正确buflen%d,bufferSize%d,%x  \n", a.UserId,len(buf),int(bufferSize),buf)
 		//log.PrintLogger(str)
-		GlobalVar.GlobalMutex.Lock()
+		//GlobalVar.GlobalMutex.Lock()
 		StaticDataPackageProtoDataLess ++
-		GlobalVar.GlobalMutex.Unlock()
+		//GlobalVar.GlobalMutex.Unlock()
 		//a.ReceiveBuf = buf			// 接受不全，那么缓存
 		return  0 //int(bufferSize) + offset
 	}
@@ -296,14 +297,20 @@ func (a *MyServer) OnClose() {
 	//luaUIDConnectMyServer[a.UserId] = nil
 	GlobalVar.RWMutex.Unlock()
 
-	runtime.GC()
+	//runtime.GC()
 
 }
 
 // ---------------------发送数据到网络-------------------------
+
+func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int) bool{
+	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
+	return a.WriteMsg(bufferEnd)
+}
+
 func (a *MyServer) WriteMsg(msg ... []byte) bool{
 	if a == nil ||  a.conn == nil{
-		log.PrintLogger("myserver 当前连接已经关闭, 不发送了")
+		log.PrintLogger("当前连接已经关闭, 不发送了")
 		return false
 	}
 

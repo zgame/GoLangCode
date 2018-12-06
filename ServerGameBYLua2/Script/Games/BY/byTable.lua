@@ -72,15 +72,15 @@ function ByTable:RunTable()
                 self.LastRunTime = GetOsTimeMillisecond()
             end
             -- 检查玩家的情况，如果玩家长期离线，那么t掉，没人就清空桌子
-            for k, player in pairs(self.UserSeatArray) do
-                if player.NetWorkState == false then
-                    if now - player.NetWorkCloseTimer > ConstPlayerNetworkWaitTime then
-                        -- 玩家长时间断线，t掉吧
-                        self:PlayerStandUp(player.ChairID,player)
-                        --print("长时间断线， t掉这个玩家",player.User.UserId)
-                    end
-                end
-            end
+            --for k, player in pairs(self.UserSeatArray) do
+            --    if player.NetWorkState == false then
+            --        if now - player.NetWorkCloseTimer > ConstPlayerNetworkWaitTime then
+            --            -- 玩家长时间断线，t掉吧
+            --            self:PlayerStandUp(player.ChairID,player)
+            --            Logger("长时间断线， t掉这个玩家"..player.User.UserId)
+            --        end
+            --    end
+            --end
         end
     end
     local game = GetGameByID(self.GameID)
@@ -215,6 +215,7 @@ function ByTable:PlayerSeat(seatID,player)
 end
 ----玩家离开椅子
 function ByTable:PlayerStandUp(seatID,player)
+    Logger(player.User.UserId.."离开桌子"..player.TableID.."椅子"..player.ChairID)
     local game = GetGameByID(player.GameType)
     AllPlayerList[player.User.UserId] = nil         -- 清理掉游戏管理的玩家总列表
     self.UserSeatArray[seatID] = nil                -- 清理掉桌子的玩家列表
@@ -226,6 +227,7 @@ function ByTable:PlayerStandUp(seatID,player)
     --如果是空桌子的话，清理一下桌子
     if self:CheckTableEmpty() then
         self:ClearTable()
+
         RedisDelGameState(self.GameID, self.TableID)   -- 把记录桌子状态的redis删掉
         game:ReleaseTableByUID(self.TableID)    --回收桌子
     end
@@ -416,8 +418,9 @@ function ByTable:SendMsgToAllUsers(mainCmd,subCmd,sendCmd)
             local result = LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
             if not result then
                 -- 发送失败了，玩家网络中断了
-                player.NetWorkState = false
-                player.NetWorkCloseTimer = GetOsTimeMillisecond()
+                --player.NetWorkState = false
+                --player.NetWorkCloseTimer = GetOsTimeMillisecond()
+                self:PlayerStandUp(player.ChairID,player)
             end
         end
     end

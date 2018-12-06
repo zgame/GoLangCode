@@ -5,7 +5,6 @@ import (
 	"../Utils/log"
 	"../Utils/ztimer"
 	"../Utils/zRedis"
-	"../NetWork"
 	"time"
 )
 
@@ -63,18 +62,21 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 
 	// lua传递过来之后， 立即开启一个新的协程去专门做发送工作
 	//go func() {
-	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
+	//bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
 	//_, err := Conn.Write(bufferEnd)
 	//log.CheckError(err)
+
 
 	var result bool
 	// 发送出去
 	if userId == 0 {
 		// 给玩家自己回复消息
-		result = GetMyServerByLSate(serverId).WriteMsg(bufferEnd)
+		result = GetMyServerByLSate(serverId).SendMsg(data, msg, mainCmd, subCmd)
+		//result = GetMyServerByLSate(serverId).WriteMsg(bufferEnd)
 	} else {
 		// 给其他玩家发送消息
-		result = GetMyServerByUID(userId).WriteMsg(bufferEnd)
+		result = GetMyServerByUID(userId).SendMsg(data, msg, mainCmd, subCmd)
+		//result = GetMyServerByUID(userId).WriteMsg(bufferEnd)
 	}
 	//}()
 

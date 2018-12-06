@@ -60,11 +60,18 @@ end
 
 -- go通知lua玩家掉线了
 function GoCallLuaPlayerNetworkBroken(uid)
-    --print(uid .. "  掉线了")
+    Logger("go 通知："..uid .. "  掉线了")
     local player = GetPlayerByUID(uid)
+
     if player ~= nil then
-        player.NetWorkState = false
-        player.NetWorkCloseTimer = GetOsTimeMillisecond()
+        local game = GetGameByID(player.GameType)
+        --printTable(game)
+        if game ~= nil then
+            game:PlayerLogOutGame(player)
+            --player.NetWorkState = false
+            --player.NetWorkCloseTimer = GetOsTimeMillisecond()
+
+        end
     end
 end
 

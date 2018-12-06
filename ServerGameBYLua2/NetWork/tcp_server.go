@@ -107,7 +107,7 @@ func (server *TCPServer) run() {
 			agent.Run()
 
 			// cleanup
-			tcpConn.Close()
+			tcpConn.Close()			// 接收的线程关闭的时候， 也会关闭发送的线程
 			server.mutexConns.Lock()
 			delete(server.conns, conn)
 			server.mutexConns.Unlock()

@@ -39,7 +39,7 @@ func (client *TCPClient) Start(start int ,end int) {
 	//fmt.Println("start")
 	client.init()
 
-	for i := start; i < end; i++ {
+	for i := start; i <= end; i++ {
 		client.wg.Add(1)
 		//fmt.Println("for")
 		go client.connect(i)

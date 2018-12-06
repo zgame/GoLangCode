@@ -132,7 +132,7 @@ func (tcpConn *TCPConn) WriteMsg(args ...[]byte) error {
 
 	//return tcpConn.msgParser.Write(tcpConn, args...)
 	//_, err :=tcpConn.conn.Write(args[0])
-
+	//return err
 	tcpConn.Write(args[0])
 	return nil
 }

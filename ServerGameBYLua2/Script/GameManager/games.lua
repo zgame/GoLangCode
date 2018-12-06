@@ -70,6 +70,7 @@ end
 function Game:ReleaseTableByUID(tableId)
     if tableId ~= 1 then
         self.AllTableList[tableId] = nil
+        Logger("清理掉桌子"..self.TableID)
     else
         -- 第一个桌子是保留着的
     end
@@ -166,8 +167,10 @@ end
 
 ----玩家登出
 function Game:PlayerLogOutGame(player)
-    local table = Game:GetTableByUID(player.TableID)
-    table:PlayerStandUp(player.ChairID, player)        -- 玩家离开桌子
-
-    print("玩家"..player.User.UserId.."离开了")
+    --Logger("玩家登出 "..player.User.UserId.. "    桌子 "..player.TableID)
+    local table = self:GetTableByUID(player.TableID)
+    if table ~= nil then
+        table:PlayerStandUp(player.ChairID, player)        -- 玩家离开桌子
+        --Logger("玩家"..player.User.UserId.."离开桌子 "..player.TableID.."椅子"..player.ChairID)
+    end
 end

@@ -154,7 +154,7 @@ func GetStaticPrint()  {
 	//	WriteChan = WriteChan/AllConnect		// 求一个平均值
 	//}
 	GlobalMutex.Unlock()
-	log.PrintfLogger("连接数量 %d 用户正常发送消息数量 %d  正常接收  %d 每秒发送 %d  每秒接收 %d  goroutine数量 %d  WriteChan数量 %d \n",  AllConnect, successSendClients, successRecClients, successSendMsg , successRecMsg,  runtime.NumGoroutine(),WriteChan)
+	log.PrintfLogger("连接数量 %d 用户正常发送消息数量 %d  正常接收  %d 每秒发送 %d  每秒接收 %d  goroutine数量 %d  WriteChan数量 %d ",  AllConnect, successSendClients, successRecClients, successSendMsg , successRecMsg,  runtime.NumGoroutine(),WriteChan)
 }
 
 
