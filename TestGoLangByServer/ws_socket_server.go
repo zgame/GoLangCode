@@ -87,7 +87,7 @@ func (a *Client)init()  {
 	GlobalMutex.Unlock()
 
 
-	if a.Index == 0{
+	if a.Index == 1{
 		a.ShowMsgSendTime = true	// 第一个才显示
 	}
 	a.SendTokenID = 1

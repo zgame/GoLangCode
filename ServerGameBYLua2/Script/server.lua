@@ -28,6 +28,7 @@ package.path = "Script/GlobalVar/?.lua;"..package.path
 package.path = "Script/GameManager/?.lua;"..package.path
 
 require("Const")
+require("Excel")
 require("protocol_cs")
 require("protocol_gs")
 require("protocol_ls")
@@ -50,6 +51,8 @@ require("network")
 -------------------------------------GameManager----------------------------------------
 
 require("globalVar")
+require("player")
+require("user")
 require("gameManager")
 
 

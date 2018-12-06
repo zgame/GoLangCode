@@ -45,3 +45,6 @@ FT_SMALL = 1 	--小鱼
 FT_MIDSIZE = 2 	--中型鱼
 FT_BIG = 3 	--大型鱼
 FT_BOSS = 4 	--boos鱼
+
+
+

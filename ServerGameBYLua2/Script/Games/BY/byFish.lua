@@ -4,7 +4,7 @@
 --- DateTime: 2018/11/2 16:48
 ---
 
-local FishServerExcel = require("mgby_fish_sever")
+--local FishServerExcel = require("mgby_fish_sever")
 
 Fish = {}
 function Fish:New(uid)

@@ -7,6 +7,9 @@
 -----------------------------game管理桌子和玩家-----------------
 ----------------------------------------------------------------
 package.path = "Script/Games/BY/?.lua;"..package.path
+require("byBullet")
+require("byFish")
+require("byFishDistribute")
 require("byTable")
 
 

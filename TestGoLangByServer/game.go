@@ -231,7 +231,7 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 	checkError(err)
 	//dataJ, _ := json.MarshalIndent(msg, "", " ")
 	//fmt.Printf("%s", dataJ)
-	//fmt.Printf("----------------新增鱼-------------%d\n", this.Index)
+	fmt.Printf("----------------新增鱼-------------%d\n", this.Index)
 
 
 	fish_cnt :=0
@@ -254,8 +254,9 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 		//}
 
 		this.Fish_id = int(v.GetUid())
-		this.do_fire()
+
 	}
+	this.do_fire()
 
 }
 

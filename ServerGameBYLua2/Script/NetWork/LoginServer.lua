@@ -18,7 +18,7 @@ function SevLoginGSGuest(serverId,buf)
     local openId = msg.machine_id
     local UserId = RedisGetPlayerLogin(openId)
     if UserId == "" then
-        print("没有账号，创建一个")
+        --print("没有账号，创建一个")
         UserId = GetLastUserID()
         MyUser = User:New()
         MyUser.FaceId = 0
@@ -41,12 +41,12 @@ function SevLoginGSGuest(serverId,buf)
         RedisSavePlayerLogin(openId,UserId)
         RedisSavePlayer(MyUser)           -- redis 数据库 save
     else
-        print("有账号，那么取出账号的信息")
+        --print("有账号，那么取出账号的信息")
         UserId = tonumber(UserId)       -- 这里需要转一下到数字
         MyUser = RedisGetPlayer(UserId)   -- redis load
     end
 
-    printTable(MyUser)
+    --printTable(MyUser)
     --MyGameType = msg.kind_id
     --if MyGame == nil then
     --    Logger("请求登录游戏类型不正确"..msg.kind_id)

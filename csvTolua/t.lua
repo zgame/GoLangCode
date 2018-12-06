@@ -1,4 +1,6 @@
-module = {
+module('t')
+
+ t = {
 ["1"] = {  name = "xx",  age = 10,  man = true,  },
 ["2"] = {  name = "xx1",  age = 11,  man = true,  },
 ["3"] = {  name = "xx2",  age = 12,  man = true,  },
@@ -20,4 +22,4 @@ module = {
 ["19"] = {  name = "xx18",  age = 28,  man = true,  },
 ["20"] = {  name = "xx19",  age = 29,  man = false,  },
 } 
- return module
+ 

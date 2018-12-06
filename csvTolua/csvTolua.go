@@ -26,6 +26,7 @@ func main() {
 	fmt.Println("--------------------end----------------------")
 }
 
+// 读取csv文件内容
 func readSample(filename string) [][]string {
 	f, err := os.Open(filename)
 	if err != nil {
@@ -61,6 +62,7 @@ func RunCurrentPahtAllFile() error {
 
 
 	rd, err := ioutil.ReadDir(pathname)
+	// 删除老的文件
 	for _, fi := range rd {
 		if !fi.IsDir() {
 			files:= strings.Split(fi.Name(), ".")
@@ -73,6 +75,7 @@ func RunCurrentPahtAllFile() error {
 			}
 		}
 	}
+	//  开始转换csv文件
 	for _, fi := range rd {
 		if fi.IsDir() {
 			//fmt.Printf("[%s]\n", pathname+"\\"+fi.Name())
@@ -84,7 +87,7 @@ func RunCurrentPahtAllFile() error {
 			if fileType == "csv"{
 				fmt.Println("开始转换",fi.Name())
 				rows := readSample(fi.Name())
-				str:= DealRowsData(rows)
+				str:= DealRowsData(fileName,rows)
 				writeLuaFiles(fileName,str)
 			}
 		}
@@ -101,7 +104,7 @@ func getCurrentDirectory() string {
 	return strings.Replace(dir, "\\", "/", -1)
 }
 
-
+// 处理每行每列中的数据
 func getString(RowIndex int, ListIndex int, rows [][]string) string {
 	var strOut string
 	ListName := rows[0][ListIndex] 		// 列名
@@ -137,11 +140,11 @@ func getString(RowIndex int, ListIndex int, rows [][]string) string {
 
 
 // 处理row数据
-func DealRowsData(rows [][]string)  string{
+func DealRowsData(fileName string,rows [][]string)  string{
 	fmt.Println("-----------------------开始处理数据--------------------------")
 	width:= len(rows[0])
 	//fmt.Println("width:",width)
-	StrOut:= "module = {\n"
+	StrOut:=  fmt.Sprintf("module('%s')\n\n %s = {\n" ,fileName,fileName)			// 开头
 	//fmt.Println("",StrOut)
 	
 	//ListName := rows[0]		// 列名
@@ -162,7 +165,7 @@ func DealRowsData(rows [][]string)  string{
 		StrOut += line
 	}
 
-	StrOut += "} \n return module"
+	StrOut += "} \n "		// 结尾
 
 	//fmt.Println("",StrOut)
 	return StrOut

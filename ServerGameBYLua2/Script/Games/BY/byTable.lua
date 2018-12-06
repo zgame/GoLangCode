@@ -3,12 +3,9 @@
 --- Created by Administrator.
 --- DateTime: 2018/11/1 14:59
 ---
-local FishServerExcel = require("mgby_fish_sever")
-require("byBullet")
-require("byFish")
-require("byFishDistribute")
-require("player")
-require("user")
+--local FishServerExcel = require("mgby_fish_sever")
+
+
 
 local CMD_Game_pb = require("CMD_Game_pb")
 

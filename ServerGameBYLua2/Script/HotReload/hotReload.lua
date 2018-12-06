@@ -21,6 +21,7 @@ function ReloadAll()
 
     -- Const
     reloadFile("Script/Const/Const")
+    reloadFile("Script/Const/Excel")
     reloadFile("Script/Const/protocol_cs")
     reloadFile("Script/Const/protocol_gs")
     reloadFile("Script/Const/protocol_ls")
