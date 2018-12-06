@@ -7,7 +7,7 @@
 
 
 
-local CMD_Game_pb = require("CMD_Game_pb")
+--local CMD_Game_pb = require("CMD_Game_pb")
 
 ByTable = {}
 function ByTable:New(tableId,gameTypeId)

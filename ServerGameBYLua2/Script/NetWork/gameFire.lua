@@ -14,7 +14,7 @@
 
 
 
-local CMD_Game_pb = require("CMD_Game_pb")
+--local CMD_Game_pb = require("CMD_Game_pb")
 
 
 ----客户端开火

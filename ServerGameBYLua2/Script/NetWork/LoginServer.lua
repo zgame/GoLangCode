@@ -4,7 +4,7 @@
 --- DateTime: 2018/12/5 14:05
 ---
 
-local CMD_GameServer_pb = require("CMD_GameServer_pb")
+--local CMD_GameServer_pb = require("CMD_GameServer_pb")
 ----游客登录申请,获取玩家的数据， 判断是否已经登录，
 function SevLoginGSGuest(serverId,buf)
     local msg = CMD_GameServer_pb.CMD_GR_LogonUserID()

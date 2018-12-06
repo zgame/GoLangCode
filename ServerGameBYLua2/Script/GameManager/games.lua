@@ -158,7 +158,7 @@ end
 function Game:SendYouLoginToOthers(player,table)
 --    print("玩家",player.User.UserId, "桌子",table.TableID,"椅子",player.ChairID)
 
-    local CMD_Game_pb = require("CMD_Game_pb")
+    --local CMD_Game_pb = require("CMD_Game_pb")
     local sendCmd = CMD_Game_pb.CMD_S_OTHER_ENTER_SCENE()
     sendCmd.user_info.user_id = player.User.UserId
     sendCmd.user_info.chair_id = player.ChairID

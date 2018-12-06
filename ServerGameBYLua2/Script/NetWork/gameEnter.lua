@@ -14,8 +14,8 @@
 
 
 
-local CMD_GameServer_pb = require("CMD_GameServer_pb")
-local CMD_Game_pb = require("CMD_Game_pb")
+--local CMD_GameServer_pb = require("CMD_GameServer_pb")
+--local CMD_Game_pb = require("CMD_Game_pb")
 
 --MyPlayer = nil -- 这是全局的玩家句柄，因为每一个LState是一个单独的lua空间，所以每个玩家都拥有自己单独的MyPlayer句柄
 
