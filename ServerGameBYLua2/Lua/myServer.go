@@ -300,9 +300,9 @@ func (a *MyServer) WriteMsg(msg ... []byte) bool{
 		return false
 	}
 
-	a.MyServerMutex.Lock()
+	//a.MyServerMutex.Lock()
 	err := a.conn.WriteMsg(msg...)
-	a.MyServerMutex.Unlock()
+	//a.MyServerMutex.Unlock()
 
 	if err != nil {
 		//fmt.Printf("玩家的网络中断，不能正常发送消息给该玩家%x \n",msg)

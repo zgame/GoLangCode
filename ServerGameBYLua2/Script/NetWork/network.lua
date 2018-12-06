@@ -110,19 +110,19 @@ function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
         end
     elseif msgId == MDM_GF_FRAME  then
         if subMsgId == SUB_GF_GAME_OPTION  then
-            print("**************游游客进入游戏房间申请***************** ",userId)      ---- 这里是玩家申请登录游戏的类型，进入游戏房间， 分配桌子坐下开始玩 , 客户端需要申请房间的类型
+            --print("**************游游客进入游戏房间申请***************** ",userId)      ---- 这里是玩家申请登录游戏的类型，进入游戏房间， 分配桌子坐下开始玩 , 客户端需要申请房间的类型
             SevEnterScene(userId,data)
         end
     elseif msgId == MDM_GF_GAME  then
         if subMsgId == SUB_C_USER_FIRE  then
-            print("**************客户端开火***************** ",userId)
+            --print("**************客户端开火***************** ",userId)
             HandleUserFire(userId,data)
         elseif subMsgId == SUB_C_CATCH_FISH  then
-            print("*************客户端抓鱼***************** ",userId)
+            --print("*************客户端抓鱼***************** ",userId)
             HandleCatchFish(userId,data)
 
         elseif subMsgId == SUB_S_BOSS_COME  then
-            print("*************暂时用来统计消息的返回时间***************** ",userId)
+            --print("*************暂时用来统计消息的返回时间***************** ",userId)
             HandleStaticsNetWorkTime(userId)
         end
     end

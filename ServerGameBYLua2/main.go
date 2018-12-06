@@ -250,7 +250,7 @@ func NetWorkServerStart()  {
 		wsServer.Addr = ServerAddress + ":"+strconv.Itoa(WebSocketPort)
 		fmt.Println("websocket 绑定："+ wsServer.Addr)
 		wsServer.MaxConnNum = int(math.MaxInt32)
-		wsServer.PendingWriteNum = 1			// 发送区缓存
+		wsServer.PendingWriteNum = 100			// 发送区缓存
 		wsServer.MaxMsgLen = 4096
 		wsServer.HTTPTimeout = 10 * time.Second
 		wsServer.CertFile = ""
@@ -268,7 +268,7 @@ func NetWorkServerStart()  {
 		server.Addr = ServerAddress +":"+strconv.Itoa(SocketPort)
 		fmt.Println("socket 绑定："+ server.Addr)
 		server.MaxConnNum = int(math.MaxInt32)
-		server.PendingWriteNum = 1		// 发送区缓存
+		server.PendingWriteNum = 100		// 发送区缓存
 		server.LenMsgLen = 4
 		server.MaxMsgLen = math.MaxUint32
 		server.NewAgent = func(conn *NetWork.TCPConn) NetWork.Agent {

@@ -46,7 +46,7 @@ function ByTable:RunTable()
     local RunTable = function()
         --print("table       run"..self.TableID)
         if self:CheckTableEmpty() then
-            --            print("这是一个空桌子")
+            --print("这是一个空桌子")
             self.LastRunTime = GetOsTimeMillisecond()
         else
             local now = GetOsTimeMillisecond()
@@ -438,6 +438,7 @@ end
 ----------------------------------------------------------------------------
 ----初始化鱼池的生成组----------------------------
 function ByTable:InitDistributeInfo()
+    --print("初始化鱼池")
     local startId = self.RoomScore * 100
     local endId = startId + 100
 
@@ -468,7 +469,7 @@ end
 ----循环鱼池的生成组
 function ByTable:RunDistributeInfo(roomScore)
     local now = GetOsTimeMillisecond()
-    --printTable(self.DistributeArray)
+
     for k,Distribute in pairs(self.DistributeArray) do
         local kindId = Distribute.FishKindID
         -- 到下一个生成时间了, 那么我们来生成鱼吧
@@ -549,7 +550,7 @@ end
 
 ---- 具体生成鱼
 function ByTable:DistributeNewFish(Distribute,offsetX,offsetY)
---    print("生成一条鱼"..Distribute.FishKindID)
+    --print("生成一条鱼"..Distribute.FishKindID)
     local kindId = Distribute.FishKindID
     -- 创建鱼
     local fish = self:CreateFish()

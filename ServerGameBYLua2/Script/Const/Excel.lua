@@ -5,4 +5,6 @@
 ---
 
 
-FishServerExcel = require("mgby_fish_sever")
+--- 各种类型鱼的定义
+require("mgby_fish_sever")
+FishServerExcel = mgby_fish_sever.mgby_fish_sever
