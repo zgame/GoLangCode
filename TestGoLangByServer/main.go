@@ -55,7 +55,6 @@ func main() {
 	}
 
 
-
 	//LoginServer := f.Section("Server").Key("LoginServer").Value()
 	GameServerAddress = f.Section("Server").Key("GameServerAddress").Value()
 	//GameServerWebSocketAddress = f.Section("Server").Key("GameServerWebSocketAddress").Value()
@@ -82,8 +81,6 @@ func main() {
 			time.Sleep(time.Second)
 		}
 	}
-
-
 
 
 	fmt.Println("max conn start :", ClientStart, "--------", ClientEnd)

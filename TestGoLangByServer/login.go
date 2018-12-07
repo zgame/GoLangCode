@@ -235,6 +235,7 @@ func (this *Client)loginGS() {
 	//this.SendTokenID++
 	//
 	//this.Send(bufferT, data)
+	fmt.Println("申请登录服务器",this.Index,this.build_mac_addr(this.Index) )
 	this.Send(string(data),MDM_GR_LOGON, SUB_GR_LOGON_USERID)
 	//this.SendTokenID++
 }
