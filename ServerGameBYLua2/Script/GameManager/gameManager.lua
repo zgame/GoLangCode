@@ -38,17 +38,23 @@ end
 -- 服务器启动的时候， 从数据库中读取玩家最后的uid
 function GetALLUserUUID()
     --这个要从数据库读取
-
-    --如果读取数据是0，那么就重置
-    if ALLUserUUID == 0 then
+    ALLUserUUID = RedisGetAllPlayersUUID()
+    --print("ALLUserUUID",ALLUserUUID)
+    --如果读取数据是空，那么就重置
+    if ALLUserUUID == "" then
         ALLUserUUID = 1000000000
+        RedisSaveAllPlayersUUID(ALLUserUUID)
+        print("初始化一下 ALLUserUUID",ALLUserUUID)
     end
-
+    --print("ALLUserUUID",ALLUserUUID)
 end
+
 --有一个新的玩家注册了，那么给他分配一个UID
 function GetLastUserID()
     local r = 1     -- math.random(1, 4)        --返回[1,4]的随机整数
-    ALLUserUUID = ALLUserUUID + r            -- 玩家的UID 中间会隔一些数字， 防止玩家挨个去猜UID
+
+    ALLUserUUID = RedisMultiProcessGetAllPlayersUUID(r)     -- 分布式申请UUID
+    Logger("给玩家分配新uid  ALLUserUUID ",ALLUserUUID)
     return ALLUserUUID
 end
 
