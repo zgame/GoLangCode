@@ -228,7 +228,6 @@ function ByTable:PlayerStandUp(seatID,player)
     if self:CheckTableEmpty() then
         self:ClearTable()
 
-        RedisDelGameState(self.GameID, self.TableID)   -- 把记录桌子状态的redis删掉
         game:ReleaseTableByUID(self.TableID)    --回收桌子
     end
 end

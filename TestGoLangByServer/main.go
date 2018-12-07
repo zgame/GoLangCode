@@ -10,7 +10,11 @@ import (
 	"github.com/go-ini/ini"
 	"runtime"
 	"flag"
+
 	"./log"
+	"net/http"
+	_ "net/http/pprof"
+	oldLog "log"
 )
 
 
@@ -38,6 +42,11 @@ var IsWebSocket bool
 // 程序入口
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
+
+	//远程获取pprof数据打开浏览器http://localhost:8080/debug/pprof/
+	go func() {
+		oldLog.Println(http.ListenAndServe("localhost:8080", nil))
+	}()
 
 	f, err := ini.Load("Setting.ini")
 	if err != nil{
@@ -73,6 +82,9 @@ func main() {
 			time.Sleep(time.Second)
 		}
 	}
+
+
+
 
 	fmt.Println("max conn start :", ClientStart, "--------", ClientEnd)
 	StartClient(ClientStart,ClientEnd, IsWebSocket)

@@ -70,7 +70,8 @@ end
 function Game:ReleaseTableByUID(tableId)
     if tableId ~= 1 then
         self.AllTableList[tableId] = nil
-        Logger("清理掉桌子"..self.TableID)
+        RedisDelGameState(self.Id, tableId)   -- 把记录桌子状态的redis删掉
+        Logger("清理掉桌子"..tableId)
     else
         -- 第一个桌子是保留着的
     end

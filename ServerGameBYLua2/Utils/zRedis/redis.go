@@ -97,9 +97,9 @@ func GetStringFromRedis(dir string,key string) string {
 }
 
 
-// 获取数据
+//删除数据
 func DelKeyToRedis(dir string,key string){
-	_, err :=  RRedis.Do("hget",dir, key)
+	_, err :=  RRedis.Do("hdel",dir, key)
 	if err !=nil {
 		fmt.Println("redis 删除key出错了:", err, key)
 	}

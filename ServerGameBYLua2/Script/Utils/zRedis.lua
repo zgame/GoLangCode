@@ -56,6 +56,8 @@ function RedisSaveGameState(gameType,tableId, state)
 end
 
 function RedisDelGameState(gameType,tableId)         -- 清理掉桌子的运行状态
+    print("gameType",gameType)
+    print("tableId",tableId)
     RedisDelKey(RedisDirGameState..ServerIP_Port..":GameID_"..gameType..":TableId"..tableId ,tableId)
 end
 

@@ -22,6 +22,10 @@ import (
 	"./GlobalVar"
 	"runtime"
 	"flag"
+	"net/http"
+
+	_ "net/http/pprof"
+	oldLog "log"
 )
 
 
@@ -62,6 +66,10 @@ var GameManagerLuaReloadTime int // 公共逻辑处理的lua更新时间
 func main() {
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
+	//远程获取pprof数据打开浏览器http://localhost:8090/debug/pprof/
+	go func() {
+		oldLog.Println(http.ListenAndServe("localhost:8090", nil))
+	}()
 
 	fmt.Println("------------------首先读取命令行参数---------------------------")
 	wsPort := flag.Int("WebSocketPort", 0, "")

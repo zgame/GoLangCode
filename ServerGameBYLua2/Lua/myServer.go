@@ -85,6 +85,9 @@ func GetAllConnectMsg() string  {
 }
 
 
+
+
+
 // 分配一个玩家处理逻辑模块的内存
 func NewMyServer(conn NetWork.Conn,GameManagerLua *MyLua)  *MyServer{
 	//myLua := NewMyLua()

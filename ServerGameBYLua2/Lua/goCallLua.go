@@ -4,6 +4,7 @@ import (
 	"github.com/yuin/gopher-lua"
 	"fmt"
 	"../GlobalVar"
+	"../Utils/log"
 )
 
 //--------------------------------------------------------------------------------
@@ -39,7 +40,7 @@ func (m *MyLua) GoCallLuaLogic(funcName string) {
 		NRet: 0,
 		Protect: true,
 	}); err != nil {		// 参数
-		fmt.Println("GoCallLuaLogic error :",funcName, "      ",err.Error())
+		log.PrintLogger("GoCallLuaLogic error :"+funcName+"      "+err.Error())
 	}
 	GlobalVar.GlobalMutex.Unlock()
 }
@@ -52,7 +53,7 @@ func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMs
 		NRet: 0,
 		Protect: true,
 	}, lua.LNumber(serverId),lua.LNumber(userId),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf)); err != nil {		// 参数
-		fmt.Println("GoCallLuaNetWorkReceive  error :",msgId , subMsgId, buf, "      ",err.Error())
+		log.PrintfLogger("GoCallLuaNetWorkReceive  error :  msgId:%d  subMsgId %d  buf:%s   error:%s",msgId , subMsgId, buf, err.Error())
 	}
 	GlobalVar.GlobalMutex.Unlock()
 }
@@ -65,7 +66,7 @@ func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
 		NRet: 0,
 		Protect: true,
 	},lua.LNumber(ii)); err != nil {		// 参数
-		fmt.Println("GoCallLuaLogicInt error :", funcName ,"      ",err.Error())
+		log.PrintLogger("GoCallLuaLogicInt error :"+ funcName+"      "+err.Error())
 	}
 	GlobalVar.GlobalMutex.Unlock()
 }
@@ -83,7 +84,7 @@ func (m *MyLua)GoCallLuaReload() error {
 
 	GlobalVar.GlobalMutex.Unlock()
 	if err != nil {
-		fmt.Println("热更新出错 ",err.Error())
+		log.PrintLogger("热更新出错 "+err.Error())
 	}
 	return err
 }
