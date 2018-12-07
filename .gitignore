@@ -1,3 +1,5 @@
 
 *.iml
 *.xml
+ServerGameBYLua2/Logs/*.log
+TestGoLangByServer/Log.log
