@@ -27,6 +27,7 @@ func (m *MyLua)InitResister() {
 	m.L.SetGlobal("luaCallGoRedisSaveString", m.L.NewFunction(luaCallGoRedisSaveString))		//注册到lua redis save
 	m.L.SetGlobal("luaCallGoRedisGetString", m.L.NewFunction(luaCallGoRedisGetString))		//注册到lua redis load
 	m.L.SetGlobal("luaCallGoRedisDelKey", m.L.NewFunction(luaCallGoRedisDelKey))		//注册到lua redis del key
+	m.L.SetGlobal("luaCallGoAddNumberToRedis", m.L.NewFunction(luaCallGoAddNumberToRedis))		//注册到lua redis add number
 
 	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
 
@@ -164,4 +165,13 @@ func  luaCallGoRedisDelKey(L * lua.LState) int  {
 	key := L.ToString(2)
 	zRedis.DelKeyToRedis(dir , key)
 	return 0
+}
+// redis add number
+func  luaCallGoAddNumberToRedis(L * lua.LState) int  {
+	dir := L.ToString(1)
+	key := L.ToString(2)
+	num := L.ToInt(3)
+	value := zRedis.AddNumberToRedis(dir , key, num)
+	L.Push(lua.LNumber(value))
+	return 1
 }

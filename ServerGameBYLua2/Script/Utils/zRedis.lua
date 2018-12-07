@@ -18,6 +18,11 @@ function RedisDelKey(dir,key)
     luaCallGoRedisDelKey(dir,key)
 end
 
+----------------------------分布式的数字增加， 可广泛用于多个进程高并发同时处理同一个数据， 保证数据的原子性----------------------------
+function RedisAddNumber(dir,key,num)
+    return luaCallGoAddNumberToRedis(dir,key,num)       -- 返回增加之后的结果
+end
+
 
 
 

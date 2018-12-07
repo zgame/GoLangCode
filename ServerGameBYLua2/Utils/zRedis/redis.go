@@ -3,7 +3,6 @@ package zRedis
 import (
 	//"github.com/gomodule/redigo/redis"
 	"github.com/garyburd/redigo/redis"
-	"fmt"
 	"../log"
 )
 
@@ -13,39 +12,19 @@ var RRedis redis.Conn
 func InitRedis(address string, pwd string) bool{
 	re, err := redis.Dial("tcp", address)
 	if err != nil {
-		fmt.Println("Redis 服务器连接不上"+ address,err.Error())
+		log.PrintLogger("Redis 服务器连接不上"+ address + err.Error())
 		return false
 	}
 	// 密码验证
 	if _, err := re.Do("AUTH", pwd); err != nil {
 		re.Close()
-		fmt.Println("Redis 服务器密码不正确")
+		log.PrintLogger("Redis 服务器密码不正确")
 		return false
 	}
 	RRedis = re
 	return true
 }
 
-//func newPool(host string, db int) *redis.Pool {
-//	return &redis.Pool {
-//		MaxIdle: 50,
-//		MaxActive: 100,
-//		Dial: func() (redis.Conn, error) {
-//			options := redis.DialDatabase(db)
-//			//redis.DialPassword("zsw123")
-//			c, err := redis.Dial("tcp", host, options)
-//			if err != nil {
-//				panic(err.Error())
-//			}
-//			// 密码验证
-//			//if _, err := c.Do("AUTH", "zsw123"); err != nil {
-//			//	c.Close()
-//			//	return nil, err
-//			//}
-//			return c, err
-//		},
-//	}
-//}
 
 
 // 保存数据            dir 组信息 key value
@@ -54,8 +33,8 @@ func SaveStringToRedis(dir string, key string,value string)  {
 	//data, _ := json.MarshalIndent(player, "", " ")
 	//key := "BY_Player_UID_"+ strconv.Itoa(int( player.UserId))
 
-	_, err := RRedis.Do("hdel", dir, key)
-	_, err = RRedis.Do("hset", dir, key,value)
+	//_, err := RRedis.Do("hdel", dir, key)
+	_, err := RRedis.Do("hset", dir, key,value)
 	if err !=nil {
 		log.PrintLogger("redis 保存的时候出错了:"+err.Error())
 	}
@@ -79,7 +58,7 @@ func GetStringFromRedis(dir string,key string) string {
 	//fmt.Println(reflect.TypeOf(ret))
 
 	if err !=nil {
-		fmt.Println("redis 读取出错了:", err)
+		log.PrintLogger("redis 读取出错了:"+err.Error())
 	}
 	//fmt.Println(ret.(string))
 	//var player Player.Player
@@ -101,7 +80,7 @@ func GetStringFromRedis(dir string,key string) string {
 func DelKeyToRedis(dir string,key string){
 	_, err :=  RRedis.Do("hdel",dir, key)
 	if err !=nil {
-		fmt.Println("redis 删除key出错了:", err, key)
+		log.PrintfLogger("redis 删除key %s 出错了:"+err.Error(), key)
 	}
 }
 
@@ -109,82 +88,24 @@ func DelKeyToRedis(dir string,key string){
 
 
 
+// 执行脚本，用于分布式，不用加锁的情况，因为脚本一次性执行的，类似存储过程
+var AddScript = redis.NewScript(2,`
+   local r = redis.call('hget',KEYS[1],KEYS[2])
+   if r ~= nil then
+		r = r + ARGV[1]
+       redis.call('hset', KEYS[1],KEYS[2], r)
+   end
+   return r
+`)
+// 这里的参数num， 记住： num只是增量， 你只能要求人家增加多少， 具体完事之后是多少，会返回给你， 因为这个涉及到分布式多请求
+func AddNumberToRedis(dir string,key string, num int) int{
+	v, err := AddScript.Do(RRedis, dir,key, num)
+	if err != nil {
+		log.PrintLogger("AddNumberToRedis Error: " + err.Error())
+		return 0
+	}
+	//fmt.Println("AddNumberToRedis",v , reflect.TypeOf(v))
+	re := int(v.(int64))
+	return re
+}
 
-
-//
-//
-//
-//
-//func dododogo() string {
-//	c := RRedis.Get()
-//	defer c.Close()
-//
-//
-//	// 有序数组zset
-//	ret, err := redis.Strings(c.Do("zrange", "zsw_zset","0","220"))
-//	fmt.Println(ret)
-//	ret1, err := redis.Strings(c.Do("zadd", "zsw_zset","0.1","ss0.1"))
-//	fmt.Println(ret1)
-//	ret1, err = redis.Strings(c.Do("zRangeByScore", "zsw_zset","0","220"))
-//	fmt.Println(ret1)
-//
-//
-//	// 列表，后面添加的在前面
-//	ret, err = redis.Strings(c.Do("lpush", "list_zsw", "newwwwwwwww"))
-//	fmt.Println(ret)
-//
-//	ret, err = redis.Strings(c.Do("lrange", "list_zsw","0","10"))
-//	fmt.Println(ret)
-//
-//
-//	// map key value
-//	ret, err = redis.Strings(c.Do("hset", "zsw_map", "new","new11"))
-//	fmt.Println(ret)
-//
-//	ret, err = redis.Strings(c.Do("hgetall", "zsw_map"))
-//	fmt.Println(ret)
-//
-//
-//
-//	// string set get
-//	n, err := c.Do("set", "key", "value1")
-//	fmt.Println("n:",n)
-//	n, err = redis.String(c.Do("get", "key"))
-//	fmt.Println("n:",n)
-//	fmt.Println("--------------------------------------------------")
-//
-//
-//	// 管道pipline
-//	c.Send("SET", "foo", "bar")
-//	c.Send("GET", "foo")
-//	c.Flush()
-//	c.Receive() // reply from SET
-//	v, err := redis.String(c.Receive()) // reply from GET
-//	fmt.Println("v:",v)
-//
-//
-//
-//
-//	//存储过程
-//	c.Send("MULTI")
-//	c.Send("INCR", "foo")
-//	c.Send("INCR", "bar")
-//	r, err := c.Do("EXEC")
-//	fmt.Println(r) // prints [1, 1]
-//
-//
-//
-//	if err !=nil{
-//		fmt.Println("error:",err)
-//		return "failed"
-//	}
-//
-//	return "Success"
-//}
-//
-//
-//func main(){
-//	InitRedis()
-//	strf := dododogo()
-//	fmt.Println("",strf)
-//}
