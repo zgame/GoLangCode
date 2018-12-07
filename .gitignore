@@ -3,3 +3,6 @@
 *.xml
 ServerGameBYLua2/Logs/*.log
 TestGoLangByServer/Log.log
+*.log
+*.log
+*.log
