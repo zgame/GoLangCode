@@ -34,6 +34,7 @@ func SaveStringToRedis(dir string, key string,value string)  {
 	//key := "BY_Player_UID_"+ strconv.Itoa(int( player.UserId))
 
 	//_, err := RRedis.Do("hdel", dir, key)
+	//fmt.Println("保存",dir, key,value)
 	_, err := RRedis.Do("hset", dir, key,value)
 	if err !=nil {
 		log.PrintLogger("redis 保存的时候出错了:"+err.Error())

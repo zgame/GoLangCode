@@ -54,7 +54,7 @@ function GetLastUserID()
     local r = 1     -- math.random(1, 4)        --返回[1,4]的随机整数
 
     ALLUserUUID = RedisMultiProcessGetAllPlayersUUID(r)     -- 分布式申请UUID
-    Logger("给玩家分配新uid  ALLUserUUID ",ALLUserUUID)
+    Logger("给玩家分配新uid  ALLUserUUID "..ALLUserUUID)
     return ALLUserUUID
 end
 
