@@ -92,7 +92,7 @@ func main() {
 	//go2(re)
 	//dolua(re)
 
-	for i:=0;i<100;i++{
+	for i:=0;i<10;i++{
 		//go zpop(re)
 		go dolua(re)
 	}
@@ -135,4 +135,7 @@ func dolua(c redis.Conn) {
 	}
 	Mutex.Unlock()
 	fmt.Println("",v)
+	var ii int
+	ii = int(v.(int64))
+	fmt.Println("",ii)
 }
