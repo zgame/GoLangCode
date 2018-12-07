@@ -66,9 +66,9 @@ var GameManagerLuaReloadTime int // 公共逻辑处理的lua更新时间
 func main() {
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	//远程获取pprof数据打开浏览器http://localhost:8090/debug/pprof/
+	//远程获取pprof数据打开浏览器http://localhost:8081/debug/pprof/
 	go func() {
-		oldLog.Println(http.ListenAndServe("localhost:8090", nil))
+		oldLog.Println(http.ListenAndServe("localhost:8081", nil))
 	}()
 
 	fmt.Println("------------------首先读取命令行参数---------------------------")

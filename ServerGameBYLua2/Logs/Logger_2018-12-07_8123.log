@@ -3787,3 +3787,1224 @@ stack traceback:
 2018/12/07 13:51:43 [Log:] ------------------start reload all---------------------------
 2018/12/07 13:51:43 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全1   拼接次数 1  成功1    标识错误0   -- 服务器状态：所有连接数量：5  所有包不全缓存大小:0 用户正常发送消息数量 5  正常接收  5 每秒5发送 1201  每5秒接收 408  goroutine数量 23 cpu 4  发送缓存平均占用0 
 2018/12/07 13:51:48 [Log:] [172.16.140.63:8123] 头部不全：0  数据不全1   拼接次数 1  成功1    标识错误0   -- 服务器状态：所有连接数量：5  所有包不全缓存大小:0 用户正常发送消息数量 5  正常接收  5 每秒5发送 1364  每5秒接收 430  goroutine数量 23 cpu 4  发送缓存平均占用0 
+2018/12/07 14:02:43 [Log:] ========Game Server Start ....========
+2018/12/07 14:02:44 [Log:] --------------StartGamesServers  End--------------------------
+2018/12/07 14:02:44 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:02:49 [Log:] ========Game Server Start ....========
+2018/12/07 14:02:50 [Log:] --------------StartGamesServers  End--------------------------
+2018/12/07 14:02:50 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:02:55 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:00 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:00 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:03:05 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:10 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:10 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:03:15 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:20 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:03:20 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:25 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:30 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:30 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:03:35 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:40 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:03:40 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:45 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:50 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:03:50 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:03:55 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 10 cpu 8  发送缓存平均占用0 
+2018/12/07 14:04:00 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 300  正常接收  300 每秒5发送 22194  每5秒接收 6579  goroutine数量 610 cpu 8  发送缓存平均占用0 
+2018/12/07 14:04:00 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:04:05 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 46703  每5秒接收 12814  goroutine数量 610 cpu 8  发送缓存平均占用0 
+2018/12/07 14:04:10 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:04:10 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 58272  每5秒接收 17415  goroutine数量 610 cpu 8  发送缓存平均占用0 
+2018/12/07 14:04:15 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 57618  每5秒接收 16187  goroutine数量 610 cpu 8  发送缓存平均占用0 
+2018/12/07 14:04:20 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 89435  每5秒接收 25326  goroutine数量 610 cpu 8  发送缓存平均占用0 
+2018/12/07 14:04:20 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:04:25 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 88782  每5秒接收 26244  goroutine数量 610 cpu 8  发送缓存平均占用0 
+2018/12/07 14:04:30 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 79724  每5秒接收 23758  goroutine数量 610 cpu 8  发送缓存平均占用0 
+2018/12/07 14:04:30 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:04:35 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 85086  每5秒接收 24247  goroutine数量 610 cpu 8  发送缓存平均占用0 
+2018/12/07 14:04:40 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:04:40 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 74467  每5秒接收 22815  goroutine数量 613 cpu 8  发送缓存平均占用214 
+2018/12/07 14:04:45 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 81584  每5秒接收 22734  goroutine数量 613 cpu 8  发送缓存平均占用331 
+2018/12/07 14:04:50 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:04:50 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 83765  每5秒接收 24845  goroutine数量 613 cpu 8  发送缓存平均占用639 
+2018/12/07 14:04:55 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：300  所有包不全缓存大小:0 用户正常发送消息数量 299  正常接收  299 每秒5发送 78448  每5秒接收 23370  goroutine数量 613 cpu 8  发送缓存平均占用767 
+2018/12/07 14:04:58 [Log:] 发送数据包的缓冲区已经满了，关闭该连接!!!
+2018/12/07 14:04:58 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11602: use of closed network connection
+2018/12/07 14:04:58 [Log:] 跟对方的连接中断了
+2018/12/07 14:04:58 [Log:] go 通知：1000000001  掉线了
+2018/12/07 14:04:58 [Log:] 1000000001离开桌子9椅子2
+2018/12/07 14:04:58 [Log:] 当前连接已经关闭, 不发送了
+2018/12/07 14:04:58 [Log:] 1000000001离开桌子3椅子1
+2018/12/07 14:05:00 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 82402  每5秒接收 23306  goroutine数量 611 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:00 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:05:05 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 78421  每5秒接收 23452  goroutine数量 611 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:10 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 77457  每5秒接收 22980  goroutine数量 611 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:10 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:05:15 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 79820  每5秒接收 22699  goroutine数量 611 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:20 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 81829  每5秒接收 24268  goroutine数量 611 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:20 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:05:25 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 84305  每5秒接收 24197  goroutine数量 611 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:30 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 85386  每5秒接收 25076  goroutine数量 609 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:30 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:05:35 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 71148  每5秒接收 21991  goroutine数量 609 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:40 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 69802  每5秒接收 19493  goroutine数量 609 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:40 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:05:45 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 85346  每5秒接收 25103  goroutine数量 609 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:50 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 80168  每5秒接收 24008  goroutine数量 609 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:50 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:05:55 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：299  所有包不全缓存大小:0 用户正常发送消息数量 298  正常接收  298 每秒5发送 81628  每5秒接收 23195  goroutine数量 609 cpu 8  发送缓存平均占用0 
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11806: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11807: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11805: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11808: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11816: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11861: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11869: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11871: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11863: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11862: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11707: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11872: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11868: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11865: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11866: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11874: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11882: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11883: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11884: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11891: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11890: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11892: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11893: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11827: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11831: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11832: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11833: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11835: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11834: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11704: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11705: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11706: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11777: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11778: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11780: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11779: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11765: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11766: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11767: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11769: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11667: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11669: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11668: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11726: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11610: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11613: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11620: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11623: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11624: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11618: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11652: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11627: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11625: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11631: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11608: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11801: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11802: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11803: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11700: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11699: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11702: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11629: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11633: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11642: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11614: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11653: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11606: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11636: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11604: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11616: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11611: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11651: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11641: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11772: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11630: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11628: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11605: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11599: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11735: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11734: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11733: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11736: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11753: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11728: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11673: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] go 通知：1000000037  掉线了
+2018/12/07 14:05:59 [Log:] 1000000037离开桌子19椅子3
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11638: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] go 通知：1000000405  掉线了
+2018/12/07 14:05:59 [Log:] 1000000405离开桌子51椅子2
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11643: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11634: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11647: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11644: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11621: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11607: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11639: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11615: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11626: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11650: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11632: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] go 通知：1000000104  掉线了
+2018/12/07 14:05:59 [Log:] 1000000104离开桌子11椅子4
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11729: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11731: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11732: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11756: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11672: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11645: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11619: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11601: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11617: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11646: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11603: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11612: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11600: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11648: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11640: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11637: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11656: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11655: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11657: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11660: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11754: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11755: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11658: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11659: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11661: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11662: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11770: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11663: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11664: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11665: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11666: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11675: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11676: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11677: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11678: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11768: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11679: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11682: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11680: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11681: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11687: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11696: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11708: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11709: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11710: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11711: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11712: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11713: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11714: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11716: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11715: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11718: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11717: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11719: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11738: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11737: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11739: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11740: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11745: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11746: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11747: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11749: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11693: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11748: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11750: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11751: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11752: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11683: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11757: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11758: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11759: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11760: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11762: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11741: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11742: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11743: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11744: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11773: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11774: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11775: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] 跟对方的连接中断了
+2018/12/07 14:05:59 [Log:] go 通知：1000000152  掉线了
+2018/12/07 14:05:59 [Log:] 1000000152离开桌子25椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000001  掉线了
+2018/12/07 14:05:59 [Log:] go 通知：1000000043  掉线了
+2018/12/07 14:05:59 [Log:] 1000000043离开桌子8椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000175  掉线了
+2018/12/07 14:05:59 [Log:] 1000000175离开桌子8椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000176  掉线了
+2018/12/07 14:05:59 [Log:] 1000000176离开桌子23椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000025  掉线了
+2018/12/07 14:05:59 [Log:] 1000000025离开桌子8椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000100  掉线了
+2018/12/07 14:05:59 [Log:] 1000000100离开桌子18椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000166  掉线了
+2018/12/07 14:05:59 [Log:] 1000000166离开桌子19椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000102  掉线了
+2018/12/07 14:05:59 [Log:] 1000000102离开桌子19椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000048  掉线了
+2018/12/07 14:05:59 [Log:] 1000000048离开桌子22椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000113  掉线了
+2018/12/07 14:05:59 [Log:] 1000000113离开桌子22椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000050  掉线了
+2018/12/07 14:05:59 [Log:] 1000000050离开桌子23椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000174  掉线了
+2018/12/07 14:05:59 [Log:] 1000000174离开桌子22椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000052  掉线了
+2018/12/07 14:05:59 [Log:] 1000000052离开桌子23椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000117  掉线了
+2018/12/07 14:05:59 [Log:] 1000000117离开桌子24椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000009  掉线了
+2018/12/07 14:05:59 [Log:] 1000000009离开桌子24椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000108  掉线了
+2018/12/07 14:05:59 [Log:] 1000000108离开桌子24椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000002  掉线了
+2018/12/07 14:05:59 [Log:] 1000000002离开桌子25椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000058  掉线了
+2018/12/07 14:05:59 [Log:] 1000000058离开桌子25椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000118  掉线了
+2018/12/07 14:05:59 [Log:] 1000000118离开桌子26椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000120  掉线了
+2018/12/07 14:05:59 [Log:] 1000000120离开桌子27椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000150  掉线了
+2018/12/07 14:05:59 [Log:] 1000000150离开桌子60椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000070  掉线了
+2018/12/07 14:05:59 [Log:] 1000000070离开桌子61椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000302  掉线了
+2018/12/07 14:05:59 [Log:] 1000000302离开桌子31椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000076  掉线了
+2018/12/07 14:05:59 [Log:] 1000000076离开桌子31椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000379  掉线了
+2018/12/07 14:05:59 [Log:] 1000000379离开桌子61椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000383  掉线了
+2018/12/07 14:05:59 [Log:] 1000000383离开桌子31椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000273  掉线了
+2018/12/07 14:05:59 [Log:] 1000000273离开桌子71椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000309  掉线了
+2018/12/07 14:05:59 [Log:] 1000000309离开桌子31椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子31
+2018/12/07 14:05:59 [Log:] go 通知：1000000281  掉线了
+2018/12/07 14:05:59 [Log:] 1000000281离开桌子32椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000308  掉线了
+2018/12/07 14:05:59 [Log:] 1000000308离开桌子32椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000338  掉线了
+2018/12/07 14:05:59 [Log:] 1000000338离开桌子61椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000318  掉线了
+2018/12/07 14:05:59 [Log:] 1000000318离开桌子33椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000317  掉线了
+2018/12/07 14:05:59 [Log:] 1000000317离开桌子49椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000085  掉线了
+2018/12/07 14:05:59 [Log:] 1000000085离开桌子60椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000344  掉线了
+2018/12/07 14:05:59 [Log:] 1000000344离开桌子41椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000133  掉线了
+2018/12/07 14:05:59 [Log:] 1000000133离开桌子41椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000352  掉线了
+2018/12/07 14:05:59 [Log:] 1000000352离开桌子41椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000140  掉线了
+2018/12/07 14:05:59 [Log:] 1000000140离开桌子43椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000146  掉线了
+2018/12/07 14:05:59 [Log:] 1000000146离开桌子44椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000284  掉线了
+2018/12/07 14:05:59 [Log:] 1000000284离开桌子46椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000334  掉线了
+2018/12/07 14:05:59 [Log:] 1000000334离开桌子62椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000193  掉线了
+2018/12/07 14:05:59 [Log:] 1000000193离开桌子46椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000395  掉线了
+2018/12/07 14:05:59 [Log:] 1000000395离开桌子46椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000294  掉线了
+2018/12/07 14:05:59 [Log:] 1000000294离开桌子47椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000321  掉线了
+2018/12/07 14:05:59 [Log:] 1000000321离开桌子47椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000194  掉线了
+2018/12/07 14:05:59 [Log:] 1000000194离开桌子46椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子46
+2018/12/07 14:05:59 [Log:] go 通知：1000000195  掉线了
+2018/12/07 14:05:59 [Log:] 1000000195离开桌子47椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000325  掉线了
+2018/12/07 14:05:59 [Log:] 1000000325离开桌子50椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000270  掉线了
+2018/12/07 14:05:59 [Log:] 1000000270离开桌子47椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子47
+2018/12/07 14:05:59 [Log:] go 通知：1000000008  掉线了
+2018/12/07 14:05:59 [Log:] 1000000008离开桌子63椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000011  掉线了
+2018/12/07 14:05:59 [Log:] 1000000011离开桌子48椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000269  掉线了
+2018/12/07 14:05:59 [Log:] 1000000269离开桌子67椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000018  掉线了
+2018/12/07 14:05:59 [Log:] 1000000018离开桌子48椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000271  掉线了
+2018/12/07 14:05:59 [Log:] 1000000271离开桌子48椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000021  掉线了
+2018/12/07 14:05:59 [Log:] 1000000021离开桌子48椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子48
+2018/12/07 14:05:59 [Log:] go 通知：1000000024  掉线了
+2018/12/07 14:05:59 [Log:] 1000000024离开桌子49椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000275  掉线了
+2018/12/07 14:05:59 [Log:] 1000000275离开桌子49椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000392  掉线了
+2018/12/07 14:05:59 [Log:] 1000000392离开桌子49椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子49
+2018/12/07 14:05:59 [Log:] go 通知：1000000026  掉线了
+2018/12/07 14:05:59 [Log:] 1000000026离开桌子50椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000306  掉线了
+2018/12/07 14:05:59 [Log:] 1000000306离开桌子50椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000402  掉线了
+2018/12/07 14:05:59 [Log:] 1000000402离开桌子50椅子3
+2018/12/07 14:05:59 [Log:] 清理掉桌子50
+2018/12/07 14:05:59 [Log:] go 通知：1000000280  掉线了
+2018/12/07 14:05:59 [Log:] 1000000280离开桌子51椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000272  掉线了
+2018/12/07 14:05:59 [Log:] 1000000272离开桌子52椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000292  掉线了
+2018/12/07 14:05:59 [Log:] 1000000292离开桌子52椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000394  掉线了
+2018/12/07 14:05:59 [Log:] 1000000394离开桌子70椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000368  掉线了
+2018/12/07 14:05:59 [Log:] 1000000368离开桌子52椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000288  掉线了
+2018/12/07 14:05:59 [Log:] 1000000288离开桌子52椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子52
+2018/12/07 14:05:59 [Log:] go 通知：1000000391  掉线了
+2018/12/07 14:05:59 [Log:] 1000000391离开桌子53椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000286  掉线了
+2018/12/07 14:05:59 [Log:] 1000000286离开桌子53椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000297  掉线了
+2018/12/07 14:05:59 [Log:] 1000000297离开桌子53椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000332  掉线了
+2018/12/07 14:05:59 [Log:] 1000000332离开桌子53椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子53
+2018/12/07 14:05:59 [Log:] go 通知：1000000401  掉线了
+2018/12/07 14:05:59 [Log:] 1000000401离开桌子54椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000295  掉线了
+2018/12/07 14:05:59 [Log:] 1000000295离开桌子54椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000346  掉线了
+2018/12/07 14:05:59 [Log:] 1000000346离开桌子54椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000278  掉线了
+2018/12/07 14:05:59 [Log:] 1000000278离开桌子54椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子54
+2018/12/07 14:05:59 [Log:] go 通知：1000000339  掉线了
+2018/12/07 14:05:59 [Log:] 1000000339离开桌子70椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000285  掉线了
+2018/12/07 14:05:59 [Log:] 1000000285离开桌子67椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000357  掉线了
+2018/12/07 14:05:59 [Log:] 1000000357离开桌子71椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000343  掉线了
+2018/12/07 14:05:59 [Log:] 1000000343离开桌子70椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000111  掉线了
+2018/12/07 14:05:59 [Log:] 1000000111离开桌子71椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000363  掉线了
+2018/12/07 14:05:59 [Log:] 1000000363离开桌子71椅子3
+2018/12/07 14:05:59 [Log:] 清理掉桌子71
+2018/12/07 14:05:59 [Log:] go 通知：1000000349  掉线了
+2018/12/07 14:05:59 [Log:] 1000000349离开桌子72椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000064  掉线了
+2018/12/07 14:05:59 [Log:] 1000000064离开桌子72椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000342  掉线了
+2018/12/07 14:05:59 [Log:] 1000000342离开桌子70椅子3
+2018/12/07 14:05:59 [Log:] 清理掉桌子70
+2018/12/07 14:05:59 [Log:] go 通知：1000000125  掉线了
+2018/12/07 14:05:59 [Log:] 1000000125离开桌子72椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000049  掉线了
+2018/12/07 14:05:59 [Log:] 1000000049离开桌子73椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000128  掉线了
+2018/12/07 14:05:59 [Log:] 1000000128离开桌子73椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000056  掉线了
+2018/12/07 14:05:59 [Log:] 1000000056离开桌子72椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子72
+2018/12/07 14:05:59 [Log:] go 通知：1000000134  掉线了
+2018/12/07 14:05:59 [Log:] 1000000134离开桌子75椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000123  掉线了
+2018/12/07 14:05:59 [Log:] 1000000123离开桌子75椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000034  掉线了
+2018/12/07 14:05:59 [Log:] 1000000034离开桌子63椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000136  掉线了
+2018/12/07 14:05:59 [Log:] 1000000136离开桌子75椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000067  掉线了
+2018/12/07 14:05:59 [Log:] 1000000067离开桌子75椅子3
+2018/12/07 14:05:59 [Log:] 清理掉桌子75
+2018/12/07 14:05:59 [Log:] go 通知：1000000069  掉线了
+2018/12/07 14:05:59 [Log:] 1000000069离开桌子64椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000187  掉线了
+2018/12/07 14:05:59 [Log:] 1000000187离开桌子63椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000141  掉线了
+2018/12/07 14:05:59 [Log:] 1000000141离开桌子64椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000042  掉线了
+2018/12/07 14:05:59 [Log:] 1000000042离开桌子64椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000188  掉线了
+2018/12/07 14:05:59 [Log:] 1000000188离开桌子64椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子64
+2018/12/07 14:05:59 [Log:] go 通知：1000000045  掉线了
+2018/12/07 14:05:59 [Log:] 1000000045离开桌子65椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000143  掉线了
+2018/12/07 14:05:59 [Log:] 1000000143离开桌子65椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000072  掉线了
+2018/12/07 14:05:59 [Log:] 1000000072离开桌子65椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000189  掉线了
+2018/12/07 14:05:59 [Log:] 1000000189离开桌子65椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子65
+2018/12/07 14:05:59 [Log:] go 通知：1000000036  掉线了
+2018/12/07 14:05:59 [Log:] 1000000036离开桌子66椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000145  掉线了
+2018/12/07 14:05:59 [Log:] 1000000145离开桌子66椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000092  掉线了
+2018/12/07 14:05:59 [Log:] 1000000092离开桌子66椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000147  掉线了
+2018/12/07 14:05:59 [Log:] 1000000147离开桌子67椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000095  掉线了
+2018/12/07 14:05:59 [Log:] 1000000095离开桌子66椅子3
+2018/12/07 14:05:59 [Log:] 清理掉桌子66
+2018/12/07 14:05:59 [Log:] go 通知：1000000190  掉线了
+2018/12/07 14:05:59 [Log:] 1000000190离开桌子69椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000083  掉线了
+2018/12/07 14:05:59 [Log:] 1000000083离开桌子67椅子2
+2018/12/07 14:05:59 [Log:] 清理掉桌子67
+2018/12/07 14:05:59 [Log:] go 通知：1000000191  掉线了
+2018/12/07 14:05:59 [Log:] 1000000191离开桌子56椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000151  掉线了
+2018/12/07 14:05:59 [Log:] 1000000151离开桌子56椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000086  掉线了
+2018/12/07 14:05:59 [Log:] 1000000086离开桌子56椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000075  掉线了
+2018/12/07 14:05:59 [Log:] 1000000075离开桌子58椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000101  掉线了
+2018/12/07 14:05:59 [Log:] 1000000101离开桌子57椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000080  掉线了
+2018/12/07 14:05:59 [Log:] 1000000080离开桌子69椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000090  掉线了
+2018/12/07 14:05:59 [Log:] 1000000090离开桌子58椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000196  掉线了
+2018/12/07 14:05:59 [Log:] 1000000196离开桌子58椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000197  掉线了
+2018/12/07 14:05:59 [Log:] 1000000197离开桌子56椅子2
+2018/12/07 14:05:59 [Log:] 清理掉桌子56
+2018/12/07 14:05:59 [Log:] go 通知：1000000183  掉线了
+2018/12/07 14:05:59 [Log:] 1000000183离开桌子69椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000039  掉线了
+2018/12/07 14:05:59 [Log:] 1000000039离开桌子60椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000374  掉线了
+2018/12/07 14:05:59 [Log:] 1000000374离开桌子61椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子61
+2018/12/07 14:05:59 [Log:] go 通知：1000000355  掉线了
+2018/12/07 14:05:59 [Log:] 1000000355离开桌子60椅子3
+2018/12/07 14:05:59 [Log:] 清理掉桌子60
+2018/12/07 14:05:59 [Log:] go 通知：1000000299  掉线了
+2018/12/07 14:05:59 [Log:] 1000000299离开桌子63椅子1
+2018/12/07 14:05:59 [Log:] 清理掉桌子63
+2018/12/07 14:05:59 [Log:] go 通知：1000000138  掉线了
+2018/12/07 14:05:59 [Log:] 1000000138离开桌子69椅子1
+2018/12/07 14:05:59 [Log:] 清理掉桌子69
+2018/12/07 14:05:59 [Log:] go 通知：1000000124  掉线了
+2018/12/07 14:05:59 [Log:] 1000000124离开桌子27椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000378  掉线了
+2018/12/07 14:05:59 [Log:] 1000000378离开桌子55椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000311  掉线了
+2018/12/07 14:05:59 [Log:] 1000000311离开桌子45椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000200  掉线了
+2018/12/07 14:05:59 [Log:] 1000000200离开桌子59椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000131  掉线了
+2018/12/07 14:05:59 [Log:] 1000000131离开桌子62椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000135  掉线了
+2018/12/07 14:05:59 [Log:] 1000000135离开桌子42椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000184  掉线了
+2018/12/07 14:05:59 [Log:] 1000000184离开桌子59椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000033  掉线了
+2018/12/07 14:05:59 [Log:] 1000000033离开桌子18椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000079  掉线了
+2018/12/07 14:05:59 [Log:] 1000000079离开桌子32椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000203  掉线了
+2018/12/07 14:05:59 [Log:] 1000000203离开桌子55椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000060  掉线了
+2018/12/07 14:05:59 [Log:] 1000000060离开桌子57椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000162  掉线了
+2018/12/07 14:05:59 [Log:] 1000000162离开桌子1椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000046  掉线了
+2018/12/07 14:05:59 [Log:] 1000000046离开桌子1椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000017  掉线了
+2018/12/07 14:05:59 [Log:] 1000000017离开桌子1椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000038  掉线了
+2018/12/07 14:05:59 [Log:] 1000000038离开桌子1椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000006  掉线了
+2018/12/07 14:05:59 [Log:] 1000000006离开桌子2椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000051  掉线了
+2018/12/07 14:05:59 [Log:] 1000000051离开桌子3椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000057  掉线了
+2018/12/07 14:05:59 [Log:] 1000000057离开桌子2椅子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000053  掉线了
+2018/12/07 14:05:59 [Log:] 1000000053离开桌子2椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000084  掉线了
+2018/12/07 14:05:59 [Log:] 1000000084离开桌子2椅子2
+2018/12/07 14:05:59 [Log:] 清理掉桌子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000326  掉线了
+2018/12/07 14:05:59 [Log:] 1000000326离开桌子51椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000016  掉线了
+2018/12/07 14:05:59 [Log:] 1000000016离开桌子3椅子4
+2018/12/07 14:05:59 [Log:] go 通知：1000000167  掉线了
+2018/12/07 14:05:59 [Log:] 1000000167离开桌子3椅子3
+2018/12/07 14:05:59 [Log:] 清理掉桌子3
+2018/12/07 14:05:59 [Log:] go 通知：1000000047  掉线了
+2018/12/07 14:05:59 [Log:] 1000000047离开桌子26椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000059  掉线了
+2018/12/07 14:05:59 [Log:] 1000000059离开桌子59椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000388  掉线了
+2018/12/07 14:05:59 [Log:] 1000000388离开桌子68椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000169  掉线了
+2018/12/07 14:05:59 [Log:] 1000000169离开桌子4椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000055  掉线了
+2018/12/07 14:05:59 [Log:] 1000000055离开桌子4椅子1
+2018/12/07 14:05:59 [Log:] go 通知：1000000153  掉线了
+2018/12/07 14:05:59 [Log:] 1000000153离开桌子57椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000007  掉线了
+2018/12/07 14:05:59 [Log:] 1000000007离开桌子57椅子1
+2018/12/07 14:05:59 [Log:] 清理掉桌子57
+2018/12/07 14:05:59 [Log:] go 通知：1000000185  掉线了
+2018/12/07 14:05:59 [Log:] 1000000185离开桌子59椅子3
+2018/12/07 14:05:59 [Log:] 清理掉桌子59
+2018/12/07 14:05:59 [Log:] go 通知：1000000115  掉线了
+2018/12/07 14:05:59 [Log:] 1000000115离开桌子26椅子2
+2018/12/07 14:05:59 [Log:] go 通知：1000000384  掉线了
+2018/12/07 14:05:59 [Log:] 1000000384离开桌子58椅子4
+2018/12/07 14:05:59 [Log:] 清理掉桌子58
+2018/12/07 14:06:00 [Log:] go 通知：1000000159  掉线了
+2018/12/07 14:06:00 [Log:] 1000000159离开桌子4椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000078  掉线了
+2018/12/07 14:06:00 [Log:] 1000000078离开桌子4椅子3
+2018/12/07 14:06:00 [Log:] 清理掉桌子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000177  掉线了
+2018/12/07 14:06:00 [Log:] 1000000177离开桌子5椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000041  掉线了
+2018/12/07 14:06:00 [Log:] 1000000041离开桌子6椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000149  掉线了
+2018/12/07 14:06:00 [Log:] 1000000149离开桌子6椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000172  掉线了
+2018/12/07 14:06:00 [Log:] 1000000172离开桌子6椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000158  掉线了
+2018/12/07 14:06:00 [Log:] 1000000158离开桌子6椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子6
+2018/12/07 14:06:00 [Log:] go 通知：1000000268  掉线了
+2018/12/07 14:06:00 [Log:] 1000000268离开桌子43椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000121  掉线了
+2018/12/07 14:06:00 [Log:] 1000000121离开桌子7椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000126  掉线了
+2018/12/07 14:06:00 [Log:] 1000000126离开桌子7椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000082  掉线了
+2018/12/07 14:06:00 [Log:] 1000000082离开桌子34椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000386  掉线了
+2018/12/07 14:06:00 [Log:] 1000000386离开桌子45椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000137  掉线了
+2018/12/07 14:06:00 [Log:] 1000000137离开桌子42椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000032  掉线了
+2018/12/07 14:06:00 [Log:] 1000000032离开桌子74椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000399  掉线了
+2018/12/07 14:06:00 [Log:] 1000000399离开桌子39椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000163  掉线了
+2018/12/07 14:06:00 [Log:] 1000000163离开桌子18椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000192  掉线了
+2018/12/07 14:06:00 [Log:] 1000000192离开桌子45椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000010  掉线了
+2018/12/07 14:06:00 [Log:] 1000000010离开桌子7椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000331  掉线了
+2018/12/07 14:06:00 [Log:] 1000000331离开桌子51椅子3
+2018/12/07 14:06:00 [Log:] 清理掉桌子51
+2018/12/07 14:06:00 [Log:] go 通知：1000000403  掉线了
+2018/12/07 14:06:00 [Log:] 1000000403离开桌子62椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000165  掉线了
+2018/12/07 14:06:00 [Log:] 1000000165离开桌子7椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子7
+2018/12/07 14:06:00 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：118  所有包不全缓存大小:0 用户正常发送消息数量 118  正常接收  118 每秒5发送 28840  每5秒接收 8443  goroutine数量 130 cpu 8  发送缓存平均占用9 
+2018/12/07 14:06:00 [Log:] go 通知：1000000333  掉线了
+2018/12/07 14:06:00 [Log:] 1000000333离开桌子32椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子32
+2018/12/07 14:06:00 [Log:] go 通知：1000000404  掉线了
+2018/12/07 14:06:00 [Log:] 1000000404离开桌子34椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000054  掉线了
+2018/12/07 14:06:00 [Log:] 1000000054离开桌子27椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000068  掉线了
+2018/12/07 14:06:00 [Log:] 1000000068离开桌子27椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子27
+2018/12/07 14:06:00 [Log:] go 通知：1000000139  掉线了
+2018/12/07 14:06:00 [Log:] 1000000139离开桌子14椅子3
+2018/12/07 14:06:00 [Log:] 跟对方的连接中断了
+2018/12/07 14:06:00 [Log:] go 通知：1000000116  掉线了
+2018/12/07 14:06:00 [Log:] tcpConn.writeChan Error 发送数据出错 write tcp 172.16.140.125:8123->172.16.140.125:11635: wsasend: An existing connection was forcibly closed by the remote host.
+2018/12/07 14:06:00 [Log:] 1000000116离开桌子73椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000027  掉线了
+2018/12/07 14:06:00 [Log:] 1000000027离开桌子74椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000142  掉线了
+2018/12/07 14:06:00 [Log:] 1000000142离开桌子9椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000130  掉线了
+2018/12/07 14:06:00 [Log:] 1000000130离开桌子9椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000081  掉线了
+2018/12/07 14:06:00 [Log:] 1000000081离开桌子9椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子9
+2018/12/07 14:06:00 [Log:] go 通知：1000000012  掉线了
+2018/12/07 14:06:00 [Log:] 1000000012离开桌子10椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000156  掉线了
+2018/12/07 14:06:00 [Log:] 1000000156离开桌子10椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000022  掉线了
+2018/12/07 14:06:00 [Log:] 1000000022离开桌子10椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000074  掉线了
+2018/12/07 14:06:00 [Log:] 1000000074离开桌子10椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子10
+2018/12/07 14:06:00 [Log:] go 通知：1000000014  掉线了
+2018/12/07 14:06:00 [Log:] 1000000014离开桌子11椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000066  掉线了
+2018/12/07 14:06:00 [Log:] 1000000066离开桌子11椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000164  掉线了
+2018/12/07 14:06:00 [Log:] 1000000164离开桌子11椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子11
+2018/12/07 14:06:00 [Log:] go 通知：1000000088  掉线了
+2018/12/07 14:06:00 [Log:] 1000000088离开桌子34椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000397  掉线了
+2018/12/07 14:06:00 [Log:] 1000000397离开桌子33椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000296  掉线了
+2018/12/07 14:06:00 [Log:] 1000000296离开桌子34椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子34
+2018/12/07 14:06:00 [Log:] go 通知：1000000110  掉线了
+2018/12/07 14:06:00 [Log:] 1000000110离开桌子39椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000340  掉线了
+2018/12/07 14:06:00 [Log:] 1000000340离开桌子19椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子19
+2018/12/07 14:06:00 [Log:] go 通知：1000000161  掉线了
+2018/12/07 14:06:00 [Log:] 1000000161离开桌子12椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000013  掉线了
+2018/12/07 14:06:00 [Log:] 1000000013离开桌子12椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000004  掉线了
+2018/12/07 14:06:00 [Log:] 1000000004离开桌子12椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000005  掉线了
+2018/12/07 14:06:00 [Log:] 1000000005离开桌子12椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子12
+2018/12/07 14:06:00 [Log:] go 通知：1000000173  掉线了
+2018/12/07 14:06:00 [Log:] 1000000173离开桌子14椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000112  掉线了
+2018/12/07 14:06:00 [Log:] 1000000112离开桌子74椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000132  掉线了
+2018/12/07 14:06:00 [Log:] 1000000132离开桌子68椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000003  掉线了
+2018/12/07 14:06:00 [Log:] 1000000003离开桌子13椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000023  掉线了
+2018/12/07 14:06:00 [Log:] 1000000023离开桌子13椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000170  掉线了
+2018/12/07 14:06:00 [Log:] 1000000170离开桌子13椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000020  掉线了
+2018/12/07 14:06:00 [Log:] 1000000020离开桌子13椅子3
+2018/12/07 14:06:00 [Log:] 清理掉桌子13
+2018/12/07 14:06:00 [Log:] go 通知：1000000154  掉线了
+2018/12/07 14:06:00 [Log:] 1000000154离开桌子15椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000087  掉线了
+2018/12/07 14:06:00 [Log:] 1000000087离开桌子15椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000179  掉线了
+2018/12/07 14:06:00 [Log:] 1000000179离开桌子15椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000157  掉线了
+2018/12/07 14:06:00 [Log:] 1000000157离开桌子15椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子15
+2018/12/07 14:06:00 [Log:] go 通知：1000000122  掉线了
+2018/12/07 14:06:00 [Log:] 1000000122离开桌子74椅子3
+2018/12/07 14:06:00 [Log:] 清理掉桌子74
+2018/12/07 14:06:00 [Log:] go 通知：1000000198  掉线了
+2018/12/07 14:06:00 [Log:] 1000000198离开桌子39椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000061  掉线了
+2018/12/07 14:06:00 [Log:] 1000000061离开桌子68椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000186  掉线了
+2018/12/07 14:06:00 [Log:] 1000000186离开桌子68椅子3
+2018/12/07 14:06:00 [Log:] 清理掉桌子68
+2018/12/07 14:06:00 [Log:] go 通知：1000000107  掉线了
+2018/12/07 14:06:00 [Log:] 1000000107离开桌子39椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子39
+2018/12/07 14:06:00 [Log:] go 通知：1000000019  掉线了
+2018/12/07 14:06:00 [Log:] 1000000019离开桌子5椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000029  掉线了
+2018/12/07 14:06:00 [Log:] 1000000029离开桌子16椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000370  掉线了
+2018/12/07 14:06:00 [Log:] 1000000370离开桌子43椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000089  掉线了
+2018/12/07 14:06:00 [Log:] 1000000089离开桌子16椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000119  掉线了
+2018/12/07 14:06:00 [Log:] 1000000119离开桌子73椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子73
+2018/12/07 14:06:00 [Log:] go 通知：1000000289  掉线了
+2018/12/07 14:06:00 [Log:] 1000000289离开桌子33椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000160  掉线了
+2018/12/07 14:06:00 [Log:] 1000000160离开桌子17椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000096  掉线了
+2018/12/07 14:06:00 [Log:] 1000000096离开桌子17椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000181  掉线了
+2018/12/07 14:06:00 [Log:] 1000000181离开桌子17椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000031  掉线了
+2018/12/07 14:06:00 [Log:] 1000000031离开桌子17椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子17
+2018/12/07 14:06:00 [Log:] go 通知：1000000182  掉线了
+2018/12/07 14:06:00 [Log:] 1000000182离开桌子18椅子3
+2018/12/07 14:06:00 [Log:] 清理掉桌子18
+2018/12/07 14:06:00 [Log:] go 通知：1000000323  掉线了
+2018/12/07 14:06:00 [Log:] 1000000323离开桌子45椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子45
+2018/12/07 14:06:00 [Log:] go 通知：1000000377  掉线了
+2018/12/07 14:06:00 [Log:] 1000000377离开桌子20椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000105  掉线了
+2018/12/07 14:06:00 [Log:] 1000000105离开桌子20椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000168  掉线了
+2018/12/07 14:06:00 [Log:] 1000000168离开桌子20椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000400  掉线了
+2018/12/07 14:06:00 [Log:] 1000000400离开桌子33椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子33
+2018/12/07 14:06:00 [Log:] go 通知：1000000304  掉线了
+2018/12/07 14:06:00 [Log:] 1000000304离开桌子55椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000202  掉线了
+2018/12/07 14:06:00 [Log:] 1000000202离开桌子55椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子55
+2018/12/07 14:06:00 [Log:] go 通知：1000000040  掉线了
+2018/12/07 14:06:00 [Log:] 1000000040离开桌子20椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子20
+2018/12/07 14:06:00 [Log:] go 通知：1000000093  掉线了
+2018/12/07 14:06:00 [Log:] 1000000093离开桌子16椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000155  掉线了
+2018/12/07 14:06:00 [Log:] 1000000155离开桌子14椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000366  掉线了
+2018/12/07 14:06:00 [Log:] 1000000366离开桌子43椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子43
+2018/12/07 14:06:00 [Log:] go 通知：1000000171  掉线了
+2018/12/07 14:06:00 [Log:] 1000000171离开桌子21椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000044  掉线了
+2018/12/07 14:06:00 [Log:] 1000000044离开桌子21椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000381  掉线了
+2018/12/07 14:06:00 [Log:] 1000000381离开桌子21椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000109  掉线了
+2018/12/07 14:06:00 [Log:] 1000000109离开桌子21椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子21
+2018/12/07 14:06:00 [Log:] go 通知：1000000114  掉线了
+2018/12/07 14:06:00 [Log:] 1000000114离开桌子14椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子14
+2018/12/07 14:06:00 [Log:] go 通知：1000000398  掉线了
+2018/12/07 14:06:00 [Log:] 1000000398离开桌子23椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子23
+2018/12/07 14:06:00 [Log:] go 通知：1000000028  掉线了
+2018/12/07 14:06:00 [Log:] 1000000028离开桌子25椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子25
+2018/12/07 14:06:00 [Log:] go 通知：1000000030  掉线了
+2018/12/07 14:06:00 [Log:] 1000000030离开桌子5椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000063  掉线了
+2018/12/07 14:06:00 [Log:] 1000000063离开桌子26椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子26
+2018/12/07 14:06:00 [Log:] go 通知：1000000035  掉线了
+2018/12/07 14:06:00 [Log:] 1000000035离开桌子5椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子5
+2018/12/07 14:06:00 [Log:] go 通知：1000000354  掉线了
+2018/12/07 14:06:00 [Log:] 1000000354离开桌子62椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子62
+2018/12/07 14:06:00 [Log:] go 通知：1000000015  掉线了
+2018/12/07 14:06:00 [Log:] 1000000015离开桌子28椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000148  掉线了
+2018/12/07 14:06:00 [Log:] 1000000148离开桌子28椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000077  掉线了
+2018/12/07 14:06:00 [Log:] 1000000077离开桌子28椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000283  掉线了
+2018/12/07 14:06:00 [Log:] 1000000283离开桌子28椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子28
+2018/12/07 14:06:00 [Log:] go 通知：1000000062  掉线了
+2018/12/07 14:06:00 [Log:] 1000000062离开桌子29椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000201  掉线了
+2018/12/07 14:06:00 [Log:] 1000000201离开桌子29椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000073  掉线了
+2018/12/07 14:06:00 [Log:] 1000000073离开桌子29椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000106  掉线了
+2018/12/07 14:06:00 [Log:] 1000000106离开桌子29椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子29
+2018/12/07 14:06:00 [Log:] go 通知：1000000290  掉线了
+2018/12/07 14:06:00 [Log:] 1000000290离开桌子30椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000065  掉线了
+2018/12/07 14:06:00 [Log:] 1000000065离开桌子30椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000375  掉线了
+2018/12/07 14:06:00 [Log:] 1000000375离开桌子30椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000098  掉线了
+2018/12/07 14:06:00 [Log:] 1000000098离开桌子30椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子30
+2018/12/07 14:06:00 [Log:] go 通知：1000000408  掉线了
+2018/12/07 14:06:00 [Log:] 1000000408离开桌子35椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000091  掉线了
+2018/12/07 14:06:00 [Log:] 1000000091离开桌子35椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000314  掉线了
+2018/12/07 14:06:00 [Log:] 1000000314离开桌子35椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000097  掉线了
+2018/12/07 14:06:00 [Log:] 1000000097离开桌子37椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000178  掉线了
+2018/12/07 14:06:00 [Log:] 1000000178离开桌子24椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子24
+2018/12/07 14:06:00 [Log:] go 通知：1000000180  掉线了
+2018/12/07 14:06:00 [Log:] 1000000180离开桌子16椅子3
+2018/12/07 14:06:00 [Log:] 清理掉桌子16
+2018/12/07 14:06:00 [Log:] go 通知：1000000396  掉线了
+2018/12/07 14:06:00 [Log:] 1000000396离开桌子38椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000099  掉线了
+2018/12/07 14:06:00 [Log:] 1000000099离开桌子37椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000199  掉线了
+2018/12/07 14:06:00 [Log:] 1000000199离开桌子22椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子22
+2018/12/07 14:06:00 [Log:] go 通知：1000000345  掉线了
+2018/12/07 14:06:00 [Log:] 1000000345离开桌子35椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子35
+2018/12/07 14:06:00 [Log:] go 通知：1000000372  掉线了
+2018/12/07 14:06:00 [Log:] 1000000372离开桌子37椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000406  掉线了
+2018/12/07 14:06:00 [Log:] 1000000406离开桌子40椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000129  掉线了
+2018/12/07 14:06:00 [Log:] 1000000129离开桌子40椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000347  掉线了
+2018/12/07 14:06:00 [Log:] 1000000347离开桌子41椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子41
+2018/12/07 14:06:00 [Log:] go 通知：1000000127  掉线了
+2018/12/07 14:06:00 [Log:] 1000000127离开桌子40椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000274  掉线了
+2018/12/07 14:06:00 [Log:] 1000000274离开桌子38椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000094  掉线了
+2018/12/07 14:06:00 [Log:] 1000000094离开桌子36椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000407  掉线了
+2018/12/07 14:06:00 [Log:] 1000000407离开桌子40椅子1
+2018/12/07 14:06:00 [Log:] 清理掉桌子40
+2018/12/07 14:06:00 [Log:] go 通知：1000000348  掉线了
+2018/12/07 14:06:00 [Log:] 1000000348离开桌子38椅子3
+2018/12/07 14:06:00 [Log:] go 通知：1000000336  掉线了
+2018/12/07 14:06:00 [Log:] 1000000336离开桌子36椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000103  掉线了
+2018/12/07 14:06:00 [Log:] 1000000103离开桌子38椅子4
+2018/12/07 14:06:00 [Log:] 清理掉桌子38
+2018/12/07 14:06:00 [Log:] go 通知：1000000364  掉线了
+2018/12/07 14:06:00 [Log:] 1000000364离开桌子36椅子4
+2018/12/07 14:06:00 [Log:] go 通知：1000000393  掉线了
+2018/12/07 14:06:00 [Log:] 1000000393离开桌子36椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子36
+2018/12/07 14:06:00 [Log:] go 通知：1000000341  掉线了
+2018/12/07 14:06:00 [Log:] 1000000341离开桌子37椅子2
+2018/12/07 14:06:00 [Log:] 清理掉桌子37
+2018/12/07 14:06:00 [Log:] go 通知：1000000144  掉线了
+2018/12/07 14:06:00 [Log:] 1000000144离开桌子44椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000359  掉线了
+2018/12/07 14:06:00 [Log:] 1000000359离开桌子42椅子1
+2018/12/07 14:06:00 [Log:] go 通知：1000000276  掉线了
+2018/12/07 14:06:00 [Log:] 1000000276离开桌子44椅子2
+2018/12/07 14:06:00 [Log:] go 通知：1000000361  掉线了
+2018/12/07 14:06:00 [Log:] 1000000361离开桌子42椅子3
+2018/12/07 14:06:00 [Log:] 清理掉桌子42
+2018/12/07 14:06:00 [Log:] go 通知：1000000389  掉线了
+2018/12/07 14:06:00 [Log:] 1000000389离开桌子44椅子3
+2018/12/07 14:06:00 [Log:] 清理掉桌子44
+2018/12/07 14:06:00 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:06:00 [Log:] go 通知：1000000071  掉线了
+2018/12/07 14:06:00 [Log:] 1000000071离开桌子8椅子3
+2018/12/07 14:06:00 [Log:] 清理掉桌子8
+2018/12/07 14:06:05 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 11 cpu 8  发送缓存平均占用0 
+2018/12/07 14:06:10 [Log:] ------------------start reload all---------------------------
+2018/12/07 14:06:10 [Log:] [172.16.140.125:8123] 头部不全：0  数据不全0   拼接次数 0  成功0    标识错误0   -- 服务器状态：所有连接数量：0  所有包不全缓存大小:0 用户正常发送消息数量 0  正常接收  0 每秒5发送 0  每5秒接收 0  goroutine数量 11 cpu 8  发送缓存平均占用0 
