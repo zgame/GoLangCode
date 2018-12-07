@@ -149,10 +149,10 @@ func (this *Client)handlerRead(buf []byte) int {
 		} else if sub_msg_id == SUB_GR_LOGON_SUCCESS {
 			this.handleLoginSucessGs(finalBuffer,int(bufferSize))
 		} else if sub_msg_id == SUB_GR_LOGON_FINISH {
-			fmt.Println("游戏服务器登录完成 ------")
+			//fmt.Println("游戏服务器登录完成 ------")
 
 			//  开始进入场景
-			//fmt.Println("开始发送进入场景",this.User.user_id)
+			fmt.Println("开始发送进入场景",this.User.user_id)
 			this.EnterScence()
 
 		}

@@ -5,8 +5,7 @@ import (
 	"math"
 	"fmt"
 	"./NetWork"
-	//"io"
-	. "./const"
+
 	"sync"
 	"strconv"
 	"./log"
@@ -94,6 +93,8 @@ func (a *Client)init()  {
 	a.Gameinfo = a.Gameinfo.New()
 	a.loginGS()
 
+
+
 	//go func() {
 	//	for {
 	//		a.GameAI()
@@ -101,20 +102,20 @@ func (a *Client)init()  {
 	//
 	//	}
 	//}()
-	if a.ShowMsgSendTime {
-		go func() {
-			for {
-				if !a.StartAI {
-					time.Sleep(time.Millisecond * 100)
-					continue
-				}
-				a.SendMsgTime = a.GetOsTime()
-				a.Send("", MDM_GF_GAME, SUB_S_BOSS_COME)
-				time.Sleep(time.Millisecond * 2000)
-
-			}
-		}()
-	}
+	//if a.ShowMsgSendTime {
+	//	go func() {
+	//		for {
+	//			if !a.StartAI {
+	//				time.Sleep(time.Millisecond * 100)
+	//				continue
+	//			}
+	//			a.SendMsgTime = a.GetOsTime()
+	//			a.Send("", MDM_GF_GAME, SUB_S_BOSS_COME)
+	//			time.Sleep(time.Millisecond * 2000)
+	//
+	//		}
+	//	}()
+	//}
 }
 
 
