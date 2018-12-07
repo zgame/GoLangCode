@@ -22,7 +22,8 @@ func ggo()  {
 	//res,err := RRedis.Do("hset","key","field","value")  //写
 	//result,err := redis.Values(RRedis.Do("hgetall","key"))//读
 
-	res, err := RRedis.Do("hget", "ALL_Players", "BY_Player_UID_2027445")
+	//res, err := RRedis.Do("hget", "ALL_Players", "BY_Player_UID_2027445")
+	res, err := RRedis.Do("hset", "ALL_Players", "BY_Player_UID_2027445","ddddd")
 	fmt.Println(reflect.TypeOf(res))
 	if err != nil {
 		fmt.Println("hget failed", err.Error())
