@@ -49,6 +49,13 @@ require("dumpTable")
 require("zTable")
 require("zRedis")
 
+-------------------------------------Redis----------------------------------------
+package.path = "Script/DataBase/?.lua;"..package.path
+require("redisConst")
+require("redisGame")
+require("redisPlayer")
+
+
 --Logger("system ok")
 -------------------------------------NetWork----------------------------------------
 

@@ -60,7 +60,7 @@ end
 
 -- go通知lua玩家掉线了
 function GoCallLuaPlayerNetworkBroken(uid)
-    Logger("go 通知："..uid .. "  掉线了")
+    --Logger("go 通知："..uid .. "  掉线了")
     local player = GetPlayerByUID(uid)
 
     if player ~= nil then

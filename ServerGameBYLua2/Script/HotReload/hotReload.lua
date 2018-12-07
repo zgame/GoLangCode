@@ -45,6 +45,12 @@ function ReloadAll()
     reloadFile("Script/Utils/zRedis")
 
 
+    -- DataBase
+    reloadFile("Script/DataBase/redisConst")
+    reloadFile("Script/DataBase/redisGame")
+    reloadFile("Script/DataBase/redisPlayer")
+
+
     -- Logger
     reloadFile("Script/Logger/logger")
 

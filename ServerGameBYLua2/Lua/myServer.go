@@ -120,7 +120,7 @@ func (a *MyServer) Run() {
 		//}
 
 		if err != nil {
-			log.PrintfLogger("跟对方的连接中断了")
+			//log.PrintfLogger("跟对方的连接中断了")
 			// 中断网络连接，关闭网络连接，关闭lua
 			break
 		}
