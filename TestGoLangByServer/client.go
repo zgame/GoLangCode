@@ -178,7 +178,7 @@ func (this *Client) Send(data string, mainCmd int, subCmd int) {
 	this.ClientMutex.Unlock()
 	//checkError(err)
 
-
+	time.Sleep(time.Millisecond * 20)
 	//fmt.Printf("send msg: %x", bufferEnd)
 	//fmt.Println("")
 }

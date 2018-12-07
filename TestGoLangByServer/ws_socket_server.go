@@ -167,7 +167,7 @@ func (a *Client) Run() {
 			bufTemp := buf[bufHead:bufLen]   //要处理的buffer
 			bufHeadTemp := a.handlerRead(bufTemp) //处理结束之后返回，接下来要开始的范围
 			bufHead += bufHeadTemp
-			time.Sleep(time.Millisecond * 2)
+			time.Sleep(time.Millisecond * 10)
 
 			//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
 			if bufHeadTemp == 0 {
