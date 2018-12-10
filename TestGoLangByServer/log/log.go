@@ -5,10 +5,11 @@ import (
 	"log"
 	"fmt"
 	"time"
+	"strconv"
 )
 
 
-
+var ServerPort int
 
 // 判断文件夹是否存在
 func PathExists(path string) (bool, error) {
@@ -43,7 +44,7 @@ func PrintLogger(s string, print bool)  {
 	t1:=time.Now()
 	t11 := t1.Format("2006-01-02")
 
-	file, _ := os.OpenFile(logDir+"/Logger_"+t11 +".log",os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
+	file, _ := os.OpenFile(logDir+"/Logger_"+t11+"_"+ strconv.Itoa(ServerPort) +".log",os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
 	logger := log.New(file, "", log.LstdFlags)
 	logger.Println("[Log] ",s)
 	if print {

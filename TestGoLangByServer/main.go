@@ -35,7 +35,7 @@ var GameServerAddress string
 //var GameServerWebSocketAddress string
 var WebSocketPort int
 var SocketPort int
-
+var ClientStart int
 var ShowLog int
 var IsWebSocket bool
 
@@ -71,8 +71,9 @@ func main() {
 	flag.Parse()
 	WebSocketPort = *wsPort
 	SocketPort = *sPort
-	ClientStart := * start
+	ClientStart = * start
 	ClientEnd := *end
+	log.ServerPort = SocketPort
 
 	if WebSocketPort == 0 || SocketPort == 0 || ClientStart == 0 || ClientEnd == 0{
 
