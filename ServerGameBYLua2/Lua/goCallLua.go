@@ -89,7 +89,28 @@ func (m *MyLua)GoCallLuaReload() error {
 	return err
 }
 
-// 将服务器地址和端口传递给lua， 记录用
+// ----------------------Lua连接mysql----------------------------------------
+func (m *MyLua)GoCallLuaConnectMysql(addr string,db string ,user string ,pwd string) bool {
+	GlobalVar.GlobalMutex.Lock()
+
+	if err := m.L.CallByParam(lua.P{
+		Fn: m.L.GetGlobal("MysqlConnect"),
+		NRet: 1,
+		Protect: true,
+	},lua.LString(addr),lua.LString(db),lua.LString(user),lua.LString(pwd)); err != nil {		// 参数
+		log.PrintLogger("GoCallLuaConnectMysql error :"+err.Error())
+	}
+	ret := m.L.Get(1) // returned value
+	//fmt.Println("ret",ret, reflect.TypeOf(ret))
+	m.L.Pop(1)  // remove received value
+	GlobalVar.GlobalMutex.Unlock()
+	if ret == lua.LTrue {
+		return true
+	}
+	return false
+}
+
+// ----------------------将服务器地址和端口传递给lua， 记录用----------------------
 func (m *MyLua)GoCallLuaSetVar(name string, address string) {
 	m.L.SetGlobal(name, lua.LString(address))
 }

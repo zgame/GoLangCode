@@ -48,6 +48,7 @@ require("Random")
 require("dumpTable")
 require("zTable")
 require("zRedis")
+require("zMySql")
 
 -------------------------------------Redis----------------------------------------
 package.path = "Script/DataBase/?.lua;"..package.path

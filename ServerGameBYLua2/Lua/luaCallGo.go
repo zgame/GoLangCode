@@ -6,6 +6,7 @@ import (
 	"../Utils/ztimer"
 	"../Utils/zRedis"
 	"time"
+	mysql "github.com/tengattack/gluasql/mysql"
 )
 
 //--------------------------------------------------------------------------------
@@ -33,6 +34,7 @@ func (m *MyLua)InitResister() {
 
 	//加载protobuf
 	luaopen_pb(m.L)
+	m.L.PreloadModule("mysql", mysql.Loader)
 }
 
 

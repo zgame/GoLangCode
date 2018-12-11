@@ -23,7 +23,6 @@ import (
 	"runtime"
 	"flag"
 	"net/http"
-
 	_ "net/http/pprof"
 	oldLog "log"
 )
@@ -52,6 +51,12 @@ var ServerAddress string    // ServerAddress 服务器地址
 var RedisAddress string		// redis 服务器地址
 var RedisPass string		// redis pwd
 var err error
+
+var MySqlServerIP string		// mysql
+var Database string
+var MySqlUid string
+var MySqlPwd string
+
 
 
 var GameManagerLua *Lua.MyLua    // 公共部分lua脚本
@@ -98,6 +103,9 @@ func main() {
 	if zRedis.InitRedis(RedisAddress,RedisPass) == false{
 		return
 	}
+	//if zMySql.ConnectDB() == false{
+	//	return
+	//}
 
 	//fmt.Println("-------------------读取CVS数据文件---------------------------")
 	//CSV.LoadFishServerExcel()
@@ -134,6 +142,10 @@ func main() {
 	//CreateGoroutineForLuaGameTable()
 
 	fmt.Println("-------------------启动gameManager---------------------------")
+	if GameManagerLua.GoCallLuaConnectMysql(MySqlServerIP,Database,MySqlUid,MySqlPwd) == false{
+		fmt.Println("lua mysql 数据库没有连接成功")
+		return
+	}
 	GameManagerLua.GoCallLuaLogic("GoCallLuaStartGamesServers")
 	//StartMultiThreadChannelPlayerToGameManager()
 
@@ -224,6 +236,12 @@ func initSetting()  {
 	ServerAddress = f.Section("Server").Key("ServerAddress").String()
 	//WebSocketAddress = f.Section("Server").Key("WebSocketAddress").String()
 	//GoroutineMax ,err  = f.Section("Server").Key("GoroutineMax").Int()
+
+	MySqlServerIP = f.Section("Server").Key("MySqlServerIP").Value()
+	Database = f.Section("Server").Key("Database").Value()
+	MySqlUid = f.Section("Server").Key("uid").Value()
+	MySqlPwd = f.Section("Server").Key("pwd").Value()
+
 	log.CheckError(err)
 }
 

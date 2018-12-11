@@ -33,7 +33,7 @@ func get_data()  {
 
 	//**************************************************************************************
 
-	fmt.Println("开始连接数据库！")
+	fmt.Println("开始连接mysql数据库！")
 
 	// 从sql中获取数据
 	//Engine, err := xorm.NewEngine("odbc", "driver={SQL Server};Server="+ServerIP+";Database="+Database+";uid="+uid+";pwd="+pwd+";")
