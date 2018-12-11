@@ -28,7 +28,8 @@ function GoCallLuaSaveServerState()
     state["PlayerNum"] = GetTableLen(AllPlayerList)
     state["SendNum"] = ServerStateSendNum
     state["ReceiveNum"] = ServerStateReceiveNum
-    RedisSaveServerState(state)
+    --RedisSaveServerState(state)
+    SqlSaveServerState(state)
     ServerStateSendNum = 0
     ServerStateReceiveNum = 0       -- 记录完成，把数量清空
 end

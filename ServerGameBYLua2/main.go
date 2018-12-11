@@ -315,7 +315,7 @@ func GameManagerInit() {
 
 	Lua.GameManagerLuaHandle = GameManagerLua  // 把句柄传递给lua保存一份
 	GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
-	GameManagerLua.GoCallLuaSetVar("ServerIP_Port", ServerAddress+ "_" + strconv.Itoa(SocketPort)) //把服务器地址传递给lua
+	GameManagerLua.GoCallLuaSetVar("ServerIP_Port", ServerAddress+ ":" + strconv.Itoa(SocketPort)) //把服务器地址传递给lua
 
 }
 

@@ -50,6 +50,7 @@ function ReloadAll()
     reloadFile("Script/DataBase/redisConst")
     reloadFile("Script/DataBase/redisGame")
     reloadFile("Script/DataBase/redisPlayer")
+    reloadFile("Script/DataBase/sqlStatistic")
 
 
     -- Logger

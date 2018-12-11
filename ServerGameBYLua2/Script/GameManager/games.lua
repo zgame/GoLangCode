@@ -70,10 +70,15 @@ end
 function Game:ReleaseTableByUID(tableId)
     if tableId ~= 1 then
         self.AllTableList[tableId] = nil
-        RedisDelGameState(self.Id, tableId)   -- 把记录桌子状态的redis删掉
+        SqlDelGameState(self.Id, tableId)   -- 把记录桌子状态的redis删掉
         Logger("清理掉桌子"..tableId)
     else
-        -- 第一个桌子是保留着的
+        -- 第一个桌子是保留着的，只是清理一下
+        local state ={}
+        state["FishNum"] = 0
+        state["BulletNum"] = 0
+        state["SeatArray"] = 0
+        SqlSaveGameState(self.Id, tableId, state)       -- mysql桌子状态修改一下
     end
     collectgarbage()        -- 强制gc
 end

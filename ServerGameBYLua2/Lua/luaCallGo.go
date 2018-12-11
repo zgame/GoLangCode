@@ -6,7 +6,8 @@ import (
 	"../Utils/ztimer"
 	"../Utils/zRedis"
 	"time"
-	mysql "github.com/tengattack/gluasql/mysql"
+	mysql "../Utils/mysql"
+	//mysql "github.com/tengattack/gluasql/mysql"
 )
 
 //--------------------------------------------------------------------------------

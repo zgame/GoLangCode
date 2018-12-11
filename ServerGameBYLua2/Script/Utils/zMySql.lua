@@ -12,19 +12,26 @@ MySqlEngineConnect = MySqlEngine.new()
 function MysqlConnect(h,d,u,ps)
     ok, err = MySqlEngineConnect:connect({ host = h, port = 3306, database = d, user = u, password = ps })
 
-    --if ok then
-    --    res, err = MySqlEngineConnect:query('SELECT * FROM user')
-    --    printTable(res)
-    --end
+    if ok then
+        print("Mysql is ok")
+        --res, err = MySqlEngineConnect:query('SELECT * FROM user')
+        --printTable(res)
+        end
 
     return ok
 
 end
 
--- 执行sql语句
+-- 执行sql select语句
 function MysqlQuery(sql)
     local re,err
     re,err = MySqlEngineConnect:query(sql)
     return re
+end
+
+
+-- 执行sql exec语句
+function MysqlExec(sql)
+    MySqlEngineConnect:exec(sql)
 end
 

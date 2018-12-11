@@ -68,7 +68,7 @@ function ByTable:RunTable()
                 state["FishNum"] = self:GetFishNum()        --当前有多少条鱼
                 state["BulletNum"] = self:GetBulletNum()    --当前有多少子弹
                 state["SeatArray"] = GetTableLen(self.UserSeatArray)    --当前有多少玩家
-                RedisSaveGameState(self.GameID, self.TableID, state)
+                SqlSaveGameState(self.GameID, self.TableID, state)
                 self.LastRunTime = GetOsTimeMillisecond()
             end
             -- 检查玩家的情况，如果玩家长期离线，那么t掉，没人就清空桌子
@@ -227,7 +227,6 @@ function ByTable:PlayerStandUp(seatID,player)
     --如果是空桌子的话，清理一下桌子
     if self:CheckTableEmpty() then
         self:ClearTable()
-
         game:ReleaseTableByUID(self.TableID)    --回收桌子
     end
 end

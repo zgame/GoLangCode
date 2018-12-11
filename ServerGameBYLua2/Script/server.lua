@@ -50,11 +50,12 @@ require("zTable")
 require("zRedis")
 require("zMySql")
 
--------------------------------------Redis----------------------------------------
+-------------------------------------Redis mysql----------------------------------------
 package.path = "Script/DataBase/?.lua;"..package.path
 require("redisConst")
 require("redisGame")
 require("redisPlayer")
+require("sqlStatistic")
 
 
 --Logger("system ok")
