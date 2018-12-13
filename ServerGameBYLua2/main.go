@@ -338,6 +338,7 @@ func TimerCommonLogicStart() {
 		log.PrintfLogger("[%s] 头部不全：%d  数据不全%d   拼接次数 %d  成功%d    标识错误%d   -- 服务器状态：%s " , ServerAddress + ":"+strconv.Itoa(SocketPort),
 			Lua.StaticDataPackageHeadLess, Lua.StaticDataPackageProtoDataLess, Lua.StaticDataPackagePasteNum  ,Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, Lua.GetAllConnectMsg())
 
+		log.PrintfLogger("内存情况：%s",log.GetSysMemInfo())
 
 		//runtime.GC()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
