@@ -110,7 +110,10 @@ func (m *MyLua)GoCallLuaConnectMysql(addr string,db string ,user string ,pwd str
 	return false
 }
 
-// ----------------------将服务器地址和端口传递给lua， 记录用----------------------
-func (m *MyLua)GoCallLuaSetVar(name string, address string) {
-	m.L.SetGlobal(name, lua.LString(address))
+// ----------------------将go的变量传递给lua， 用来改变lua的全局变量值，一般用于统计和监控----------------------
+func (m *MyLua) GoCallLuaSetStringVar(name string, value string) {
+	m.L.SetGlobal(name, lua.LString(value))
+}
+func (m *MyLua) GoCallLuaSetIntVar(name string, value int) {
+	m.L.SetGlobal(name, lua.LNumber(value))
 }

@@ -315,7 +315,7 @@ func GameManagerInit() {
 
 	Lua.GameManagerLuaHandle = GameManagerLua  // 把句柄传递给lua保存一份
 	GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
-	GameManagerLua.GoCallLuaSetVar("ServerIP_Port", ServerAddress+ ":" + strconv.Itoa(SocketPort)) //把服务器地址传递给lua
+	GameManagerLua.GoCallLuaSetStringVar("ServerIP_Port", ServerAddress+ ":" + strconv.Itoa(SocketPort)) //把服务器地址传递给lua
 
 }
 
@@ -336,7 +336,7 @@ func TimerCommonLogicStart() {
 	// 创建计时器，定期去run公共逻辑
 	ztimer.TimerCheckUpdate(func() {
 		log.PrintfLogger("[%s] 头部不全：%d  数据不全%d   拼接次数 %d  成功%d    标识错误%d   -- 服务器状态：%s " , ServerAddress + ":"+strconv.Itoa(SocketPort),
-			Lua.StaticDataPackageHeadLess, Lua.StaticDataPackageProtoDataLess, Lua.StaticDataPackagePasteNum  ,Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, Lua.GetAllConnectMsg())
+			Lua.StaticDataPackageHeadLess, Lua.StaticDataPackageProtoDataLess, Lua.StaticDataPackagePasteNum  ,Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, GetAllConnectMsg())
 
 		log.PrintfLogger("内存情况：%s",log.GetSysMemInfo())
 
@@ -378,3 +378,43 @@ func TimerCommonLogicStart() {
 //		}
 //	}
 //}
+
+
+
+// 这是用来统计所有连接数量，及连接包不全的缓存大小
+func GetAllConnectMsg() string  {
+	connNum := 0
+	successSendClients := 0
+	successRecClients := 0
+	successSendMsg := 0
+	successRecMsg := 0
+	WriteChan := 0
+	AllConnect :=0
+
+	GlobalVar.RWMutex.RLock()
+	for _,v := range Lua.LuaConnectMyServer{
+		if v!=nil {
+			AllConnect ++
+			connNum += len(v.ReceiveBuf)
+			if v.SendMsgNum>0{
+				successSendClients++
+				successSendMsg += v.SendMsgNum
+				v.SendMsgNum = 0
+			}
+			if v.ReceiveMsgNum>0{
+				successRecClients ++
+				successRecMsg += v.ReceiveMsgNum
+				v.ReceiveMsgNum = 0
+			}
+			WriteChan += v.Conn.GetWriteChanCap()
+		}
+	}
+	//if AllConnect>0{
+	//	WriteChan = WriteChan/AllConnect
+	//}
+	GlobalVar.RWMutex.RUnlock()
+	GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)		// 发送缓冲区大小
+	GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError)  // 把数据头尾错误发送给lua
+	str:=fmt.Sprintf(" 用户正常发送消息数量 %d  正常接收  %d 每秒5发送 %d  每5秒接收 %d  goroutine数量 %d cpu %d  发送缓存平均占用%d",   successSendClients, successRecClients, successSendMsg , successRecMsg, runtime.NumGoroutine(),runtime.NumCPU(), WriteChan)
+	return "所有连接数量："+ strconv.Itoa(AllConnect) + "  所有包不全缓存大小:" + strconv.Itoa(connNum) + str
+}

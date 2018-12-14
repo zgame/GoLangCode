@@ -9,6 +9,8 @@
 ServerIP_Port = ""      -- 当前服务器的地址和端口号
 ServerStateSendNum = 0      -- 平均网络发送包数量
 ServerStateReceiveNum = 0   -- 平均网络接收包数量
+ServerSendWriteChannelNum = 0  -- 用来发送数据包的缓存，如果太大就会中断网络
+ServerDataHeadErrorNum = 0  -- 数据包的头尾有校验码， 这是校验码的错误数量
 
 
 ZswLogShowSendMsgNum = 0        -- 发送数量

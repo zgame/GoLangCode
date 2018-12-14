@@ -1,14 +1,11 @@
 package Lua
 
 import (
-	"fmt"
 	"net"
 	"../NetWork"
 	"../GlobalVar"
 	"../Utils/log"
 	"math"
-	"strconv"
-	"runtime"
 	"time"
 	"sync"
 )
@@ -24,15 +21,15 @@ var StaticDataPackagePasteNum = 0   // 统计信息，拼接次数
 var StaticDataPackagePasteSuccess = 0   // 统计信息，成功拼接后，解析成功
 var StaticDataPackageHeadFlagError = 0   // 统计信息，数据包头部标识不正确
 
-var luaConnectMyServer map[int]*MyServer    // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
+var LuaConnectMyServer map[int]*MyServer    // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
 var luaUIDConnectMyServer map[int]*MyServer // 将uid跟连接句柄进行哈希
 
 
 
 // MyServer是每个客户端的连接
 type MyServer struct {
-	conn NetWork.Conn			// 对应的每个玩家的连接
-	myLua     *MyLua			// 处理该玩家的lua脚本
+	Conn  NetWork.Conn // 对应的每个玩家的连接
+	myLua *MyLua       // 处理该玩家的lua脚本
 	//luaReloadTime	int			// 记录上次lua脚本更新的时间戳，后面统一到一个Lstate之后，这个作废了
 	ServerId int				// 自己分配的连接编号
 	UserId  int					// 玩家uid
@@ -46,42 +43,6 @@ type MyServer struct {
 	LastBuf []byte				// 最后一次接收数据包
 	ReceiveMsgNum int		// 接收包数量
 	SendMsgNum int			// 发送包的数量
-}
-
-// 这是用来统计所有连接数量，及连接包不全的缓存大小
-func GetAllConnectMsg() string  {
-	connNum := 0
-	successSendClients := 0
-	successRecClients := 0
-	successSendMsg := 0
-	successRecMsg := 0
-	WriteChan := 0
-	AllConnect :=0
-
-	GlobalVar.RWMutex.RLock()
-	for _,v := range luaConnectMyServer{
-		if v!=nil {
-			AllConnect ++
-			connNum += len(v.ReceiveBuf)
-			if v.SendMsgNum>0{
-				successSendClients++
-				successSendMsg += v.SendMsgNum
-				v.SendMsgNum = 0
-			}
-			if v.ReceiveMsgNum>0{
-				successRecClients ++
-				successRecMsg += v.ReceiveMsgNum
-				v.ReceiveMsgNum = 0
-			}
-			WriteChan += v.conn.GetWriteChanCap()
-		}
-	}
-	//if AllConnect>0{
-	//	WriteChan = WriteChan/AllConnect
-	//}
-	GlobalVar.RWMutex.RUnlock()
-	str:=fmt.Sprintf(" 用户正常发送消息数量 %d  正常接收  %d 每秒5发送 %d  每5秒接收 %d  goroutine数量 %d cpu %d  发送缓存平均占用%d",   successSendClients, successRecClients, successSendMsg , successRecMsg, runtime.NumGoroutine(),runtime.NumCPU(), WriteChan)
-	return "所有连接数量："+ strconv.Itoa(AllConnect) + "  所有包不全缓存大小:" + strconv.Itoa(connNum) + str
 }
 
 
@@ -100,7 +61,7 @@ func NewMyServer(conn NetWork.Conn,GameManagerLua *MyLua)  *MyServer{
 		MyServerUUID = 0
 	}
 	GlobalVar.GlobalMutex.Unlock()
-	return &MyServer{conn:conn,myLua:myLua,ServerId:ServerId,ReceiveBuf:nil}
+	return &MyServer{Conn:conn,myLua:myLua,ServerId:ServerId,ReceiveBuf:nil}
 }
 
 //--------------------------各个玩家连接逻辑主循环------------------------------
@@ -112,7 +73,7 @@ func (a *MyServer) Run() {
 	for {
 
 		//a.GlobalMutex.Lock()
-		buf,bufLen, err := a.conn.ReadMsg()
+		buf,bufLen, err := a.Conn.ReadMsg()
 		//a.GlobalMutex.Unlock()
 		//panic(strconv.Itoa(a.UserId)+"出现严重错误"+strconv.Itoa(a.ServerId))
 		//if r := recover(); r != nil {
@@ -294,9 +255,9 @@ func (a *MyServer) OnClose() {
 
 	// 清理掉一些调用关系
 	GlobalVar.RWMutex.Lock()
-	delete(luaConnectMyServer, a.ServerId)
+	delete(LuaConnectMyServer, a.ServerId)
 	delete(luaUIDConnectMyServer, a.UserId)
-	//luaConnectMyServer[a.ServerId] = nil
+	//LuaConnectMyServer[a.ServerId] = nil
 	//luaUIDConnectMyServer[a.UserId] = nil
 	GlobalVar.RWMutex.Unlock()
 
@@ -312,13 +273,13 @@ func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int) boo
 }
 
 func (a *MyServer) WriteMsg(msg ... []byte) bool{
-	if a == nil ||  a.conn == nil{
+	if a == nil ||  a.Conn == nil{
 		log.PrintLogger("当前连接已经关闭, 不发送了")
 		return false
 	}
 
 	//a.MyServerMutex.Lock()
-	err := a.conn.WriteMsg(msg...)
+	err := a.Conn.WriteMsg(msg...)
 	//a.MyServerMutex.Unlock()
 
 	if err != nil {
@@ -331,19 +292,19 @@ func (a *MyServer) WriteMsg(msg ... []byte) bool{
 }
 
 func (a *MyServer) LocalAddr() net.Addr {
-	return a.conn.LocalAddr()
+	return a.Conn.LocalAddr()
 }
 
 func (a *MyServer) RemoteAddr() net.Addr {
-	return a.conn.RemoteAddr()
+	return a.Conn.RemoteAddr()
 }
 
 //func (a *MyServer) Close() {
-//	a.conn.Close()
+//	a.Conn.Close()
 //}
 //
 //func (a *MyServer) Destroy() {
-//	a.conn.Destroy()
+//	a.Conn.Destroy()
 //}
 //
 //func (a *MyServer) UserData() interface{} {
@@ -362,10 +323,10 @@ func (a *MyServer) Init() {
 	//a.luaReloadTime = GlobalVar.LuaReloadTime
 
 	GlobalVar.RWMutex.Lock()
-	if luaConnectMyServer[a.ServerId] != nil {
-		log.PrintfLogger("luaConnectMyServer  已经有了, map重复了", a.ServerId,  a.UserId)
+	if LuaConnectMyServer[a.ServerId] != nil {
+		log.PrintfLogger("LuaConnectMyServer  已经有了, map重复了", a.ServerId,  a.UserId)
 	}
-	luaConnectMyServer[a.ServerId] = a
+	LuaConnectMyServer[a.ServerId] = a
 	GlobalVar.RWMutex.Unlock()
 
 	// 以后这里可以初始化玩家自己solo的游戏服务器

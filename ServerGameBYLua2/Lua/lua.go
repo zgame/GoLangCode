@@ -26,7 +26,7 @@ func NewMyLua() *MyLua {
 
 // --------------------全局变量初始化--------------------------
 func InitGlobalVar() {
-	luaConnectMyServer = make(map[int]*MyServer)
+	LuaConnectMyServer = make(map[int]*MyServer)
 	luaUIDConnectMyServer = make(map[int]*MyServer)
 	//GameManagerReceiveCh = make(chan lua.LValue)// 这是每个玩家线程跟主线程之间的通信用channel
 	//GameManagerSendCh = make(chan lua.LValue)
@@ -36,7 +36,7 @@ func InitGlobalVar() {
 // 通过lua堆栈找到对应的是哪个myServer
 func GetMyServerByLSate(id int) *MyServer {
 	GlobalVar.RWMutex.RLock()
-	re := luaConnectMyServer[id]		// 这是全局变量，所以要加锁， 读写都要加
+	re := LuaConnectMyServer[id] // 这是全局变量，所以要加锁， 读写都要加
 	GlobalVar.RWMutex.RUnlock()
 	return re
 }

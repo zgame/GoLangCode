@@ -7,7 +7,8 @@
 ----------------------------保存服务器状态信息，是按照时间保存的，可以看历史记录-----------------------------
 function SqlSaveServerState(state)
     local time= GetOsDateNow()
-    local sql = string.format("insert into server_state (server_ip,time,table_num,player_num,rece_num,send_num) values ('%s','%s', %d,%d,%d,%d)",ServerIP_Port,time,state.TableNum,state.PlayerNum,state.ReceiveNum,state.SendNum)
+    local sql = string.format("insert into server_state (server_ip,time,table_num,player_num,rece_num,send_num, write_chan, head_err ) values ('%s','%s', %d,%d,%d,%d,%d,%d)",
+            ServerIP_Port,time,state.TableNum,state.PlayerNum,state.ReceiveNum,state.SendNum,ServerSendWriteChannelNum,ServerDataHeadErrorNum)
     --print(sql)
     MysqlExec(sql)
 end
