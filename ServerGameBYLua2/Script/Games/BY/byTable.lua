@@ -40,7 +40,7 @@ end
 ------------主循环-------------------
 function ByTable:RunTable()
     --    luaCallGoCreateGoroutine("RunTable")
---    self:InitTable()        -- 可以进行初始化
+    self:InitTable()        -- 可以进行初始化
 
     -- 开始桌子的主循环
     local RunTable = function()

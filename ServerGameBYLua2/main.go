@@ -70,6 +70,7 @@ var GameManagerLuaReloadTime int // 公共逻辑处理的lua更新时间
 
 func main() {
 
+	//runtime.GOMAXPROCS(1)
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	//远程获取pprof数据打开浏览器http://localhost:8081/debug/pprof/
 	go func() {
@@ -152,7 +153,7 @@ func main() {
 	TimerCommonLogicStart()
 
 	fmt.Println("-------------------读取数据库设置---------------------------")
-	UpdateDBSetting()
+	//UpdateLuaReload()
 
 	fmt.Println("-------------------游戏服务器开始建立连接---------------------------")
 	NetWorkServerStart()
@@ -183,7 +184,7 @@ func main() {
 		//select {
 		//case <-tickerCheckUpdateData.C:
 		//	// 定期更新后台的配置数据
-		//	UpdateDBSetting()
+		//	UpdateLuaReload()
 		//}
 		//start:= ztimer.GetOsTimeMillisecond()
 		//GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
@@ -255,7 +256,7 @@ func initVar()  {
 
 
 //-------------------------定期更新后台的配置数据---------------------------------------------------------
-func UpdateDBSetting() {
+func UpdateLuaReload() {
 	// 以后增加读取数据库的代码
 	//...
 
@@ -352,8 +353,8 @@ func TimerCommonLogicStart() {
 	// 创建计时器，定期去更新
 	ztimer.TimerCheckUpdate(func() {
 		// 定期更新后台的配置数据
-		UpdateDBSetting()
-	}, 10)  // 60秒
+		UpdateLuaReload()
+	}, 60)  // 60秒
 
 	ztimer.TimerClock0(func() { // 创建计时器，夜里12点触发
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
