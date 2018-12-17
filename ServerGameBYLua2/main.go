@@ -188,6 +188,8 @@ func main() {
 		//}
 		//start:= ztimer.GetOsTimeMillisecond()
 		//GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
+
+		//UpdateDBSetting()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 给lua的桌子用的 n个协程函数
 		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
 		//end:= ztimer.GetOsTimeMillisecond()
@@ -348,12 +350,15 @@ func TimerCommonLogicStart() {
 	// 创建计时器，定期去保存服务器状态
 	ztimer.TimerCheckUpdate(func() {
 		GameManagerLua.GoCallLuaLogic("GoCallLuaSaveServerState") // 保存服务器的状态
+		runtime.GC()
 	}, 60)
 
 	// 创建计时器，定期去更新
 	ztimer.TimerCheckUpdate(func() {
 		// 定期更新后台的配置数据
+
 		UpdateLuaReload()
+
 	}, 60)  // 60秒
 
 	ztimer.TimerClock0(func() { // 创建计时器，夜里12点触发

@@ -8,7 +8,7 @@
 
 Fish = {}
 function Fish:New(uid)
-    c = {
+    local c = {
         FishUID = uid, --UID
         FishKindID = 0, -- 鱼的表中的类型， 是小丑鱼，娃娃鱼，还是锤头鲨
         FishType = 0, -- 鱼大的分类类型， 是大鱼，小鱼，中鱼，还是boss
@@ -41,7 +41,7 @@ function Fish:FishRun(table)
 end
 
 -- 创建一条鱼
-function Fish:CreateFish(kindId,x,y,PathID)
+function Fish:SetFishData(kindId, x, y, PathID)
 
     local now = GetOsTimeMillisecond()
     local speed = FishServerExcel[tostring(kindId)].speed

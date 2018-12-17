@@ -15,6 +15,8 @@
 function GoCallLuaCommonLogicRun()
 --    print("公共逻辑循环处理")
     ShowAllGameStates()
+
+    collectgarbage()        -- 系统gc
 end
 
 -- 每60秒记录一下，服务器的状态到数据库中

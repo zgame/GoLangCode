@@ -40,6 +40,18 @@ end
 ------------主循环-------------------
 function ByTable:RunTable()
     --    luaCallGoCreateGoroutine("RunTable")
+
+
+    -- 做一个内存测试
+    --for i = 1, 100000 do
+    --   local fish = self:CreateFish()
+    --   --fish:SetFishData(101,0,0,1)
+    --   -- fish = nil
+    --end
+    --self:DelFishes()
+    --collectgarbage()
+
+
     self:InitTable()        -- 可以进行初始化
 
     -- 开始桌子的主循环
@@ -555,7 +567,7 @@ function ByTable:DistributeNewFish(Distribute,offsetX,offsetY)
     local kindId = Distribute.FishKindID
     -- 创建鱼
     local fish = self:CreateFish()
-    fish:CreateFish(kindId,offsetY,offsetY,Distribute.FirstPathID)
+    fish:SetFishData(kindId,offsetY,offsetY,Distribute.FirstPathID)
 
     -- 发送给所有客户端生成鱼的消息
     self:SendNewFishes(fish)
