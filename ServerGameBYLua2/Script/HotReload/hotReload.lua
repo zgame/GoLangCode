@@ -9,7 +9,7 @@
 -----------------------------------------------------------------------------
 
 
-local function reloadFile(module_name)
+function ReloadFile(module_name)
     package.loaded[module_name] = nil
     require(module_name)
 end
@@ -21,72 +21,72 @@ function ReloadAll()
     Logger("------------------start reload all---------------------------")
 
      --HotReload
-    reloadFile("Script/HotReload/hotReload")
+    ReloadFile("Script/HotReload/hotReload")
 
     -- CSV
-    reloadFile("Script/CSV/mgby_fish_sever")
+    ReloadFile("Script/CSV/mgby_fish_sever")
 
     -- Protocol
-    reloadFile("Script/Protocol/build/CMD_Game_pb")
-    reloadFile("Script/Protocol/build/CMD_GameServer_pb")
+    ReloadFile("Script/Protocol/build/CMD_Game_pb")
+    ReloadFile("Script/Protocol/build/CMD_GameServer_pb")
 
     -- Const
-    reloadFile("Script/Const/Const")
-    reloadFile("Script/Const/Excel")
-    reloadFile("Script/Const/Proto")
-    reloadFile("Script/Const/protocol_cs")
-    reloadFile("Script/Const/protocol_gs")
-    reloadFile("Script/Const/protocol_ls")
+    ReloadFile("Script/Const/Const")
+    ReloadFile("Script/Const/Excel")
+    ReloadFile("Script/Const/Proto")
+    ReloadFile("Script/Const/protocol_cs")
+    ReloadFile("Script/Const/protocol_gs")
+    ReloadFile("Script/Const/protocol_ls")
 
     -- Utils
-    reloadFile("Script/Utils/Random")
-    reloadFile("Script/Utils/Time")
-    reloadFile("Script/Utils/zTable")
-    reloadFile("Script/Utils/zRedis")
-    reloadFile("Script/Utils/zMySql")
+    ReloadFile("Script/Utils/Random")
+    ReloadFile("Script/Utils/Time")
+    ReloadFile("Script/Utils/zTable")
+    ReloadFile("Script/Utils/zRedis")
+    ReloadFile("Script/Utils/zMySql")
 
 
     -- DataBase
-    reloadFile("Script/DataBase/redisConst")
-    reloadFile("Script/DataBase/redisGame")
-    reloadFile("Script/DataBase/redisPlayer")
-    reloadFile("Script/DataBase/sqlStatistic")
+    ReloadFile("Script/DataBase/redisConst")
+    ReloadFile("Script/DataBase/redisGame")
+    ReloadFile("Script/DataBase/redisPlayer")
+    ReloadFile("Script/DataBase/sqlStatistic")
 
 
     -- Logger
-    reloadFile("Script/Logger/logger")
+    ReloadFile("Script/Logger/logger")
 
     -- GameCommonLogic
-    reloadFile("Script/GameCommonLogic/commonLogic")
+    ReloadFile("Script/GameCommonLogic/commonLogic")
 
 
     -- Games
-    reloadFile("Script/Games/BY/byBullet")
-    reloadFile("Script/Games/BY/byFish")
-    reloadFile("Script/Games/BY/byFishDistribute")
-    reloadFile("Script/Games/BY/byTable")
+    ReloadFile("Script/Games/BY/byBullet")
+    ReloadFile("Script/Games/BY/byFish")
+    ReloadFile("Script/Games/BY/byFishDistribute")
+    ReloadFile("Script/Games/BY/byTable")
 
     -- GameManager
-    reloadFile("Script/GameManager/player")
-    reloadFile("Script/GameManager/user")
-    reloadFile("Script/GameManager/games")
-    reloadFile("Script/GameManager/gameManager")
+    ReloadFile("Script/GameManager/player")
+    ReloadFile("Script/GameManager/user")
+    ReloadFile("Script/GameManager/games")
+    ReloadFile("Script/GameManager/gameManager")
 
 
     -- GlobalVar    -- 注意事项： 因为这里有游戏的全局变量，所以不能reload
 
     -- NetWork
-    reloadFile("Script/NetWork/LoginServer")
-    reloadFile("Script/NetWork/gameFire")
-    reloadFile("Script/NetWork/gameEnter")
-    reloadFile("Script/NetWork/Statistic")
-    reloadFile("Script/NetWork/network")
+    ReloadFile("Script/NetWork/LoginServer")
+    ReloadFile("Script/NetWork/gameFire")
+    ReloadFile("Script/NetWork/gameEnter")
+    ReloadFile("Script/NetWork/Statistic")
+    ReloadFile("Script/NetWork/network")
 
 
     -- main
     --reloadFile("Script/server")
 
-
+    collectgarbage()
 end
 
 

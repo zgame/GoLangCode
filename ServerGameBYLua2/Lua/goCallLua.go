@@ -112,8 +112,12 @@ func (m *MyLua)GoCallLuaConnectMysql(addr string,db string ,user string ,pwd str
 
 // ----------------------将go的变量传递给lua， 用来改变lua的全局变量值，一般用于统计和监控----------------------
 func (m *MyLua) GoCallLuaSetStringVar(name string, value string) {
+	GlobalVar.GlobalMutex.Lock()
 	m.L.SetGlobal(name, lua.LString(value))
+	GlobalVar.GlobalMutex.Unlock()
 }
 func (m *MyLua) GoCallLuaSetIntVar(name string, value int) {
+	GlobalVar.GlobalMutex.Lock()
 	m.L.SetGlobal(name, lua.LNumber(value))
+	GlobalVar.GlobalMutex.Unlock()
 }
