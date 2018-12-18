@@ -9,22 +9,25 @@ import (
 // 处理单个包内容
 func (this *Client)handlerRead(buf []byte) int {
 	//var err error
-
-	msg_id, sub_msg_id, bufferSize, ver := dealRecvTcpDeaderData(buf)
-
 	offset := 10
 
+	if len(buf)< offset {		// 接受不全，那么缓存
+		//log.PrintfLogger("数据包头部小于 10 : %x   ",buf)
 
+		this.ReceiveBuf = buf
+		//str:= fmt.Sprintf("%d数据包头部小于 10 : %x   ",this.Index,buf)
+		//this.PrintLogger(str)
+		return 0
+	}
+	// 读取头部信息
+	msg_id, sub_msg_id, bufferSize, ver := dealRecvTcpDeaderData(buf)
 
-	if len(buf) < offset + int(bufferSize){
-		fmt.Println("出现数据包异常")
-		fmt.Println("len(buf)",len(buf))
-		fmt.Println("offset",offset)
-		fmt.Println("bufferSize",bufferSize)
-		fmt.Printf("Receive buf: %x",buf)
-		fmt.Println(" ")
+	//BufAllSize := offset + int(bufferSize)    // 整个数据包长度
 
-		return  int(bufferSize) + offset
+	if len(buf) < offset + int(bufferSize) {	// 接受不全，那么缓存
+		this.ReceiveBuf = buf
+
+		return  0
 	}
 	if ver > 0{
 		offset = 12		// version == 1 的时候， 加了一个token

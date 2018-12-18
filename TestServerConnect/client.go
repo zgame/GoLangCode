@@ -40,21 +40,58 @@ func (this *Client) Receive()  bool{
 		return false
 	}
 	bufHead := 0
-	num:=0
+	//num:=0
 	for {
 		//fmt.Println(" buf ",buf)
 		if this.Quit {
 			return false
 		}
+		if this.ReceiveBuf !=nil {
+			//str:= fmt.Sprintf("%d上次buf: %x ", this.Index,this.ReceiveBuf)
+			//this.PrintLogger(str)
+			//str= fmt.Sprintf("%d本次buf: %x ", this.Index,buf)
+			//this.PrintLogger(str)
+
+
+			buf2 := make([]byte,len(this.ReceiveBuf)+bufLen)		//缓存从新组合包
+			copy(buf2, this.ReceiveBuf)
+			copy(buf2[len(this.ReceiveBuf):],buf[:bufLen])
+			//str= fmt.Sprintf("%d合并后buf2: %x ", this.Index,buf2)
+			//this.PrintLogger(str)
+			buf = buf2
+			bufLen= len(buf2)
+		}
 
 		bufTemp := buf[bufHead:bufLen]   //要处理的buffer
-		bufHead += this.handlerRead(bufTemp)   //处理结束之后返回，接下来要开始的范围
-		time.Sleep(time.Millisecond * 100)
+		bufHeadTemp := this.handlerRead(bufTemp)   //处理结束之后返回，接下来要开始的范围
+		bufHead += bufHeadTemp
+		time.Sleep(time.Millisecond * 10)
 		//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
-		num++
+		//num++
 		//fmt.Println("num",num)
-		if bufHead >= bufLen{
-			return true
+		//if bufHead >= bufLen{
+		//	return true
+		//}
+		if bufHeadTemp == 0 {
+			return true		// 包不全，等待下一次继续接受包
+		}else if bufHeadTemp > 0 {				// 解析完成
+			if this.ReceiveBuf != nil {			// 如果是拼接包，清理一下
+				//str := fmt.Sprintf("%d 拼接后成功解析%x", this.Index, buf)
+				//this.PrintLogger(str)
+				this.ReceiveBuf = nil
+			}
+		}else if bufHeadTemp == -1 {
+			//log.PrintfLogger("最后一次成功的buf：%x  bufHeadTemp%d  bufHead %d",a.SuccessBuf , bufHeadTemp, bufHead)
+			//log.PrintfLogger("最后一次接收的buf：%x  len:%d",a.LastBuf, len(a.LastBuf))
+			return false		//数据包不正确，关闭连接
+		}
+
+		if bufHead >= bufLen {
+			//this.LastBuf = buf[:bufLen]		//记录上次接收buf
+			//if bufHead > bufLen{
+			//	log.PrintfLogger(" %d bufHead  %d > bufLen %d  bufHeadTemp %d  buf：%x", a.Index, bufHead ,  bufHeadTemp ,bufLen,buf[:bufLen])
+			//}
+			return true   //解析结束，等待下一次继续接受
 		}
 	}
 

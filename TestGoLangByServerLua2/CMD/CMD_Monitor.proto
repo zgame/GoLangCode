@@ -1,0 +1,82 @@
+﻿// To use the "libprotobuf-lite.lib" library for C++ code.
+option optimize_for = LITE_RUNTIME;
+
+
+// Namespace: MESSAGE
+package CMD;
+
+message CMD_MONITOR_CLIENT_REG
+{
+	
+};
+
+message CMD_MONITOR_SERVER_REG
+{
+	optional int32	server_id = 1;						//服务器ID
+	optional bytes	server_name = 2;					//服务器名称
+	optional int32  start_time = 3;						//服务器启动时间
+	optional int32	room_state = 4;						//房间的状态，正常是0，维护是1
+};
+
+// 服务器基本信息
+message tagMonitorItem
+{
+	optional int32	server_id = 1;						//服务器ID
+	optional bytes	server_name = 2;					//服务器名称
+	optional int32  start_time = 3;						//服务器启动时间
+	optional int32	room_state = 4;						//房间的状态，正常是0，维护是1
+};
+
+// 监控服务器列表
+message CMD_MONITOR_ITEM_LST
+{
+	repeated tagMonitorItem items = 1;					//服务器列表
+};
+
+// 服务器
+message CMD_MONITOR_NEW_ITEM
+{
+	optional tagMonitorItem item = 1;					//服务器
+};
+
+message CMD_MONITOR_DEL_ITEM
+{
+	optional int32	server_id = 1;						//服务器ID
+};
+
+// 更新运行状态信息
+message CMD_MONITOR_ITEM_STATE
+{
+	optional int32	server_id = 1;						//服务器ID
+	optional int64	memory = 2;							//运行内存
+	optional int32	cpu = 3;							//cpu占比
+	optional int64	io_read = 4;						//io读字节数
+	optional int64	io_write = 5;						//io写字节数
+	optional int32  online = 6;							//在线人数
+	optional int32	room_state = 7;						//房间的状态，正常是0，维护是1
+};
+
+// 日志输出
+message CMD_MONITOR_LOG
+{
+	optional int32	server_id = 1;						//服务器ID
+	optional int32	log_level = 2;						//日志等级
+	optional int64	log_time = 3;						//日志时间
+	optional bytes	log_text = 4;						//日志内容
+};
+
+// 控制指令
+message CMD_MONITOR_CMD
+{
+	optional int32	server_id = 1;						//服务器ID
+	optional int32  client_id = 2;						//监控客户端id
+	optional bytes	cmd = 3;							//指令内容
+};
+
+// 控制指令
+message CMD_MONITOR_CMD_RESP
+{
+	optional int32	server_id = 1;						//服务器ID
+	optional int32  client_id = 2;						//监控客户端id
+	optional bytes	result = 3;							//指令执行结果
+};

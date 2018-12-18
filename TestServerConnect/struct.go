@@ -1,8 +1,8 @@
 package main
 
 import (
-	"net"
 	"time"
+	"net"
 )
 
 type Client struct {
@@ -24,6 +24,8 @@ type Client struct {
 
 	ReloginTime time.Time	// 志勇要模拟玩家玩1分钟再退出重新进入的测试
 	Quit  bool
+
+	ReceiveBuf  []byte
 }
 
 

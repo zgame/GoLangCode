@@ -4,13 +4,16 @@ package main
 import (
 	"net"
 	"sync"
-
+	"net/http"
 	//"util/logs"
 	//"github.com/astaxie/beego/logs"
 	"fmt"
-
+	_ "net/http/pprof"			// 注意这里
 	"time"
 	"github.com/go-ini/ini"
+	"log"
+	"runtime"
+	"strconv"
 )
 
 
@@ -66,6 +69,11 @@ func main() {
 	UseFire ,err   = f.Section("Server").Key("UseFire").Bool()
 	UseSkill ,err   = f.Section("Server").Key("UseSkill").Bool()
 
+
+	go func() {
+		log.Println(http.ListenAndServe("localhost:8080", nil))
+	}()
+
 	GetEngine()
 	getGoldFishMap()
 
@@ -101,7 +109,7 @@ func main() {
 
 			clients := &Client{conn, i, nil, nil, nil, 0, false,
 			time.Now(), time.Now(), time.Now(), time.Now(), 0, 0, 0,
-				time.Now().Add(time.Second * time.Duration(ReLoginTime)),false}
+				time.Now().Add(time.Second * time.Duration(ReLoginTime)),false,nil}
 
 			clients.Gameinfo = clients.Gameinfo.New()
 
@@ -113,6 +121,13 @@ func main() {
 		}(i)
 	}
 
+	go func() {
+		for{
+			PrintfLogger("内存情况：%s",GetSysMemInfo())
+			time.Sleep(time.Second)
+		}
+	}()
+
 	w.Wait()
 	//for{
 	//	time.Sleep(time.Second * 1)
@@ -123,12 +138,7 @@ func main() {
 	fmt.Println("---------压测已经结束! ----- ")
 	fmt.Println("-----------------------------------------------------")
 
-	for{
-		select {
 
-		}
-		time.Sleep(time.Second)
-	}
 
 
 }
@@ -210,3 +220,30 @@ func (c *Client) ConnectLoginServer() {
 	startClient(c)
 }
 
+
+
+func GetSysMemInfo()  string{
+	//自身占用
+	memStat := new(runtime.MemStats)
+	runtime.ReadMemStats(memStat)
+
+	str:= ""
+	//str += "   Lookups:" + strconv.Itoa( int(memStat.Lookups))
+	//str += "M   TotalAlloc:" + strconv.Itoa( int(memStat.TotalAlloc/1000000))//从服务开始运行至今分配器为分配的堆空间总和
+	str += "  Sys:" + strconv.Itoa( int(memStat.Sys/1000000) )+ "M"
+	//str += "M   Mallocs:" + strconv.Itoa( int(memStat.Mallocs))//服务malloc的次数
+	//str += "次   Frees:" + strconv.Itoa( int(memStat.Frees))//服务回收的heap objects
+	str += "   HeapAlloc:" + strconv.Itoa( int(memStat.HeapAlloc/1000000)) + "M"//服务分配的堆内存
+	str += "   HeapSys:" + strconv.Itoa( int(memStat.HeapSys/1000000))+ "M"//系统分配的堆内存
+	str += "   HeapIdle:" + strconv.Itoa( int(memStat.HeapIdle/1000000))+ "M"//申请但是为分配的堆内存，（或者回收了的堆内存）
+	str += "   HeapInuse:" + strconv.Itoa( int(memStat.HeapInuse/1000000))+ "M"//正在使用的堆内存
+	str += "   HeapReleased:" + strconv.Itoa( int(memStat.HeapReleased))+ "M"//返回给OS的堆内存，类似C/C++中的free。
+	//str += "   HeapObjects:" + strconv.Itoa( int(memStat.HeapObjects))+ "个"//堆内存块申请的量
+	str += "   StackInuse:" + strconv.Itoa( int(memStat.StackInuse/1000000)) + "M"//正在使用的栈
+	str += "   StackSys:" + strconv.Itoa( int(memStat.StackSys/1000000)) + "M"//系统分配的作为运行栈的内存
+	//str += "   NumGC:" + strconv.Itoa( int(memStat.NumGC))+ "次"////垃圾回收的内存大小
+	//str += "   NumForcedGC:" + strconv.Itoa( int(memStat.NumForcedGC))
+	//str += "   LastGC:" + strconv.Itoa( int(memStat.LastGC))
+	return str
+
+}
