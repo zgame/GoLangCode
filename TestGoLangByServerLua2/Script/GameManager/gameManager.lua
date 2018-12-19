@@ -69,6 +69,9 @@ end
 function GetPlayerByUID(uid)
     return AllPlayerList[tostring(uid)]     --- 这里一定要注意， goperlua在用数字作为key的时候会默认为数组，内存消耗惊人， 所以要用string
 end
+function SetAllPlayerList(userId,value)
+    AllPlayerList[tostring(userId)] = value
+end
 
 -- go通知lua玩家掉线了
 function GoCallLuaPlayerNetworkBroken(uid)

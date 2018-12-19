@@ -25,5 +25,7 @@ ZswLogShowReceiveLastTime = 0      -- 接收时间
 AllGamesList = {}   -- gameType (type string) , game          --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题          AllGamesList[tostring(gameType)]
 AllPlayerList = {}   -- 所有玩家列表   key  userId(type string) , value player     --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
 
+
+
 ALLUserUUID = 0   -- 玩家uid的自增
 

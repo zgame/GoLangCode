@@ -139,8 +139,11 @@ function handleUserFireSuccess(userId, buf)
     local msg = CMD_Game_pb.CMD_S_USER_FIRE()
     msg:ParseFromString(buf)
 
-
     local player = GetPlayerByUID(userId)
+    print(userId)
+    print(ZJson.encode(player))
+    printTable(player)
+
     local chair_id = player.ChairID
     if chair_id == msg.chair_id then
 

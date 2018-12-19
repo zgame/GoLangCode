@@ -229,7 +229,7 @@ end
 function ByTable:PlayerStandUp(seatID,player)
     Logger(player.User.UserId.."离开桌子"..player.TableID.."椅子"..player.ChairID)
     local game = GetGameByID(player.GameType)
-    AllPlayerList[tostring(player.User.UserId)] = nil         -- 清理掉游戏管理的玩家总列表
+    SetAllPlayerList(player.User.UserId, nil)         -- 清理掉游戏管理的玩家总列表
     self.UserSeatArray[seatID] = nil                -- 清理掉桌子的玩家列表
     player.TableID = TABLE_CHAIR_NOBODY
     player.ChairID = TABLE_CHAIR_NOBODY
