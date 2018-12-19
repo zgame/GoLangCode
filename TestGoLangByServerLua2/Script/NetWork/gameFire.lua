@@ -106,21 +106,24 @@ function GetPlayer_Game_Table(userId)
     return player,game, table
 end
 
-
---- 新生成鱼
+--------------------------------------------客户端----------------------------------------
+--- 服务器下发新生成鱼
 function handleNewFish(userId, buf)
     local msg = CMD_Game_pb.CMD_S_DISTRIBUTE_FISH()
     msg:ParseFromString(buf)
 
     local fishs = msg.fishs
+    local fish_num = 0
     for k, v in ipairs(fishs) do
-        print("新生成鱼",v.uid)
-        doFire(userId, v.uid)
+        --print("新生成鱼",v.uid)
+        fish_num = fish_num + 1
+        doFire(userId, v.uid)       -- 这里测试的时候，下发鱼就开枪
     end
+    --print("玩家:",userId , "收到鱼数量:", fish_num )
 end
 
 
---- 开火
+--- 申请开火
 function doFire(userId,fish_id)
     local sendCmd = CMD_Game_pb.CMD_C_USER_FIRE()
     sendCmd.lock_fish_id = fish_id
@@ -130,7 +133,7 @@ end
 
 
 
---- 开火成功
+--- 服务器返回开火成功
 function handleUserFireSuccess(userId, buf)
 
     local msg = CMD_Game_pb.CMD_S_USER_FIRE()
@@ -153,7 +156,7 @@ function handleUserFireSuccess(userId, buf)
 end
 
 
---- 抓鱼成功
+--- 服务器返回抓鱼成功
 function handleCatchFishSuccess(userId, buf)
 
     local msg = CMD_Game_pb.CMD_S_CATCH_FISH()

@@ -23,8 +23,8 @@ function ByTable:New(tableId,gameTypeId)
         GenerateFishUid = 1, -- 生成鱼的uid
         GenerateBulletUid = 1, -- 生成子弹的uid
 
-        FishArray = {},   -- 鱼的哈希表    uid, fish
-        BulletArray = {},   -- 子弹的哈希表   id,  bullet
+        FishArray = {},   -- 鱼的哈希表    uid, fish         --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
+        BulletArray = {},   -- 子弹的哈希表   id,  bullet         --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
 
 
         DistributeArray = {},   -- 鱼的生成信息数据    key顺序生成1,2,3,4...  Distribute
@@ -229,7 +229,7 @@ end
 function ByTable:PlayerStandUp(seatID,player)
     Logger(player.User.UserId.."离开桌子"..player.TableID.."椅子"..player.ChairID)
     local game = GetGameByID(player.GameType)
-    AllPlayerList[player.User.UserId] = nil         -- 清理掉游戏管理的玩家总列表
+    AllPlayerList[tostring(player.User.UserId)] = nil         -- 清理掉游戏管理的玩家总列表
     self.UserSeatArray[seatID] = nil                -- 清理掉桌子的玩家列表
     player.TableID = TABLE_CHAIR_NOBODY
     player.ChairID = TABLE_CHAIR_NOBODY
@@ -281,7 +281,8 @@ function ByTable:HandleUserFire(player , lockFishId)
     end
     -- 创建新的子弹
     local bullet = Bullet:New(self.GenerateBulletUid)
-    self.BulletArray[bullet.BulletUID] = bullet     --把bullet加入列表
+    --self.BulletArray[bullet.BulletUID] = bullet     --把bullet加入列表
+    self:SetBulletArray(bullet.BulletUID,bullet)        --把bullet加入列表
     bullet.UserID = player.User.UserID              --子弹的主人
     bullet.lockFishID = lockFishId                  --锁定鱼
     player.ActivityBulletNum = player.ActivityBulletNum + 1  --玩家已激活子弹增加
@@ -300,17 +301,24 @@ function ByTable:HandleUserFire(player , lockFishId)
 
 end
 
+-- 获取子弹
 function ByTable:GetBullet(bulletId)
-    return self.BulletArray[bulletId]
+    return self.BulletArray[tostring(bulletId)]
 end
+-- 把子弹加入列表或者删除
+function ByTable:SetBulletArray(bulletId,value)
+    self.BulletArray[tostring(bulletId)] = value
+end
+
 
 ----删除特定id的子弹
 function ByTable:DelBullet(bulletId)
-    local bullet = self.BulletArray[bulletId]
+    local bullet = self:GetBullet(bulletId)
     if bullet ~= nil then
-        self.BulletArray[bulletId] = nil
+        --self.BulletArray[bulletId] = nil
+        self:SetBulletArray(bulletId, nil)
     end
-    if #self.BulletArray == 0 then
+    if self:GetBulletNum() == 0 then
         self.GenerateBulletUid = 0  --重置一下生成子弹uuid
     end
 end
@@ -323,13 +331,15 @@ function ByTable:DelBullets(userId)
     end
     for k,v in pairs(self.BulletArray) do
         if v.UserID == userId then
-            self.BulletArray[k] = nil
+            --self.BulletArray[k] = nil
+            self:SetBulletArray(k,nil)
         end
     end
-    if #self.BulletArray == 0 then
+    if self:GetBulletNum() == 0 then
         self.GenerateBulletUid = 0  --重置一下生成子弹uuid
     end
 end
+
 ---- 有多少子弹
 function ByTable:GetBulletNum()
     local re = GetTableLen(self.BulletArray)
@@ -342,40 +352,46 @@ end
 ----新建一个新的鱼
 function ByTable:CreateFish()
     local fish = Fish:New(self.GenerateFishUid)
-    self.FishArray[fish.FishUID] = fish
+    --self.FishArray[tostring(fish.FishUID)] = fish
+    self:SetFishArray(fish.FishUID ,fish)
     self.GenerateFishUid = self.GenerateFishUid  + 1
     return fish
 end
 
 --- 获取鱼的句柄
 function ByTable:GetFish(fishId)
-    return self.FishArray[fishId]
+    return self.FishArray[tostring(fishId)]
+end
+function ByTable:SetFishArray(fishId,value)
+    self.FishArray[tostring(fishId)] = value
 end
 
 ----删除特定uid的鱼
 function ByTable:DelFish(fishId)
 
-    local fish = self.FishArray[fishId]
+    local fish = self:GetFish(fishId)
     if fish ~=nil then
-        self.FishArray[fishId] = nil
+        self:SetFishArray(fishId,nil)       -- 删掉鱼从列表中
     end
-    if #self.FishArray == 0 then
+    if self:GetFishNum() == 0 then
         self.GenerateFishUid = 0  --重置一下生成鱼uuid
     end
 
 end
+
 ----删除特定uid的鱼list
-function ByTable:DelFishList(fishIdList)
-    for k,v in pairs(fishIdList) do
-        local fish = self.FishArray[v]
-        if fish ~=nil then
-            self.FishArray[fishId] = nil
-        end
-    end
-    if #self.FishArray == 0 then
-        self.GenerateFishUid = 0  --重置一下生成鱼uuid
-    end
-end
+--function ByTable:DelFishList(fishIdList)
+--    for k,v in pairs(fishIdList) do
+--        local fish = self:GetFish(v)
+--        if fish ~=nil then
+--            self.FishArray[tostring(fish.FishUID)] = nil
+--            self:SetFish()
+--        end
+--    end
+--    if self:GetFishNum() == 0 then
+--        self.GenerateFishUid = 0  --重置一下生成鱼uuid
+--    end
+--end
 
 
 

@@ -119,10 +119,10 @@ function SendLoginGSGuest(serverId)
 
     sendCmd.machine_id = build_mac_addr(serverId)
     LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_USERID,sendCmd,nil)
-    print(serverId.."申请登录")
+    print("-----申请登录serverId:----------",serverId)
 end
 
--- 登录服务器成功
+-- 服务器返回登录服务器成功，下发uid
 function SendLoginGSGuestSuccess(serverId,buf)
     local msg = CMD_GameServer_pb.CMD_GR_LogonSuccess()
     msg:ParseFromString(buf)

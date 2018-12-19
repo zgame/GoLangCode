@@ -67,7 +67,7 @@ end
 
 -- 根据user uid 返回user的句柄
 function GetPlayerByUID(uid)
-    return AllPlayerList[uid]
+    return AllPlayerList[tostring(uid)]     --- 这里一定要注意， goperlua在用数字作为key的时候会默认为数组，内存消耗惊人， 所以要用string
 end
 
 -- go通知lua玩家掉线了

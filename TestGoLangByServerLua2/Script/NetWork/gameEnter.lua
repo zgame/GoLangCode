@@ -136,7 +136,7 @@ function SendEnterScene(userId, buf)
     LuaNetWorkSendToUser(userId, MDM_GF_FRAME, SUB_GF_GAME_OPTION ,sendCmd,nil)
 end
 
--- 进入场景成功
+-- 服务器回复进入场景成功，下发桌子椅子，其他玩家等信息
 function SendEnterSceneSuccess(userId, buf)
     local msg = CMD_Game_pb.CMD_S_ENTER_SCENE()
     msg:ParseFromString(buf)

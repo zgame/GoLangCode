@@ -61,7 +61,7 @@ end
 
 -- 根据user uid 返回user的句柄
 function GetPlayerByUID(uid)
-    return AllPlayerList[uid]
+    return AllPlayerList[tostring(uid)]
 end
 
 -- go通知lua玩家掉线了
@@ -85,13 +85,13 @@ end
 -----------------------------------游戏-------------------------------------
 --增加一个游戏， 指定这个游戏的类型， 并且创建一个桌子，并启动桌子逻辑
 function AddGame(name, gameType, gameScore)
-    if AllGamesList.gameType ~= nil then
+    if AllGamesList[tostring(gameType)] ~= nil then
         Logger("游戏类型["..gameType.."已经添加过了，不用重复添加")
         return
     end
 
     local game = Game:New(name, gameType,true)
-    AllGamesList[gameType] = game
+    AllGamesList[tostring(gameType)] = game
 
     --Logger("--------------AddGame--------------------------")
     game:CreateTable(gameType,gameScore)
@@ -99,8 +99,8 @@ function AddGame(name, gameType, gameScore)
 end
 
 --通过gameID获取是哪个游戏
-function GetGameByID(gameTypeID)
-    return AllGamesList[gameTypeID]
+function GetGameByID(gameType)
+    return AllGamesList[tostring(gameType)]
 end
 
 

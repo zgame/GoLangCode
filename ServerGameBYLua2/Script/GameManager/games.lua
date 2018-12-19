@@ -16,10 +16,10 @@ function Game:New(name,gameTypeId, switch)
         Id = gameTypeId,
         Switch = switch,    -- 游戏是否开启
 
-        AllTableList = {},  -- 所有桌子列表       key tableUid  ,value table
+        AllTableList = {},  -- 所有桌子列表       key tableUid  ,value table          --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
         TableUUID = 1 ,     -- tableUid 从1开始
 
-        GoRunTableAllList = {},   -- 桌子的run函数在里面
+        GoRunTableAllList = {},   -- 桌子的run函数在里面                --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
         GameScore = 0 ,     --  游戏倍率
     }
     setmetatable(c,self)
@@ -51,7 +51,7 @@ function Game:CreateTable(gameType,gameScore)
 --    Logger("创建了一个新的桌子,type:"..gameType)
 
     --增加该桌子到总列表中
-    self.AllTableList[self.TableUUID] = table_t
+    self.AllTableList[tostring(self.TableUUID)] = table_t
     self.TableUUID = self.TableUUID + 1     -- table uuid 自增
 
     -- 桌子开始自行启动计算
@@ -63,13 +63,14 @@ end
 
 --- 根据桌子uid 返回桌子的句柄
 function Game:GetTableByUID(tableId)
-    return self.AllTableList[tableId]
+    return self.AllTableList[tostring(tableId)]
 end
 
 --- 桌子回收
 function Game:ReleaseTableByUID(tableId)
     if tableId ~= 1 then
-        self.AllTableList[tableId] = nil
+        self.AllTableList[tostring(tableId)] = nil
+        self.GoRunTableAllList[tostring(tableId)] = nil
         SqlDelGameState(self.Id, tableId)   -- 把记录桌子状态的redis删掉
         Logger("清理掉桌子"..tableId)
     else
@@ -86,7 +87,7 @@ end
 
 --- 然后注册TableRun
 function Game:FindGoRoutineAndRegisterTableRun(tableId,func)
-    self.GoRunTableAllList[tableId] = func  --注册TableRun函数
+    self.GoRunTableAllList[tostring(tableId)] = func  --注册TableRun函数
 end
 
 
@@ -99,8 +100,8 @@ end
 function Game:PlayerLoginGame(oldPlayer)
     local player
     -- 如果玩家是断线重连的
-    if AllPlayerList[oldPlayer.User.UserId] ~= nil then      --找到之前有玩家在线
-        player = AllPlayerList[oldPlayer.User.UserId]          -- 把之前的玩家数据取出来
+    if AllPlayerList[tostring(oldPlayer.User.UserId)] ~= nil then      --找到之前有玩家在线
+        player = AllPlayerList[tostring(oldPlayer.User.UserId)]          -- 把之前的玩家数据取出来
         if oldPlayer.GameType == player.GameType and oldPlayer.NetWorkState == false then
             -- 同一个游戏， 并且玩家状态是等待断线重连
             player.NetWorkState = true                      -- 网络恢复正常
@@ -119,7 +120,7 @@ function Game:PlayerLoginGame(oldPlayer)
     -- 不是断线重连的就重新建一个玩家数据
     player = Player:New(oldPlayer.User)
     player.GameType = oldPlayer.GameType            -- 设定游戏类型
-    AllPlayerList[oldPlayer.User.UserId] = player      --创建好之后加入玩家总列表
+    AllPlayerList[tostring(oldPlayer.User.UserId)] = player      --创建好之后加入玩家总列表
 
 
 
@@ -144,7 +145,7 @@ function Game:PlayerLoginGame(oldPlayer)
 
     --没有空座位的房间了，创建一个
 --    print("没有空座位的房间了，创建一个吧,  score".. self.Id)
-    local gameType = self.AllTableList[1].GameID
+    local gameType = self.AllTableList["1"].GameID
     local table = self:CreateTable(gameType, self.GameScore)
     local seatId = table:GetEmptySeatInTable()  --获取空椅位
     table:InitTable()

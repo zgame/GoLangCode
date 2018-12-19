@@ -199,12 +199,12 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	//fmt.Println("bufferSize",bufferSize)
 
 	//-----------------------------错误提示----------------------------
-	//if msgSize >0 {
-	//	//fmt.Println("有错误提示了")
-	//	//msgBuffer := buf[offset + int(bufferSize):offset + int(bufferSize)+ int(msgSize)]
-	//	//fmt.Println(string(msgBuffer))
-	//	return BufAllSize
-	//}
+	if msgSize >0 {
+		//fmt.Println("有错误提示了")
+		msgBuffer := buf[NetWork.TCPHeaderSize + int(bufferSize):NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize)]
+		log.WritefLogger(string(msgBuffer))
+		return BufAllSize
+	}
 
 	//-----------------------------proto buffer 内容不完整----------------------------
 	if len(buf) < BufAllSize{
