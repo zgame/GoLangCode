@@ -103,7 +103,7 @@ function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
         elseif subMsgId == SUB_GR_LOGON_FAILURE  then
             print("登录失败")
         elseif subMsgId == SUB_GR_LOGON_SUCCESS  then
-            print("------------登录成功-------------")
+            --print("------------登录成功-------------")
             SendLoginGSGuestSuccess(serverId,data)
         elseif subMsgId == SUB_GR_LOGON_FINISH  then
             print("----------------登录完成，申请进入场景-----------",userId)

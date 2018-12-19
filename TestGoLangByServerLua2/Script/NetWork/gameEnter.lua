@@ -101,9 +101,11 @@ function SevEnterScene(userId, buf)
     sendCmd.scene_id = player.GameType
     sendCmd.table_id = player.TableID
     for k,v in pairs(table.UserSeatArray) do       -- 从桌子传递过来的其他玩家信息，原来坐着的玩家信息
-        local uu = sendCmd.table_users:add()
-        uu.user_id = v.User.UserId
-        uu.chair_id = k
+        if v~= nil then
+            local uu = sendCmd.table_users:add()
+            uu.user_id = v.User.UserId
+            uu.chair_id = k
+        end
     end
 
     LuaNetWorkSendToUser(userId,MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil) --进入房间
@@ -126,6 +128,8 @@ function SevEnterScene(userId, buf)
 end
 
 
+--------------------------------------------客户端----------------------------------------
+
 -- 申请进入场景
 function SendEnterScene(userId, buf)
     local sendCmd = CMD_GameServer_pb.CMD_GF_GameOption()
@@ -137,22 +141,25 @@ function SendEnterSceneSuccess(userId, buf)
     local msg = CMD_Game_pb.CMD_S_ENTER_SCENE()
     msg:ParseFromString(buf)
     --printTable(msg.table_users)
-    print("桌子id：", msg.table_id)
+    --print("桌子id：", msg.table_id)
 
     local user = User:New()
     user.UserId = userId
     local player = Player:New(user)
     player.TableID = msg.table_id
 
-    for k, v in pairs(msg.table_users) do
+
+    --print("table_users",ZJson.encode(msg.table_users))
+
+    local players_num = 0
+    for k, v in ipairs(msg.table_users) do
+        --print("table_users k",k)
+        --print("table_users v",v)
         if v.user_id == userId then
             player.ChairID = v.chair_id
         end
-        if v.user_id ~= nil then
-            print("玩家坐下", v.user_id, "椅子", v.chair_id)
-
-        end
+        players_num = players_num + 1
     end
-
-    AllPlayerList[player.User.UserId] = player
+    print("---------玩家坐下----------", userId, "桌子id：", msg.table_id ,"椅子", player.ChairID , "一共几个人", players_num)
+    AllPlayerList[player.User.UserId] = player      --- 客户端保留用户句柄
 end

@@ -101,9 +101,11 @@ function SevEnterScene(userId, buf)
     sendCmd.scene_id = player.GameType
     sendCmd.table_id = player.TableID
     for k,v in pairs(table.UserSeatArray) do       -- 从桌子传递过来的其他玩家信息，原来坐着的玩家信息
-        local uu = sendCmd.table_users:add()
-        uu.user_id = v.User.UserId
-        uu.chair_id = k
+        if v~= nil then
+            local uu = sendCmd.table_users:add()
+            uu.user_id = v.User.UserId
+            uu.chair_id = k
+        end
     end
 
     LuaNetWorkSendToUser(userId,MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil) --进入房间

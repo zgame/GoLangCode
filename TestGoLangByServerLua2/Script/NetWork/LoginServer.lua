@@ -87,6 +87,8 @@ function SevLoginGSGuest(serverId,buf)
 end
 
 
+
+--------------------------------------------客户端----------------------------------------
 function build_mac_addr(index)
     local str = "74-D4-36-AD-"
     local i1 = math.floor(index / 256)
