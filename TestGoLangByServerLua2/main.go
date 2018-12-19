@@ -17,6 +17,7 @@ import (
 	oldLog "log"
 	"strconv"
 	"math"
+	"sync"
 )
 
 
@@ -42,6 +43,13 @@ var ClientStart int
 var ClientEnd int
 var ShowLog int
 var IsWebSocket bool
+
+
+var clients []*NetWork.TCPClient
+var wsclients []*NetWork.WSClient
+
+var GlobalMutex sync.Mutex // 全局互斥锁
+//var GlobalClients map[*Client] interface{}  // 全局client
 
 // 程序入口
 func main() {
@@ -168,7 +176,7 @@ func GameManagerInit() {
 
 //-----------------------------------建立服务器的网络功能---------------------------------------------------------------
 func StartClient() {
-	GlobalClients = make(map[*Client]interface{},0)
+	//GlobalClients = make(map[*Client]interface{},0)
 	Lua.ClientStart = ClientStart
 	//IsWebSocket := false
 	if !IsWebSocket {
@@ -224,21 +232,25 @@ func GetStaticPrint()  {
 	successRecMsg := 0
 	WriteChan := 0
 	AllConnect :=0
+	//connNum := 0
 
 	GlobalMutex.Lock()
-	for k,_:=range GlobalClients{
-		AllConnect++
-		if k.SendMsgNum>0{
-			successSendClients++
-			successSendMsg += k.SendMsgNum
-			k.SendMsgNum = 0
+	for _,v := range Lua.LuaConnectMyServer{
+		if v!=nil {
+			AllConnect ++
+			//connNum += len(v.ReceiveBuf)
+			if v.SendMsgNum>0{
+				successSendClients++
+				successSendMsg += v.SendMsgNum
+				v.SendMsgNum = 0
+			}
+			if v.ReceiveMsgNum>0{
+				successRecClients ++
+				successRecMsg += v.ReceiveMsgNum
+				v.ReceiveMsgNum = 0
+			}
+			WriteChan += v.Conn.GetWriteChanCap()
 		}
-		if k.ReceiveMsgNum>0{
-			successRecClients ++
-			successRecMsg += k.ReceiveMsgNum
-			k.ReceiveMsgNum = 0
-		}
-		WriteChan += k.Conn.GetWriteChanCap()
 	}
 	//if AllConnect>0{
 	//	WriteChan = WriteChan/AllConnect		// 求一个平均值
