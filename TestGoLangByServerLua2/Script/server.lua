@@ -42,7 +42,7 @@ require("protocol_ls")
 
 -------------------------------------Const----------------------------------------
 require("commonLogic")
-require("hotReload")
+--require("hotReload")
 require("Time")
 require("Random")
 require("dumpTable")
@@ -74,13 +74,13 @@ require("globalVar")
 require("player")
 require("user")
 
-package.path = "Script/Games/BY/?.lua;"..package.path
-require("byBullet")
-require("byFish")
-require("byFishDistribute")
-require("byTable")
+--package.path = "Script/Games/BY/?.lua;"..package.path
+--require("byBullet")
+--require("byFish")
+--require("byFishDistribute")
+--require("byTable")
 
-require("games")
+--require("games")
 require("gameManager")
 
 

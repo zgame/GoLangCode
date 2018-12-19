@@ -161,5 +161,5 @@ function SendEnterSceneSuccess(userId, buf)
         players_num = players_num + 1
     end
     print("---------玩家坐下----------", userId, "桌子id：", msg.table_id ,"椅子", player.ChairID , "一共几个人", players_num)
-    AllPlayerList[player.User.UserId] = player      --- 客户端保留用户句柄
+    SetAllPlayerList(player.User.UserId, player)      --- 客户端保留用户句柄
 end

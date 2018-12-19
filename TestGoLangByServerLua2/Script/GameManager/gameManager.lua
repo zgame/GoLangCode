@@ -41,28 +41,28 @@ function GoCallLuaStartGamesServers(serverId)
 end
 
 -----------------------------------玩家注册，玩家掉线-------------------------------------
--- 服务器启动的时候， 从数据库中读取玩家最后的uid
-function GetALLUserUUID()
-    --这个要从数据库读取
-    ALLUserUUID = RedisGetAllPlayersUUID()
-    --print("ALLUserUUID",ALLUserUUID)
-    --如果读取数据是空，那么就重置
-    if ALLUserUUID == "" then
-        ALLUserUUID = 1000000000
-        RedisSaveAllPlayersUUID(ALLUserUUID)
-        print("初始化一下 ALLUserUUID",ALLUserUUID)
-    end
-    --print("ALLUserUUID",ALLUserUUID)
-end
-
---有一个新的玩家注册了，那么给他分配一个UID
-function GetLastUserID()
-    local r = 1     -- math.random(1, 4)        --返回[1,4]的随机整数
-
-    ALLUserUUID = RedisMultiProcessGetAllPlayersUUID(r)     -- 分布式申请UUID
-    Logger("给玩家分配新uid  ALLUserUUID "..ALLUserUUID)
-    return ALLUserUUID
-end
+---- 服务器启动的时候， 从数据库中读取玩家最后的uid
+--function GetALLUserUUID()
+--    --这个要从数据库读取
+--    ALLUserUUID = RedisGetAllPlayersUUID()
+--    --print("ALLUserUUID",ALLUserUUID)
+--    --如果读取数据是空，那么就重置
+--    if ALLUserUUID == "" then
+--        ALLUserUUID = 1000000000
+--        RedisSaveAllPlayersUUID(ALLUserUUID)
+--        print("初始化一下 ALLUserUUID",ALLUserUUID)
+--    end
+--    --print("ALLUserUUID",ALLUserUUID)
+--end
+--
+----有一个新的玩家注册了，那么给他分配一个UID
+--function GetLastUserID()
+--    local r = 1     -- math.random(1, 4)        --返回[1,4]的随机整数
+--
+--    ALLUserUUID = RedisMultiProcessGetAllPlayersUUID(r)     -- 分布式申请UUID
+--    Logger("给玩家分配新uid  ALLUserUUID "..ALLUserUUID)
+--    return ALLUserUUID
+--end
 
 
 -- 根据user uid 返回user的句柄
@@ -78,39 +78,40 @@ function GoCallLuaPlayerNetworkBroken(uid)
     --Logger("go 通知："..uid .. "  掉线了")
     local player = GetPlayerByUID(uid)
 
-    if player ~= nil then
-        local game = GetGameByID(player.GameType)
-        --printTable(game)
-        if game ~= nil then
-            game:PlayerLogOutGame(player)
-            --player.NetWorkState = false
-            --player.NetWorkCloseTimer = GetOsTimeMillisecond()
-
-        end
-    end
+    print("玩家被t了"..player.User.UserId)
+    --if player ~= nil then
+    --    local game = GetGameByID(player.GameType)
+    --    --printTable(game)
+    --    if game ~= nil then
+    --        game:PlayerLogOutGame(player)
+    --        --player.NetWorkState = false
+    --        --player.NetWorkCloseTimer = GetOsTimeMillisecond()
+    --
+    --    end
+    --end
 end
 
 
 -----------------------------------游戏-------------------------------------
 --增加一个游戏， 指定这个游戏的类型， 并且创建一个桌子，并启动桌子逻辑
-function AddGame(name, gameType, gameScore)
-    if AllGamesList.gameType ~= nil then
-        Logger("游戏类型["..gameType.."已经添加过了，不用重复添加")
-        return
-    end
-
-    local game = Game:New(name, gameType,true)
-    AllGamesList[gameType] = game
-
-    --Logger("--------------AddGame--------------------------")
-    game:CreateTable(gameType,gameScore)
-    game.GameScore = gameScore
-end
-
---通过gameID获取是哪个游戏
-function GetGameByID(gameTypeID)
-    return AllGamesList[gameTypeID]
-end
+--function AddGame(name, gameType, gameScore)
+--    if AllGamesList.gameType ~= nil then
+--        Logger("游戏类型["..gameType.."已经添加过了，不用重复添加")
+--        return
+--    end
+--
+--    local game = Game:New(name, gameType,true)
+--    AllGamesList[gameType] = game
+--
+--    --Logger("--------------AddGame--------------------------")
+--    game:CreateTable(gameType,gameScore)
+--    game.GameScore = gameScore
+--end
+--
+----通过gameID获取是哪个游戏
+--function GetGameByID(gameTypeID)
+--    return AllGamesList[gameTypeID]
+--end
 
 
 -----------------------------------桌子-------------------------------------
@@ -128,13 +129,13 @@ end
 
 
 -- 遍历所有的列表，然后依次run
-function GoCallLuaGoRoutineForLuaGameTable()
-    --print("----------------当前有"..#GoRoutineAllList.."个桌子")
-    for k, game in pairs(AllGamesList) do
-        for _, run in pairs(game.GoRunTableAllList) do
-            run() -- 执行注册的函数，table run
-        end
-    end
-
-
-end
+--function GoCallLuaGoRoutineForLuaGameTable()
+--    --print("----------------当前有"..#GoRoutineAllList.."个桌子")
+--    for k, game in pairs(AllGamesList) do
+--        for _, run in pairs(game.GoRunTableAllList) do
+--            run() -- 执行注册的函数，table run
+--        end
+--    end
+--
+--
+--end

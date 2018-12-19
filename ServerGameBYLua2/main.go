@@ -421,6 +421,6 @@ func GetAllConnectMsg() string  {
 	GlobalVar.RWMutex.RUnlock()
 	GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)		// 发送缓冲区大小
 	GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError)  // 把数据头尾错误发送给lua
-	str:=fmt.Sprintf(" 用户正常发送消息数量 %d  正常接收  %d 每秒5发送 %d  每5秒接收 %d  goroutine数量 %d cpu %d  发送缓存平均占用%d",   successSendClients, successRecClients, successSendMsg , successRecMsg, runtime.NumGoroutine(),runtime.NumCPU(), WriteChan)
+	str:=fmt.Sprintf(" 用户正常发送消息数量 %d  正常接收  %d 每秒5发送 %d  每5秒接收 %d    发送缓存占用%d",   successSendClients, successRecClients, successSendMsg , successRecMsg,WriteChan)
 	return "所有连接数量："+ strconv.Itoa(AllConnect) + "  所有包不全缓存大小:" + strconv.Itoa(connNum) + str
 }

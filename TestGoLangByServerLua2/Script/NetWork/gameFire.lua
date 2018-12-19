@@ -140,9 +140,6 @@ function handleUserFireSuccess(userId, buf)
     msg:ParseFromString(buf)
 
     local player = GetPlayerByUID(userId)
-    print(userId)
-    print(ZJson.encode(player))
-    printTable(player)
 
     local chair_id = player.ChairID
     if chair_id == msg.chair_id then
@@ -167,21 +164,24 @@ function handleCatchFishSuccess(userId, buf)
 
     local num = 0
     local score = 0
+    local fish_id = 0
 
     for k,v in ipairs(msg.catch_fishs) do
         --v.fish_uid
         num = num +1
-        print(" 捕鱼",v.fish_uid)
+        --print(" 捕鱼",v.fish_uid)
+        fish_id = v.fish_uid
         --score = score + v.fish_score
     end
 
+
     local player = GetPlayerByUID(userId)
     local chair_id = player.ChairID
-    if msg.chair_id == chair_id then
-        print("捕鱼成功",num, "得分",score)
-    end
-
-
+    --if msg.chair_id == chair_id then
+    --    print(player.User.UserId.."捕鱼成功, 抓了",num, "条,uid:" , fish_id)
+    --else
+    --    print(userId.."这是同步消息哈，别人，座位"..msg.chair_id .."捕鱼成功, 抓了",num, "条,uid:" , fish_id)
+    --end
 
 end
 
