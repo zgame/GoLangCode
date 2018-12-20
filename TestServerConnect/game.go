@@ -165,7 +165,7 @@ func (this *Client)handleNewFish(buf []byte, bufferSize int){
 // -------------------------------------开炮普通捕鱼-------------------------------------------
 // 开炮
 func (this *Client)do_fire() {
-	this.select_fish()
+	//this.select_fish()
 
 	tick_count := uint64(time.Now().Unix())
 	angle := float32(45)
@@ -192,7 +192,7 @@ func (this *Client)do_fire() {
 	size := len(data)
 	bufferT := getSendTcpHeaderData(MDM_GF_GAME, SUB_C_USER_FIRE, uint16(size))
 	this.Send(bufferT, data)
-	//fmt.Println("发子弹")
+	fmt.Println("发子弹")
 }
 
 

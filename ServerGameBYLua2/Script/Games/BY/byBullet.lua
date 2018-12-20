@@ -22,8 +22,8 @@ function Bullet:New(id)
     return c
 end
 
-function Bullet:BulletRun(table)
-    if GetOsTimeMillisecond() > self.DeadTime then
+function Bullet:BulletRun(now,table)
+    if now > self.DeadTime then
         table:DelBullet(self.BulletUID)     -- 生存时间已经到了，销毁
     end
 end

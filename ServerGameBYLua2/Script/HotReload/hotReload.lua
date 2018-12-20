@@ -86,7 +86,7 @@ function ReloadAll()
     -- main
     --reloadFile("Script/server")
 
-    collectgarbage()
+    --collectgarbage()
 end
 
 

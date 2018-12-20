@@ -190,8 +190,12 @@ func main() {
 		//GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
 
 		//UpdateDBSetting()
-		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 给lua的桌子用的 n个协程函数
-		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
+		startTime := ztimer.GetOsTimeMillisecond()
+		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
+		if ztimer.GetOsTimeMillisecond()-startTime > 100 {
+			log.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ]单个桌子循环消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		}
+		time.Sleep(time.Millisecond * 10)                                //给其他协程让出1秒的时间， 这个可以后期调整
 		//end:= ztimer.GetOsTimeMillisecond()
 		//if end - start > 120 {
 			//fmt.Println("一个循环用时", end-start)
@@ -336,34 +340,48 @@ func GameManagerLuaReloadCheck() {
 }
 
 func TimerCommonLogicStart() {
+	var startTime int64
 
-	// 创建计时器，定期去run公共逻辑
+	// -------------------创建计时器，定期去run公共逻辑---------------------
 	ztimer.TimerCheckUpdate(func() {
+
+		startTime = ztimer.GetOsTimeMillisecond()
 		log.PrintfLogger("[%s] 拼接成功%d    标识错误%d   %s   %s  处理消息平均时间：%d  " , ServerAddress + ":"+strconv.Itoa(SocketPort),
 			Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, GetAllConnectMsg(), log.GetSysMemInfo()  , Lua.StaticNetWorkReceiveToSendCostTime)
 
-		//log.PrintfLogger("内存情况：%s",log.GetSysMemInfo())
-
-		//runtime.GC()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
+		if ztimer.GetOsTimeMillisecond()-startTime > 100 {
+			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]GoCallLuaCommonLogicRun消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		}
 	}, 1)
 
-	// 创建计时器，定期去保存服务器状态
+	// ---------------------创建计时器，定期去保存服务器状态---------------------
 	ztimer.TimerCheckUpdate(func() {
+		startTime = ztimer.GetOsTimeMillisecond()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaSaveServerState") // 保存服务器的状态
+		if ztimer.GetOsTimeMillisecond()-startTime > 100 {
+			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]GoCallLuaSaveServerState消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		}
 		runtime.GC()
 	}, 60)
 
-	// 创建计时器，定期去更新
+	// ---------------------创建计时器，定期去更新lua脚本reload---------------------
 	ztimer.TimerCheckUpdate(func() {
 		// 定期更新后台的配置数据
-
+		startTime = ztimer.GetOsTimeMillisecond()
 		UpdateLuaReload()
+		if ztimer.GetOsTimeMillisecond()-startTime > 100 {
+			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]UpdateLuaReload消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		}
+	}, 60 * 10)  // 10 分钟
 
-	}, 60)  // 60秒
-
-	ztimer.TimerClock0(func() { // 创建计时器，夜里12点触发
+	//---------------------创建计时器，夜里12点触发---------------------
+	ztimer.TimerClock0(func() {
+		startTime = ztimer.GetOsTimeMillisecond()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
+		if ztimer.GetOsTimeMillisecond()-startTime > 100 {
+			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] GoCallLuaCommonLogic12clock消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		}
 	})
 
 }

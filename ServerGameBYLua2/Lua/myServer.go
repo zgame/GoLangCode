@@ -290,7 +290,7 @@ func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int , to
 		cost := int(now - a.TokenTime)
 
 		if cost > 200{
-			log.PrintfLogger("UID: %d  处理消息花费时间 %d", a.UserId, int(cost))
+			log.PrintfLogger("UID: %d  处理消息花费时间 %d  mainCmd   %d  subCmd  %d", a.UserId, int(cost), mainCmd, subCmd)
 		}
 		if StaticNetWorkReceiveToSendCostTimeAll> 99999999 {
 			StaticNetWorkReceiveToSendCostTimeAll = 0	// 定期清理，防止数字过大

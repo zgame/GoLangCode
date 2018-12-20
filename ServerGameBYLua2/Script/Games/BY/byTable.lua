@@ -68,10 +68,10 @@ function ByTable:RunTable()
                 self:RunBossDistributeInfo(table.RoomScore)
             end
             for k, bullet in pairs(self.BulletArray) do
-                bullet:BulletRun(self)      -- 遍历所有子弹，并且run
+                bullet:BulletRun(now,self)      -- 遍历所有子弹，并且run
             end
             for k, fish in pairs(self.FishArray) do
-                fish:FishRun(self)              --遍历所有鱼，并且run
+                fish:FishRun(now,self)              --遍历所有鱼，并且run
             end
 
             -- 记录桌子的运行状态
@@ -82,6 +82,7 @@ function ByTable:RunTable()
                 state["SeatArray"] = GetTableLen(self.UserSeatArray)    --当前有多少玩家
                 SqlSaveGameState(self.GameID, self.TableID, state)
                 self.LastRunTime = GetOsTimeMillisecond()
+                print("记录桌子的运行状态")
             end
             -- 检查玩家的情况，如果玩家长期离线，那么t掉，没人就清空桌子
             --for k, player in pairs(self.UserSeatArray) do
