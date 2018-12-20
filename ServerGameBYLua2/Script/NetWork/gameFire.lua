@@ -84,13 +84,13 @@ end
 function GetPlayer_Game_Table(userId)
     local player = GetPlayerByUID(userId)
     if player == nil then
-        LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "玩家没有正常登录")
+        LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "玩家没有正常登录", nil)
         return nil,nil,nil
     end
 
     local game = GetGameByID(player.GameType)
     if game == nil then
-        LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
+        LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确", nil)
         return nil,nil,nil
     end
 
@@ -99,7 +99,7 @@ function GetPlayer_Game_Table(userId)
     --result.ChairID = player.ChairID                 -- 把player桌子id，椅子id的数据 返回去
     local table = game:GetTableByUID(player.TableID)
     if table == nil then
-        LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+        LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子", nil)
         return nil,nil,nil
     end
 

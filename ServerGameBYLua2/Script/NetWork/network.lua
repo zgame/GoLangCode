@@ -29,12 +29,14 @@
 
 
 -- 发送消息给其他玩家
-function LuaNetWorkSendToUser(userId,msgId,subMsgId,sendCmd,err)
+function LuaNetWorkSendToUser(userId,msgId,subMsgId,sendCmd,err,token)
     local buffer = ""
     if sendCmd ~= nil then
         buffer = sendCmd:SerializeToString()
     end
-
+    if token == nil then
+        token = UserToken       -- 这里为了写方便， 默认nil就是玩家发来的消息的token , 否则就是硬指定的token
+    end
     if err == nil then
         err = ""
     end
@@ -56,7 +58,7 @@ function LuaNetWorkSendToUser(userId,msgId,subMsgId,sendCmd,err)
         ZswLogShowSendMsgNum = ZswLogShowSendMsgNum + 1       -- 没到一秒就加数量
     end
 
-    return luaCallGoNetWorkSend(userId,0,msgId,subMsgId,buffer,err)       -- 返回结果 true 发送成功  false 发送失败
+    return luaCallGoNetWorkSend(userId,0,msgId,subMsgId,buffer,err,token)       -- 返回结果 true 发送成功  false 发送失败
 end
 
 
@@ -64,11 +66,11 @@ end
 ---接收消息
 ----------------------------------------------------------------------
 -- 网络接收函数
-function GoCallLuaNetWorkReceive(serverId,userId, msgId, subMsgId, data)
+function GoCallLuaNetWorkReceive(serverId,userId, msgId, subMsgId, data, token)
     --Logger("lua收到了消息："..msgId)
     --Logger("lua收到了消息："..subMsgId)
     --Logger("lua收到了消息："..data)
-    ReceiveMsg(serverId,userId,msgId,subMsgId,data)
+    ReceiveMsg(serverId,userId,msgId,subMsgId,data, token)
 
     local now = GetOsTimeMillisecond()
     if now - ZswLogShowReceiveLastTime > 1000 then
@@ -89,18 +91,17 @@ end
 
 
 -- 根据命令进行分支处理
-function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
+function ReceiveMsg(serverId,userId, msgId, subMsgId, data, token)
     --print("msgId",msgId, "subMsgId",subMsgId)
-
+    UserToken = token           -- 保存到全局里面，发送的时候取出来
     if msgId == MDM_MB_LOGON  then
-        if subMsgId == SUB_MB_GUESTLOGIN  then
-            print("**************游客登录服申请******************* ")
-        end
+        --if subMsgId == SUB_MB_GUESTLOGIN  then
+        --    --print("**************游客登录服申请******************* ")
+        --end
     elseif msgId == MDM_GR_LOGON  then
         if subMsgId == SUB_GR_LOGON_USERID  then
 --            print("**************游客登录游戏服申请******************* ")     ----这里是原来的登录， 主要是返回客户端玩家的一些数据
             SevLoginGSGuest(serverId,data)      -- 返回给客户端，玩家的数据，用来显示的
-
         end
     elseif msgId == MDM_GF_FRAME  then
         if subMsgId == SUB_GF_GAME_OPTION  then
@@ -117,7 +118,7 @@ function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
 
         elseif subMsgId == SUB_S_BOSS_COME  then
             --print("*************暂时用来统计消息的返回时间***************** ",userId)
-            HandleStaticsNetWorkTime(userId)
+            --HandleStaticsNetWorkTime(userId)
         end
     end
 end

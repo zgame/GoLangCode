@@ -186,7 +186,7 @@ func StartClient() {
 		client.Addr = GameServerAddress+":"+ strconv.Itoa(SocketPort)
 		client.ConnNum = 1  //废了
 		client.ConnectInterval = 3 * time.Second	// 客户端自动重连
-		client.PendingWriteNum = 1000 	// 发送缓冲区
+		client.PendingWriteNum = 1000	// 发送缓冲区
 		client.LenMsgLen = 4
 		client.MaxMsgLen = math.MaxUint32
 		client.NewAgent = func(conn *NetWork.TCPConn,index int) NetWork.Agent {
@@ -257,8 +257,9 @@ func GetStaticPrint()  {
 	//	WriteChan = WriteChan/AllConnect		// 求一个平均值
 	//}
 	GlobalVar.RWMutex.Unlock()
-	log.PrintfLogger("连接数量 %d 用户正常发送消息数量 %d  正常接收  %d 每秒发送 %d  每秒接收 %d  goroutine数量 %d  WriteChan数量 %d ",  AllConnect, successSendClients, successRecClients, successSendMsg , successRecMsg,  runtime.NumGoroutine(),WriteChan)
-	log.PrintfLogger("内存情况：%s", GetSysMemInfo())
+	log.PrintfLogger("连接数量 %d  发送活跃连接 %d 接收活跃 %d 每秒发送 %d  每秒接收 %d   WriteChan数量 %d  %s ",  AllConnect,  successSendClients, successRecClients, successSendMsg , successRecMsg,  WriteChan, GetSysMemInfo())
+	//log.PrintfLogger("内存情况：%s", GetSysMemInfo())
+
 }
 
 
@@ -270,17 +271,17 @@ func GetSysMemInfo()  string{
 	str:= ""
 	//str += "   Lookups:" + strconv.Itoa( int(memStat.Lookups))
 	//str += "M   TotalAlloc:" + strconv.Itoa( int(memStat.TotalAlloc/1000000))//从服务开始运行至今分配器为分配的堆空间总和
-	str += "  Sys:" + strconv.Itoa( int(memStat.Sys/1000000) )+ "M"
+	//str += "  Sys:" + strconv.Itoa( int(memStat.Sys/1000000) )+ "M"
 	//str += "M   Mallocs:" + strconv.Itoa( int(memStat.Mallocs))//服务malloc的次数
 	//str += "次   Frees:" + strconv.Itoa( int(memStat.Frees))//服务回收的heap objects
-	str += "   HeapAlloc:" + strconv.Itoa( int(memStat.HeapAlloc/1000000)) + "M"//服务分配的堆内存
-	str += "   HeapSys:" + strconv.Itoa( int(memStat.HeapSys/1000000))+ "M"//系统分配的堆内存
-	str += "   HeapIdle:" + strconv.Itoa( int(memStat.HeapIdle/1000000))+ "M"//申请但是为分配的堆内存，（或者回收了的堆内存）
+	//str += "   HeapAlloc:" + strconv.Itoa( int(memStat.HeapAlloc/1000000)) + "M"//服务分配的堆内存
+	//str += "   HeapSys:" + strconv.Itoa( int(memStat.HeapSys/1000000))+ "M"//系统分配的堆内存
+	//str += "   HeapIdle:" + strconv.Itoa( int(memStat.HeapIdle/1000000))+ "M"//申请但是为分配的堆内存，（或者回收了的堆内存）
 	str += "   HeapInuse:" + strconv.Itoa( int(memStat.HeapInuse/1000000))+ "M"//正在使用的堆内存
-	str += "   HeapReleased:" + strconv.Itoa( int(memStat.HeapReleased))+ "M"//返回给OS的堆内存，类似C/C++中的free。
+	//str += "   HeapReleased:" + strconv.Itoa( int(memStat.HeapReleased/1000000))+ "M"//返回给OS的堆内存，类似C/C++中的free。
 	//str += "   HeapObjects:" + strconv.Itoa( int(memStat.HeapObjects))+ "个"//堆内存块申请的量
-	str += "   StackInuse:" + strconv.Itoa( int(memStat.StackInuse/1000000)) + "M"//正在使用的栈
-	str += "   StackSys:" + strconv.Itoa( int(memStat.StackSys/1000000)) + "M"//系统分配的作为运行栈的内存
+	//str += "   StackInuse:" + strconv.Itoa( int(memStat.StackInuse/1000000)) + "M"//正在使用的栈
+	//str += "   StackSys:" + strconv.Itoa( int(memStat.StackSys/1000000)) + "M"//系统分配的作为运行栈的内存
 	//str += "   NumGC:" + strconv.Itoa( int(memStat.NumGC))+ "次"////垃圾回收的内存大小
 	//str += "   NumForcedGC:" + strconv.Itoa( int(memStat.NumForcedGC))
 	//str += "   LastGC:" + strconv.Itoa( int(memStat.LastGC))

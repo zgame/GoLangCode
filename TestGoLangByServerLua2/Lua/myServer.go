@@ -141,7 +141,7 @@ func (a *MyServer) Run() {
 				log.WritefLogger("最后一次成功的buf：%x  bufHeadTemp%d  bufHead %d",a.SuccessBuf , bufHeadTemp, bufHead)
 				log.WritefLogger("最后一次接收的buf：%x  len:%d",a.LastBuf, len(a.LastBuf))
 				log.WritefLogger("最后一次保存的不完整buf：%x",a.ReceiveBuf)
-				log.WritefLogger("当前buf：%x   bufLen %d",buf[bufHead:bufLen] , bufLen)
+				log.WritefLogger("当前buf：%x   bufLen %d",bufTemp , bufLen)
 				return  		//数据包不正确，放弃连接
 			}
 
@@ -152,7 +152,7 @@ func (a *MyServer) Run() {
 				}
 				break		// 处理完毕，继续接收
 			}
-			time.Sleep(time.Millisecond * 10)
+			time.Sleep(time.Millisecond * 1)			// 客户端必须疯狂的接收服务器的消息，有多少收多少，防止服务器发太多，堵塞
 		}
 		//GlobalVar.GlobalMutex.Unlock()
 
@@ -180,7 +180,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	}
 	//-----------------------------解析头部信息----------------------------
 
-	headFlag,msgId, subMsgId, bufferSize, tokenId ,msgSize := NetWork.DealRecvTcpHeaderData(buf)
+	headFlag,msgId, subMsgId, bufferSize, _ ,msgSize := NetWork.DealRecvTcpHeaderData(buf)
 	BufAllSize := NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize) + 1    // 整个数据包长度，末尾有标示位
 
 	//-----------------------------头部信息错误----------------------------
@@ -198,13 +198,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	//fmt.Println("offset",offset)
 	//fmt.Println("bufferSize",bufferSize)
 
-	//-----------------------------错误提示----------------------------
-	if msgSize >0 {
-		//fmt.Println("有错误提示了")
-		msgBuffer := buf[NetWork.TCPHeaderSize + int(bufferSize):NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize)]
-		log.WritefLogger(string(msgBuffer))
-		return BufAllSize
-	}
+
 
 	//-----------------------------proto buffer 内容不完整----------------------------
 	if len(buf) < BufAllSize{
@@ -225,9 +219,16 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	}
 
 	//-----------------------------数据包重复----------------------------
-	if int(tokenId) == a.TokenId{
-		//log.PrintLogger( strconv.Itoa(a.UserId)+" 出现重复的数据包,包id："+ strconv.Itoa(int(tokenId)))
-		//return BufAllSize  // 如果重复，那么跳过解析这个数据包
+	//if int(tokenId) == a.TokenId{
+	//	//log.PrintLogger( strconv.Itoa(a.UserId)+" 出现重复的数据包,包id："+ strconv.Itoa(int(tokenId)))
+	//	//return BufAllSize  // 如果重复，那么跳过解析这个数据包
+	//}
+	//-----------------------------错误提示----------------------------
+	if msgSize >0 {
+		//fmt.Println("有错误提示了")
+		msgBuffer := buf[NetWork.TCPHeaderSize + int(bufferSize):NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize)]
+		log.WritefLogger(string(msgBuffer))
+		return BufAllSize
 	}
 
 	//-----------------------------取出proto buffer的内容----------------------------
@@ -238,7 +239,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	a.myLua.GoCallLuaNetWorkReceive( a.ServerId,  a.UserId,int(msgId),int(subMsgId),string(finalBuffer))		// 把收到的数据传递给lua进行处理
 	a.ReceiveMsgNum++
 	a.SuccessBuf = buf 	// 记录最后一次成功的buf
-	a.TokenId = int(tokenId)		// 记录当前最后接收的数据包编号，防止重复
+	//a.TokenId = int(tokenId)		// 记录当前最后接收的数据包编号，防止重复
 	return BufAllSize
 
 }
@@ -274,7 +275,8 @@ func (a *MyServer) OnClose() {
 // ---------------------发送数据到网络-------------------------
 
 func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int) bool{
-	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
+	a.TokenId++
+	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, a.TokenId)
 	return a.WriteMsg(bufferEnd)
 }
 

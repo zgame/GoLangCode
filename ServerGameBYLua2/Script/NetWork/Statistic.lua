@@ -7,5 +7,5 @@
 
 --- 客户端用来统计消息传递的时间
 function HandleStaticsNetWorkTime(UserId)
-    LuaNetWorkSendToUser(UserId,MDM_GF_GAME, SUB_S_BOSS_COME,nil,nil)
+    --LuaNetWorkSendToUser(UserId,MDM_GF_GAME, SUB_S_BOSS_COME,nil,nil, nil)
 end

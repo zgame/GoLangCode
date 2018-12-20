@@ -106,7 +106,7 @@ function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
             --print("------------登录成功-------------")
             SendLoginGSGuestSuccess(serverId,data)
         elseif subMsgId == SUB_GR_LOGON_FINISH  then
-            print("----------------登录完成，申请进入场景-----------",userId)
+            --print("----------------登录完成，申请进入场景-----------",userId)
             SendEnterScene(userId,data)
         end
     elseif msgId == MDM_GF_FRAME  then
@@ -116,7 +116,7 @@ function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
         end
     elseif msgId == MDM_GF_GAME  then
         if subMsgId == SUB_S_ENTER_SCENE  then
-            print("进入场景成功")
+            --print("进入场景成功")
             SendEnterSceneSuccess(userId,data)
         --elseif subMsgId == SUB_C_USER_FIRE  then
         --    --print("**************客户端开火***************** ",userId)

@@ -63,6 +63,7 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	subCmd := L.ToInt(4)
 	data := L.ToString(5)
 	msg := L.ToString(6)
+	token := L.ToInt(7)
 
 	// lua传递过来之后， 立即开启一个新的协程去专门做发送工作
 	//go func() {
@@ -75,11 +76,11 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	// 发送出去
 	if userId == 0 {
 		// 给玩家自己回复消息
-		result = GetMyServerByLSate(serverId).SendMsg(data, msg, mainCmd, subCmd)
+		result = GetMyServerByLSate(serverId).SendMsg(data, msg, mainCmd, subCmd, token)		// 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
 		//result = GetMyServerByLSate(serverId).WriteMsg(bufferEnd)
 	} else {
 		// 给其他玩家发送消息
-		result = GetMyServerByUID(userId).SendMsg(data, msg, mainCmd, subCmd)
+		result = GetMyServerByUID(userId).SendMsg(data, msg, mainCmd, subCmd, token)	// 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
 		//result = GetMyServerByUID(userId).WriteMsg(bufferEnd)
 	}
 	//}()

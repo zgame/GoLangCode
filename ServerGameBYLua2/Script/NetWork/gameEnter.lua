@@ -61,7 +61,7 @@ function SevEnterScene(userId, buf)
 
     local game = GetGameByID(gameType)
     if game == nil then
-        LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确")
+        LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确", nil)
         return
     end
 
@@ -70,7 +70,7 @@ function SevEnterScene(userId, buf)
     --result.ChairID = player.ChairID                 -- 把player桌子id，椅子id的数据 返回去
     local table = game:GetTableByUID(player.TableID)
     if table == nil then
-        LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+        LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子", nil)
         return
     end
     --local playerList = table:GetUsersSeatInTable()
@@ -108,7 +108,7 @@ function SevEnterScene(userId, buf)
         end
     end
 
-    LuaNetWorkSendToUser(userId,MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil) --进入房间
+    LuaNetWorkSendToUser(userId,MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil, nil) --进入房间
     --
     ----LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_GAME_STATUS , nil, nil)--更新游戏状态
     ----LuaNetWorkSend( MDM_GF_FRAME, SUB_GF_SYSTEM_MESSAGE , nil, nil)--系统消息

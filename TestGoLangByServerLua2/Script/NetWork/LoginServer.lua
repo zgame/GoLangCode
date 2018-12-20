@@ -119,7 +119,7 @@ function SendLoginGSGuest(serverId)
 
     sendCmd.machine_id = build_mac_addr(serverId)
     LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_USERID,sendCmd,nil)
-    print("-----申请登录serverId:----------",serverId)
+    --print("-----申请登录serverId:----------",serverId)
 end
 
 -- 服务器返回登录服务器成功，下发uid
@@ -129,5 +129,5 @@ function SendLoginGSGuestSuccess(serverId,buf)
     local uid = msg.user_right
 
     luaCallGoResisterUID(uid,serverId)
-    print("--------登录成功---UID:",uid)
+    --print("--------登录成功---UID:",uid)
 end

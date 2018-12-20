@@ -29,3 +29,5 @@ AllPlayerList = {}   -- 所有玩家列表   key  userId(type string) , value pl
 
 ALLUserUUID = 0   -- 玩家uid的自增
 
+-----------------------临时全局变量---------------------------------------
+UserToken = 0
