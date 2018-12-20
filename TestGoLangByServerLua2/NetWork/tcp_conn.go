@@ -80,6 +80,14 @@ func (tcpConn *TCPConn) Close() {
 }
 
 func (tcpConn *TCPConn) doWrite(b []byte) {
+	//if len(tcpConn.writeChan) > cap(tcpConn.writeChan)/2 {
+	//	log.PrintfLogger("发送数据包的缓冲区大于1/2!!!")
+	//	time.Sleep(time.Millisecond * 500)
+	//}
+	//if len(tcpConn.writeChan) > cap(tcpConn.writeChan)*2/3 {
+	//	log.PrintfLogger("发送数据包的缓冲区大于2/3!!!")
+	//	time.Sleep(time.Millisecond * 2000)
+	//}
 	if len(tcpConn.writeChan) == cap(tcpConn.writeChan) {
 		log.PrintfLogger("发送数据包的缓冲区已经满了，关闭该连接!!!")
 		tcpConn.doDestroy()

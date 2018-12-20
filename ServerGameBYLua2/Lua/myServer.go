@@ -5,6 +5,7 @@ import (
 	"../NetWork"
 	"../GlobalVar"
 	"../Utils/log"
+	"../Utils/ztimer"
 	"math"
 	"time"
 	"sync"
@@ -21,6 +22,10 @@ var StaticDataPackagePasteNum = 0   // 统计信息，拼接次数
 var StaticDataPackagePasteSuccess = 0   // 统计信息，成功拼接后，解析成功
 var StaticDataPackageHeadFlagError = 0   // 统计信息，数据包头部标识不正确
 
+var StaticNetWorkReceiveToSendCostTime = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
+var StaticNetWorkReceiveToSendCostTimeAll = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
+var StaticNetWorkReceiveToSendCostTimeNum = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
+
 var LuaConnectMyServer map[int]*MyServer    // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
 var luaUIDConnectMyServer map[int]*MyServer // 将uid跟连接句柄进行哈希
 
@@ -34,6 +39,7 @@ type MyServer struct {
 	ServerId int				// 自己分配的连接编号
 	UserId  int					// 玩家uid
 	TokenId int					// 玩家发包的id标识
+	TokenTime int64				// 接收token的时间
 
 
 	MyServerMutex sync.Mutex // 连接自己的锁主要用于防止发送时候产生的线程不安全
@@ -146,7 +152,7 @@ func (a *MyServer) Run() {
 				}
 				break		// 处理完毕，继续接收
 			}
-			time.Sleep(time.Millisecond * 10)
+			time.Sleep(time.Millisecond * 50)
 		}
 		//GlobalVar.GlobalMutex.Unlock()
 
@@ -229,10 +235,12 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
 	//fmt.Println("")
 
-	a.myLua.GoCallLuaNetWorkReceive( a.ServerId,  a.UserId,int(msgId),int(subMsgId),string(finalBuffer))		// 把收到的数据传递给lua进行处理
+	a.TokenId = int(tokenId)		// 记录当前最后接收的数据包编号，防止重复
+	a.TokenTime = ztimer.GetOsTimeMillisecond()
+	a.myLua.GoCallLuaNetWorkReceive( a.ServerId,  a.UserId,int(msgId),int(subMsgId),string(finalBuffer),int(tokenId))		// 把收到的数据传递给lua进行处理
 	a.ReceiveMsgNum++
 	a.SuccessBuf = buf 	// 记录最后一次成功的buf
-	a.TokenId = int(tokenId)		// 记录当前最后接收的数据包编号，防止重复
+
 	return BufAllSize
 
 }
@@ -267,8 +275,39 @@ func (a *MyServer) OnClose() {
 
 // ---------------------发送数据到网络-------------------------
 
-func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int) bool{
-	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
+func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int , token int) bool{
+	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, token) // token始终是0，服务器不用发token
+
+	//if token!=0 {
+	//	fmt.Println("token", token)
+	//	fmt.Println("a.TokenId ", a.TokenId)
+	//}
+
+	if token==a.TokenId {
+		// 计算一下处理时间
+		now := ztimer.GetOsTimeMillisecond()
+		cost := int(now - a.TokenTime)
+
+		if cost > 200{
+			log.PrintfLogger("UID: %d  处理消息花费时间 %d", a.UserId, int(cost))
+		}
+		if StaticNetWorkReceiveToSendCostTimeAll> 99999999 {
+			StaticNetWorkReceiveToSendCostTimeAll = 0	// 定期清理，防止数字过大
+			StaticNetWorkReceiveToSendCostTimeNum = 0
+		}
+
+		StaticNetWorkReceiveToSendCostTimeNum++
+		StaticNetWorkReceiveToSendCostTimeAll+= cost
+		StaticNetWorkReceiveToSendCostTime = StaticNetWorkReceiveToSendCostTimeAll/StaticNetWorkReceiveToSendCostTimeNum
+		//GlobalVar.RWMutex.Lock()
+		//if StaticNetWorkReceiveToSendCostTime == 0{
+		//	StaticNetWorkReceiveToSendCostTime = cost
+		//}else {
+		//	StaticNetWorkReceiveToSendCostTime = (StaticNetWorkReceiveToSendCostTime+cost)/2	//求平均值
+		//}
+		//GlobalVar.RWMutex.Unlock()
+		//log.PrintfLogger("UID: %d  处理消息花费时间 %d", a.UserId, int(cost))
+	}
 	return a.WriteMsg(bufferEnd)
 }
 

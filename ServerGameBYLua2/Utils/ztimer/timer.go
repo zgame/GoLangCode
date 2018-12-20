@@ -47,6 +47,7 @@ func TimerClock(f func(),clock int) {
 	}()
 }
 
+// 获取系统时间，精确到毫秒
 func GetOsTimeMillisecond()  int64{
 	return time.Now().UnixNano() / int64(time.Millisecond)
 }

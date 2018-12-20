@@ -46,13 +46,13 @@ func (m *MyLua) GoCallLuaLogic(funcName string) {
 }
 
 // -------------------go传递接收到的网络数据包给lua-------------------
-func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMsgId int ,buf string) {
+func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMsgId int ,buf string, token int) {
 	GlobalVar.GlobalMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal("GoCallLuaNetWorkReceive"),		// lua的函数名字
 		NRet: 0,
 		Protect: true,
-	}, lua.LNumber(serverId),lua.LNumber(userId),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf)); err != nil {		// 参数
+	}, lua.LNumber(serverId),lua.LNumber(userId),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf),  lua.LNumber(token)); err != nil {		// 参数
 		log.PrintfLogger("GoCallLuaNetWorkReceive  error :  msgId:%d  subMsgId %d  buf:%s   error:%s",msgId , subMsgId, buf, err.Error())
 	}
 	GlobalVar.GlobalMutex.Unlock()

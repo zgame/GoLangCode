@@ -336,16 +336,17 @@ func GameManagerLuaReloadCheck() {
 }
 
 func TimerCommonLogicStart() {
+
 	// 创建计时器，定期去run公共逻辑
 	ztimer.TimerCheckUpdate(func() {
-		log.PrintfLogger("[%s] 头部不全：%d  数据不全%d   拼接次数 %d  成功%d    标识错误%d   -- 服务器状态：%s " , ServerAddress + ":"+strconv.Itoa(SocketPort),
-			Lua.StaticDataPackageHeadLess, Lua.StaticDataPackageProtoDataLess, Lua.StaticDataPackagePasteNum  ,Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, GetAllConnectMsg())
+		log.PrintfLogger("[%s] 拼接成功%d    标识错误%d   %s   %s  处理消息平均时间：%d  " , ServerAddress + ":"+strconv.Itoa(SocketPort),
+			Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, GetAllConnectMsg(), log.GetSysMemInfo()  , Lua.StaticNetWorkReceiveToSendCostTime)
 
-		log.PrintfLogger("内存情况：%s",log.GetSysMemInfo())
+		//log.PrintfLogger("内存情况：%s",log.GetSysMemInfo())
 
 		//runtime.GC()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
-	}, 5)
+	}, 1)
 
 	// 创建计时器，定期去保存服务器状态
 	ztimer.TimerCheckUpdate(func() {
@@ -389,7 +390,7 @@ func TimerCommonLogicStart() {
 
 // 这是用来统计所有连接数量，及连接包不全的缓存大小
 func GetAllConnectMsg() string  {
-	connNum := 0
+	connNum := 0		//所有包不全缓存大小
 	successSendClients := 0
 	successRecClients := 0
 	successSendMsg := 0
@@ -421,6 +422,6 @@ func GetAllConnectMsg() string  {
 	GlobalVar.RWMutex.RUnlock()
 	GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)		// 发送缓冲区大小
 	GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError)  // 把数据头尾错误发送给lua
-	str:=fmt.Sprintf(" 用户正常发送消息数量 %d  正常接收  %d 每秒5发送 %d  每5秒接收 %d    发送缓存占用%d",   successSendClients, successRecClients, successSendMsg , successRecMsg,WriteChan)
-	return "所有连接数量："+ strconv.Itoa(AllConnect) + "  所有包不全缓存大小:" + strconv.Itoa(connNum) + str
+	str:=fmt.Sprintf(" 发送连接数量 %d  接收连接数量  %d 每秒发送 %d  每秒接收 %d    发送缓存WriteChan %d",   successSendClients, successRecClients, successSendMsg , successRecMsg,WriteChan)
+	return "所有连接数量："+ strconv.Itoa(AllConnect) + str
 }

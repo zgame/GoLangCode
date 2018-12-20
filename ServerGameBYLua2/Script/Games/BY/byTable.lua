@@ -113,7 +113,7 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
 
     local bullet = self:GetBullet(BulletId)
     if bullet == nil then
-        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_CATCH_FISH,nil,"子弹的uid不正确")
+        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_CATCH_FISH,nil,"子弹的uid不正确", nil)
         return
     end
 
@@ -149,7 +149,7 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
     end
 
     if GetTableLen(AllFishes) == 0 then
-        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_CATCH_FISH,nil,"要捕获的鱼id不正确或者已经被别人捕捉了")
+        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_CATCH_FISH,nil,"要捕获的鱼id不正确或者已经被别人捕捉了", nil)
         return
     end
 
@@ -176,7 +176,10 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
     sendCmd.bullet.bullet_id = bullet.BulletUID
     sendCmd.curr_score = player.User.Score
 
-    self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_CATCH_FISH,sendCmd)
+    --self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_CATCH_FISH,sendCmd)
+
+    LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_CATCH_FISH,sendCmd,nil, nil)     -- 回复给玩家
+    self:SendMsgToOtherUsers(player.User.UserId, sendCmd, MDM_GF_GAME, SUB_S_CATCH_FISH)                -- 同步其他人
 
 
 end
@@ -276,7 +279,7 @@ function ByTable:HandleUserFire(player , lockFishId)
     local cost = self.RoomScore
     if player.User.Score < cost then
         print("玩家没钱了")
-        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,nil,"玩家没钱了")
+        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,nil,"玩家没钱了", nil)
         return
     end
     -- 创建新的子弹
@@ -296,7 +299,9 @@ function ByTable:HandleUserFire(player , lockFishId)
     sendCmd.lock_fish_id = lockFishId
     --sendCmd.curr_score = player.User.Score
 
-    self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_USER_FIRE,sendCmd)
+    --self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_USER_FIRE,sendCmd)
+    LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,sendCmd,nil, nil)     -- 回复给玩家
+    self:SendMsgToOtherUsers(player.User.UserId, sendCmd, MDM_GF_GAME, SUB_S_USER_FIRE)                -- 同步其他人
 
 
 end
@@ -418,7 +423,7 @@ function ByTable:SendSceneFishes(UserId)
         cmd.uid = fish.FishUID
         cmd.kind_id = fish.FishKindID
     end
-    LuaNetWorkSendToUser(UserId, MDM_GF_GAME, SUB_S_SCENE_FISH, sendCmd, nil)
+    LuaNetWorkSendToUser(UserId, MDM_GF_GAME, SUB_S_SCENE_FISH, sendCmd, nil, nil)
 
 end
 
@@ -441,7 +446,7 @@ function ByTable:SendMsgToAllUsers(mainCmd,subCmd,sendCmd)
     for k,player in pairs(self.UserSeatArray) do
         if player ~= nil and player.IsRobot == false and player.NetWorkState then
              --LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
-            local result = LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
+            local result = LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
             if not result then
                 -- 发送失败了，玩家网络中断了
                 --player.NetWorkState = false
@@ -456,7 +461,7 @@ end
 function ByTable:SendMsgToOtherUsers(userId,sendCmd,mainCmd,subCmd)
     for k,player in pairs(self.UserSeatArray) do
         if player ~= nil and player.IsRobot == false and userId ~= player.User.UserId and player.NetWorkState then
-            LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
+            LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
         end
     end
 end
@@ -497,6 +502,7 @@ end
 
 ----循环鱼池的生成组
 function ByTable:RunDistributeInfo(roomScore)
+    --print("循环鱼池生成组")
     local now = GetOsTimeMillisecond()
 
     for k,Distribute in pairs(self.DistributeArray) do
@@ -534,6 +540,7 @@ function ByTable:RunDistributeInfo(roomScore)
 
             -- 创建鱼
             self:DistributeNewFish(Distribute,0,0)
+            return
         end
 
         -- 多条鱼的判断
@@ -552,6 +559,7 @@ function ByTable:RunDistributeInfo(roomScore)
                 end
                 -- 创建鱼
                 self:DistributeNewFish(Distribute,offsetX,offsetY)
+                return
             end
         end
 
@@ -560,20 +568,21 @@ end
 
 -----循环Boss鱼池的生成组
 function ByTable:RunBossDistributeInfo(roomScore)
-    local now = GetOsTimeMillisecond()
-    for k,Distribute in pairs(self.BossDistributeArray) do
-        --到下一个生成时间了, 那么我们来生成鱼吧
-        if now > Distribute.CreateTime + Distribute.DistributeIntervalTime then
-            local kindId = Distribute.FishKindID
-            local buildNum = 1   -- 鱼生成数量
-            Distribute.BuildNumber = buildNum
-            Distribute.CreateTime = now
-            Distribute.DistributeIntervalTime = Distribute:GetIntervalTime(kindId)
-            Distribute.FirstPathID = Distribute:GetPathType()    -- 获取路径
 
-            self:DistributeNewFish(Distribute,0,0)
-        end
-    end
+    --local now = GetOsTimeMillisecond()
+    --for k,Distribute in pairs(self.BossDistributeArray) do
+    --    --到下一个生成时间了, 那么我们来生成鱼吧
+    --    if now > Distribute.CreateTime + Distribute.DistributeIntervalTime then
+    --        local kindId = Distribute.FishKindID
+    --        local buildNum = 1   -- 鱼生成数量
+    --        Distribute.BuildNumber = buildNum
+    --        Distribute.CreateTime = now
+    --        Distribute.DistributeIntervalTime = Distribute:GetIntervalTime(kindId)
+    --        Distribute.FirstPathID = Distribute:GetPathType()    -- 获取路径
+    --
+    --        self:DistributeNewFish(Distribute,0,0)
+    --    end
+    --end
 end
 
 
