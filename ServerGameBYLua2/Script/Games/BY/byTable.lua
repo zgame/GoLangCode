@@ -504,6 +504,8 @@ end
 function ByTable:RunDistributeInfo(roomScore)
     --print("循环鱼池生成组")
     local now = GetOsTimeMillisecond()
+    local fish_number = 0
+    local fish_number_max = 2       -- 每秒最多几条鱼
 
     for k,Distribute in pairs(self.DistributeArray) do
         local kindId = Distribute.FishKindID
@@ -540,7 +542,11 @@ function ByTable:RunDistributeInfo(roomScore)
 
             -- 创建鱼
             self:DistributeNewFish(Distribute,0,0)
-            return
+            fish_number = fish_number + 1
+            if fish_number >= fish_number_max then
+                return
+            end
+
         end
 
         -- 多条鱼的判断
@@ -559,7 +565,10 @@ function ByTable:RunDistributeInfo(roomScore)
                 end
                 -- 创建鱼
                 self:DistributeNewFish(Distribute,offsetX,offsetY)
-                return
+                fish_number = fish_number + 1
+                if fish_number >= fish_number_max then
+                    return
+                end
             end
         end
 
