@@ -18,6 +18,7 @@ import (
 	"strconv"
 	"math"
 	"sync"
+	"./GlobalVar"
 )
 
 
@@ -234,7 +235,7 @@ func GetStaticPrint()  {
 	AllConnect :=0
 	//connNum := 0
 
-	GlobalMutex.Lock()
+	GlobalVar.RWMutex.Lock()
 	for _,v := range Lua.LuaConnectMyServer{
 		if v!=nil {
 			AllConnect ++
@@ -255,7 +256,7 @@ func GetStaticPrint()  {
 	//if AllConnect>0{
 	//	WriteChan = WriteChan/AllConnect		// 求一个平均值
 	//}
-	GlobalMutex.Unlock()
+	GlobalVar.RWMutex.Unlock()
 	log.PrintfLogger("连接数量 %d 用户正常发送消息数量 %d  正常接收  %d 每秒发送 %d  每秒接收 %d  goroutine数量 %d  WriteChan数量 %d ",  AllConnect, successSendClients, successRecClients, successSendMsg , successRecMsg,  runtime.NumGoroutine(),WriteChan)
 	log.PrintfLogger("内存情况：%s", GetSysMemInfo())
 }
