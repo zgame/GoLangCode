@@ -152,7 +152,7 @@ func (a *MyServer) Run() {
 				}
 				break		// 处理完毕，继续接收
 			}
-			time.Sleep(time.Millisecond * 50)
+			time.Sleep(time.Millisecond * 50)			//服务器在接收客户端消息的时候， 1秒最多接收20个消息， 防止客户端狂发消息给服务器
 		}
 		//GlobalVar.GlobalMutex.Unlock()
 
@@ -283,8 +283,9 @@ func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int , to
 	//	fmt.Println("a.TokenId ", a.TokenId)
 	//}
 
+	// 计算一下从消息的接收 --  消息的处理  --- 消息的发送  所消耗的时间
 	if token==a.TokenId {
-		// 计算一下处理时间
+
 		now := ztimer.GetOsTimeMillisecond()
 		cost := int(now - a.TokenTime)
 
