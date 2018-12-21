@@ -75,14 +75,14 @@ function ByTable:RunTable()
             end
 
             -- 记录桌子的运行状态
-            if now - self.LastRunTime > 3000 then
+            if now - self.LastRunTime > 1000 * 60  then     -- 60秒记录一次
                 local state = {}
                 state["FishNum"] = self:GetFishNum()        --当前有多少条鱼
                 state["BulletNum"] = self:GetBulletNum()    --当前有多少子弹
                 state["SeatArray"] = GetTableLen(self.UserSeatArray)    --当前有多少玩家
                 SqlSaveGameState(self.GameID, self.TableID, state)
-                self.LastRunTime = GetOsTimeMillisecond()
-                print("记录桌子的运行状态")
+                self.LastRunTime = now
+                --print("记录桌子的运行状态")
             end
             -- 检查玩家的情况，如果玩家长期离线，那么t掉，没人就清空桌子
             --for k, player in pairs(self.UserSeatArray) do
@@ -506,7 +506,7 @@ function ByTable:RunDistributeInfo(roomScore)
     --print("循环鱼池生成组")
     local now = GetOsTimeMillisecond()
     local fish_number = 0
-    local fish_number_max = 2       -- 每秒最多几条鱼
+    local fish_number_max = 4       -- 每秒最多几条鱼
 
     for k,Distribute in pairs(self.DistributeArray) do
         local kindId = Distribute.FishKindID

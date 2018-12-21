@@ -5,6 +5,7 @@ import (
 	"../Utils/log"
 	"../Utils/ztimer"
 	"../Utils/zRedis"
+	"../Utils/zMySql"
 	"time"
 	mysql "../Utils/mysql"
 	//mysql "github.com/tengattack/gluasql/mysql"
@@ -30,12 +31,14 @@ func (m *MyLua)InitResister() {
 	m.L.SetGlobal("luaCallGoRedisGetString", m.L.NewFunction(luaCallGoRedisGetString))		//注册到lua redis load
 	m.L.SetGlobal("luaCallGoRedisDelKey", m.L.NewFunction(luaCallGoRedisDelKey))		//注册到lua redis del key
 	m.L.SetGlobal("luaCallGoAddNumberToRedis", m.L.NewFunction(luaCallGoAddNumberToRedis))		//注册到lua redis add number
+	m.L.SetGlobal("luaCallGoSqlSaveGameState", m.L.NewFunction(luaCallGoSqlSaveGameState))		//lua要保存房间的信息到mysql
+	m.L.SetGlobal("luaCallGoSqlExec", m.L.NewFunction(luaCallGoSqlExec))		//lua 执行sql语句， 不带返回， 需要select用lua自己的mysql
 
 	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
 
-	//加载protobuf
-	luaopen_pb(m.L)
-	m.L.PreloadModule("mysql", mysql.Loader)
+
+	luaopen_pb(m.L)		//加载protobuf的lua调用
+	m.L.PreloadModule("mysql", mysql.Loader)		//加载mysql的lua调用 ，性能一般，写起来方便
 }
 
 
@@ -141,15 +144,13 @@ func luaCallGoGetOsTimeMillisecond(L *lua.LState) int {
 	return 1
 }
 
-
-
 //--------------------------------Redis-------------------------------------
 // redis set value
 func  luaCallGoRedisSaveString(L * lua.LState) int  {
 	dir := L.ToString(1)
 	key := L.ToString(2)
 	value := L.ToString(3)
-	zRedis.SaveStringToRedis(dir , key ,value )
+	go zRedis.SaveStringToRedis(dir , key ,value )
 	return 0
 }
 // redis get value
@@ -167,7 +168,7 @@ func  luaCallGoRedisGetString(L * lua.LState) int  {
 func  luaCallGoRedisDelKey(L * lua.LState) int  {
 	dir := L.ToString(1)
 	key := L.ToString(2)
-	zRedis.DelKeyToRedis(dir , key)
+	go zRedis.DelKeyToRedis(dir , key)
 	return 0
 }
 // redis add number
@@ -178,4 +179,23 @@ func  luaCallGoAddNumberToRedis(L * lua.LState) int  {
 	value := zRedis.AddNumberToRedis(dir , key, num)
 	L.Push(lua.LNumber(value))
 	return 1
+}
+
+//----------------------------------mysql-------------------------------------------
+// lua要保存服务器的房间信息到mysql， 因为性能问题，所以用go
+func luaCallGoSqlSaveGameState(L * lua.LState) int  {
+	ServerIP_Port := L.ToString(1)
+	gameType:= L.ToInt(2)
+	tableId:= L.ToInt(3)
+	FishNum:= L.ToInt(4)
+	BulletNum:= L.ToInt(5)
+	SeatArray:= L.ToInt(6)
+	go zMySql.SqlSaveGameState(ServerIP_Port ,gameType ,tableId  ,FishNum ,BulletNum ,SeatArray )
+	return 0
+}
+
+func luaCallGoSqlExec(L * lua.LState) int  {
+	sql := L.ToString(1)
+	go zMySql.SqlExec(sql )
+	return 0
 }

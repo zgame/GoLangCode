@@ -4,6 +4,8 @@ import (
 	//"github.com/gomodule/redigo/redis"
 	"github.com/garyburd/redigo/redis"
 	"../log"
+	"../ztimer"
+	"../../GlobalVar"
 )
 
 var RRedis redis.Conn
@@ -29,6 +31,7 @@ func InitRedis(address string, pwd string) bool{
 
 // 保存数据            dir 组信息 key value
 func SaveStringToRedis(dir string, key string,value string)  {
+	startTime := ztimer.GetOsTimeMillisecond()
 
 	//data, _ := json.MarshalIndent(player, "", " ")
 	//key := "BY_Player_UID_"+ strconv.Itoa(int( player.UserId))
@@ -38,6 +41,9 @@ func SaveStringToRedis(dir string, key string,value string)  {
 	_, err := RRedis.Do("hset", dir, key,value)
 	if err !=nil {
 		log.PrintLogger("redis 保存的时候出错了:"+err.Error())
+	}
+	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]SaveStringToRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 	}
 	//if ret == '1'{
 	//	fmt.Println("save success", ret)
@@ -51,6 +57,7 @@ func SaveStringToRedis(dir string, key string,value string)  {
 
 // 获取数据
 func GetStringFromRedis(dir string,key string) string {
+	startTime := ztimer.GetOsTimeMillisecond()
 	//var key string
 	//key = "BY_Player_UID_"+ strconv.Itoa(uid)
 	//fmt.Println("",key)
@@ -60,6 +67,9 @@ func GetStringFromRedis(dir string,key string) string {
 
 	if err !=nil {
 		log.PrintLogger("redis 读取出错了:"+err.Error())
+	}
+	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]GetStringFromRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 	}
 	//fmt.Println(ret.(string))
 	//var player Player.Player
@@ -79,9 +89,13 @@ func GetStringFromRedis(dir string,key string) string {
 
 //删除数据
 func DelKeyToRedis(dir string,key string){
+	startTime := ztimer.GetOsTimeMillisecond()
 	_, err :=  RRedis.Do("hdel",dir, key)
 	if err !=nil {
 		log.PrintfLogger("redis 删除key %s 出错了:"+err.Error(), key)
+	}
+	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]DelKeyToRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 	}
 }
 
@@ -98,12 +112,17 @@ var AddScript = redis.NewScript(2,`
    end
    return r
 `)
+
 // 这里的参数num， 记住： num只是增量， 你只能要求人家增加多少， 具体完事之后是多少，会返回给你， 因为这个涉及到分布式多请求
 func AddNumberToRedis(dir string,key string, num int) int{
+	startTime := ztimer.GetOsTimeMillisecond()
 	v, err := AddScript.Do(RRedis, dir,key, num)
 	if err != nil {
 		log.PrintLogger("AddNumberToRedis Error: " + err.Error())
 		return 0
+	}
+	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] AddNumberToRedis 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 	}
 	//fmt.Println("AddNumberToRedis",v , reflect.TypeOf(v))
 	re := int(v.(int64))

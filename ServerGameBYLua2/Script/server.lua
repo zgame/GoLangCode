@@ -48,6 +48,7 @@ require("Random")
 require("dumpTable")
 require("zTable")
 require("zRedis")
+require("luaMySql")
 require("zMySql")
 
 -------------------------------------Redis mysql----------------------------------------

@@ -7,8 +7,8 @@ import (
 	"../Utils/log"
 	"../Utils/ztimer"
 	"math"
-	"time"
 	"sync"
+	"time"
 )
 
 // ----------------------------服务器处理的统一接口----------------------------------
@@ -138,20 +138,21 @@ func (a *MyServer) Run() {
 				}
 			}else if bufHeadTemp == -1 {
 				a.ReceiveBuf = nil
-				log.WritefLogger("最后一次成功的buf：%x  bufHeadTemp%d  bufHead %d",a.SuccessBuf , bufHeadTemp, bufHead)
-				log.WritefLogger("最后一次接收的buf：%x  len:%d",a.LastBuf, len(a.LastBuf))
-				log.WritefLogger("最后一次保存的不完整buf：%x",a.ReceiveBuf)
-				log.WritefLogger("当前buf：%x   bufLen %d",buf[bufHead:bufLen] , bufLen)
+				log.PrintfLogger("最后一次成功的buf：%x  bufHeadTemp%d  bufHead %d",a.SuccessBuf , bufHeadTemp, bufHead)
+				log.PrintfLogger("最后一次接收的buf：%x  len:%d",a.LastBuf, len(a.LastBuf))
+				log.PrintfLogger("最后一次保存的不完整buf：%x",a.ReceiveBuf)
+				log.PrintfLogger("当前buf：%x   bufLen %d",buf , bufLen)
 				return  		//数据包不正确，放弃连接
 			}
 
 			if bufHead >= bufLen{
 				a.LastBuf = buf[:bufLen]		//记录上次接收buf
 				if bufHead > bufLen{
-					log.WritefLogger(" %d bufHead  %d > bufLen %d  bufHeadTemp %d  buf：%x", a.UserId, bufHead ,  bufHeadTemp ,bufLen,buf[:bufLen])
+					log.PrintfLogger(" %d bufHead  %d > bufLen %d  bufHeadTemp %d  buf：%x", a.UserId, bufHead ,  bufHeadTemp ,bufLen,buf[:bufLen])
 				}
 				break		// 处理完毕，继续接收
 			}
+			//time.Sleep(time.Millisecond * 50)			//服务器在接收客户端消息的时候， 1秒最多接收20个消息， 防止客户端狂发消息给服务器
 			time.Sleep(time.Millisecond * 50)			//服务器在接收客户端消息的时候， 1秒最多接收20个消息， 防止客户端狂发消息给服务器
 		}
 		//GlobalVar.GlobalMutex.Unlock()
@@ -185,7 +186,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 
 	//-----------------------------头部信息错误----------------------------
 	if headFlag != uint8(254){
-		log.WritefLogger("%d 数据包头部标识不正确 %x",a.UserId, buf)
+		log.PrintfLogger("%d 数据包头部标识不正确 %x",a.UserId, buf)
 
 		//GlobalVar.GlobalMutex.Lock()
 		StaticDataPackageHeadFlagError ++
@@ -220,7 +221,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	// ------------------------数据包尾部的判断----------------------
 	endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
 	if endData!= uint8(NetWork.TCPEnd){		// EE
-		log.WritefLogger("%d数据包尾部判断不正确 %x ",a.UserId, buf)
+		log.PrintfLogger("%d数据包尾部判断不正确 %x ",a.UserId, buf)
 		return -1
 	}
 
@@ -289,7 +290,7 @@ func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int , to
 		now := ztimer.GetOsTimeMillisecond()
 		cost := int(now - a.TokenTime)
 
-		if cost > 200{
+		if cost > GlobalVar.WarningTimeCost {
 			log.PrintfLogger("UID: %d  处理消息花费时间 %d  mainCmd   %d  subCmd  %d", a.UserId, int(cost), mainCmd, subCmd)
 		}
 		if StaticNetWorkReceiveToSendCostTimeAll> 99999999 {

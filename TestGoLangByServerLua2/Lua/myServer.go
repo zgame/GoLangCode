@@ -6,7 +6,6 @@ import (
 	"../GlobalVar"
 	"../Utils/log"
 	"math"
-	"time"
 	"sync"
 )
 
@@ -152,7 +151,7 @@ func (a *MyServer) Run() {
 				}
 				break		// 处理完毕，继续接收
 			}
-			time.Sleep(time.Millisecond * 1)			// 客户端必须疯狂的接收服务器的消息，有多少收多少，防止服务器发太多，堵塞
+			//time.Sleep(time.Millisecond * 20)			// 客户端必须疯狂的接收服务器的消息，有多少收多少，防止服务器发太多，堵塞
 		}
 		//GlobalVar.GlobalMutex.Unlock()
 

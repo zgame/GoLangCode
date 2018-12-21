@@ -129,13 +129,13 @@ function GoCallLuaGoRoutineForLuaGameTable()
     --print("----------------当前有"..#GoRoutineAllList.."个桌子")
     for gameType, game in pairs(AllGamesList) do
         for tableId, run in pairs(game.GoRunTableAllList) do
-            local key = gameType .. "_".. tableId
-            if AllGamesListRunCurrentTableIndex[key] == nil then
+            --local key = gameType .. "_".. tableId
+            --if AllGamesListRunCurrentTableIndex[key] == nil then
                 -- 没有run过
                 run() -- 执行注册的函数，table run
-                AllGamesListRunCurrentTableIndex[key] = true   -- 记录一下已经run过了
-                return          -- run一次就退出
-            end
+                --AllGamesListRunCurrentTableIndex[key] = true   -- 记录一下已经run过了
+                --return          -- run一次就退出
+            --end
         end
     end
 

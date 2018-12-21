@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"./Utils/log"
 	"./Utils/zRedis"
+	"./Utils/zMySql"
 	//"./Games"
 	//"./Logic/Player"
 	//"./CSV"
@@ -104,9 +105,9 @@ func main() {
 	if zRedis.InitRedis(RedisAddress,RedisPass) == false{
 		return
 	}
-	//if zMySql.ConnectDB() == false{
-	//	return
-	//}
+	if zMySql.ConnectDB() == false{
+		return
+	}
 
 	//fmt.Println("-------------------读取CVS数据文件---------------------------")
 	//CSV.LoadFishServerExcel()
@@ -192,10 +193,10 @@ func main() {
 		//UpdateDBSetting()
 		startTime := ztimer.GetOsTimeMillisecond()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
-		if ztimer.GetOsTimeMillisecond()-startTime > 100 {
-			log.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ]单个桌子循环消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+			log.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 桌子循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		}
-		time.Sleep(time.Millisecond * 10)                                //给其他协程让出1秒的时间， 这个可以后期调整
+		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
 		//end:= ztimer.GetOsTimeMillisecond()
 		//if end - start > 120 {
 			//fmt.Println("一个循环用时", end-start)
@@ -350,8 +351,8 @@ func TimerCommonLogicStart() {
 			Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, GetAllConnectMsg(), log.GetSysMemInfo()  , Lua.StaticNetWorkReceiveToSendCostTime)
 
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
-		if ztimer.GetOsTimeMillisecond()-startTime > 100 {
-			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]GoCallLuaCommonLogicRun消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] GoCallLuaCommonLogicRun 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		}
 	}, 1)
 
@@ -359,18 +360,18 @@ func TimerCommonLogicStart() {
 	ztimer.TimerCheckUpdate(func() {
 		startTime = ztimer.GetOsTimeMillisecond()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaSaveServerState") // 保存服务器的状态
-		if ztimer.GetOsTimeMillisecond()-startTime > 100 {
-			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]GoCallLuaSaveServerState消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] GoCallLuaSaveServerState 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		}
 		runtime.GC()
-	}, 60)
+	}, 60)	// 1 分钟
 
 	// ---------------------创建计时器，定期去更新lua脚本reload---------------------
 	ztimer.TimerCheckUpdate(func() {
 		// 定期更新后台的配置数据
 		startTime = ztimer.GetOsTimeMillisecond()
 		UpdateLuaReload()
-		if ztimer.GetOsTimeMillisecond()-startTime > 100 {
+		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
 			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]UpdateLuaReload消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		}
 	}, 60 * 10)  // 10 分钟
@@ -379,7 +380,7 @@ func TimerCommonLogicStart() {
 	ztimer.TimerClock0(func() {
 		startTime = ztimer.GetOsTimeMillisecond()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
-		if ztimer.GetOsTimeMillisecond()-startTime > 100 {
+		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
 			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] GoCallLuaCommonLogic12clock消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		}
 	})

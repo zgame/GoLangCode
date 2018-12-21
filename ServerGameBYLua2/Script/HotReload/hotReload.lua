@@ -43,6 +43,7 @@ function ReloadAll()
     ReloadFile("Script/Utils/Time")
     ReloadFile("Script/Utils/zTable")
     ReloadFile("Script/Utils/zRedis")
+    ReloadFile("Script/Utils/luaMySql")
     ReloadFile("Script/Utils/zMySql")
 
 

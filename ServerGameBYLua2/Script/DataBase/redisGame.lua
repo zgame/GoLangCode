@@ -23,6 +23,8 @@
 
 
 
+
+
 ----------------------------获取UUID，只能用于服务器初始化-----------------------------
 function RedisGetAllPlayersUUID()         -- 清理掉桌子的运行状态
     return RedisGetString(RedisDirAllPlayersUUID.."BY_UUID" ,"BY_UUID")
