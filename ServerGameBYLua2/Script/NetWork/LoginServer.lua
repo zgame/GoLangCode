@@ -39,7 +39,9 @@ function SevLoginGSGuest(serverId,buf)
         MyUser.Diamond = 29
         MyUser.OpenId = openId
         RedisSavePlayerLogin(openId,UserId)
+        --print("保存",openId,UserId)
         RedisSavePlayer(MyUser)           -- redis 数据库 save
+        --print("保存玩家信息",UserId)
     else
         --print("有账号，那么取出账号的信息")
         UserId = tonumber(UserId)       -- 这里需要转一下到数字

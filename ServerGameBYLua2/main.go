@@ -139,6 +139,7 @@ func main() {
 
 	fmt.Println("-------------------Lua逻辑处理器---------------------------")
 	GameManagerInit()
+	fmt.Println("Lua 代码初始化完成")
 
 	//fmt.Println("-------------------多核桌子逻辑处理器---------------------------")
 	//CreateGoroutineForLuaGameTable()

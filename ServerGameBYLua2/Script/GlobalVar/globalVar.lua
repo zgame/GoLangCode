@@ -29,7 +29,7 @@ AllGamesListRunCurrentTableIndex = {}                     -- 所有游戏中的�
 
 
 
-ALLUserUUID = 0   -- 玩家uid的自增
+--ALLUserUUID = 0   -- 玩家uid的自增
 
 -----------------------临时全局变量---------------------------------------
 UserToken = 0

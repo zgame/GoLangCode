@@ -94,14 +94,14 @@ function build_mac_addr(index)
     local i1 = math.floor(index / 256)
     local i2 = math.floor(index % 256)
 
-    local ss1 = tostring(i1)
+    local ss1 = string.format("%x",i1)
     if #ss1 == 1 then
         ss1 = "0" .. ss1
     end
 
     str = str .. ss1
     str = str .. "-"
-    local ss2 = tostring(i2)
+    local ss2 = string.format("%x",i2)
     if #ss2 == 1 then
         ss2 = "0" .. ss2
     end

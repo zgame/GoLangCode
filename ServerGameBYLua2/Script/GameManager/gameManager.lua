@@ -22,7 +22,7 @@
 -- 服务器开始创建各个游戏，这里的游戏都是多人的游戏， 如果是单人游戏，玩家自己创建即可
 function GoCallLuaStartGamesServers()
     --CreateAllGoRoutineGameTable()   --创建桌子使用的goroutine函数列表
-    GetALLUserUUID()
+    --GetALLUserUUID()        -- 是一个UUID是不是需要初始化的判断
 
     AddGame("满贯捕鱼", GameTypeBY , 1)     -- 普通房间
     --AddGame("满贯捕鱼30倍", GameTypeBY30 , 30)    -- 30倍房间
@@ -36,26 +36,26 @@ end
 
 -----------------------------------玩家注册，玩家掉线-------------------------------------
 -- 服务器启动的时候， 从数据库中读取玩家最后的uid
-function GetALLUserUUID()
-    --这个要从数据库读取
-    ALLUserUUID = RedisGetAllPlayersUUID()
-    --print("ALLUserUUID",ALLUserUUID)
-    --如果读取数据是空，那么就重置
-    if ALLUserUUID == "" then
-        ALLUserUUID = 1000000000
-        RedisSaveAllPlayersUUID(ALLUserUUID)
-        print("初始化一下 ALLUserUUID",ALLUserUUID)
-    end
-    --print("ALLUserUUID",ALLUserUUID)
-end
+--function GetALLUserUUID()
+--    --这个要从数据库读取
+--    local uuid = RedisGetAllPlayersUUID()
+--    --print("ALLUserUUID",ALLUserUUID)
+--    --如果读取数据是空，那么就重置
+--    if uuid == "" then
+--        uuid = 1000000000
+--        RedisSaveAllPlayersUUID(uuid)
+--        print("初始化一下 ALLUserUUID",uuid)
+--    end
+--    --print("ALLUserUUID",ALLUserUUID)
+--end
 
 --有一个新的玩家注册了，那么给他分配一个UID
 function GetLastUserID()
     local r = 1     -- math.random(1, 4)        --返回[1,4]的随机整数
 
-    ALLUserUUID = RedisMultiProcessGetAllPlayersUUID(r)     -- 分布式申请UUID
-    Logger("给玩家分配新uid  ALLUserUUID "..ALLUserUUID)
-    return ALLUserUUID
+    local uuid = RedisMultiProcessGetAllPlayersUUID(r)     -- 分布式申请UUID
+    --Logger("给玩家分配新uid  ALLUserUUID "..uuid)
+    return uuid
 end
 
 

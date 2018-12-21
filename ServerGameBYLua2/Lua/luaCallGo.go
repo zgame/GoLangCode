@@ -150,7 +150,7 @@ func  luaCallGoRedisSaveString(L * lua.LState) int  {
 	dir := L.ToString(1)
 	key := L.ToString(2)
 	value := L.ToString(3)
-	go zRedis.SaveStringToRedis(dir , key ,value )
+	zRedis.SaveStringToRedis(dir , key ,value )
 	return 0
 }
 // redis get value
@@ -168,7 +168,7 @@ func  luaCallGoRedisGetString(L * lua.LState) int  {
 func  luaCallGoRedisDelKey(L * lua.LState) int  {
 	dir := L.ToString(1)
 	key := L.ToString(2)
-	go zRedis.DelKeyToRedis(dir , key)
+	zRedis.DelKeyToRedis(dir , key)
 	return 0
 }
 // redis add number
