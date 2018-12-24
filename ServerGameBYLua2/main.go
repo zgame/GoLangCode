@@ -348,10 +348,10 @@ func TimerCommonLogicStart() {
 	// -------------------创建计时器，定期去run公共逻辑---------------------
 	ztimer.TimerCheckUpdate(func() {
 
-		ztimer.CheckRunTimeCost(func() {
+		//ztimer.CheckRunTimeCost(func() {
 			log.PrintfLogger("[%s] 拼接成功%d    标识错误%d   %s   %s  处理消息平均时间：%d  ", ServerAddress+":"+strconv.Itoa(SocketPort),
 				Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, GetAllConnectMsg(), log.GetSysMemInfo(), Lua.StaticNetWorkReceiveToSendCostTime)
-		}, "GoCallLuaCommonLogicRun log.PrintfLogger")
+		//}, "GoCallLuaCommonLogicRun log.PrintfLogger")
 
 		ztimer.CheckRunTimeCost(func() {
 			GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
@@ -377,7 +377,7 @@ func TimerCommonLogicStart() {
 		}, "UpdateLuaReload")
 
 
-	}, 1)  // 10 分钟
+	},  60 * 1)  // 1 分钟
 
 	//---------------------创建计时器，夜里12点触发---------------------
 	ztimer.TimerClock0(func() {
