@@ -350,7 +350,10 @@ func TimerCommonLogicStart() {
 		startTime = ztimer.GetOsTimeMillisecond()
 		log.PrintfLogger("[%s] 拼接成功%d    标识错误%d   %s   %s  处理消息平均时间：%d  " , ServerAddress + ":"+strconv.Itoa(SocketPort),
 			Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, GetAllConnectMsg(), log.GetSysMemInfo()  , Lua.StaticNetWorkReceiveToSendCostTime)
-
+		//if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] GoCallLuaCommonLogicRun log.PrintfLogger 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		//}
+		startTime = ztimer.GetOsTimeMillisecond()
 		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
 		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
 			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] GoCallLuaCommonLogicRun 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))

@@ -56,7 +56,7 @@ func PrintfLogger(format string, a...interface{})  {
 
 // 内部函数
 func _logger(str string)  {
-	//go func() {
+	go func() {
 		// 判断一下目录， 如果没有目录就创建出来
 		logDir := "Logs"
 		exist, err := PathExists(logDir)
@@ -80,7 +80,7 @@ func _logger(str string)  {
 		file, _ := os.OpenFile(logDir+"/Logger_"+t11+"_" + strconv.Itoa(ServerPort) +".log", os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
 		logger := log.New(file, "", log.LstdFlags)
 		logger.Println("[Log:]", str)
-	//}()
+	}()
 
 }
 
