@@ -335,8 +335,7 @@ end
 
 ----删除特定id的子弹
 function ByTable:DelBullet(bulletId)
-    local bullet = self:GetBullet(bulletId)
-    if bullet ~= nil then
+    if self:GetBullet(bulletId) ~= nil then
         --self.BulletArray[bulletId] = nil
         self:SetBulletArray(bulletId, nil)
     end
@@ -365,8 +364,7 @@ end
 
 ---- 有多少子弹
 function ByTable:GetBulletNum()
-    local re = self.BulletArrayNumber
-    return re
+    return self.BulletArrayNumber
 end
 ----------------------------------------------------------------------------
 -----------------------------消息同步-----------------------------------------
@@ -374,7 +372,7 @@ end
 
 -----给桌上的所有玩家同步消息
 function ByTable:SendMsgToAllUsers(mainCmd,subCmd,sendCmd)
-    for k,player in pairs(self.UserSeatArray) do
+    for _,player in pairs(self.UserSeatArray) do
         if player ~= nil and player.IsRobot == false and player.NetWorkState then
              --LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil)
             local result = LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
@@ -390,7 +388,7 @@ end
 
 ----给桌上的其他玩家同步消息
 function ByTable:SendMsgToOtherUsers(userId,sendCmd,mainCmd,subCmd)
-    for k,player in pairs(self.UserSeatArray) do
+    for _,player in pairs(self.UserSeatArray) do
         if player ~= nil and player.IsRobot == false and userId ~= player.User.UserId and player.NetWorkState then
             LuaNetWorkSendToUser(player.User.UserId,mainCmd,subCmd,sendCmd,nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
         end
@@ -406,11 +404,11 @@ function ByTable:InitDistributeInfo()
     --print("初始化鱼池")
     local startId = self.RoomScore * 100
     local endId = startId + 100
-
+    local distribute
     for fishKind, v in pairs(FishServerExcel) do
         fishKind = tonumber(fishKind)
         if v.is_use == 1 and fishKind > startId and fishKind < endId then
-            local distribute = FishDistribute:New()
+            distribute = FishDistribute:New()
             distribute.FishKindID = fishKind
 
             distribute.CreateTime = GetOsTimeMillisecond()               --生成时间

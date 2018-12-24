@@ -75,9 +75,7 @@ end
 
 ----删除特定uid的鱼
 function ByTable:DelFish(fishId)
-
-    local fish = self:GetFish(fishId)
-    if fish ~=nil then
+    if self:GetFish(fishId) ~= nil then
         self:SetFishArray(fishId,nil)       -- 删掉鱼从列表中
     end
     if self:GetFishNum() == 0 then
@@ -112,8 +110,7 @@ end
 
 ---- 有多少条鱼
 function ByTable:GetFishNum()
-    local re = self.FishArrayNumber
-    return re
+    return self.FishArrayNumber
 end
 
 
@@ -121,8 +118,9 @@ end
 function ByTable:SendSceneFishes(UserId)
     --    print("鱼数量"..self.FishArrayNumber)
     local sendCmd = CMD_Game_pb.CMD_S_SCENE_FISH()
-    for k,fish in pairs(self.FishArray) do
-        local cmd = sendCmd.scene_fishs:add()
+    local cmd
+    for _,fish in pairs(self.FishArray) do
+        cmd = sendCmd.scene_fishs:add()
         cmd.uid = fish.FishUID
         cmd.kind_id = fish.FishKindID
     end
