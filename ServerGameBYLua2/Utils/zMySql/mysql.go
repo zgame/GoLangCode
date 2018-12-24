@@ -7,8 +7,6 @@ import (
 	"github.com/go-ini/ini"
 	_ "github.com/go-sql-driver/mysql"
 	"../ztimer"
-	zlog "../log"
-	"../../GlobalVar"
 )
 var MySqlEngine *xorm.Engine
 //------------------------------------------------------------------------------------------
@@ -58,42 +56,40 @@ func ConnectDB() bool{
 
 // 保存服务器的游戏房间的当前状态， 这个作废了， 效率低
 func SqlSaveGameState(ServerIP_Port string,gameType int,tableId  int,FishNum int,BulletNum int,SeatArray int)  {
-	startTime := ztimer.GetOsTimeMillisecond()
-	// 这里没有用duplicate是因为没有主键
-	select_sql := fmt.Sprintf("select table_id from game_state where server_ip = '%s' and game_id = %d and table_id = %d limit 1",ServerIP_Port,gameType,tableId )
-	insert_sql := fmt.Sprintf("insert into game_state (server_ip,game_id,table_id,fish_num,bullet_num,seat_array) values ('%s',%d, %d,%d,%d,%d)",ServerIP_Port,gameType,tableId ,FishNum,BulletNum,SeatArray)
-	update_sql := fmt.Sprintf("update  game_state   set  fish_num =%d ,bullet_num =%d,seat_array=%d where server_ip = '%s' and game_id = %d and table_id = %d",FishNum,BulletNum,SeatArray,ServerIP_Port,gameType,tableId )
+	ztimer.CheckRunTimeCost(func() {
+		// 这里没有用duplicate是因为没有主键
+		select_sql := fmt.Sprintf("select table_id from game_state where server_ip = '%s' and game_id = %d and table_id = %d limit 1",ServerIP_Port,gameType,tableId )
+		insert_sql := fmt.Sprintf("insert into game_state (server_ip,game_id,table_id,fish_num,bullet_num,seat_array) values ('%s',%d, %d,%d,%d,%d)",ServerIP_Port,gameType,tableId ,FishNum,BulletNum,SeatArray)
+		update_sql := fmt.Sprintf("update  game_state   set  fish_num =%d ,bullet_num =%d,seat_array=%d where server_ip = '%s' and game_id = %d and table_id = %d",FishNum,BulletNum,SeatArray,ServerIP_Port,gameType,tableId )
 
-	//fmt.Println("select_sql",select_sql)
+		//fmt.Println("select_sql",select_sql)
 
-	result,err:=	MySqlEngine.Query(select_sql)
-	if err!=nil{
-		fmt.Println("Query error ", err.Error())
-	}
+		result,err:=	MySqlEngine.Query(select_sql)
+		if err!=nil{
+			fmt.Println("Query error ", err.Error())
+		}
 
-	if len(result) == 0 {
-		_,err = MySqlEngine.Exec(insert_sql)
-	}else {
-		_,err = MySqlEngine.Exec(update_sql)
-	}
-	if err!=nil{
-		fmt.Println("Exec error ", err.Error())
-	}
-	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		zlog.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]SqlSaveGameState消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
-	}
+		if len(result) == 0 {
+			_,err = MySqlEngine.Exec(insert_sql)
+		}else {
+			_,err = MySqlEngine.Exec(update_sql)
+		}
+		if err!=nil{
+			fmt.Println("Exec error ", err.Error())
+		}
+	},"SqlSaveGameState")
+
 }
 
 // 执行sql语句
 func SqlExec(sql string){
-	startTime := ztimer.GetOsTimeMillisecond()
-	_,err := MySqlEngine.Exec(sql)
-	if err!=nil{
-		fmt.Println("SqlExec error ", err.Error())
-	}
-	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		zlog.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]SqlExec消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
-	}
+	ztimer.CheckRunTimeCost(func() {
+		_,err := MySqlEngine.Exec(sql)
+		if err!=nil{
+			fmt.Println("SqlExec error ", err.Error())
+		}
+	},"SqlExec")
+
 }
 
 

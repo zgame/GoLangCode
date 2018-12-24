@@ -192,11 +192,14 @@ func main() {
 		//GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
 
 		//UpdateDBSetting()
-		startTime := ztimer.GetOsTimeMillisecond()
-		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
-		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-			log.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 桌子循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
-		}
+		ztimer.CheckRunTimeCost(func() {
+				GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
+			}, "桌子循环GoCallLuaGoRoutineForLuaGameTable"		)
+		//startTime := ztimer.GetOsTimeMillisecond()
+		//GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
+		//if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+		//	log.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 桌子循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		//}
 		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
 		//end:= ztimer.GetOsTimeMillisecond()
 		//if end - start > 120 {
@@ -342,51 +345,46 @@ func GameManagerLuaReloadCheck() {
 }
 
 func TimerCommonLogicStart() {
-	var startTime int64
-
 	// -------------------创建计时器，定期去run公共逻辑---------------------
 	ztimer.TimerCheckUpdate(func() {
 
-		startTime = ztimer.GetOsTimeMillisecond()
-		log.PrintfLogger("[%s] 拼接成功%d    标识错误%d   %s   %s  处理消息平均时间：%d  " , ServerAddress + ":"+strconv.Itoa(SocketPort),
-			Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, GetAllConnectMsg(), log.GetSysMemInfo()  , Lua.StaticNetWorkReceiveToSendCostTime)
-		//if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] GoCallLuaCommonLogicRun log.PrintfLogger 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
-		//}
-		startTime = ztimer.GetOsTimeMillisecond()
-		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
-		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] GoCallLuaCommonLogicRun 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
-		}
+		ztimer.CheckRunTimeCost(func() {
+			log.PrintfLogger("[%s] 拼接成功%d    标识错误%d   %s   %s  处理消息平均时间：%d  ", ServerAddress+":"+strconv.Itoa(SocketPort),
+				Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, GetAllConnectMsg(), log.GetSysMemInfo(), Lua.StaticNetWorkReceiveToSendCostTime)
+		}, "GoCallLuaCommonLogicRun log.PrintfLogger")
+
+		ztimer.CheckRunTimeCost(func() {
+			GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
+		}, "GoCallLuaCommonLogicRun")
+
 	}, 1)
 
 	// ---------------------创建计时器，定期去保存服务器状态---------------------
 	ztimer.TimerCheckUpdate(func() {
-		startTime = ztimer.GetOsTimeMillisecond()
-		GameManagerLua.GoCallLuaLogic("GoCallLuaSaveServerState") // 保存服务器的状态
-		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] GoCallLuaSaveServerState 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
-		}
+		ztimer.CheckRunTimeCost(func() {
+			GameManagerLua.GoCallLuaLogic("GoCallLuaSaveServerState") // 保存服务器的状态
+		}, "GoCallLuaSaveServerState")
+
+
 		runtime.GC()
 	}, 60)	// 1 分钟
 
 	// ---------------------创建计时器，定期去更新lua脚本reload---------------------
 	ztimer.TimerCheckUpdate(func() {
 		// 定期更新后台的配置数据
-		startTime = ztimer.GetOsTimeMillisecond()
-		UpdateLuaReload()
-		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]UpdateLuaReload消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
-		}
+		ztimer.CheckRunTimeCost(func() {
+			UpdateLuaReload()
+		}, "UpdateLuaReload")
+
+
 	}, 60 * 10)  // 10 分钟
 
 	//---------------------创建计时器，夜里12点触发---------------------
 	ztimer.TimerClock0(func() {
-		startTime = ztimer.GetOsTimeMillisecond()
-		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
-		if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-			log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] GoCallLuaCommonLogic12clock消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
-		}
+		ztimer.CheckRunTimeCost(func() {
+			GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
+		}, "GoCallLuaCommonLogic12clock")
+
 	})
 
 }

@@ -2,6 +2,9 @@ package ztimer
 
 import (
 	"time"
+	"../log"
+	"../../GlobalVar"
+
 )
 
 // 计时器，用来定期检查配置的更新，包括后台控制的活动，开关，配置文件更新，用数据版本号来控制
@@ -50,4 +53,13 @@ func TimerClock(f func(),clock int) {
 // 获取系统时间，精确到毫秒
 func GetOsTimeMillisecond()  int64{
 	return time.Now().UnixNano() / int64(time.Millisecond)
+}
+
+// 用来检测运行时间的
+func CheckRunTimeCost(f func(), msg string)  {
+	startTime := GetOsTimeMillisecond()
+	f()
+	if GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]    %s     消耗时间: %d", msg, int(GetOsTimeMillisecond()-startTime))
+	}
 }
