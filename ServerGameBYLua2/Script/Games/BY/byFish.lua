@@ -27,15 +27,15 @@ function Fish:New(uid)
         TotalAliveTime = 0, -- 存活时间，秒
         --MovePerPointTime time.Time	-- 移动一个坐标点需要的时间
     }
-    --setmetatable(c, self)
-    --self.__index = self
+    setmetatable(c, self)
+    self.__index = self
     return c
 end
 
---function Fish:Reload(c)
---    setmetatable(c, self)
---    self.__index = self
---end
+function Fish:Reload(c)
+    setmetatable(c, self)
+    self.__index = self
+end
 
 --function Fish:FishRun(now,table)
 --    if now > self.DeadTime then

@@ -95,12 +95,12 @@ function ReloadAll()
             for _, table in pairs(game.AllTableList) do
                 -- 遍历所有游戏，所有桌子， 所有鱼，所有子弹，所有生成鱼池， 因为这些都是类， 已经生成的对象需要刷新函数
                 ByTable:Reload(table)
-                --for _, fish in pairs(table.FishArray) do
-                --    Fish:Reload(fish)
-                --end
-                --for _, bullet in pairs(table.BulletArray) do
-                --    Bullet:Reload(bullet)
-                --end
+                for _, fish in pairs(table.FishArray) do
+                    Fish:Reload(fish)
+                end
+                for _, bullet in pairs(table.BulletArray) do
+                    Bullet:Reload(bullet)
+                end
                 for _, distribute in pairs(table.DistributeArray) do
                     FishDistribute:Reload(distribute)
                 end

@@ -19,15 +19,15 @@ function Bullet:New(id)
         lockFishID = 0, -- 锁定鱼的ID
         DeadTime = GetOsTimeMillisecond() + 5 * 1000 , -- 过期时间 5秒
     }
-    --setmetatable(c, self)
-    --self.__index = self
+    setmetatable(c, self)
+    self.__index = self
     return c
 end
 
---function Bullet:Reload(c)
---    setmetatable(c, self)
---    self.__index = self
---end
+function Bullet:Reload(c)
+    setmetatable(c, self)
+    self.__index = self
+end
 
 --function Bullet:BulletRun(now,table)
 --    --print("BulletRun")

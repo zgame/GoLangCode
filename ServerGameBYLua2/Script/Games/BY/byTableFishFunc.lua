@@ -8,10 +8,9 @@
 ---- 具体生成鱼
 function ByTable:DistributeNewFish(Distribute,offsetX,offsetY)
     --print("生成一条鱼"..Distribute.FishKindID)
-    local kindId = Distribute.FishKindID
     -- 创建鱼
     local fish = self:CreateFish()
-    self:SetFishData(fish,kindId,offsetY,offsetY,Distribute.FirstPathID)
+    self:SetFishData(fish,Distribute.FishKindID,offsetY,offsetY,Distribute.FirstPathID)
 
     -- 发送给所有客户端生成鱼的消息
     self:SendNewFishes(fish)
@@ -22,9 +21,6 @@ end
 function ByTable:SetFishData(fish,kindId, x, y, PathID)
 
     local now = GetOsTimeMillisecond()
-    local speed = FishServerExcel[tostring(kindId)].speed
-    local Mulriple = FishServerExcel[tostring(kindId)].mulriple
-    local CapturePro = FishServerExcel[tostring(kindId)].capture_probability
     local totalAliveTime = 10           -- 鱼的生存时间
 
     fish.FishKindID = kindId
@@ -32,10 +28,10 @@ function ByTable:SetFishData(fish,kindId, x, y, PathID)
     fish.CreateTime = now
     fish.TotalAliveTime = totalAliveTime
     fish.DeadTime = now + fish.TotalAliveTime * 1000
-    fish.Speed = speed
+    fish.Speed = FishServerExcel[tostring(kindId)].speed
     fish.PathID = PathID
-    fish.Mulriple = Mulriple
-    fish.CapturePro = CapturePro
+    fish.Mulriple = FishServerExcel[tostring(kindId)].mulriple
+    fish.CapturePro = FishServerExcel[tostring(kindId)].capture_probability
 
     return fish
 end

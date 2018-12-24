@@ -35,29 +35,20 @@ end
 function FishDistribute:GetIntervalTime(kindId)
     kindId  = tostring(kindId)          -- 这里要注意，之所以用string是因为用int，消耗内存大
     -- 获取时间间隔
-    local DistributeIntervalMin = FishServerExcel[kindId].distribute_interval_min
-    local DistributeIntervalMax = FishServerExcel[kindId].distribute_interval_max
-
-    local re = GetRandom(DistributeIntervalMin,DistributeIntervalMax)
+    local re = GetRandom(FishServerExcel[kindId].distribute_interval_min,FishServerExcel[kindId].distribute_interval_max)
     return re
 end
 ----获取生成数量间隔
 function FishDistribute:GetCount(kindId)
     kindId  = tostring(kindId)          -- 这里要注意，之所以用string是因为用int，消耗内存大
     -- 获取时间间隔
-    local DistributeIntervalMin = FishServerExcel[kindId].count_min
-    local DistributeIntervalMax = FishServerExcel[kindId].count_max
-
-    return GetRandom(DistributeIntervalMin,DistributeIntervalMax)
+    return GetRandom(FishServerExcel[kindId].count_min,FishServerExcel[kindId].count_max)
 end
 ----多条鱼生成时间间隔
 function FishDistribute:GetCountFishTime(kindId)
     kindId  = tostring(kindId)          -- 这里要注意，之所以用string是因为用int，消耗内存大
     -- 获取时间间隔
-    local DistributeIntervalMin = FishServerExcel[kindId].time_min
-    local DistributeIntervalMax = FishServerExcel[kindId].time_max
-
-    return GetRandom(DistributeIntervalMin,DistributeIntervalMax)
+    return GetRandom(FishServerExcel[kindId].time_min,FishServerExcel[kindId].time_max)
 end
 
 ----获取路径的类型
@@ -65,14 +56,13 @@ function FishDistribute:GetPathType()
     return 1
 end
 
+FishDistributeOffsetXY = {{0,0}, {-1,1}, {-0.5,1},{0,1},{0.5,1},{1,1},
+                          {-1,0.5}, {-0.5,0.5},{0,0.5},{0.5,0.5},{1,0.5},{-1,1},{1,0},
+                          {-1,-0.5}, {-0.5,-0.5},{0,-0.5},{0.5,-0.5},{1,-0.5},
+                          {-1,-1}, {-0.5,-1},{0,-1},{0.5,-1},{1,-1}}
 ----获得路径位置偏移
 function FishDistribute:GetOffsetXY()
-    local offset = {{0,0}, {-1,1}, {-0.5,1},{0,1},{0.5,1},{1,1},
-    {-1,0.5}, {-0.5,0.5},{0,0.5},{0.5,0.5},{1,0.5},{-1,1},{1,0},
-    {-1,-0.5}, {-0.5,-0.5},{0,-0.5},{0.5,-0.5},{1,-0.5},
-    {-1,-1}, {-0.5,-1},{0,-1},{0.5,-1},{1,-1}}
-
-    return offset[GetRandom(1,23)]
+    return FishDistributeOffsetXY[GetRandom(1,23)]
 end
 
 
