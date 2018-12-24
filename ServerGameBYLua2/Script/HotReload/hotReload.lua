@@ -67,6 +67,7 @@ function ReloadAll()
     ReloadFile("Script/Games/BY/byFish")
     ReloadFile("Script/Games/BY/byFishDistribute")
     ReloadFile("Script/Games/BY/byTable")
+    ReloadFile("Script/Games/BY/byTableFishFunc")
 
 
     -- GameManager

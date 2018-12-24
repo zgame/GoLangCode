@@ -80,6 +80,7 @@ require("byBullet")
 require("byFish")
 require("byFishDistribute")
 require("byTable")
+require("byTableFishFunc")
 
 require("games")
 require("gameManager")
