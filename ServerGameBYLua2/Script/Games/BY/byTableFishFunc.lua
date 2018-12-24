@@ -5,8 +5,20 @@
 ---
 
 
+---- 具体生成鱼
+function ByTable:DistributeNewFish(Distribute,offsetX,offsetY)
+    --print("生成一条鱼"..Distribute.FishKindID)
+    local kindId = Distribute.FishKindID
+    -- 创建鱼
+    local fish = self:CreateFish()
+    self:SetFishData(fish,kindId,offsetY,offsetY,Distribute.FirstPathID)
 
--- 创建一条鱼
+    -- 发送给所有客户端生成鱼的消息
+    self:SendNewFishes(fish)
+
+end
+
+--- 创建一条鱼
 function ByTable:SetFishData(fish,kindId, x, y, PathID)
 
     local now = GetOsTimeMillisecond()
@@ -28,9 +40,106 @@ function ByTable:SetFishData(fish,kindId, x, y, PathID)
     return fish
 end
 
--- 获取鱼的分数
+--- 获取鱼的分数
 function ByTable:GetFishScore(fish)
     local score = FishServerExcel[tostring(fish.FishKindID)].gold_multiples
     score = 100
     return score
+end
+
+
+
+
+
+----------------------------------------------------------------------------
+------------------------------鱼-----------------------------------------
+---------------------------------------------------------------------------
+
+----新建一个新的鱼
+function ByTable:CreateFish()
+    local fish = Fish:New(self.GenerateFishUid)
+    --self.FishArray[tostring(fish.FishUID)] = fish
+    self:SetFishArray(fish.FishUID ,fish)
+    self.GenerateFishUid = self.GenerateFishUid  + 1
+    return fish
+end
+
+--- 获取鱼的句柄
+function ByTable:GetFish(fishId)
+    return self.FishArray[tostring(fishId)]
+end
+function ByTable:SetFishArray(fishId,value)
+    self.FishArray[tostring(fishId)] = value
+    if value == nil then
+        self.FishArrayNumber = self.FishArrayNumber - 1     -- 数量减少
+    else
+        self.FishArrayNumber = self.FishArrayNumber + 1
+    end
+end
+
+----删除特定uid的鱼
+function ByTable:DelFish(fishId)
+
+    local fish = self:GetFish(fishId)
+    if fish ~=nil then
+        self:SetFishArray(fishId,nil)       -- 删掉鱼从列表中
+    end
+    if self:GetFishNum() == 0 then
+        self.GenerateFishUid = 0  --重置一下生成鱼uuid
+    end
+
+end
+
+----删除特定uid的鱼list
+--function ByTable:DelFishList(fishIdList)
+--    for k,v in pairs(fishIdList) do
+--        local fish = self:GetFish(v)
+--        if fish ~=nil then
+--            self.FishArray[tostring(fish.FishUID)] = nil
+--            self:SetFish()
+--        end
+--    end
+--    if self:GetFishNum() == 0 then
+--        self.GenerateFishUid = 0  --重置一下生成鱼uuid
+--    end
+--end
+
+
+
+---清空所有的鱼群
+function ByTable:DelFishes()
+    self.FishArray = {}
+    self.GenerateFishUid = 0  --重置一下生成鱼uuid
+    self.FishArrayNumber = 0
+end
+
+
+---- 有多少条鱼
+function ByTable:GetFishNum()
+    local re = self.FishArrayNumber
+    return re
+end
+
+
+----玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
+function ByTable:SendSceneFishes(UserId)
+    --    print("鱼数量"..self.FishArrayNumber)
+    local sendCmd = CMD_Game_pb.CMD_S_SCENE_FISH()
+    for k,fish in pairs(self.FishArray) do
+        local cmd = sendCmd.scene_fishs:add()
+        cmd.uid = fish.FishUID
+        cmd.kind_id = fish.FishKindID
+    end
+    LuaNetWorkSendToUser(UserId, MDM_GF_GAME, SUB_S_SCENE_FISH, sendCmd, nil, nil)
+
+end
+
+--- 给所有玩家同步新建的鱼的信息
+function ByTable:SendNewFishes(fish)
+    local sendCmd = CMD_Game_pb.CMD_S_DISTRIBUTE_FISH()
+    local cmd = sendCmd.fishs:add()
+    cmd.uid = fish.FishUID
+    cmd.kind_id = fish.FishKindID
+
+    self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_DISTRIBUTE_FISH, sendCmd)
 end

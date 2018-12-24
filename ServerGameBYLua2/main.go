@@ -200,6 +200,7 @@ func main() {
 		//if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
 		//	log.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 桌子循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		//}
+		runtime.GC()
 		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
 		//end:= ztimer.GetOsTimeMillisecond()
 		//if end - start > 120 {
