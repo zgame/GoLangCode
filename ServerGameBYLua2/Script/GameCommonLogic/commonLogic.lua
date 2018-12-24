@@ -19,13 +19,13 @@ end
 
 -- 每60秒记录一下，服务器的状态到数据库中
 function GoCallLuaSaveServerState()
-    local tableNum = 0
+    local allGamesTablesNum = 0
     for k, game in pairs(AllGamesList) do
-        tableNum = tableNum + GetTableLen(game.AllTableList)
+        allGamesTablesNum = allGamesTablesNum + game.AllTableListNumber
     end
     local state = {}
-    state["TableNum"] = tableNum
-    state["PlayerNum"] = GetTableLen(AllPlayerList)
+    state["TableNum"] = allGamesTablesNum
+    state["PlayerNum"] = AllPlayerListNumber
     state["SendNum"] = ServerStateSendNum
     state["ReceiveNum"] = ServerStateReceiveNum
     --RedisSaveServerState(state)

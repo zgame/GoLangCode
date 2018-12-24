@@ -65,6 +65,11 @@ function GetPlayerByUID(uid)
 end
 function SetAllPlayerList(userId,value)
     AllPlayerList[tostring(userId)] = value
+    if value == nil then
+        AllPlayerListNumber = AllPlayerListNumber - 1   -- 玩家人数减少
+    else
+        AllPlayerListNumber = AllPlayerListNumber + 1   -- 玩家人数增加
+    end
 end
 
 -- go通知lua玩家掉线了
@@ -115,7 +120,7 @@ end
 function ShowAllGameStates()
     for k, v in pairs(AllGamesList) do
         local game = GetGameByID(k)
-        print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(AllPlayerList))
+        print("游戏"..k.."有桌子数量"..game.AllTableListNumber..",有玩家数量".. AllPlayerListNumber)
     end
 
     --print("用来看reload的excel是否生效：",FishServerExcel["101"].type)
@@ -140,6 +145,6 @@ function GoCallLuaGoRoutineForLuaGameTable()
     end
 
     -- 全部都run过了，重置一下
-    AllGamesListRunCurrentTableIndex = {}
+    --AllGamesListRunCurrentTableIndex = {}
     --print("全部都run过了，重置一下")
 end

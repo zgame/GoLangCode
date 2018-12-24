@@ -17,6 +17,7 @@ function Game:New(name,gameTypeId, switch)
         Switch = switch,    -- 游戏是否开启
 
         AllTableList = {},  -- 所有桌子列表       key tableUid  ,value table          --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
+        AllTableListNumber = 0 ,  -- 所有该游戏的桌子数量
         TableUUID = 1 ,     -- tableUid 从1开始
 
         GoRunTableAllList = {},   -- 桌子的run函数在里面                --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
@@ -52,6 +53,7 @@ function Game:CreateTable(gameType,gameScore)
 
     --增加该桌子到总列表中
     self.AllTableList[tostring(self.TableUUID)] = table_t
+    self.AllTableListNumber = self.AllTableListNumber + 1
     self.TableUUID = self.TableUUID + 1     -- table uuid 自增
 
     -- 桌子开始自行启动计算
@@ -70,6 +72,7 @@ end
 function Game:ReleaseTableByUID(tableId)
     if tableId ~= 1 then
         self.AllTableList[tostring(tableId)] = nil
+        self.AllTableListNumber = self.AllTableListNumber - 1
         self.GoRunTableAllList[tostring(tableId)] = nil
         SqlDelGameState(self.Id, tableId)   -- 把记录桌子状态的redis删掉
         Logger("清理掉桌子"..tableId)

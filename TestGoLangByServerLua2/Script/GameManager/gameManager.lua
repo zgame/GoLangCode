@@ -116,15 +116,15 @@ end
 
 -----------------------------------桌子-------------------------------------
 -- 显示当前的状态
-function ShowAllGameStates()
-    for k, v in pairs(AllGamesList) do
-        local game = GetGameByID(k)
-        print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(AllPlayerList))
-    end
-
-    --print("用来看reload的excel是否生效：",FishServerExcel["101"].type)
-
-end
+--function ShowAllGameStates()
+--    for k, v in pairs(AllGamesList) do
+--        local game = GetGameByID(k)
+--        print("游戏"..k.."有桌子数量"..GetTableLen(game.AllTableList)..",有玩家数量"..GetTableLen(AllPlayerList))
+--    end
+--
+--    --print("用来看reload的excel是否生效：",FishServerExcel["101"].type)
+--
+--end
 
 
 

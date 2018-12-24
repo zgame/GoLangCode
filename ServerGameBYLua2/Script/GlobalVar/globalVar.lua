@@ -25,7 +25,8 @@ ZswLogShowReceiveLastTime = 0      -- 接收时间
 
 AllGamesList = {}   -- gameType (type string) , game          --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题          AllGamesList[tostring(gameType)]
 AllPlayerList = {}   -- 所有玩家列表   key  userId(type string) , value player     --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
-AllGamesListRunCurrentTableIndex = {}                     -- 所有游戏中的桌子已经run过的map ，  run过之后，就会加入到这里，每次循环的时候判断是否run过了
+AllPlayerListNumber = 0   -- 所有玩家的人数，记住不要遍历上面的map，性能太慢
+--AllGamesListRunCurrentTableIndex = {}                     -- 所有游戏中的桌子已经run过的map ，  run过之后，就会加入到这里，每次循环的时候判断是否run过了
 
 
 

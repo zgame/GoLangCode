@@ -18,13 +18,15 @@ function ByTable:New(tableId,gameTypeId)
         RoomScore = 0,  --房间分数
 
         UserSeatArray = {},  -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
-
+        UserSeatArrayNumber = 0,  -- 桌子上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
 
         GenerateFishUid = 1, -- 生成鱼的uid
         GenerateBulletUid = 1, -- 生成子弹的uid
 
         FishArray = {},   -- 鱼的哈希表    uid, fish         --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
+        FishArrayNumber = 0,   -- 鱼数组的长度，因为是哈希，所以记录一下比较方便
         BulletArray = {},   -- 子弹的哈希表   id,  bullet         --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
+        BulletArrayNumber = 0 ,   -- 子弹数组的长度，因为是哈希，所以记录一下比较方便
 
 
         DistributeArray = {},   -- 鱼的生成信息数据    key顺序生成1,2,3,4...  Distribute
@@ -79,7 +81,7 @@ function ByTable:RunTable()
                 local state = {}
                 state["FishNum"] = self:GetFishNum()        --当前有多少条鱼
                 state["BulletNum"] = self:GetBulletNum()    --当前有多少子弹
-                state["SeatArray"] = GetTableLen(self.UserSeatArray)    --当前有多少玩家
+                state["SeatArray"] = self.UserSeatArrayNumber    --当前有多少玩家
                 SqlSaveGameState(self.GameID, self.TableID, state)
                 self.LastRunTime = now
                 --print("记录桌子的运行状态")
@@ -141,7 +143,8 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
                 fish.CurrScore = tonumber( fish:GetFishScore())   --鱼的分数
                 ALLCurrScore = ALLCurrScore + fish.CurrScore
 
-                AllFishes[fish.FishUID] = fish
+                table.insert(AllFishes,fish)
+                --AllFishes[fish.FishUID] = fish
                 -- 删除鱼
                 self:DelFish(fish.FishUID)
             end
@@ -149,7 +152,7 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
         end
     end
 
-    if GetTableLen(AllFishes) == 0 then
+    if #AllFishes == 0 then
         LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_CATCH_FISH,nil,"要捕获的鱼id不正确或者已经被别人捕捉了", nil)
         return
     end
@@ -167,7 +170,7 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
     -- 给所有玩家同步一下，这个玩家捕到鱼了
     local sendCmd = CMD_Game_pb.CMD_S_CATCH_FISH()
 
-    for k,v in pairs(AllFishes) do
+    for _,v in ipairs(AllFishes) do
         local cmd = sendCmd.catch_fishs:add()
         cmd.fish_uid = v.FishUID
         cmd.fish_score = v.CurrScore
@@ -196,7 +199,7 @@ end
 
 -----判断桌子是有人，还是空桌子
 function ByTable:CheckTableEmpty()
-    if GetTableLen(self.UserSeatArray) >0 then
+    if self.UserSeatArrayNumber >0 then
         return false
     end
 
@@ -228,6 +231,8 @@ end
 ----玩家坐到椅子上
 function ByTable:PlayerSeat(seatID,player)
     self.UserSeatArray[seatID] = player
+    self.UserSeatArrayNumber = self.UserSeatArrayNumber + 1   -- 桌子上玩家数量增加
+
 end
 ----玩家离开椅子
 function ByTable:PlayerStandUp(seatID,player)
@@ -235,6 +240,7 @@ function ByTable:PlayerStandUp(seatID,player)
     local game = GetGameByID(player.GameType)
     SetAllPlayerList(player.User.UserId, nil)         -- 清理掉游戏管理的玩家总列表
     self.UserSeatArray[seatID] = nil                -- 清理掉桌子的玩家列表
+    self.UserSeatArrayNumber = self.UserSeatArrayNumber - 1  -- 桌子上玩家数量减少
     player.TableID = TABLE_CHAIR_NOBODY
     player.ChairID = TABLE_CHAIR_NOBODY
 
@@ -314,6 +320,11 @@ end
 -- 把子弹加入列表或者删除
 function ByTable:SetBulletArray(bulletId,value)
     self.BulletArray[tostring(bulletId)] = value
+    if value == nil then
+        self.BulletArrayNumber = self.BulletArrayNumber - 1     -- 减少数量
+    else
+        self.BulletArrayNumber = self.BulletArrayNumber + 1
+    end
 end
 
 
@@ -331,8 +342,9 @@ end
 
 ---- 删除所有子弹， 1 如果传入玩家uid，删除玩家的  ； 2  如果传入 -1 ，那么删除所有的
 function ByTable:DelBullets(userId)
-    if userId == -1 then
+    if userId == -1 then        -- 全部清空
         self.BulletArray = {}
+        self.BulletArrayNumber = 0
         return
     end
     for k,v in pairs(self.BulletArray) do
@@ -348,7 +360,7 @@ end
 
 ---- 有多少子弹
 function ByTable:GetBulletNum()
-    local re = GetTableLen(self.BulletArray)
+    local re = self.BulletArrayNumber
     return re
 end
 ----------------------------------------------------------------------------
@@ -370,6 +382,11 @@ function ByTable:GetFish(fishId)
 end
 function ByTable:SetFishArray(fishId,value)
     self.FishArray[tostring(fishId)] = value
+    if value == nil then
+        self.FishArrayNumber = self.FishArrayNumber - 1     -- 数量减少
+    else
+        self.FishArrayNumber = self.FishArrayNumber + 1
+    end
 end
 
 ----删除特定uid的鱼
@@ -405,19 +422,20 @@ end
 function ByTable:DelFishes()
     self.FishArray = {}
     self.GenerateFishUid = 0  --重置一下生成鱼uuid
+    self.FishArrayNumber = 0
 end
 
 
 ---- 有多少条鱼
 function ByTable:GetFishNum()
-    local re = GetTableLen(self.FishArray)
+    local re = self.FishArrayNumber
     return re
 end
 
 
 ----玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
 function ByTable:SendSceneFishes(UserId)
---    print("鱼数量"..GetTableLen(self.FishArray))
+--    print("鱼数量"..self.FishArrayNumber)
     local sendCmd = CMD_Game_pb.CMD_S_SCENE_FISH()
     for k,fish in pairs(self.FishArray) do
         local cmd = sendCmd.scene_fishs:add()

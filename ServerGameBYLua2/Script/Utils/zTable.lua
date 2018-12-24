@@ -4,14 +4,14 @@
 --- DateTime: 2018/11/7 15:56
 ---
 
--- 获取table有多少个元素
-function GetTableLen(table)
-    local num = 0
-    for k,v in pairs(table) do
-        num = num + 1
-    end
-    return num
-end
+---- 获取table有多少个元素，作废了，不能用
+--function GetTableLen(table)
+--    local num = 0
+--    for k,v in pairs(table) do
+--        num = num + 1
+--    end
+--    return num
+--end
 
 --
 --function ToStringEx(value)
