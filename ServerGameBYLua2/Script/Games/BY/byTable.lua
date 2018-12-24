@@ -39,8 +39,13 @@ function ByTable:New(tableId,gameTypeId)
     return c
 end
 
+function ByTable:Reload(c)
+    setmetatable(c, self)
+    self.__index = self
+end
+
 ------------主循环-------------------
-function ByTable:RunTable()
+function ByTable:StartTable()
     --    luaCallGoCreateGoroutine("RunTable")
 
 
@@ -56,51 +61,98 @@ function ByTable:RunTable()
 
     self:InitTable()        -- 可以进行初始化
 
-    -- 开始桌子的主循环
-    local RunTable = function()
-        --print("table       run"..self.TableID)
-        if self:CheckTableEmpty() then
-            --print("这是一个空桌子")
-            self.LastRunTime = GetOsTimeMillisecond()
-        else
-            local now = GetOsTimeMillisecond()
-
-            if self:GetFishNum() < MAX_Fish_NUMBER then
-                self:RunDistributeInfo(table.RoomScore)
-                self:RunBossDistributeInfo(table.RoomScore)
-            end
-            for k, bullet in pairs(self.BulletArray) do
-                bullet:BulletRun(now,self)      -- 遍历所有子弹，并且run
-            end
-            for k, fish in pairs(self.FishArray) do
-                fish:FishRun(now,self)              --遍历所有鱼，并且run
-            end
-
-            -- 记录桌子的运行状态
-            if now - self.LastRunTime > 1000 * 60  then     -- 60秒记录一次
-                local state = {}
-                state["FishNum"] = self:GetFishNum()        --当前有多少条鱼
-                state["BulletNum"] = self:GetBulletNum()    --当前有多少子弹
-                state["SeatArray"] = self.UserSeatArrayNumber    --当前有多少玩家
-                SqlSaveGameState(self.GameID, self.TableID, state)
-                self.LastRunTime = now
-                --print("记录桌子的运行状态")
-            end
-            -- 检查玩家的情况，如果玩家长期离线，那么t掉，没人就清空桌子
-            --for k, player in pairs(self.UserSeatArray) do
-            --    if player.NetWorkState == false then
-            --        if now - player.NetWorkCloseTimer > ConstPlayerNetworkWaitTime then
-            --            -- 玩家长时间断线，t掉吧
-            --            self:PlayerStandUp(player.ChairID,player)
-            --            Logger("长时间断线， t掉这个玩家"..player.User.UserId)
-            --        end
-            --    end
-            --end
-        end
-    end
-    local game = GetGameByID(self.GameID)
-    game:FindGoRoutineAndRegisterTableRun(self.TableID ,RunTable)    -- 注册开始一个新的协程
+    ---- 开始桌子的主循环
+    --local RunTable = function()
+    --    --print("table       run"..self.TableID)
+    --    if self:CheckTableEmpty() then
+    --        --print("这是一个空桌子")
+    --        --print("FishServerExcel[101].type"..FishServerExcel["101"].type)
+    --        self.LastRunTime = GetOsTimeMillisecond()
+    --    else
+    --        local now = GetOsTimeMillisecond()
+    --
+    --        if self:GetFishNum() < MAX_Fish_NUMBER then
+    --            self:RunDistributeInfo(table.RoomScore)
+    --            self:RunBossDistributeInfo(table.RoomScore)
+    --        end
+    --        for k, bullet in pairs(self.BulletArray) do
+    --            bullet:BulletRun(now,self)      -- 遍历所有子弹，并且run
+    --        end
+    --        for k, fish in pairs(self.FishArray) do
+    --            fish:FishRun(now,self)              --遍历所有鱼，并且run
+    --        end
+    --
+    --        -- 记录桌子的运行状态
+    --        if now - self.LastRunTime > 1000 * 60  then     -- 60秒记录一次
+    --            local state = {}
+    --            state["FishNum"] = self:GetFishNum()        --当前有多少条鱼
+    --            state["BulletNum"] = self:GetBulletNum()    --当前有多少子弹
+    --            state["SeatArray"] = self.UserSeatArrayNumber    --当前有多少玩家
+    --            SqlSaveGameState(self.GameID, self.TableID, state)
+    --            self.LastRunTime = now
+    --            print("记录桌子的运行状态")
+    --        end
+    --        -- 检查玩家的情况，如果玩家长期离线，那么t掉，没人就清空桌子
+    --        --for k, player in pairs(self.UserSeatArray) do
+    --        --    if player.NetWorkState == false then
+    --        --        if now - player.NetWorkCloseTimer > ConstPlayerNetworkWaitTime then
+    --        --            -- 玩家长时间断线，t掉吧
+    --        --            self:PlayerStandUp(player.ChairID,player)
+    --        --            Logger("长时间断线， t掉这个玩家"..player.User.UserId)
+    --        --        end
+    --        --    end
+    --        --end
+    --    end
+    --end
+    --local game = GetGameByID(self.GameID)
+    --game:FindGoRoutineAndRegisterTableRun(self.TableID ,RunTable)    -- 注册开始一个新的协程
 end
+
+
+-- 桌子的主循环
+function ByTable:RunTable()
+    if self:CheckTableEmpty() then
+        --print("这是一个空桌子")
+        --print("FishServerExcel[101].type"..FishServerExcel["101"].type)
+        self.LastRunTime = GetOsTimeMillisecond()
+    else
+        local now = GetOsTimeMillisecond()
+
+        if self:GetFishNum() < MAX_Fish_NUMBER then
+            self:RunDistributeInfo(table.RoomScore)
+            self:RunBossDistributeInfo(table.RoomScore)
+        end
+        for k, bullet in pairs(self.BulletArray) do
+            bullet:BulletRun(now,self)      -- 遍历所有子弹，并且run
+        end
+        for k, fish in pairs(self.FishArray) do
+            fish:FishRun(now,self)              --遍历所有鱼，并且run
+        end
+
+        -- 记录桌子的运行状态
+        if now - self.LastRunTime > 1000 * 60  then     -- 60秒记录一次
+            local state = {}
+            state["FishNum"] = self:GetFishNum()        --当前有多少条鱼
+            state["BulletNum"] = self:GetBulletNum()    --当前有多少子弹
+            state["SeatArray"] = self.UserSeatArrayNumber    --当前有多少玩家
+            SqlSaveGameState(self.GameID, self.TableID, state)
+            self.LastRunTime = now
+            --print("记录桌子的运行状态")
+        end
+        -- 检查玩家的情况，如果玩家长期离线，那么t掉，没人就清空桌子
+        --for k, player in pairs(self.UserSeatArray) do
+        --    if player.NetWorkState == false then
+        --        if now - player.NetWorkCloseTimer > ConstPlayerNetworkWaitTime then
+        --            -- 玩家长时间断线，t掉吧
+        --            self:PlayerStandUp(player.ChairID,player)
+        --            Logger("长时间断线， t掉这个玩家"..player.User.UserId)
+        --        end
+        --    end
+        --end
+    end
+end
+
+
 
 function ByTable:InitTable()
     if self:CheckTableEmpty() then

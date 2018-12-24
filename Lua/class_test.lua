@@ -15,7 +15,7 @@ end
 
 
 function Counter:incr(v)
-    self.value = self.value + v
+    self.value = self.value + v*1
     return self.value
 end
 
@@ -24,4 +24,8 @@ function Counter:get()
     return self.value
 end
 
+function Counter:reload(c)
+    setmetatable(c,self)
+    self.__index = self
+end
 

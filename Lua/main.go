@@ -23,8 +23,8 @@ var quit chan lua.LValue
 var mutex sync.Mutex
 //const FileLua  = "Script/main.lua"
 //const FileLua  = "goroutine.lua"
-const FileLua  = "user.lua"
-//const FileLua  = "main.lua"
+//const FileLua  = "user.lua"
+const FileLua  = "main.lua"
 
 func main() {
 	ch = make(chan lua.LValue)
@@ -48,10 +48,10 @@ func main() {
 
 	//主线程
 	L := lua.NewState()
-	L.SetGlobal("ch", lua.LChannel(ch))
-	L.SetGlobal("quit", lua.LChannel(quit))
+	//L.SetGlobal("ch", lua.LChannel(ch))
+	//L.SetGlobal("quit", lua.LChannel(quit))
 	// 声明double函数为Lua的全局函数，绑定go函数Double
-	L.SetGlobal("zClose", L.NewFunction(zClose))
+	//L.SetGlobal("zClose", L.NewFunction(zClose))
 
 	// 直接调用luaopen_pb
 	luaopen_pb(L)
@@ -73,28 +73,28 @@ func main() {
 
 
 
-	for i:=0;i<10;i++{
-		go func() {
-			for{
-				mutex.Lock()
-				GoCallLuaLogic(L,"add_uid")
-				GoCallLuaLogic(L,"show_uid")
-				mutex.Unlock()
-				//time.Sleep(time.Second*1)
-			}
-		}()
-
-	}
+	//for i:=0;i<10;i++{
+	//	go func() {
+	//		for{
+	//			mutex.Lock()
+	//			GoCallLuaLogic(L,"add_uid")
+	//			GoCallLuaLogic(L,"show_uid")
+	//			mutex.Unlock()
+	//			//time.Sleep(time.Second*1)
+	//		}
+	//	}()
+	//
+	//}
 
 
 	for{
 		//fmt.Println("主循环")
 		//GoCallLuaLogic(L,"test")
 		mutex.Lock()
-		GoCallLuaLogic(L,"pp")
+		GoCallLuaLogic(L,"Run")
 		mutex.Unlock()
 		//goCallLuaSelect(L)			// 主线程监听
-		time.Sleep(time.Millisecond * 100 * 1)
+		time.Sleep(time.Millisecond * 1000 * 1)
 		//select {
 		//
 		//}

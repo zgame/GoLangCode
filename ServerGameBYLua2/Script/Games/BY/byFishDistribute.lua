@@ -26,6 +26,11 @@ function FishDistribute:New()
     return c
 end
 
+function FishDistribute:Reload(c)
+    setmetatable(c, self)
+    self.__index = self
+end
+
 ----获取生成时间间隔
 function FishDistribute:GetIntervalTime(kindId)
     kindId  = tostring(kindId)          -- 这里要注意，之所以用string是因为用int，消耗内存大

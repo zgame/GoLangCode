@@ -32,6 +32,11 @@ function Fish:New(uid)
     return c
 end
 
+function Fish:Reload(c)
+    setmetatable(c, self)
+    self.__index = self
+end
+
 function Fish:FishRun(now,table)
     if now > self.DeadTime then
         --print("鱼生存时间到了",self.FishUID)

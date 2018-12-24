@@ -123,6 +123,7 @@ function ShowAllGameStates()
         print("游戏"..k.."有桌子数量"..game.AllTableListNumber..",有玩家数量".. AllPlayerListNumber)
     end
 
+
     --print("用来看reload的excel是否生效：",FishServerExcel["101"].type)
 
 end
@@ -132,14 +133,26 @@ end
 -- 遍历所有的列表，然后依次run
 function GoCallLuaGoRoutineForLuaGameTable()
     --print("----------------当前有"..#GoRoutineAllList.."个桌子")
-    for gameType, game in pairs(AllGamesList) do
-        for tableId, run in pairs(game.GoRunTableAllList) do
+    --for _, game in pairs(AllGamesList) do
+    --    for _, run in pairs(game.GoRunTableAllList) do
+    --        --local key = gameType .. "_".. tableId
+    --        --if AllGamesListRunCurrentTableIndex[key] == nil then
+    --            -- 没有run过
+    --            run() -- 执行注册的函数，table run
+    --            --AllGamesListRunCurrentTableIndex[key] = true   -- 记录一下已经run过了
+    --            --return          -- run一次就退出
+    --        --end
+    --    end
+    --end
+
+    for _, game in pairs(AllGamesList) do
+        for _, table in pairs(game.AllTableList) do
             --local key = gameType .. "_".. tableId
             --if AllGamesListRunCurrentTableIndex[key] == nil then
-                -- 没有run过
-                run() -- 执行注册的函数，table run
-                --AllGamesListRunCurrentTableIndex[key] = true   -- 记录一下已经run过了
-                --return          -- run一次就退出
+            -- 没有run过
+            table:RunTable() -- 执行注册的函数，table run
+            --AllGamesListRunCurrentTableIndex[key] = true   -- 记录一下已经run过了
+            --return          -- run一次就退出
             --end
         end
     end

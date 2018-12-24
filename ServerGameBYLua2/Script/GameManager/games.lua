@@ -13,14 +13,14 @@ Game = {}
 function Game:New(name,gameTypeId, switch)
     c = {
         Name = name,
-        Id = gameTypeId,
+        GameTypeID = gameTypeId,
         Switch = switch,    -- 游戏是否开启
 
         AllTableList = {},  -- 所有桌子列表       key tableUid  ,value table          --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
         AllTableListNumber = 0 ,  -- 所有该游戏的桌子数量
         TableUUID = 1 ,     -- tableUid 从1开始
 
-        GoRunTableAllList = {},   -- 桌子的run函数在里面                --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
+        --GoRunTableAllList = {},   -- 桌子的run函数在里面                --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
         GameScore = 0 ,     --  游戏倍率
     }
     setmetatable(c,self)
@@ -28,7 +28,10 @@ function Game:New(name,gameTypeId, switch)
     return c
 end
 
-
+function Game:Reload(c)
+    setmetatable(c, self)
+    self.__index = self
+end
 ----------------------------------------------------------------
 -----------------------------管理桌子---------------------------
 ----------------------------------------------------------------
@@ -57,7 +60,7 @@ function Game:CreateTable(gameType,gameScore)
     self.TableUUID = self.TableUUID + 1     -- table uuid 自增
 
     -- 桌子开始自行启动计算
-    table_t:RunTable()
+    table_t:StartTable()
 
     return table_t
 
@@ -73,8 +76,8 @@ function Game:ReleaseTableByUID(tableId)
     if tableId ~= 1 then
         self.AllTableList[tostring(tableId)] = nil
         self.AllTableListNumber = self.AllTableListNumber - 1
-        self.GoRunTableAllList[tostring(tableId)] = nil
-        SqlDelGameState(self.Id, tableId)   -- 把记录桌子状态的redis删掉
+        --self.GoRunTableAllList[tostring(tableId)] = nil
+        SqlDelGameState(self.GameTypeID, tableId)   -- 把记录桌子状态的redis删掉
         Logger("清理掉桌子"..tableId)
     else
         -- 第一个桌子是保留着的，只是清理一下
@@ -82,16 +85,16 @@ function Game:ReleaseTableByUID(tableId)
         state["FishNum"] = 0
         state["BulletNum"] = 0
         state["SeatArray"] = 0
-        SqlSaveGameState(self.Id, tableId, state)       -- mysql桌子状态修改一下
+        SqlSaveGameState(self.GameTypeID, tableId, state)       -- mysql桌子状态修改一下
     end
     collectgarbage()        -- 强制gc
 end
 
 
---- 然后注册TableRun
-function Game:FindGoRoutineAndRegisterTableRun(tableId,func)
-    self.GoRunTableAllList[tostring(tableId)] = func  --注册TableRun函数
-end
+----- 然后注册TableRun
+--function Game:FindGoRoutineAndRegisterTableRun(tableId,func)
+--    self.GoRunTableAllList[tostring(tableId)] = func  --注册TableRun函数
+--end
 
 
 ----------------------------------------------------------------
@@ -149,7 +152,7 @@ function Game:PlayerLoginGame(oldPlayer)
     end
 
     --没有空座位的房间了，创建一个
---    print("没有空座位的房间了，创建一个吧,  score".. self.Id)
+--    print("没有空座位的房间了，创建一个吧,  score".. self.GameTypeID)
     local gameType = self.AllTableList["1"].GameID
     local table = self:CreateTable(gameType, self.GameScore)
     local seatId = table:GetEmptySeatInTable()  --获取空椅位

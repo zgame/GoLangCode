@@ -33,4 +33,8 @@ function User:New()
     return c
 end
 
-
+--- 备用的， 纯数据类，用不到， 如果是带函数的话， 就需要热更新之后重新刷新每个对象了
+function User:Reload(c)
+    setmetatable(c, self)
+    self.__index = self
+end

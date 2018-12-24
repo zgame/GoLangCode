@@ -18,12 +18,14 @@ require("dumpTable")
 --require("class_test")
 
 require("protocol_test")
+require("class_test")
 
 
 
 -- 热更新全部的逻辑代码，需要自己控制， 切记玩家数据部分不要加进去，不然会重置玩家数据，如果你是保存型代码，容易导致玩家清档
 function ReloadAll()
 
+    reloadFile("main")
     reloadFile("hello")
     reloadFile("hello2")
     reloadFile("class_test")
@@ -35,6 +37,19 @@ function reloadFile(module_name)
     require(module_name)
 end
 
+
+Zcc = Counter:new()
+
+function Run()
+    ReloadAll()
+
+    ppprint()
+    module.zsw()
+
+    Counter:reload(Zcc)
+    print(Zcc:incr(1))
+
+end
 
 --xpcall(main, function(err)
 --    print(err)

@@ -22,8 +22,15 @@ function Bullet:New(id)
     return c
 end
 
+function Bullet:Reload(c)
+    setmetatable(c, self)
+    self.__index = self
+end
+
 function Bullet:BulletRun(now,table)
+    --print("BulletRun")
     if now > self.DeadTime then
         table:DelBullet(self.BulletUID)     -- 生存时间已经到了，销毁
     end
+
 end

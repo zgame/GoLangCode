@@ -18,11 +18,15 @@ function Zsw2(inss,ss)
 end
 
 
+function ppprint()
+    print("-------------ppprint----------***********")
+
+end
 
 
 -- lua调用go---------------------------------------------------------------
-num,sss = double(20,2,"zsw")
-print("lua call go:  ",num,sss)
+--num,sss = double(20,2,"zsw")
+--print("lua call go:  ",num,sss)
 
 
 
@@ -37,9 +41,7 @@ print("lua call go:  ",num,sss)
 
 -- 类的调用方法---------------------------------------------------------------
 
-print('--------自增-------------')
-counter = Counter:new(1)
-
-
-helloNum = counter:incr(helloNum)
-print(counter:get())
+--print('--------自增-------------')
+--counter = Counter:new(1)
+--helloNum = counter:incr(helloNum)
+--print(counter:get())
