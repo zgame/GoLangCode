@@ -17,18 +17,23 @@ function ByTable:New(tableId,gameTypeId)
         TableMax = BY_TABLE_MAX_PLAYER, --桌子容纳玩家数量
         RoomScore = 0,  --房间分数
 
+        -- 椅子
         UserSeatArray = {},  -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
         UserSeatArrayNumber = 0,  -- 桌子上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
 
+        -- 生成编号
         GenerateFishUid = 1, -- 生成鱼的uid
         GenerateBulletUid = 1, -- 生成子弹的uid
 
+        -- 鱼
         FishArray = {},   -- 鱼的哈希表    uid, fish         --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
         FishArrayNumber = 0,   -- 鱼数组的长度，因为是哈希，所以记录一下比较方便
+
+        -- 子弹
         BulletArray = {},   -- 子弹的哈希表   id,  bullet         --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
         BulletArrayNumber = 0 ,   -- 子弹数组的长度，因为是哈希，所以记录一下比较方便
 
-
+        -- 生成鱼池
         DistributeArray = {},   -- 鱼的生成信息数据    key顺序生成1,2,3,4...  Distribute
         BossDistributeArray = {},   -- Boss鱼的生成信息数组 key顺序生成1,2,3,4...  Distribute
 
