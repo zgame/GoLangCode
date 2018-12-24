@@ -4,7 +4,9 @@
 --- DateTime: 2018/11/2 16:48
 ---
 
-
+--------------------------------------------------------------------------------------
+-- 子弹做成纯数据， 不写成员函数节省内存
+--------------------------------------------------------------------------------------
 
 Bullet = {}
 function Bullet:New(id)
@@ -17,20 +19,20 @@ function Bullet:New(id)
         lockFishID = 0, -- 锁定鱼的ID
         DeadTime = GetOsTimeMillisecond() + 5 * 1000 , -- 过期时间 5秒
     }
-    setmetatable(c, self)
-    self.__index = self
+    --setmetatable(c, self)
+    --self.__index = self
     return c
 end
 
-function Bullet:Reload(c)
-    setmetatable(c, self)
-    self.__index = self
-end
+--function Bullet:Reload(c)
+--    setmetatable(c, self)
+--    self.__index = self
+--end
 
-function Bullet:BulletRun(now,table)
-    --print("BulletRun")
-    if now > self.DeadTime then
-        table:DelBullet(self.BulletUID)     -- 生存时间已经到了，销毁
-    end
-
-end
+--function Bullet:BulletRun(now,table)
+--    --print("BulletRun")
+--    if now > self.DeadTime then
+--        table:DelBullet(self.BulletUID)     -- 生存时间已经到了，销毁
+--    end
+--
+--end

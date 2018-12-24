@@ -27,26 +27,26 @@ function Fish:New(uid)
         TotalAliveTime = 0, -- 存活时间，秒
         --MovePerPointTime time.Time	-- 移动一个坐标点需要的时间
     }
-    setmetatable(c, self)
-    self.__index = self
+    --setmetatable(c, self)
+    --self.__index = self
     return c
 end
 
-function Fish:Reload(c)
-    setmetatable(c, self)
-    self.__index = self
-end
+--function Fish:Reload(c)
+--    setmetatable(c, self)
+--    self.__index = self
+--end
 
-function Fish:FishRun(now,table)
-    if now > self.DeadTime then
-        --print("鱼生存时间到了",self.FishUID)
-        table:DelFish(self.FishUID)
-    end
-
-end
+--function Fish:FishRun(now,table)
+--    if now > self.DeadTime then
+--        --print("鱼生存时间到了",self.FishUID)
+--        table:DelFish(self.FishUID)
+--    end
+--
+--end
 
 -- 创建一条鱼
-function Fish:SetFishData(kindId, x, y, PathID)
+function ByTable:SetFishData(fish,kindId, x, y, PathID)
 
     local now = GetOsTimeMillisecond()
     local speed = FishServerExcel[tostring(kindId)].speed
@@ -58,7 +58,7 @@ function Fish:SetFishData(kindId, x, y, PathID)
     self.FishType = FishServerExcel[tostring(kindId)].type
     self.CreateTime = now
     self.TotalAliveTime = totalAliveTime
-    self.DeadTime = now + self.TotalAliveTime * 1000
+    self.DeadTime = now + fish.TotalAliveTime * 1000
     self.Speed = speed
     self.PathID = PathID
     self.Mulriple = Mulriple
@@ -68,8 +68,8 @@ function Fish:SetFishData(kindId, x, y, PathID)
 end
 
 -- 获取鱼的分数
-function Fish:GetFishScore()
-    local score = FishServerExcel[tostring(self.FishKindID)].gold_multiples
+function ByTable:GetFishScore(fish)
+    local score = FishServerExcel[tostring(fish.FishKindID)].gold_multiples
     score = 100
     return score
 end

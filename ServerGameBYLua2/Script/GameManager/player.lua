@@ -6,7 +6,8 @@
 
 
 --------------------------------------------------------------------------------------
----player的数据是玩家的游戏中的数据，临时的，退出不保存的数据
+--- player 的数据是玩家的游戏中的数据
+--- 这里直接定义成员变量， 但是不写成员函数， 是为了节省内存
 --------------------------------------------------------------------------------------
 
 Player = {}
@@ -25,13 +26,13 @@ function Player:New(user)
         NetWorkState = true,   -- 网络状态正常
         NetWorkCloseTimer = 0 ,   -- 等待玩家断线重连的时间倒计时
     }
-    setmetatable(c, self)
-    self.__index = self
+    --setmetatable(c, self)
+    --self.__index = self
     return c
 end
 
---- 备用的， 纯数据类，用不到， 如果是带函数的话， 就需要热更新之后重新刷新每个对象了
-function Player:Reload(c)
-    setmetatable(c, self)
-    self.__index = self
-end
+---- 备用的， 纯数据类，用不到， 如果是带函数的话， 就需要热更新之后重新刷新每个对象了
+--function Player:Reload(c)
+--    setmetatable(c, self)
+--    self.__index = self
+--end
