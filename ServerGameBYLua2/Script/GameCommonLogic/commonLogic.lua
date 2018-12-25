@@ -20,7 +20,7 @@ end
 -- 每60秒记录一下，服务器的状态到数据库中
 function GoCallLuaSaveServerState()
     local allGamesTablesNum = 0
-    for k, game in pairs(AllGamesList) do
+    for _, game in pairs(AllGamesList) do
         allGamesTablesNum = allGamesTablesNum + game.AllTableListNumber
     end
     local state = {}

@@ -47,6 +47,11 @@ end
 function ByTable:Reload(c)
     setmetatable(c, self)
     self.__index = self
+
+    -- 如果热更新有改动成员变量的定义的话， 下面需要进行成员变量的处理
+    -- 比如 1 增加了字段， 那么你需要将老数据进行， 新字段的初始化
+    -- 比如 2 删除了字段， 那么你需要将老数据进行， 老字段=nil
+    -- 比如 3 修改了字段， 那么你需要将老数据进行， 老字段=nil， 新字段初始化或者进行赋值处理
 end
 
 ------------主循环-------------------
@@ -68,13 +73,13 @@ function ByTable:RunTable()
             self:RunDistributeInfo(table.RoomScore)
             self:RunBossDistributeInfo(table.RoomScore)
         end
-        for k, bullet in pairs(self.BulletArray) do
+        for _, bullet in pairs(self.BulletArray) do
             if now > bullet.DeadTime then
                 self:DelBullet(bullet.BulletUID)     -- 生存时间已经到了，销毁
             end
             --bullet:BulletRun(now,self)      -- 遍历所有子弹，并且run
         end
-        for k, fish in pairs(self.FishArray) do
+        for _, fish in pairs(self.FishArray) do
             if now > fish.DeadTime then
                 --print("鱼生存时间到了",self.FishUID)
                 self:DelFish(fish.FishUID)
@@ -115,7 +120,7 @@ function ByTable:InitTable()
 end
 
 
---- 判断玩家是否捕到鱼的逻辑判断
+--- 判断玩家是否捕到鱼的逻辑判断   LockFishIdList 是保存fishId 的数组
 function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
 --    print("玩家申请捕鱼")
 
@@ -128,12 +133,10 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
     local ALLCurrScore = 0   -- 获得的分数
     local AllFishes = {}     -- 抓获的鱼list
 
-
     --printTable(LockFishIdList)
-
-    for k,v in pairs(LockFishIdList) do
+    for _,fishId in ipairs(LockFishIdList) do
 --        print("抓鱼uid",v)
-        local fish = self:GetFish(v)
+        local fish = self:GetFish(fishId)
         if fish ~= nil then
 
             -- 这里判断鱼是否可以被捕获
@@ -175,10 +178,10 @@ function ByTable:LogicCatchFish(player, LockFishIdList, BulletId)
     -- 给所有玩家同步一下，这个玩家捕到鱼了
     local sendCmd = CMD_Game_pb.CMD_S_CATCH_FISH()
 
-    for _,v in ipairs(AllFishes) do
+    for _,fish in ipairs(AllFishes) do
         local cmd = sendCmd.catch_fishs:add()
-        cmd.fish_uid = v.FishUID
-        cmd.fish_score = v.CurrScore
+        cmd.fish_uid = fish.FishUID
+        cmd.fish_score = fish.CurrScore
     end
 
     sendCmd.chair_id = player.ChairID
@@ -351,10 +354,10 @@ function ByTable:DelBullets(userId)
         self.BulletArrayNumber = 0
         return
     end
-    for k,v in pairs(self.BulletArray) do
-        if v.UserID == userId then
+    for bulletId, bullet in pairs(self.BulletArray) do
+        if bullet.UserID == userId then
             --self.BulletArray[k] = nil
-            self:SetBulletArray(k,nil)
+            self:SetBulletArray(bulletId,nil)
         end
     end
     if self:GetBulletNum() == 0 then
@@ -436,7 +439,7 @@ function ByTable:RunDistributeInfo(roomScore)
     local fish_number = 0
     local fish_number_max = 4       -- 每秒最多几条鱼
 
-    for k,Distribute in pairs(self.DistributeArray) do
+    for _,Distribute in pairs(self.DistributeArray) do
         local kindId = Distribute.FishKindID
         -- 到下一个生成时间了, 那么我们来生成鱼吧
 

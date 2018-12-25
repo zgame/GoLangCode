@@ -31,6 +31,10 @@ end
 function Game:Reload(c)
     setmetatable(c, self)
     self.__index = self
+    -- 如果热更新有改动成员变量的定义的话， 下面需要进行成员变量的处理
+    -- 比如 1 增加了字段， 那么你需要将老数据进行， 新字段的初始化
+    -- 比如 2 删除了字段， 那么你需要将老数据进行， 老字段=nil
+    -- 比如 3 修改了字段， 那么你需要将老数据进行， 老字段=nil， 新字段初始化或者进行赋值处理
 end
 ----------------------------------------------------------------
 -----------------------------管理桌子---------------------------
@@ -107,7 +111,6 @@ function Game:PlayerLoginGame(oldPlayer)
     local player
     -- 如果玩家是断线重连的
     if GetPlayerByUID(oldPlayer.User.UserId) ~= nil then      --找到之前有玩家在线
-        --player = AllPlayerList[tostring(oldPlayer.User.UserId)]          -- 把之前的玩家数据取出来
         player = GetPlayerByUID(oldPlayer.User.UserId) -- 把之前的玩家数据取出来
         if oldPlayer.GameType == player.GameType and oldPlayer.NetWorkState == false then
             -- 同一个游戏， 并且玩家状态是等待断线重连
@@ -127,7 +130,6 @@ function Game:PlayerLoginGame(oldPlayer)
     -- 不是断线重连的就重新建一个玩家数据
     player = Player:New(oldPlayer.User)
     player.GameType = oldPlayer.GameType            -- 设定游戏类型
-    --AllPlayerList[tostring(oldPlayer.User.UserId)] = player      --创建好之后加入玩家总列表
     SetAllPlayerList(oldPlayer.User.UserId, player)  --创建好之后加入玩家总列表
 
 

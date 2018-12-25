@@ -100,11 +100,11 @@ function SevEnterScene(userId, buf)
     local sendCmd = CMD_Game_pb.CMD_S_ENTER_SCENE()
     sendCmd.scene_id = player.GameType
     sendCmd.table_id = player.TableID
-    for k,v in pairs(table.UserSeatArray) do       -- 从桌子传递过来的其他玩家信息，原来坐着的玩家信息
-        if v~= nil then
+    for index, player in pairs(table.UserSeatArray) do       -- 从桌子传递过来的其他玩家信息，原来坐着的玩家信息
+        if player ~= nil then
             local uu = sendCmd.table_users:add()
-            uu.user_id = v.User.UserId
-            uu.chair_id = k
+            uu.user_id = player.User.UserId
+            uu.chair_id = index
         end
     end
 

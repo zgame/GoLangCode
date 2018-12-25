@@ -23,12 +23,12 @@ function HandleUserFire(userId, buf)
     msg:ParseFromString(buf)
 
 
-    local player,game,table = GetPlayer_Game_Table(userId)
-    if player ==nil or game ==nil or table ==nil then
+    local player,game, gameTable = GetPlayer_Game_Table(userId)
+    if player ==nil or game ==nil or gameTable ==nil then
         --Logger("玩家数据："..player.."game:"..game.."table:"..table)
         return
     end
-    table:HandleUserFire(player , msg.lock_fish_id )       -- 桌子会发送消息给玩家
+    gameTable:HandleUserFire(player , msg.lock_fish_id )       -- 桌子会发送消息给玩家
 
 
 
@@ -55,15 +55,15 @@ function HandleCatchFish(userId, buf)
     end
 
 
-    local player,game,table = GetPlayer_Game_Table(userId)
-    if player ==nil or game ==nil or table ==nil then
+    local player,game, gameTable = GetPlayer_Game_Table(userId)
+    if player ==nil or game ==nil or gameTable ==nil then
         --Logger("玩家数据："..player.."game:"..game.."table:"..table)
         return
     end
 
     local LockFishIdList = {}      -- 要打击的鱼id
-    LockFishIdList[1] =  msg.fish_uid     -- 要打击的鱼id
-    table:LogicCatchFish(player,LockFishIdList, msg.bullet_id)
+    table.insert(LockFishIdList, msg.fish_uid)-- 要打击的鱼id
+    gameTable:LogicCatchFish(player,LockFishIdList, msg.bullet_id)
 
 
     --local data = {}
@@ -97,13 +97,13 @@ function GetPlayer_Game_Table(userId)
     --local player = game:PlayerLoginGame(oldPlayer)
     --result.TableID = player.TableID
     --result.ChairID = player.ChairID                 -- 把player桌子id，椅子id的数据 返回去
-    local table = game:GetTableByUID(player.TableID)
-    if table == nil then
+    local gameTable = game:GetTableByUID(player.TableID)
+    if gameTable == nil then
         LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子", nil)
         return nil,nil,nil
     end
 
-    return player,game, table
+    return player,game, gameTable
 end
 
 

@@ -29,14 +29,18 @@ end
 function FishDistribute:Reload(c)
     setmetatable(c, self)
     self.__index = self
+
+    -- 如果热更新有改动成员变量的定义的话， 下面需要进行成员变量的处理
+    -- 比如 1 增加了字段， 那么你需要将老数据进行， 新字段的初始化
+    -- 比如 2 删除了字段， 那么你需要将老数据进行， 老字段=nil
+    -- 比如 3 修改了字段， 那么你需要将老数据进行， 老字段=nil， 新字段初始化或者进行赋值处理
 end
 
 ----获取生成时间间隔
 function FishDistribute:GetIntervalTime(kindId)
     kindId  = tostring(kindId)          -- 这里要注意，之所以用string是因为用int，消耗内存大
     -- 获取时间间隔
-    local re = GetRandom(FishServerExcel[kindId].distribute_interval_min,FishServerExcel[kindId].distribute_interval_max)
-    return re
+    return GetRandom(FishServerExcel[kindId].distribute_interval_min,FishServerExcel[kindId].distribute_interval_max)
 end
 ----获取生成数量间隔
 function FishDistribute:GetCount(kindId)
