@@ -98,8 +98,8 @@ func PathExists(path string) (bool, error) {
 
 
 
-
-func GetSysMemInfo()  string{
+// 查看内存占用情况
+func GetSysMemInfo()  (string,int){
 	//自身占用
 	memStat := new(runtime.MemStats)
 	runtime.ReadMemStats(memStat)
@@ -113,7 +113,8 @@ func GetSysMemInfo()  string{
 	//str += "   HeapAlloc:" + strconv.Itoa( int(memStat.HeapAlloc/1000000)) + "M"//服务分配的堆内存
 	//str += "   HeapSys:" + strconv.Itoa( int(memStat.HeapSys/1000000))+ "M"//系统分配的堆内存
 	str += "   HeapIdle:" + strconv.Itoa( int(memStat.HeapIdle/1000000))+ "M"//申请但是为分配的堆内存，（或者回收了的堆内存）
-	str += "   HeapInuse:" + strconv.Itoa( int(memStat.HeapInuse/1000000))+ "M"//正在使用的堆内存
+	heapInUse := int(memStat.HeapInuse/1000000)
+	str += "   HeapInuse:" + strconv.Itoa(heapInUse )+ "M"//正在使用的堆内存
 	//str += "   HeapReleased:" + strconv.Itoa( int(memStat.HeapReleased))+ "M"//返回给OS的堆内存，类似C/C++中的free。
 	//str += "   HeapObjects:" + strconv.Itoa( int(memStat.HeapObjects))+ "个"//堆内存块申请的量
 	//str += "   StackInuse:" + strconv.Itoa( int(memStat.StackInuse/1000000)) + "M"//正在使用的栈
@@ -121,6 +122,6 @@ func GetSysMemInfo()  string{
 	//str += "   NumGC:" + strconv.Itoa( int(memStat.NumGC))+ "次"////垃圾回收的内存大小
 	//str += "   NumForcedGC:" + strconv.Itoa( int(memStat.NumForcedGC))
 	//str += "   LastGC:" + strconv.Itoa( int(memStat.LastGC))
-	return str
+	return str,heapInUse
 
 }

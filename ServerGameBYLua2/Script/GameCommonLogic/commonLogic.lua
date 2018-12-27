@@ -28,10 +28,13 @@ function GoCallLuaSaveServerState()
     state["PlayerNum"] = AllPlayerListNumber
     state["SendNum"] = ServerStateSendNum
     state["ReceiveNum"] = ServerStateReceiveNum
+    state["WriteChannelNum"] = ServerSendWriteChannelNum
+    state["HeadErrorNum"] = ServerDataHeadErrorNum
+    state["HeapInUse"] = ServerHeapInUse
+    state["NetWorkDelay"] = ServerNetWorkDelay
     --RedisSaveServerState(state)
     SqlSaveServerState(state)
-    ServerStateSendNum = 0
-    ServerStateReceiveNum = 0       -- 记录完成，把数量清空
+
 end
 
 

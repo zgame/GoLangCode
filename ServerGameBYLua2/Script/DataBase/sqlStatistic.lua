@@ -17,8 +17,8 @@
 ----------------------------保存服务器状态信息，是按照时间保存的，可以看历史记录-----------------------------
 function SqlSaveServerState(state)
     local time= GetOsDateNow()
-    local sql = string.format("insert into server_state (server_ip,time,table_num,player_num,rece_num,send_num, write_chan, head_err ) values ('%s','%s', %d,%d,%d,%d,%d,%d)",
-            ServerIP_Port,time,state.TableNum,state.PlayerNum,state.ReceiveNum,state.SendNum,ServerSendWriteChannelNum,ServerDataHeadErrorNum)
+    local sql = string.format("insert into server_state (server_ip,time,table_num,player_num,rece_num,send_num, write_chan, head_err , heap_inuse, network_delay ) values ('%s','%s', %d,%d,%d,%d,%d,%d,%d,%d)",
+            ServerIP_Port,time,state.TableNum,state.PlayerNum,state.ReceiveNum,state.SendNum,state.WriteChannelNum,state.HeadErrorNum , state.HeapInUse, state.NetWorkDelay)
     --print(sql)
     --MysqlExec(sql) -- 性能慢
     ZMySqlExec(sql) -- 性能快
@@ -27,9 +27,8 @@ end
 ----------------------------保存桌子状态信息，当前的运行信息，桌子销毁就删掉-----------------------------
 function SqlSaveGameState(gameType,tableId, state)
 
+    -- 为了节省性能，直接丢给go去处理了
     ZMySqlSaveGameState(ServerIP_Port,gameType,tableId ,state.FishNum,state.BulletNum,state.SeatArray)   -- 采用go来做这个事情了， lua太费性能
-
-
 
     --RedisSaveString(RedisDirGameState..ServerIP_Port..":GameID_"..gameType..":TableId"..tableId, tableId, ZJson.encode(state))
 
@@ -51,7 +50,7 @@ function SqlSaveGameState(gameType,tableId, state)
 
 
     --insert into vclb_mm_inventory (`ID_`, `STOCK_ID_`, `ITEM_ID_`, `AMOUNT_`)
-    --values ('489734716803514367', '仓库一', '水杯', 44)
+    --values ('1', '1', '1', 44)
     --ON DUPLICATE KEY UPDATE `AMOUNT_` = `AMOUNT_` + 44;
 
 end

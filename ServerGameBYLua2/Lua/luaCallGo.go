@@ -30,7 +30,8 @@ func (m *MyLua)InitResister() {
 	m.L.SetGlobal("luaCallGoRedisSaveString", m.L.NewFunction(luaCallGoRedisSaveString))		//注册到lua redis save
 	m.L.SetGlobal("luaCallGoRedisGetString", m.L.NewFunction(luaCallGoRedisGetString))		//注册到lua redis load
 	m.L.SetGlobal("luaCallGoRedisDelKey", m.L.NewFunction(luaCallGoRedisDelKey))		//注册到lua redis del key
-	m.L.SetGlobal("luaCallGoAddNumberToRedis", m.L.NewFunction(luaCallGoAddNumberToRedis))		//注册到lua redis add number
+	//m.L.SetGlobal("luaCallGoAddNumberToRedis", m.L.NewFunction(luaCallGoAddNumberToRedis))		//注册到lua redis add number
+	m.L.SetGlobal("luaCallGoRedisRunLuaScript", m.L.NewFunction(luaCallGoRedisRunLuaScript))		//注册到lua redis RedisRunLuaScript
 	m.L.SetGlobal("luaCallGoSqlSaveGameState", m.L.NewFunction(luaCallGoSqlSaveGameState))		//lua要保存房间的信息到mysql
 	m.L.SetGlobal("luaCallGoSqlExec", m.L.NewFunction(luaCallGoSqlExec))		//lua 执行sql语句， 不带返回， 需要select用lua自己的mysql
 
@@ -171,12 +172,21 @@ func  luaCallGoRedisDelKey(L * lua.LState) int  {
 	zRedis.DelKeyToRedis(dir , key)
 	return 0
 }
-// redis add number
-func  luaCallGoAddNumberToRedis(L * lua.LState) int  {
-	dir := L.ToString(1)
-	key := L.ToString(2)
-	num := L.ToInt(3)
-	value := zRedis.AddNumberToRedis(dir , key, num)
+//// redis add number
+//func  luaCallGoAddNumberToRedis(L * lua.LState) int  {
+//	dir := L.ToString(1)
+//	key := L.ToString(2)
+//	num := L.ToInt(3)
+//	value := zRedis.AddNumberToRedis(dir , key, num)
+//	L.Push(lua.LNumber(value))
+//	return 1
+//}
+
+// 分布式统一的协调数据方法， 避免加分布式锁
+func  luaCallGoRedisRunLuaScript(L * lua.LState) int  {
+	script := L.ToString(1)
+	name := L.ToString(2)
+	value := zRedis.RedisRunLuaScript(script, name)
 	L.Push(lua.LNumber(value))
 	return 1
 }

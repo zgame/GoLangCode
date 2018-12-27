@@ -15,12 +15,14 @@ ServerStateSendNum = 0      -- 平均网络发送包数量
 ServerStateReceiveNum = 0   -- 平均网络接收包数量
 ServerSendWriteChannelNum = 0  -- 用来发送数据包的缓存，如果太大就会中断网络
 ServerDataHeadErrorNum = 0  -- 数据包的头尾有校验码， 这是校验码的错误数量
+ServerHeapInUse = 0       -- 程序员申请的堆内存
+ServerNetWorkDelay = 0    -- 平均网络延迟时间
 
 
-ZswLogShowSendMsgNum = 0        -- 发送数量
-ZswLogShowSendMsgLastTime = 0   -- 发送时间
-ZswLogShowReceiveMsgNum = 0     -- 接收数量
-ZswLogShowReceiveLastTime = 0      -- 接收时间
+--ZswLogShowSendMsgNum = 0        -- 发送数量
+--ZswLogShowSendMsgLastTime = 0   -- 发送时间
+--ZswLogShowReceiveMsgNum = 0     -- 接收数量
+--ZswLogShowReceiveLastTime = 0      -- 接收时间
 
 
 

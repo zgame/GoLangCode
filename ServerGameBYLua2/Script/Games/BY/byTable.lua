@@ -59,12 +59,39 @@ function ByTable:StartTable()
     self:InitTable()        -- 可以进行初始化
 end
 
+GlobalMap= {}
 
 -- 桌子的主循环
 function ByTable:RunTable()
     if self:CheckTableEmpty() then
         --print("这是一个空桌子")
         --print("FishServerExcel[101].type"..FishServerExcel["101"].type)
+
+        -- 这部分是做一个内存的测试
+        ---- create Global Map hash
+        --for i=1,40 do
+        --    GlobalMap[tostring(i)] = i
+        --end
+        --
+        --for i=1,40 do
+        --    GlobalMap[tostring(i)] = nil
+        --end
+
+        --table.foreach(GlobalMap,function(i,v)
+        --     print(i,v)
+        --end )
+
+        --clear  Global Map hash element
+        --for i,_ in pairs(GlobalMap)do
+        --    GlobalMap[tostring(i)] = nil        -- memery leak
+        --end
+        --
+        --
+
+        ---- if you clear all data, it's ok, but,  if you clear some data,  memery leak
+        ----GlobalMap = {}
+        --collectgarbage()
+
         self.LastRunTime = GetOsTimeMillisecond()
     else
         local now = GetOsTimeMillisecond()
@@ -107,7 +134,7 @@ function ByTable:RunTable()
         --        end
         --    end
         --end
-    end
+        end
 end
 
 
@@ -199,176 +226,6 @@ end
 
 
 
-
-
---------------------------------------------------------------------------------
---------------玩家----------------------------------------------------------
---------------------------------------------------------------------------------
-
------判断桌子是有人，还是空桌子
-function ByTable:CheckTableEmpty()
-    if self.UserSeatArrayNumber >0 then
-        return false
-    end
-
-    return true -- 空桌子
-end
-
---获取桌子的所有玩家-
---function ByTable:GetUsersSeatInTable()
---    local userList = {}
---    for i=1,BY_TABLE_MAX_PLAYER do
---        if self.UserSeatArray[i] ~= nil then
---            -- 说明有人在座位上
---            table.insert(userList,self.UserSeatArray[i])
---        end
---    end
---    return userList     -- 元素是player对象
---end
-
------获取桌子的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
-function ByTable:GetEmptySeatInTable()
-    for i=1,BY_TABLE_MAX_PLAYER do
-        if self.UserSeatArray[i] == nil then
-            return i        -- 返回当前空着的座位号(1,2,3,4)
-        end
-    end
-    return -1   -- 座位满了
-end
-
-----玩家坐到椅子上
-function ByTable:PlayerSeat(seatID,player)
-    self.UserSeatArray[seatID] = player
-    self.UserSeatArrayNumber = self.UserSeatArrayNumber + 1   -- 桌子上玩家数量增加
-
-end
-----玩家离开椅子
-function ByTable:PlayerStandUp(seatID,player)
-    Logger(player.User.UserId.."离开桌子"..player.TableID.."椅子"..player.ChairID)
-    local game = GetGameByID(player.GameType)
-    SetAllPlayerList(player.User.UserId, nil)         -- 清理掉游戏管理的玩家总列表
-    self.UserSeatArray[seatID] = nil                -- 清理掉桌子的玩家列表
-    self.UserSeatArrayNumber = self.UserSeatArrayNumber - 1  -- 桌子上玩家数量减少
-    player.TableID = TABLE_CHAIR_NOBODY
-    player.ChairID = TABLE_CHAIR_NOBODY
-
-    -- 清理掉玩家所有子弹
-    self:DelBullets(player.User.UserId)
-    --如果是空桌子的话，清理一下桌子
-    if self:CheckTableEmpty() then
-        self:ClearTable()
-        game:ReleaseTableByUID(self.TableID)    --回收桌子
-    end
-end
-
------清理桌子
-function ByTable:ClearTable()
-    -- 清理一下生成鱼的结构
-    self.DistributeArray = {}
-    self.BossDistributeArray = {}
-
-    -- 清理掉所有子弹和鱼群
-    self:DelBullets(-1)
-    self:DelFishes()
-
-    self.BulletArray = {}
-    self.FishArray = {}
-    self.UserSeatArray = {}     --  seatID    player
-
-end
-
---------------------------------------------------------------------------------
-----------------------子弹------------------------------------------------------
---------------------------------------------------------------------------------
----
------玩家发射一个新的子弹
-function ByTable:HandleUserFire(player , lockFishId)
-    --print("玩家发射一个子弹")
-
-    local num = player.ActivityBulletNum
---    if num > MAX_BULLET_NUMBER then
-----        print("子弹超过上限了")
---        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,nil,"子弹超过上限了")
---        return
---    end
-    local cost = self.RoomScore
-    if player.User.Score < cost then
-        print("玩家没钱了")
-        LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,nil,"玩家没钱了", nil)
-        return
-    end
-    -- 创建新的子弹
-    local bullet = Bullet:New(self.GenerateBulletUid)
-    --self.BulletArray[bullet.BulletUID] = bullet     --把bullet加入列表
-    self:SetBulletArray(bullet.BulletUID,bullet)        --把bullet加入列表
-    bullet.UserID = player.User.UserID              --子弹的主人
-    bullet.lockFishID = lockFishId                  --锁定鱼
-    player.ActivityBulletNum = player.ActivityBulletNum + 1  --玩家已激活子弹增加
-    self.GenerateBulletUid  = self.GenerateBulletUid + 1        -- 生成子弹id，自增
-
-
-    -- 给所有玩家同步一下，这个玩家发子弹了
-    local sendCmd = CMD_Game_pb.CMD_S_USER_FIRE()
-    sendCmd.chair_id = player.ChairID
-    sendCmd.bullet_id = bullet.BulletUID
-    sendCmd.lock_fish_id = lockFishId
-    --sendCmd.curr_score = player.User.Score
-
-    --self:SendMsgToAllUsers(MDM_GF_GAME, SUB_S_USER_FIRE,sendCmd)
-    LuaNetWorkSendToUser(player.User.UserId,MDM_GF_GAME, SUB_S_USER_FIRE,sendCmd,nil, nil)     -- 回复给玩家
-    self:SendMsgToOtherUsers(player.User.UserId, sendCmd, MDM_GF_GAME, SUB_S_USER_FIRE)                -- 同步其他人
-
-
-end
-
--- 获取子弹
-function ByTable:GetBullet(bulletId)
-    return self.BulletArray[tostring(bulletId)]
-end
--- 把子弹加入列表或者删除
-function ByTable:SetBulletArray(bulletId,value)
-    self.BulletArray[tostring(bulletId)] = value
-    if value == nil then
-        self.BulletArrayNumber = self.BulletArrayNumber - 1     -- 减少数量
-    else
-        self.BulletArrayNumber = self.BulletArrayNumber + 1
-    end
-end
-
-
-----删除特定id的子弹
-function ByTable:DelBullet(bulletId)
-    if self:GetBullet(bulletId) ~= nil then
-        --self.BulletArray[bulletId] = nil
-        self:SetBulletArray(bulletId, nil)
-    end
-    if self:GetBulletNum() == 0 then
-        self.GenerateBulletUid = 0  --重置一下生成子弹uuid
-    end
-end
-
----- 删除所有子弹， 1 如果传入玩家uid，删除玩家的  ； 2  如果传入 -1 ，那么删除所有的
-function ByTable:DelBullets(userId)
-    if userId == -1 then        -- 全部清空
-        self.BulletArray = {}
-        self.BulletArrayNumber = 0
-        return
-    end
-    for bulletId, bullet in pairs(self.BulletArray) do
-        if bullet.UserID == userId then
-            --self.BulletArray[k] = nil
-            self:SetBulletArray(bulletId,nil)
-        end
-    end
-    if self:GetBulletNum() == 0 then
-        self.GenerateBulletUid = 0  --重置一下生成子弹uuid
-    end
-end
-
----- 有多少子弹
-function ByTable:GetBulletNum()
-    return self.BulletArrayNumber
-end
 ----------------------------------------------------------------------------
 -----------------------------消息同步-----------------------------------------
 ----------------------------------------------------------------------------

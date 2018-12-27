@@ -114,34 +114,54 @@ func DelKeyToRedis(dir string,key string){
 }
 
 
+//
+//// 执行脚本，用于分布式，不用加锁的情况，因为脚本一次性执行的，类似存储过程
+////---- KEYS[1] 是dir
+////---- KEYS[2] 是key
+////---- ARGV[1] 是参数
+//var AddScript = redis.NewScript(2,`
+//   local r = redis.call('hget',KEYS[1],KEYS[2])
+//   if r ~= false then
+//		r = r + ARGV[1]
+//   else
+//	    r = 1000000001
+//   end
+//   redis.call('hset', KEYS[1],KEYS[2], r)
+//   return r
+//`)
+//
+//// 这里的参数num， 记住： num只是增量， 你只能要求人家增加多少， 具体完事之后是多少，会返回给你， 因为这个涉及到分布式多请求
+//func AddNumberToRedis(dir string,key string, num int) int{
+//	startTime := ztimer.GetOsTimeMillisecond()
+//	v, err := AddScript.Do(RRedis, dir,key, num)
+//	if err != nil {
+//		log.PrintLogger("AddNumberToRedis Error: " + err.Error())
+//		panic("AddNumberToRedis Error: " + err.Error())
+//		os.Exit(0)
+//	}
+//	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
+//		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] AddNumberToRedis 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+//	}
+//	//fmt.Println("AddNumberToRedis",v , reflect.TypeOf(v))
+//	re := int(v.(int64))
+//	//fmt.Println("========AddNumberToRedis===============",re)
+//	return re
+//}
 
-// 执行脚本，用于分布式，不用加锁的情况，因为脚本一次性执行的，类似存储过程
-var AddScript = redis.NewScript(2,`
-   local r = redis.call('hget',KEYS[1],KEYS[2])
-   if r ~= false then		
-		r = r + ARGV[1]			
-   else			
-	    r = 1000000001	
-   end
-   redis.call('hset', KEYS[1],KEYS[2], r)
-   return r
-`)
-
-// 这里的参数num， 记住： num只是增量， 你只能要求人家增加多少， 具体完事之后是多少，会返回给你， 因为这个涉及到分布式多请求
-func AddNumberToRedis(dir string,key string, num int) int{
+// redis直接运行lua的脚本， 这个主要是用来进行分布式的统一性， 可以避免加分布式锁， 广泛用在处理跨服的活动上面，比如分布式抢红包，世界boss受伤，boss击杀， 主要是保证数值的增加，或者减少是分布式统一协调的
+func RedisRunLuaScript(luaScript string ,name string)  int{
 	startTime := ztimer.GetOsTimeMillisecond()
-	v, err := AddScript.Do(RRedis, dir,key, num)
+	var AddScript = redis.NewScript(0,luaScript)
+	v, err := AddScript.Do(RRedis)
 	if err != nil {
-		log.PrintLogger("AddNumberToRedis Error: " + err.Error())
-		panic("AddNumberToRedis Error: " + err.Error())
+		log.PrintLogger(  name + "  RedisRunLuaScript Error: " + err.Error())
+		panic(name + "  RedisRunLuaScript Error: " + err.Error())
 		os.Exit(0)
 	}
 	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] AddNumberToRedis 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] RedisRunLuaScript  %s 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime),  name)
 	}
-	//fmt.Println("AddNumberToRedis",v , reflect.TypeOf(v))
 	re := int(v.(int64))
-	//fmt.Println("========AddNumberToRedis===============",re)
 	return re
-}
 
+}
