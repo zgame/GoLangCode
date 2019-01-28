@@ -1,12 +1,13 @@
 package main
 
 import (
-	"./NetWork"
+	"./netWork"
 	"reflect"
 	"net"
 	"fmt"
 	"math"
 	"time"
+	"strconv"
 )
 
 var wsServer *NetWork.WSServer
@@ -38,7 +39,7 @@ func main() {
 
 		// socket 服务器开启----------------------------------
 		server = new(NetWork.TCPServer)
-		server.Addr = "127.0.0.1:8088"
+		server.Addr = "172.16.140.131:8123"
 		server.MaxConnNum = int(math.MaxInt32)
 		server.PendingWriteNum = 100
 		server.LenMsgLen = 4
@@ -84,6 +85,12 @@ func (a *agentServer) Run() {
 		fmt.Println("收到消息------------")
 		fmt.Println("消息:  ", string(data))
 
+		for i:=0;i<100 ;i++  {
+			a.WriteMsg([]byte("服务器收到你的消息-------" + strconv.Itoa(i)+ string(data) ))
+			fmt.Println("",i)
+			time.Sleep(time.Microsecond * 1000)
+
+		}
 		a.WriteMsg([]byte("服务器收到你的消息-------" + string(data)))
 
 		//if a.gate.Processor != nil {

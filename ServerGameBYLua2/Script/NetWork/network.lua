@@ -95,6 +95,10 @@ end
 -- 根据命令进行分支处理
 function ReceiveMsg(serverId,userId, msgId, subMsgId, data, token)
     --print("msgId",msgId, "subMsgId",subMsgId)
+    --print("data",data, "token",token)
+    --print("serverId",serverId, "userId",userId)
+
+
     UserToken = token           -- 保存到全局里面，发送的时候取出来
     if msgId == MDM_MB_LOGON  then
         --if subMsgId == SUB_MB_GUESTLOGIN  then

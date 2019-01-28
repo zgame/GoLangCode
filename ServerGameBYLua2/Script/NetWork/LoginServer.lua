@@ -14,6 +14,13 @@ function SevLoginGSGuest(serverId,buf)
     --print("user_id id: ".. msg.user_id)
     --print("machine_id : ".. msg.machine_id)
 
+
+    if msg.machine_id == "" then
+        print("请求登录 machine_id 不能为空")
+        return
+    end
+
+
     local MyUser
     local openId = msg.machine_id
     local UserId = RedisGetPlayerLogin(openId)
@@ -84,6 +91,15 @@ function SevLoginGSGuest(serverId,buf)
 
     --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
     LuaNetWorkSendToUser(UserId, MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, sendCmd, nil, nil)
-    LuaNetWorkSendToUser(UserId, MDM_GR_LOGON, SUB_GR_LOGON_FINISH, nil, nil,nil)
+
+
+    sendCmd = CMD_Game_pb.tagUserInfo()
+    sendCmd.nick_name = MyUser.NickName
+    sendCmd.score = MyUser.Score
+    sendCmd.exp = MyUser.Exp
+    sendCmd.user_id = MyUser.UserId
+
+
+    LuaNetWorkSendToUser(UserId, MDM_GR_LOGON, SUB_GR_LOGON_FINISH, sendCmd, nil,nil)
 
 end
