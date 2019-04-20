@@ -83,9 +83,9 @@ FRIEND_AD1_FIELD.name = "ad1"
 FRIEND_AD1_FIELD.full_name = ".tutorial.Friend.ad1"
 FRIEND_AD1_FIELD.number = 4
 FRIEND_AD1_FIELD.index = 3
-FRIEND_AD1_FIELD.label = 1
+FRIEND_AD1_FIELD.label = 3
 FRIEND_AD1_FIELD.has_default_value = false
-FRIEND_AD1_FIELD.default_value = 0
+FRIEND_AD1_FIELD.default_value = {}
 FRIEND_AD1_FIELD.type = 3
 FRIEND_AD1_FIELD.cpp_type = 2
 
@@ -113,9 +113,9 @@ FRIEND_AD4_FIELD.name = "ad4"
 FRIEND_AD4_FIELD.full_name = ".tutorial.Friend.ad4"
 FRIEND_AD4_FIELD.number = 7
 FRIEND_AD4_FIELD.index = 6
-FRIEND_AD4_FIELD.label = 1
+FRIEND_AD4_FIELD.label = 3
 FRIEND_AD4_FIELD.has_default_value = false
-FRIEND_AD4_FIELD.default_value = 0
+FRIEND_AD4_FIELD.default_value = {}
 FRIEND_AD4_FIELD.type = 5
 FRIEND_AD4_FIELD.cpp_type = 1
 

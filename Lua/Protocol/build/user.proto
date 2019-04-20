@@ -14,10 +14,10 @@ message Friend {
     double zswnameb = 1;
     bool address = 2;
     float ad = 3;
-    int64 ad1 = 4;
+    repeated int64 ad1 = 4;
 	uint64 ad2 = 5;
 	uint32 ad3 = 6;
-	int32 ad4 = 7;
+	repeated int32 ad4 = 7;
 	string ad5 = 8;
 	sint32 ad6 = 9;
 	sint64 ad7 = 10;

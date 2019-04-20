@@ -43,11 +43,11 @@ Zcc = Counter:new()
 function Run()
     ReloadAll()
 
-    ppprint()
-    module.zsw()
+    --ppprint()
+    --module.zsw()
 
-    Counter:reload(Zcc)
-    print(Zcc:incr(1))
+    --Counter:reload(Zcc)
+    --print(Zcc:incr(1))
 
 end
 
