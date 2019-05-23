@@ -15,6 +15,10 @@
 --  CREATED:  2010年07月29日 19时30分46秒 CST
 --------------------------------------------------------------------------------
 --
+local print = print     -- module 调用系统函数
+local printTable = printTable     -- module 调用系统函数
+
+
 local string = string
 local table = table
 local ipairs = ipairs
@@ -29,7 +33,12 @@ function _VarintSize(value)
     if value <= 0x3fff then return 2 end
     if value <= 0x1fffff then return 3 end
     if value <= 0xfffffff then return 4 end
-    return 5 
+    if value <= 0x7ffffffff then return 5 end
+    if value <= 0x3ffffffffff then return 6 end
+    if value <= 0x1ffffffffffff then return 7 end
+    if value <= 0xffffffffffffff then return 8 end
+    if value <= 0x7fffffffffffffff then return 9 end
+    return 10
 end
 
 function _SignedVarintSize(value)
@@ -38,14 +47,43 @@ function _SignedVarintSize(value)
     if value <= 0x3fff then return 2 end
     if value <= 0x1fffff then return 3 end
     if value <= 0xfffffff then return 4 end
-    return 5
+    if value <= 0x7ffffffff then return 5 end
+    if value <= 0x3ffffffffff then return 6 end
+    if value <= 0x1ffffffffffff then return 7 end
+    if value <= 0xffffffffffffff then return 8 end
+    if value <= 0x7fffffffffffffff then return 9 end
+    return 10
 end
+
+
+--function _VarintSize(value)
+--    if value <= 0x7f then return 1 end
+--    if value <= 0x3fff then return 2 end
+--    if value <= 0x1fffff then return 3 end
+--    if value <= 0xfffffff then return 4 end
+--    return 5
+--end
+--
+--function _SignedVarintSize(value)
+--    if value < 0 then return 10 end
+--    if value <= 0x7f then return 1 end
+--    if value <= 0x3fff then return 2 end
+--    if value <= 0x1fffff then return 3 end
+--    if value <= 0xfffffff then return 4 end
+--    return 5
+--end
 
 function _TagSize(field_number)
   return _VarintSize(wire_format.PackTag(field_number, 0))
 end
 
+
+--print("encoder")
+
+
+
 function _SimpleSizer(compute_value_size)
+--    print("---------------_SimpleSizer")
     return function(field_number, is_repeated, is_packed)
         local tag_size = _TagSize(field_number)
         if is_packed then
@@ -217,20 +255,29 @@ local _EncodeSignedVarint = pb.signed_varint_encoder
 
 
 function _VarintBytes(value)
+
     local out = {}
     local write = function(value)
         out[#out + 1 ] = value
     end
     _EncodeSignedVarint(write, value)
+--pp =
+--print("ppppppppp",pp)
     return table.concat(out)
 end
 
 function TagBytes(field_number, wire_type)
+--    print("TagBytes---------field_number:",field_number," -- wire_type:", wire_type)
   return _VarintBytes(wire_format.PackTag(field_number, wire_type))
 end
 
+
+
+
 function _SimpleEncoder(wire_type, encode_value, compute_value_size)
+--    print("---------------_SimpleEncoder  wire_type",wire_type)
     return function(field_number, is_repeated, is_packed)
+--        print("---------------_SimpleEncoder  is_repeated:",is_repeated,"is_packed:",is_packed ,"wire_type:",wire_type)
         if is_packed then
             local tag_bytes = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
             local EncodeVarint = _EncodeVarint
@@ -254,7 +301,9 @@ function _SimpleEncoder(wire_type, encode_value, compute_value_size)
                 end
             end
         else
+
             local tag_bytes = TagBytes(field_number, wire_type)
+--            print("-------------now _SimpleEncoder  no packed no repeated--------------------------tag_bytes",tag_bytes)
             return function(write, value)
                 write(tag_bytes)
                 encode_value(write, value)
@@ -264,7 +313,9 @@ function _SimpleEncoder(wire_type, encode_value, compute_value_size)
 end
 
 function _ModifiedEncoder(wire_type, encode_value, compute_value_size, modify_value)
+
     return function (field_number, is_repeated, is_packed)
+--        print("modifiedEncoder",field_number, is_repeated, is_packed)
         if is_packed then
             local tag_bytes = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
             local EncodeVarint = _EncodeVarint
@@ -298,7 +349,9 @@ function _ModifiedEncoder(wire_type, encode_value, compute_value_size, modify_va
 end
 
 function _StructPackEncoder(wire_type, value_size, format)
+
     return function(field_number, is_repeated, is_packed)
+--        print("StructPackEncoder",field_number, is_repeated, is_packed)
         local struct_pack = pb.struct_pack
         if is_packed then
             local tag_bytes = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
@@ -320,6 +373,7 @@ function _StructPackEncoder(wire_type, value_size, format)
             end
         else
             local tag_bytes = TagBytes(field_number, wire_type)
+--            pb.ZswLuaShowBytesToString(tag_bytes)
             return function (write, value)
                 write(tag_bytes)
                 struct_pack(write, format, value)
@@ -353,6 +407,7 @@ DoubleEncoder   = _StructPackEncoder(wire_format.WIRETYPE_FIXED64, 8, string.byt
 
 
 function BoolEncoder(field_number, is_repeated, is_packed)
+--    print("BoolEncoder")
     local false_byte = '\0'
     local true_byte = '\1'
     if is_packed then
@@ -394,6 +449,7 @@ function BoolEncoder(field_number, is_repeated, is_packed)
 end
 
 function StringEncoder(field_number, is_repeated, is_packed)
+--    print("StringEncoder")
     local tag = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
     local EncodeVarint = _EncodeVarint
     assert(not is_packed)
@@ -417,6 +473,7 @@ function StringEncoder(field_number, is_repeated, is_packed)
 end
 
 function BytesEncoder(field_number, is_repeated, is_packed)
+--    print("BytesEncoder")
     local tag = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
     local EncodeVarint = _EncodeVarint
     assert(not is_packed)
@@ -439,6 +496,7 @@ end
 
 
 function MessageEncoder(field_number, is_repeated, is_packed)
+--    print("MessageEncoder")
     local tag = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
     local EncodeVarint = _EncodeVarint
     assert(not is_packed)

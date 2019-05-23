@@ -1,4 +1,4 @@
-﻿syntax = "proto3";
+﻿syntax = "proto2";
 package CMD;
 
 
@@ -6,20 +6,23 @@ package CMD;
 //场景鱼
 message tagSceneFish
 {
-	 uint32			uid = 1;				//鱼UID
-	 uint32			kind_id = 2;			//鱼的类型读表用
-	 uint32			path_id = 3;			//路径ID
-	 int32			path_index = 4;			//当前所在的路径坐标索引
-	 uint32			tag = 5;				//标记(同类炸弹时标记为目标鱼kind_id)
-	 uint32			speed = 6;				//速度
-	 float			offset_x = 7;			//路径偏移
-	 float			offset_y = 8;			//路径偏移
-	 uint32         boat_id  = 9;           //所属船的ID
-	 uint32         alive_state = 10;       //在存活状态下子状态
-	 bool           is_form_fish = 11;      //是否属于鱼阵的鱼
+	optional uint32			uid = 1;				//鱼UID
+	optional uint32			kind_id = 2;			//鱼的类型读表用
+	optional uint32			path_id = 3;			//路径ID
+	optional int32			path_index = 4;			//当前所在的路径坐标索引
+	optional uint32			tag = 5;				//标记(同类炸弹时标记为目标鱼kind_id)
+	optional uint32			speed = 6;				//速度
+	optional float			offset_x = 7;			//路径偏移
+	optional float			offset_y = 8;			//路径偏移
+	optional uint32         boat_id  = 9;           //所属船的ID
+	optional uint32         alive_state = 10;       //在存活状态下子状态
+	optional bool           is_form_fish = 11;      //是否属于鱼阵的鱼
 }
 //生成鱼
 message CCMD_S_DISTRIBUTE_FISH
 {
-	repeated tagSceneFish fishs = 1;					//生成的鱼
+	//repeated tagSceneFish fishs = 1;					//生成的鱼
+	//optional int32 num22 = 1;
+	//repeated tagSceneFish sdfsdf =2;
+	optional tagSceneFish fishs = 3;					//生成的鱼
 }

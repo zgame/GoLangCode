@@ -72,7 +72,7 @@ print("msg**********************************************************************
 print("msg**********************************************************************",msg.zz[2].id)
 print("msg**********************************************************************",msg.zz1.id)
 
-
+print("000000000000000000000000000000*****************************************************************000000000000000")
 --
 local CMD_Game_pb = require('CMD_Game_pb')
 --
@@ -84,21 +84,33 @@ local msg = CMD_Game_pb.tagSceneFish()
 msg:ParseFromString(data)
 print("msg**********************************************************************",msg.uid)
 
+--
+--
+--local sendCmd = CMD_Game_pb.CCMD_S_DISTRIBUTE_FISH()
+--local cmd = sendCmd.fishs:add()
+--cmd.uid = 1
+--cmd.kind_id = 1
+--local cmd2 = sendCmd.fishs:add()
+--cmd2.uid = 222
+--cmd2.kind_id = 234
+--
+--local data = sendCmd:SerializeToString()
+--local msg = CMD_Game_pb.CCMD_S_DISTRIBUTE_FISH()
+--msg:ParseFromString(data)
+--print("msg**********************************************************************",msg.fishs[2].uid)
 
+--
+--
+function zsws(sendCmd)
+    --sendCmd.num22 = 110
+    return sendCmd
+end
+print("000000000000000000000000--------------------------------开始测试结构体为空---------------------------------000000000000000000000")
 
 local sendCmd = CMD_Game_pb.CCMD_S_DISTRIBUTE_FISH()
-local cmd = sendCmd.fishs:add()
-cmd.uid = 1
-cmd.kind_id = 1
-local cmd2 = sendCmd.fishs:add()
-cmd2.uid = 222
-cmd2.kind_id = 234
+sendCmd = zsws(sendCmd)
 
 local data = sendCmd:SerializeToString()
 local msg = CMD_Game_pb.CCMD_S_DISTRIBUTE_FISH()
 msg:ParseFromString(data)
-print("msg**********************************************************************",msg.fishs[2].uid)
-
---
---
-
+print("000000000000000000000000-----------------------------------------------------------------000000000000000000000")
