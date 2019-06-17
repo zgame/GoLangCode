@@ -1,0 +1,244 @@
+
+// To use the "libprotobuf-lite.lib" library for C++ code.
+//option optimize_for = LITE_RUNTIME;
+
+//-------------------------------------------------------------------------------------------------------
+// 游戏服务器， 负责登录部分，邮件，跑马灯
+//-------------------------------------------------------------------------------------------------------
+
+syntax = "proto2";
+// Namespace: MESSAGE
+package CMD;
+
+
+
+//---------------------------------------登录部分-------------------------------------------------
+//I D 登录
+message CMD_GR_LogonUserID
+{
+	//版本信息
+	optional uint32					plaza_version = 1;						//广场版本
+	optional uint32					frame_version = 2;						//框架版本
+	optional uint32					process_version = 3;					//进程版本
+	optional int32					client_type = 4;						//客户端类型 1为网页 2为PC 3为IOS 4为Android
+
+	//登录信息
+	optional uint32					user_id = 5;							//用户 I D
+	optional bytes					password = 6;							//登录密码(32md5)
+	optional bytes					machine_id = 7;							//机器序列
+	optional int32					kind_id = 8;							//类型索引
+	optional bytes					ip_addr = 9;							//IP地址
+	optional int32 					ditch_number = 10;						//渠道号 1为官网
+	optional bytes					device_type = 11;						//设备的型号
+	optional uint32                 packet_index = 12;                      //包索引，用来记录这是第几次发送这个包，服务器收到这个包检查BUG
+	optional bool					is_android = 13;						//是否为机器人
+	//大师赛专用
+	optional uint32					cannon_mulriple = 14;					//炮倍率
+ 
+};
+//登录成功
+message CMD_GR_LogonSuccess
+{
+	optional uint32							user_right = 1;						//用户权限
+	optional uint32							master_right = 2;					//管理权限
+	optional uint32                         new_guide = 3;                      //新手引导
+	optional int32							server_id = 4;						//服务器房间ID
+	optional int32							cannon_num_switch = 5;				//炮数量开关0:关,1:开. 0是有x1-x3
+};
+
+//登录失败
+message CMD_GR_LogonFailure
+{
+	optional int32							error_code = 1;					//错误代码
+	optional int32							server_id = 2;					//服务器房间ID
+	optional bytes							describe = 3;					//描述消息
+};
+
+
+//-------------------------------------进出倍率房间-----------------------------------
+//游戏房间进入
+message CMD_GF_EnterScene
+{
+	optional int32							game_type = 1;				//申请进入的游戏类型
+	
+};
+
+//游戏房间离开
+message CMD_GF_C_LeaveScene
+{
+	optional int32							game_type = 1;				//申请离开的游戏类型
+	
+};
+
+// 游戏房间离开结果
+message CMD_GF_S_LeaveScene
+{
+	optional uint32							result = 1;						//用户离开是否成功， 成功1， 失败是0
+};
+
+
+//---------------------------------------请求房间信息------------------------------------------------
+message CMD_C_GameRoomInfo
+{
+}
+
+message CMD_S_GameRoomInfo
+{
+	repeated int32							room_type = 1;				//房间类型
+	repeated uint64							jackpot = 2;				//大奖池数据
+	repeated uint32							room_score = 3;				//房间倍率
+	repeated uint32							player_num = 4;				//房间人数
+}
+
+
+//-------------------------------------邮件部分-----------------------------------
+//邮件内容
+message  tagMailData
+{
+	optional uint64			index = 1;		//记录的编号
+	optional uint32			type = 2;		//记录的类型	消息类型 1系统补偿,2排行榜奖励
+	optional uint64			time = 3;		//记录的时间
+	optional bytes			msg = 4;			//记录的信息
+	optional uint32			status = 5;						//状态 1为领取,0为未领取
+	optional uint32			gift_count = 6;					//附件数量
+	optional uint32			gift_type1 = 7;		//附件1 ID (最多4个)
+	optional uint32			gift_type2 = 8;
+	optional uint32			gift_type3 = 9;
+	optional uint32			gift_type4 = 10;
+	optional uint32			amount1 = 11;		//附件数量
+	optional uint32			amount2 = 12;		//附件数量
+	optional uint32			amount3 = 13;		//附件数量
+	optional uint32			amount4 = 14;		//附件数量
+	optional bytes			title = 15;			//标题
+	optional uint32			gift_score = 16;	// 赠送玩家分数
+};
+
+//服务器返回的mail
+message	CMD_S_Mail
+{
+	optional uint32			max_count  = 1;			//记录的总数量
+	repeated tagMailData	message_list = 2;		//单次发送的信息	
+};
+//申请获取mail
+message	CMD_C_Mail
+{
+	optional uint32			user_id = 1;			//玩家ID
+	optional int32			index = 2;				//消息索引
+};
+//删除mail
+message CMD_MB_C_DeleteMail
+{
+	optional uint32		user_id = 1;			//用户ID
+	repeated uint64		del_index_list = 2;		//要删除的列表
+};
+//服务器返回删除mail
+message CMD_MB_S_DeleteMail
+{
+	optional uint32		result = 1;				// 1为成功, 0为失败
+	repeated uint64		info_index = 2;			// index
+}
+
+//获取mail礼包
+message CMD_MB_C_MailGetGift
+{
+	optional uint32		user_id = 1;			// 用户ID
+	repeated uint64		get_index_list = 2;		// 要获取的所有
+}
+//获取mail礼包服务器返回
+message CMD_MB_S_MailGetGift
+{
+	optional uint32		result = 1;			//结果1为操作成功,其他为失败
+	repeated uint64		info_index = 2;		//index
+	optional uint64		player_score = 3;	// 玩家分数总额
+	optional uint64		mail_score = 4;	// 玩家分数增加
+}
+
+
+
+//-------------------------------------跑马灯部分-----------------------------------
+
+message CMD_CR_Tip
+{
+	optional int32							type = 1;						//消息类型
+	optional int32							level = 2;						//等级
+	optional uint32							delay_time = 3;					//延迟时间
+	optional bytes							text = 4;						//消息内容
+};
+
+
+//---------------------------------------签到-------------------------------------------
+message CMD_C_Sign_In
+{
+	optional int32							index = 1;						//签到的位置， 如果是0，那么返回数据列表， 如果不是0，就是签到
+}
+
+message CMD_S_Sign_In
+{
+	optional int32							index = 1;						//签到的位置
+	repeated int32							sign_list = 2;						//签到列表
+	optional uint32							score =3;						// 获得的分数,  这个还是发基础值， vip让客户端做一个乘法来显示
+	optional uint64							player_score = 4;				// 玩家最终的分数
+	optional int32							sign_times = 5;					// 玩家连续签到次数
+	optional uint64							last_sign_time = 6 ;			// 最后一次签到的时间
+	optional uint32							vip_multi	= 7 ;				// vip倍率，  最终得到的金币是score * vip_multi, 这样做可以客户端做个乘法的显示，更直观
+}
+
+//---------------------------------------整点领取金币-------------------------------------------
+message CMD_C_Clock_Gold
+{
+	optional int32							index = 1;						//申请领取金币，index是表里面的第几项
+}
+
+message CMD_S_Clock_Gold
+{
+	optional int32							index = 1;						//
+	repeated int32							clock_list = 2;						//刷新领取列表
+	optional uint32							score =3;						// 获得的分数
+	optional uint64							player_score = 4;				// 玩家最终的分数
+	optional uint32							vip_multi	= 5 ;				// vip倍率，  最终得到的金币是score * vip_multi, 这样做可以客户端做个乘法的显示，更直观
+}
+
+//----------------------------------------vip 救济金 补充金币------------------------------------------------
+message CMD_S_Vip_Gold_Dole
+{
+	optional uint32							vip_level = 1;						//vip level
+	optional uint32							rmb = 2;							//充值金额
+	optional uint32							score = 3;						// 获得的分数
+	optional uint64							player_score = 4;				// 玩家最终的分数
+	
+}
+
+// ------------------------------ 抽奖 ------------------------------------
+message CMD_C_DRAW
+{
+	optional		uint32				index				= 1;		// 0 是请求列表， 1是开始转
+}
+
+message Draw_item
+{
+	optional	uint32				item_type	= 1;				// 类型，1-资源2-道具3-实物
+	optional	uint32				item_sub_type	= 2;				// 子类型，资源类型对应子类型1-金币2-奖券 实物类型对应子类型1-话费2-京东卡3-手机
+	optional	uint32				item_value	= 3;				// 数值
+}
+
+message Draw_history_list
+{
+	optional	bytes				nick_name	= 1;				// 玩家昵称
+	optional	uint32				wheel_result	= 2;				// 这里返回的是第几个位置中奖了
+}
+
+
+message CMD_S_DRAW
+{
+	optional	uint32				result_code	= 1;				// 1为成功, 0为失败
+	repeated 	Draw_item			draw_list = 2;						//刷新列表
+	optional 	uint32				score = 3;						// 获得的分数
+	optional 	uint64				player_score = 4;				// 玩家最终的分数
+	optional 	uint32				wheel_result = 5;				// 这里返回的是第几个位置中奖了
+	optional 	uint32				can_wheel_num = 6;				// 还能转几次
+	optional 	uint32				max_wheel_num = 7;				// 最多能转几次
+	optional 	uint32				player_lottery = 8;				// 奖券数量 
+	optional 	uint32				cost_lottery = 9;				// 消耗奖券数量 
+	repeated	Draw_history_list	history = 10;					// 历史记录
+
+}
