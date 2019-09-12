@@ -16,6 +16,8 @@
 --------------------------------------------------------------------------------
 --
 
+local printTable = printTable
+
 local setmetatable = setmetatable
 local rawset = rawset
 local rawget = rawget
@@ -138,9 +140,9 @@ local NON_PACKABLE_TYPES = {
 
 local _VALUE_CHECKERS = {
     [FieldDescriptor.CPPTYPE_INT32] = type_checkers.Int32ValueChecker(),
-    [FieldDescriptor.CPPTYPE_INT64] = type_checkers.Int32ValueChecker(),
+    [FieldDescriptor.CPPTYPE_INT64] = type_checkers.Int64ValueChecker(),
     [FieldDescriptor.CPPTYPE_UINT32] = type_checkers.Uint32ValueChecker(),
-    [FieldDescriptor.CPPTYPE_UINT64] = type_checkers.Uint32ValueChecker(),
+    [FieldDescriptor.CPPTYPE_UINT64] = type_checkers.Uint64ValueChecker(),
     [FieldDescriptor.CPPTYPE_DOUBLE] = type_checkers.TypeChecker({number = true}),
     [FieldDescriptor.CPPTYPE_FLOAT] = type_checkers.TypeChecker({number = true}),
     [FieldDescriptor.CPPTYPE_BOOL] = type_checkers.TypeChecker({boolean = true, bool = true, int=true}),
@@ -296,25 +298,31 @@ local function _DefaultValueConstructorForField(field)
 end
 
 local function _AttachFieldHelpers(message_meta, field_descriptor)
+--    print("-----------------------------------------------------------------------------------_AttachFieldHelpers",field_descriptor.name, "type",field_descriptor.type)
     local is_repeated = (field_descriptor.label == FieldDescriptor.LABEL_REPEATED)
     local is_packed = (field_descriptor.has_options and field_descriptor.GetOptions().packed)
 
+--    print("****************************************************field_descriptor.number****",field_descriptor.number)
     rawset(field_descriptor, "_encoder", TYPE_TO_ENCODER[field_descriptor.type](field_descriptor.number, is_repeated, is_packed))
     rawset(field_descriptor, "_sizer", TYPE_TO_SIZER[field_descriptor.type](field_descriptor.number, is_repeated, is_packed))
     rawset(field_descriptor, "_default_constructor", _DefaultValueConstructorForField(field_descriptor))
 
+
+--    print("********************************************************")
     local AddDecoder = function(wiretype, is_packed)
         local tag_bytes = encoder.TagBytes(field_descriptor.number, wiretype)
         message_meta._decoders_by_tag[tag_bytes] = TYPE_TO_DECODER[field_descriptor.type](field_descriptor.number, is_repeated, is_packed, field_descriptor, field_descriptor._default_constructor)
     end
-  
+
     AddDecoder(FIELD_TYPE_TO_WIRE_TYPE[field_descriptor.type], False)
     if is_repeated and IsTypePackable(field_descriptor.type) then
         AddDecoder(wire_format.WIRETYPE_LENGTH_DELIMITED, True)
     end
+--    print("********************************************************")
 end
 
 local function _AddEnumValues(descriptor, message_meta)
+
     for _, enum_type in ipairs(descriptor.enum_types) do
         for _, enum_value in ipairs(enum_type.values) do
             message_meta._member[enum_value.name] = enum_value.number
@@ -336,6 +344,7 @@ local function _InitMethod(message_meta)
 end
 
 local function _AddPropertiesForRepeatedField(field, message_meta)
+--    print("_AddPropertiesForRepeatedField",field.name)
     local property_name = field.name
 
     message_meta._getter[property_name] = function(self)
@@ -354,6 +363,7 @@ local function _AddPropertiesForRepeatedField(field, message_meta)
 end
 
 local function _AddPropertiesForNonRepeatedCompositeField(field, message_meta)
+--    print("_AddPropertiesForNonRepeatedCompositeField",field.name)
     local property_name = field.name
     local message_type = field.message_type
 
@@ -373,6 +383,7 @@ local function _AddPropertiesForNonRepeatedCompositeField(field, message_meta)
 end
 
 local function _AddPropertiesForNonRepeatedScalarField(field, message)
+--    print("_AddPropertiesForNonRepeatedScalarField",field.name)
     local property_name = field.name
     local type_checker = GetTypeChecker(field.cpp_type, field.type)
     local default_value = field.default_value
@@ -389,13 +400,17 @@ local function _AddPropertiesForNonRepeatedScalarField(field, message)
     message._setter[property_name] = function(self, new_value)
         type_checker(new_value)
         self._fields[field] = new_value
+
         if not self._cached_byte_size_dirty then
             message._member._Modified(self)
         end
     end
+
+--    print("message._setter[nameb]",message._setter[property_name])
 end
 
 local function _AddPropertiesForField(field, message_meta)
+--    print("_AddPropertiesForField", field.name)
     constant_name = field.name:upper() .. "_FIELD_NUMBER"
     message_meta._member[constant_name] = field.number
 
@@ -614,6 +629,8 @@ local function _AddByteSizeMethod(message_descriptor, message_meta)
 end
 
 local function _AddSerializeToStringMethod(message_descriptor, message_meta)
+--    print("_AddSerializeToStringMethod")
+
     message_meta._member.SerializeToString = function(self)
         if not message_meta._member.IsInitialized(self) then
             error('Message is missing required fields: ' .. 
@@ -631,6 +648,7 @@ local function _AddSerializeToStringMethod(message_descriptor, message_meta)
 end
 
 local function _AddSerializePartialToStringMethod(message_descriptor, message_meta)
+--    print("_AddSerializePartialToStringMethod")
     local concat = table.concat
     local _internal_serialize = function(self, write_bytes)
         for field_descriptor, field_value in message_meta._member.ListFields(self) do
@@ -648,6 +666,7 @@ local function _AddSerializePartialToStringMethod(message_descriptor, message_me
     end
 
     local _serialize_partial_to_string = function(self)
+--        print("---------------------------------SerializeToString------------------------------------------------")
         local out = {}
         local write = function(value)
             out[#out + 1] = value
@@ -666,6 +685,8 @@ local function _AddMergeFromStringMethod(message_descriptor, message_meta)
     local SkipField = decoder.SkipField
     local decoders_by_tag = message_meta._decoders_by_tag
 
+--    print("-------------_AddMergeFromStringMethod")
+
     local _internal_parse = function(self, buffer, pos, pend)
         message_meta._member._Modified(self)
         local field_dict = self._fields
@@ -673,6 +694,8 @@ local function _AddMergeFromStringMethod(message_descriptor, message_meta)
         local field_decoder
         while pos ~= pend do
             tag_bytes, new_pos = ReadTag(buffer, pos)
+--            pb.ZswLuaShowBytesToString(tag_bytes)
+--            print("********ReadTag",tag_bytes, new_pos)
             field_decoder = decoders_by_tag[tag_bytes]
             if field_decoder == nil then
                 new_pos = SkipField(buffer, new_pos, pend, tag_bytes)
@@ -682,6 +705,7 @@ local function _AddMergeFromStringMethod(message_descriptor, message_meta)
                 pos = new_pos
             else
                 pos = field_decoder(buffer, new_pos, pend, self, field_dict)
+
             end
         end
         return pos
@@ -807,6 +831,7 @@ local function _AddMergeFromMethod(message_meta)
 end
 
 local function _AddMessageMethods(message_descriptor, message_meta)
+--    print("*************************************************************_AddMessageMethods**********************************************************")
     _AddListFieldsMethod(message_descriptor, message_meta)
     _AddHasFieldMethod(message_descriptor, message_meta)
     _AddClearFieldMethod(message_descriptor, message_meta)
@@ -874,6 +899,7 @@ function _AddClassAttributesForNestedExtensions(descriptor, message_meta)
 end
 
 local function Message(descriptor)
+--    print("-----------------Message-------------------------")
     local message_meta = {}
     message_meta._decoders_by_tag = {}
     rawset(descriptor, "_extensions_by_name", {})

@@ -72,8 +72,8 @@ end
 
 
 function Int64ValueChecker()
-    local _MIN = -562949953421312
-    local _MAX = 562949953421312
+    local _MIN = -9223372036854775807
+    local _MAX = 9223372036854775807
                 --9223372036854775807
     return function(proposed_value)
         if type(proposed_value) ~= 'number' then
@@ -88,7 +88,7 @@ end
 
 function Uint64ValueChecker(IntValueChecker)
     local _MIN = 0
-    local _MAX = 1125899906842624
+    local _MAX = 18446744073709551615
                 --18446744073709551615
     return function(proposed_value)
         if type(proposed_value) ~= 'number' then

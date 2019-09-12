@@ -134,7 +134,7 @@ func (a *MyServer) Run() {
 			bufHead += bufHeadTemp
 			//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
 			if bufHeadTemp == 0 {
-				a.ReceiveBuf = buf			// 接收不全，那么缓存
+				a.ReceiveBuf = bufTemp			// 接收不全，那么缓存
 				break 	// 数据不全， 继续接收数据
 			}else if bufHeadTemp > 0 {				// 解析完成
 				if a.ReceiveBuf != nil {			// 如果是拼接包，只要成功解析，就可以清理了

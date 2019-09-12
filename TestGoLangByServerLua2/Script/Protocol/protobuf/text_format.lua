@@ -39,12 +39,12 @@ end
 
 local FieldDescriptor = descriptor.FieldDescriptor
 
-msg_format_indent = function(write, msg, indent)
+msg_format_indent = function(write, msg, indent)       -- 内部调用， 用来打印msg
     for field, value in msg:ListFields() do
         local print_field = function(field_value)
             local name = field.name
             write(string.rep(" ", indent))
-            if field.type == FieldDescriptor.TYPE_MESSAGE then
+            if field.type == FieldDescriptor.TYPE_MESSAGE then      -- 输出message
                 local extensions = getmetatable(msg)._extensions_by_name
                 if extensions[field.full_name] then
                     write("[" .. name .. "] {\n")
@@ -68,10 +68,10 @@ msg_format_indent = function(write, msg, indent)
     end
 end
 
-function msg_format(msg)
+function msg_format(msg)            -- protobuf.lua调用， 用来__tostring
     local out = {}
     local write = function(value)
-        out[#out + 1] = value
+        out[#out + 1] = value       --在表的长度#out后面写入value
     end
     msg_format_indent(write, msg, 0)
     return table.concat(out)

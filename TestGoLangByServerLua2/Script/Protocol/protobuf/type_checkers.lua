@@ -69,3 +69,34 @@ function UnicodeValueChecker()
         end
     end
 end
+
+
+function Int64ValueChecker()
+    local _MIN = -9223372036854775807
+    local _MAX = 9223372036854775807
+                --9223372036854775807
+    return function(proposed_value)
+        if type(proposed_value) ~= 'number' then
+            error(string.format('%s has type %s, but expected one of: number',
+                proposed_value, type(proposed_value)))
+        end
+        if _MIN > proposed_value or proposed_value > _MAX then
+            error('Value out of range: ' .. proposed_value)
+        end
+    end
+end
+
+function Uint64ValueChecker(IntValueChecker)
+    local _MIN = 0
+    local _MAX = 18446744073709551615
+                --18446744073709551615
+    return function(proposed_value)
+        if type(proposed_value) ~= 'number' then
+            error(string.format('%s has type %s, but expected one of: number',
+                proposed_value, type(proposed_value)))
+        end
+        if _MIN > proposed_value or proposed_value > _MAX then
+            error('Value out of range: ' .. proposed_value)
+        end
+    end
+end
