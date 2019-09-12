@@ -91,8 +91,8 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	if userId == 0 {
 		// 给玩家自己回复消息
 		//result =
-			GetMyServerByLSate(serverId).SendMsg(data, msg, mainCmd, subCmd, token)		// 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
-		//result = GetMyServerByLSate(serverId).WriteMsg(bufferEnd)
+			GetMyServerByServerId(serverId).SendMsg(data, msg, mainCmd, subCmd, token) // 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
+		//result = GetMyServerByServerId(serverId).WriteMsg(bufferEnd)
 	} else {
 		// 给其他玩家发送消息
 		//result =
@@ -121,11 +121,11 @@ func luaCallGoNetWorkClose(L *lua.LState) int {
 
 // user id 要注册，方便以后查询
 func luaCallGoResisterUID(L * lua.LState) int  {
-	uid := L.ToNumber(1)                        // 玩家uid
-	serverId := L.ToNumber(2)                   //
-	server := GetMyServerByLSate(int(serverId)) // my server
-	luaUIDConnectMyServer[int(uid)] = server    // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
-	server.UserId = int(uid)                    // 保存uid
+	uid := L.ToNumber(1)                           // 玩家uid
+	serverId := L.ToNumber(2)                      //
+	server := GetMyServerByServerId(int(serverId)) // my server
+	luaUIDConnectMyServer[int(uid)] = server       // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
+	server.UserId = int(uid)                       // 保存uid
 	return 0
 }
 

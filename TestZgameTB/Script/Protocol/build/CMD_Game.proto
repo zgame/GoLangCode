@@ -1,0 +1,245 @@
+﻿syntax = "proto2";
+package CMD;
+
+
+
+
+
+
+//用户信息------------------------------------------------------------------------------------------------------------
+message tagUserInfo
+{
+	optional bytes nick_name = 1;					//昵称
+	optional uint32 user_id = 2;					//用户ID
+	optional uint32 game_id = 3;					//游戏ID
+	optional uint32 vip_level = 4;					//VIP等级
+	optional uint32 level = 5;						//用户等级
+	optional int32  chair_id = 6;					//椅子ID
+	optional int32  table_id = 7;					//桌子ID
+	optional int64	score = 8;						//分数
+	optional int64  lottery = 9;					//奖券
+	optional int32  bullet_mulriple = 10;			//炮台倍率
+	repeated tagUsedSkill used_skills = 11;			//已使用技能
+	optional uint32 cannon_id = 12;					//炮ID
+	optional uint32 face_id = 13;					//头像ID
+	optional uint32 exp = 14;						//用户经验
+	optional int64  diamond = 15;					//钻石
+	optional uint32 bullet = 16;					//子弹
+	optional uint32 cannon_num = 17;				//炮管数量
+	optional int32  account_level = 18;				//账号等级
+	optional int32	login_type = 19;				//登陆方式
+	optional bytes	face_url	= 20;				//头像
+	optional int32  arena_score = 21;				//竞技场分数
+	optional uint32 sitelv = 22;					//锻造（法阵）等级
+	optional int64	achievement_title_id = 23;		//佩戴的成就称号ID
+	optional uint32 bullet_skin_id = 24;  //子弹皮肤id，0是默认皮肤
+	repeated tagBuff buffs = 25;					//buff
+	optional uint32 secsitelv = 26;					//妖怪房炮等级
+	optional uint32 monster_upper = 27;				// 妖怪房炮提升倍数			
+}
+//已使用的技能
+message tagUsedSkill
+{
+	optional uint32 skill_id = 1;					//技能ID
+	optional uint32 time = 2;						//剩余时间(毫秒)
+	optional uint32 cd = 3;
+	optional uint32	used = 4;						//已使用技能数
+	optional uint32	total = 5;						//总共技能数
+	optional uint32 addSec = 6;                     //附加的技能时间
+}
+//奖池配置信息
+message tagRewardPoolOption
+{
+	optional int32  detail_cost_type = 1;         //1 gold， 2 lottery， 3.diamond
+	optional int64  detail_cost_value = 2;
+	optional uint32 player_min_stay_time = 3;      //参加奖池所需最小停留时长 （ms）
+}
+
+message tagBuff
+{
+	optional uint32 buff_id = 1;					//buffid
+	optional int32  duration = 2;					//持续时间
+	optional int32  add_ratio = 3;					//增加比例
+ }
+
+// 进入场景------------------------------------------------------------------------------------------------------------
+message CMD_S_ENTER_SCENE
+{
+	optional bool is_special_scene = 1;				//是否特殊场景
+	optional uint32 special_sceene_waited_time = 2;	//特殊场景等待时间(毫秒)
+	optional uint32 tick_count = 3;					//服务器时间
+	optional uint32 exchange_ratio_userscore = 4;	//金币换鱼币比例
+	optional uint32 exchange_ratio_fishscore = 5;	//金币换鱼币比例
+	optional uint32 exchange_count = 6;				//每次兑换数量 
+	optional uint32 min_bullet_multiple = 7;		//最小炮台倍率
+	optional uint32 max_bullet_multiple = 8;		//最大炮台倍率
+	optional uint32 scene_id = 9;					//当前场景ID
+	optional int32	pause_time = 10;				//暂停时间
+	repeated tagUserInfo table_users = 11;			//用户信息
+	optional int32	bonus_fish = 12;				//奖金鱼
+	optional int32  buttle_num = 13;				//子弹数量
+	optional int32  alms_get_count = 14;			//救济金领取次数
+	optional int32  scene_type = 15;                //场景类型
+	optional tagRewardPoolOption rewardpool_opt = 16;  //奖池信息
+	optional int32  table_id = 17;					//桌子ID
+	optional bool  is_master = 18;					//是否是房主
+	optional int32  game_time = 19;					//游戏时间
+	optional int32  room_score = 20;					//房间倍率		
+}
+//其他玩家进入场景
+message CMD_S_OTHER_ENTER_SCENE
+{
+	optional tagUserInfo user_info = 1;				//用户信息
+}
+
+
+//场景鱼------------------------------------------------------------------------------------------------------------
+
+message tagSceneFish
+{
+	optional uint32			uid = 1;				//鱼UID
+	optional uint32			kind_id = 2;			//鱼的类型读表用
+	optional uint32			path_id = 3;			//路径ID
+	optional int32			path_index = 4;			//当前所在的路径坐标索引
+	optional uint32			tag = 5;				//标记(同类炸弹时标记为目标鱼kind_id)
+	optional uint32			speed = 6;				//速度
+	optional float			offset_x = 7;			//路径偏移
+	optional float			offset_y = 8;			//路径偏移
+	optional uint32         boat_id  = 9;           //所属船的ID
+	optional uint32         alive_state = 10;       //在存活状态下子状态
+	optional bool           is_form_fish = 11;      //是否属于鱼阵的鱼
+}
+//服务器发送场景鱼
+message CMD_S_SCENE_FISH
+{
+	repeated tagSceneFish scene_fishs = 1;			//场景鱼
+}
+//生成鱼
+message CMD_S_DISTRIBUTE_FISH
+{
+	repeated tagSceneFish fishs = 1;					//生成的鱼
+}
+
+//客户端开炮------------------------------------------------------------------------------------------------------------
+message CMD_C_USER_FIRE
+{
+	optional uint64 tick_count = 1;					//开炮时间
+	optional float  angle = 2;						//角度
+	optional uint32 lock_fish_id = 3;				//锁定鱼的UID
+	optional uint32 bullet_mulriple = 4;			//子弹倍率
+	optional uint32 bullet_temp_id = 5;				//子弹临时ID
+	optional uint32 bullet_num = 6;				//子弹数量（炮管数量）
+	optional bool   is_broadcast = 7;				//是否广播发射子弹
+	optional bool   is_double = 8;                  //是否双倍子弹
+	optional uint32  sf_skill_id = 9;               //技能鱼的技能ID
+	optional uint32 monster_upper = 10;				// 妖怪房炮提升倍数	
+};
+//服务器返回客户端开炮
+message CMD_S_USER_FIRE
+{
+	optional int32 chair_id			= 1;			//开炮的椅子
+	optional uint32 bullet_id		= 2;			//子弹ID
+	optional float angle			= 3;			//角度
+	optional bool bullet_double		= 4;			//是否双倍
+	optional uint32 bullet_mulriple = 5;			//子弹倍率
+	optional uint32 lock_fish_id	= 6;			//锁定鱼的UID
+	optional uint32 bullet_temp_id	= 7;			//子弹临时ID
+	optional uint32 bind_user_id	= 8;            //子弹绑定的非机器人玩家ID，用来计算捕鱼发包
+	optional uint32 bullet_num		= 9;			//子弹数量（炮管数量）
+	optional int64 curr_score		= 10;			//当前分数
+	optional uint32 curr_time       = 11;			//当前服务器时间，用于客户端同步显示
+	optional uint32  sf_skill_id	= 12;           //技能鱼的技能ID
+	optional int64  cost_score      = 13;           //子弹消耗的分数
+	optional int64 curr_daimond		= 14;			//当前钻币
+};
+//使用技能------------------------------------------------------------------------------------------------------------
+message CMD_C_USE_SKILL
+{
+	optional uint32 skill_id = 1;					//技能ID
+	optional uint32 target_id = 2;					//目标
+	optional bool	is_trigger = 3;					//是否特殊触发
+};
+//使用技能
+message CMD_S_USE_SKILL
+{
+	optional int32 chair_id = 1;					//玩家椅子
+	optional uint32	skill_id = 2;					//技能ID
+	optional uint32	used = 3;						//已使用技能数
+	optional uint32	total = 4;						//总共技能数
+	optional uint32 score_cost = 5;					//金币消耗
+	optional int32	skill_status = 6;				//技能状态
+	optional uint32 bind_user_id= 7;				//技能绑定的非机器人玩家ID，用来计算捕鱼发包
+	optional uint32 target_id = 8;					//目标
+	optional uint32 add_secs = 9;					//增加时间
+};
+
+//捕获鱼儿(单个)------------------------------------------------------------------------------------------------------
+message CMD_C_CATCH_FISH
+{
+	optional uint32 fish_uid = 1;					//鱼ID
+	optional uint32 bullet_id = 2;					//子弹ID
+	optional uint32 bullet_temp_id = 3;				//子弹临时ID
+	optional uint32  chair_id = 4;					//椅子ID
+	optional uint32 weakness_id = 5;                //波塞冬弱点位置
+};
+
+//场景子弹
+message tagSceneBullet
+{
+	optional int32	chair_id = 1;					//椅子ID
+	optional uint32 bullet_id = 2;					//子弹ID
+	optional float  pos_x = 3;						//子弹位置X
+	optional float  pos_y = 4;						//子弹位置Z
+	optional float  angle = 5;						//子弹角度
+	optional uint32 tick_count = 6;					//子弹时间
+	optional uint32 bullet_mulriple = 7;			//子弹倍率
+	optional bool	is_double = 8;					//是否为双倍
+	optional uint32 lock_fish_id = 9;				//锁定鱼的ID
+	optional uint32 bullet_num = 10;				//子弹个数(炮管数量)
+}
+//掉落道具
+message tagDropItem
+{
+	optional uint32 item_id = 1;					//道具ID
+	optional uint32 item_num = 2;					//道具数量
+}
+//捕获鱼儿
+message tagCatchFish
+{
+	optional uint32 fish_uid		= 1;				//鱼的UID
+	optional uint32 fish_kind		= 2;				//鱼的类型
+	optional uint32 fish_score		= 3;				//鱼的分数，增量
+	optional uint32	fish_lottery	= 4;				//鱼的奖券，增量
+	optional uint32 diamond			= 5;				//钻石，增量
+	optional bool	bullet_double	= 6;				//是否双倍子弹
+	optional bool	link_fish_uid	= 7;				//连接的鱼UID
+	optional bool   dead_sign		= 8;               //是否死亡的标志
+	optional uint32 skill_id		= 9;				//获得技能,技能鱼自带技能
+	//optional uint32 skill_num		= 10;				//获得技能数量--弃用
+	optional uint32 fish_mulriple	= 11;				//鱼的倍率（加成后的）
+	optional uint32 fish_original_score	= 12;			//鱼的原始金币（受寻宝影响前）
+	repeated tagDropItem drop_items		=13;				//掉落道具
+	optional uint32 fish_score_show = 14;        // 用于客户端显示捕获该条鱼得到的金币值
+	optional uint32 buff_id = 15;				 // buff_id
+	optional int32  buff_time = 16;				// buff剩余时间
+	optional int32  buff_add = 17;				// buff增加比例
+	optional int32  crit_rate = 18;             // 死亡暴击倍数
+};
+//服务器返回捕获鱼儿
+message CMD_S_CATCH_FISH
+{
+	optional int32	chair_id		= 1;				//椅子ID
+	optional int32  fish_type		= 2;				//中鱼类型
+	optional tagSceneBullet bullet	= 3;				//子弹ID
+	optional int64  curr_score		= 4;				//分数，当前数值
+	optional int64	curr_lottery	= 5;				//奖券，当前数值
+	optional int64  curr_diamond	= 6;				//钻石，当前数值
+	optional uint32 curr_time       = 7;				//当前服务器时间，用于客户端同步显示
+	repeated tagCatchFish catch_fishs = 8;				//捕获的鱼
+	optional int32  add_exp			= 9;
+	optional uint32 skill_id		= 10;				//技能抓捕到鱼
+	optional bool	is_crit			= 11;				//是否暴击
+	optional uint32 buff_id         = 12;               //BUFF状态下打死鱼
+	optional uint32 treasure_effect = 13;               //海皇秘宝特效
+};
+

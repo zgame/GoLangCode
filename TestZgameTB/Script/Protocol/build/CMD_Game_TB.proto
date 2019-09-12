@@ -1,0 +1,369 @@
+syntax = "proto2";
+package CMD;
+
+
+//---------------------------------------投币-----------------------------------------------
+
+message tagCoin
+{
+	optional	int32	 coin_uid	= 1;	//唯一id
+	optional	int32	 lottery_type	= 2; //附加奖券类型 (对应表里的id字段)
+	optional	int32	 lottery_value	= 3; //附加奖券面值
+}
+
+message tagBigCoin
+{
+	optional	int32	 big_coin_uid	= 1;				//大金币唯一UID
+	optional	int32	 big_coin_value = 2;				//等值的普通金币个数
+	optional	int64	 big_coin_lottery_value	= 3;		//包含的奖券面值
+	optional	int32	 big_coin_type  = 4;				//大金币类型
+	optional	int64    draw_value		= 5;				//抽奖值
+}
+
+//投币
+message CMD_C_CAST_COIN
+{
+	optional uint32   coin_num =1; //投币数量
+}
+//客户端主动请求同步大奖池
+message CMD_C_SYNC_BIGAWARD
+{
+
+}
+
+//同步大小奖池
+message CMD_S_SYNC_BIGAWARD
+{
+	optional	float	big_award	= 1;
+	optional	float	small_award 	= 2;
+	optional	float	time			= 3;
+	optional	bytes		last_player_name = 4;		//上次中奖玩家昵称
+	optional	int64		last_player_score = 5;		// 上次中奖玩家获得分数
+
+}
+//获得金币
+message CMD_C_OBTAIN_COIN
+{
+	repeated 	uint32	get_coin_data = 1;			//获取的金币信息(包含普通金币和特殊金币)
+	optional	uint32	fail_coin_count = 2;		//从旁边滚落的金币数目(仅仅是金币)
+	repeated	uint32	get_big_coin_data	= 3;	//获取的大金币信息
+	repeated	uint32	fail_big_coin_data = 4;		//从旁边滚落的大金币ID
+}
+//获得能量 同步金币奖券大小奖池台面金币
+message CMD_S_OBTAIN_ENERGY
+{
+	optional int32	get_energy = 1;		//获取能量
+	optional int64  gold_num = 2;	//金币
+	optional int64  lettery_num = 3;	//奖券
+	optional	float	big_award	= 4;	//大奖池
+	optional	float	small_award 	= 5;	//小奖池
+	optional	int32	remain_gold_num = 6;		//台面金币包含特殊金币
+	optional	int32	big_gold_num	= 7;		
+	optional	int64	big_gold_lottery  = 8;
+	optional	int32	player_count		= 9;		//当前服务器任务  用于客户端判断能否开始多人押注
+	optional	int32	draw_big_coin		= 10;		//抽奖币
+	optional	int64	draw_value			= 11;		//抽奖值
+}
+
+//-------------------------------------------老虎机-------------------------------------------
+
+//客户端老虎机游戏事件触发
+message CMD_C_GAME_TIGER
+{
+	optional uint32 tiger_num = 1; //触发老虎机的次数
+}		
+//服务器老虎机游戏结果
+message CMD_S_GAME_TIGER
+{
+	optional int32 tiger_num	= 1; //触发老虎机的次数
+	optional int32 result_type	= 2; //结果类型 1表示赢，2表示输
+	optional int32 gold_num     = 3; //奖励金币数量
+	optional int32 ticket_num   = 4; //奖励奖券数量
+	repeated int32 item_array	= 5; //物品数组
+	repeated tagCoin	coin_data = 6;	//产出金币数组
+	optional int32	tiger_reward_num = 7;		//本次老虎机本身奖励
+	optional tagBigCoin		big_coin_data	= 8;	//大金币数据	(老虎机有百分之50几率出大金币)
+	optional int32		multi_value	= 9;	//倍率
+}        
+
+
+//---------------------------------------翻牌-----------------------------------------------
+//客户端卡牌游戏事件触发
+message CMD_C_GAME_CARD
+{	
+	optional uint32 card_num		= 1; //触发卡牌的次数	
+}
+
+//卡牌消息
+message tagCard
+{
+	enum E_CARD_TYPE
+	{
+		CT_SPADE	= 1;		//黑桃
+		CT_HEART	= 2;		//红桃
+		CT_CLUB		= 3;		//梅花
+		CT_DIAMOND	= 4;		//方块
+	};
+	optional uint32	cnum		= 1;
+	optional uint32	ctype		= 2;		
+}
+
+//服务器卡牌游戏结果
+message CMD_S_GAME_CARD
+{
+	optional int32 card_num		= 1; //触发卡牌的次数
+	optional int32 result_type	= 2; //结果类型,棋牌类型 
+	optional int32 small_pool_add_num     = 3; //小奖池增加金币数量
+	repeated tagCard item_array = 4;
+	optional int32 gold_num     = 5; //奖励金币数量
+	repeated tagCoin	coin_data = 6;	//产出金币数组
+	optional tagBigCoin		big_coin_data	= 7;	//大金币数据	(纸牌有百分之0几率出大金币) 先放这里 可能以后又要改成会出
+}	
+
+//----------------------------------------------热血模式----------------------------------------
+
+//进入热血模式请求
+message CMD_C_B_MODE
+{
+	enum E_B_MODE_TYPE
+	{
+		BM_START	= 1;	//初始进入
+		BM_CONTINUE	= 2;	//继续 (挤开功能)
+	};
+	optional	uint32 				user_id	= 1;
+	optional	uint32		enter_type = 2;
+}
+
+//进入热血模式结果
+message CMD_S_B_MODE
+{
+	enum	E_B_MODE_RESULT
+	{
+		BME_FAILED			= 0;	//失败
+		BME_START_SUC		= 1;	//开始成功
+		BME_CAN_CONTINUE	= 2;	//可以继续
+		BME_CONTINUE_SUC	= 3;	//继续成功
+	};
+	optional  uint32	 result_type		= 1;
+	repeated	int32	time = 2; //持续时间
+	repeated	int32	condition_num = 3;	//进入下回合条件
+	optional	int32	round	= 4;	//当前回合数
+	optional	int32	add_gold_num	= 5;//经过翻牌机关 附加金币个数 (供客户端界面显示用  实际产出的金币另外开消息)
+	repeated	int32	open_door = 6; 		// 开门与否,  {1,0}   1表示开门， 0表示不能
+}
+
+//热血模式金币经过翻牌机关
+message CMD_C_B_MODE_COIN_PASS
+{
+	repeated	int32	num	= 1; //经过数量数组，  分别为第一回合，第二回合， 第三回合
+}
+
+//热血模式产出金币
+message CMD_S_B_MODE_COIN_PASS
+{
+	optional	int32		gold_num	= 1;	//普通金币数量
+	repeated	tagCoin		coin_data	= 2;	//特殊金币信息
+	optional tagBigCoin		big_coin_data	= 3;	//大金币数据
+}
+
+//热血模式结束请求大金币		--------------------------作废了
+message CMD_C_B_MODE_TIME_OVER
+{
+	
+}
+
+//热血模式结束产出大金币	--------------------------作废了
+message CMD_S_B_MODE_TIME_OVER
+{
+	optional tagBigCoin		big_coin_data	= 8;	//大金币数据
+}
+
+
+//----------------------------------------轮盘----------------------------------------------
+
+//轮盘奖励信息 (供客户端界面显示用)  各种信息读表之类的数据都放在这个消息里 不再另开
+message CMD_S_GAME_WHEELPLATE_SHOWINFO
+{
+	repeated	int32		reward_gold_num		= 1;
+	repeated	int32		lotter_num 			= 2;
+	repeated	int32		blood_time			= 3;
+	repeated	int32		blood_condition_num = 4;
+	optional	int32		auto_coin_speed		= 5;
+	optional	int32		pram1				= 6;
+	optional	float		pram2				= 7;
+	optional	int32		pram3				= 8;
+	optional	float		pram4				= 9;
+	optional	int32		pram5				= 10;	//已用 押注 开始条件
+	optional	float		pram6				= 11;	//已用 扑克牌收回时间
+	optional	int32		pram7				= 12;	//已用 押注 加入条件
+	optional	float		pram8				= 13;	//已用 热血模式奖励翻倍
+	optional	int32		pram9				= 14;	//已用 押注 开始条件2  人数
+	optional	float		pram10				= 15;
+	optional	int32		pram11				= 16;
+	optional	float		pram12				= 17;
+	repeated	int64		chip				= 18;	//押注筹码
+	optional	tag_QUALIFYING_INFO		q_info				= 19;	//竞技赛
+}
+
+//客户端轮盘游戏事件触发
+message CMD_C_GAME_WHEELPLATE
+{
+	optional int32 wheel_num		= 1; //触发轮盘的次数
+}	
+//服务器轮盘游戏结果
+message CMD_S_GAME_WHEELPLATE	
+{
+	optional int32 wheel_num		= 1; //触发轮盘的次数
+	optional int32 drop_num         = 2; //落袋数字			0-代表星星  998-失败
+	optional int32 gold_num			= 3; //奖励金币数量
+	optional int32 ticket_num		= 4; //奖励奖券数量
+	repeated tagCoin coin_data 		= 5; //产出金币数组
+	optional tagBigCoin		big_coin_data	= 6;	//大金币数据	(轮盘百分之100几率出大金币)
+	repeated	int32		reward_gold_num		= 7;
+}	
+//客户端轮盘游戏的翻倍事件触发
+message CMD_C_GAME_SELECT_DOUBLE
+{
+	optional int32 double_color    = 1; //翻倍颜色，0表示黑色，1表示红色, 997表示取消不参加
+}  
+//服务器轮盘游戏翻倍结果
+message CMD_S_GAME_SELECT_DOUBLE
+{
+	optional int32 double_color     = 1; //翻倍颜色，0表示黑色，1表示红色  997表示取消 998表示失败
+	optional int32 drop_num         = 2; //落袋数字
+	optional int32 gold_num			= 3; //奖励金币数量
+	optional int32 ticket_num		= 4; //奖励奖券数量
+	repeated tagCoin coin_data 		= 5; //产出金币数组
+	optional int32	tiger_reward_num = 7;		//轮盘本身奖励
+	optional tagBigCoin		big_coin_data	= 8;	//大金币数据	(轮盘百分之100几率出大金币)
+}	
+
+
+//--------------------------------------------------------------------------------------
+//机器人用空消息
+message CMD_S_EMPTY
+{
+}
+
+message CMD_C_AUTO_COIN
+{
+}
+
+message CMD_S_AUTO_COIN
+{
+	optional	int32		result_code = 1; //0 - 失败  1 - 成功
+	optional	int64		try_auto_time = 2;
+}
+
+message CMD_C_REQ_CONTRI
+{
+
+}
+
+message CMD_S_PUBLIC_BIG_POOL
+{
+	optional	bytes		name = 1;
+	optional	int64		score = 2;
+	optional	int32		id = 3;
+}
+
+
+
+// -------------------------- 竞技赛 ---------------------------------------
+
+
+message CMD_S_SYNC_QUALIFYING_AWARD
+{
+	optional	double		award_pool	= 1;		
+	optional	int32		sync_time	= 2;
+}
+message tag_QUALIFYING_INFO
+{
+	optional	bytes		award_rank	= 1;	//奖励区间
+	optional	uint64		award_score	= 2;	//奖励分配
+}
+message QUSER_INFO			// 排名的用户信息
+{
+	optional	int32		user_id		= 1;
+	optional	int32		q_value		= 2;	// 积分
+	optional	int32		q_rank		= 3;	// 排名
+	optional	int32		face_id		= 4;
+	optional	int32		login_type	= 5;
+	optional	bytes		face_url	= 6;
+	optional	bytes		name		= 7;
+	optional	int32		luck_times  = 8;
+	optional	int32		vip_lv		= 9;
+}
+
+message	CMD_S_QUALIFYING_DATA
+{
+	enum E_Q_DATA_MARK
+	{
+		QD_OPEN		= 0;	//开启
+		QD_SYNC		= 1;	//同步
+		QD_END		= 2;	//结束
+		QD_USER		= 3;	//个人
+		QD_TOP  	= 4;	//榜首
+		QD_REDY		= 5;	//准备
+		QD_INIT	= 6; 		//间隔之后，可以开始了
+	};
+	optional	uint32			mark			= 1;	// 当前状态
+	optional	uint64  		award_pool		= 2;	// 奖池金额
+	optional	uint64			start_time		= 3;	//持续时间
+	optional	uint64			remain_time		= 4;	//持续时间
+	optional	QUSER_INFO		user_data		= 5;	// 自身数据
+	repeated	QUSER_INFO		user_data_top	= 6;	// 排名数据
+	optional	int32			user_num		= 7;	// 鼓捣起要加个人数
+	repeated    tag_QUALIFYING_INFO  rank_info  = 8;	// 排名发奖情况
+}
+
+message CMD_C_QUALIFYING_REWARD
+{
+}
+//----------------------------------- 翻倍老虎机 ------------------------
+
+message CMD_S_MULTI_SLOT
+{
+	enum E_MS_OPTION
+	{
+		MS_OPEN		= 0;
+		MS_CLOSE	= 1;
+		MS_TIMEUP	= 2;
+		MS_INIT		= 3;
+		MS_READY	= 4;
+	};
+	optional	uint32  mark 			= 1;
+	optional	int32		multi_kind		= 2;	//翻倍项
+	optional	int32		multi_value		= 3;	//翻倍倍率
+	optional	uint64		remain_time		= 4;	//持续时间
+	optional	bytes		name			= 5;	
+	optional	int32		gold			= 6;
+	optional	int32		id				= 7;	//中奖玩家Id
+}
+
+//------------------------------  喇叭 ------------------------------------
+//用户聊天
+message CMD_C_USERCHAT
+{
+	optional uint32							chat_color = 1;					//信息颜色
+	optional uint32							target_user_id = 2;				//目标用户
+	optional bytes							chat = 3;						//聊天信息
+};
+
+
+//-------------------------------进入房间，发送房间信息--------------------------------
+//用户房间信息
+message CMD_GF_S_ServerUserInfo
+{
+	optional uint32                                                 user_id			= 1;			//用户ID
+	optional int32                                                  room_id		= 2;			//房间ID
+	optional int64                                                  big_award_pool		= 3;                    //大奖池数据  
+	optional int64                                                  small_award_pool	= 4;			//小奖池数据
+	optional int64                                                  remain_table_gold	= 5;			//台面剩余普通金币数量
+	optional int64													user_score				= 6;		// 玩家分数
+	optional int64													user_lottery				= 7;	// 玩家奖券数量
+	repeated tagCoin													user_lottery_list			= 8;			//台面上奖券列表
+	repeated tagBigCoin													user_big_coin_list				= 9;			//台面上大金币列表
+	optional int32													room_score				= 10;	//房间倍率
+};
+

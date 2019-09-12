@@ -34,10 +34,10 @@ func InitGlobalVar() {
 }
 
 // 通过lua堆栈找到对应的是哪个myServer
-func GetMyServerByLSate(id int) *MyServer {
+func GetMyServerByServerId(serverId int) *MyServer {
 	var re *MyServer = nil
 	GlobalVar.RWMutex.RLock()
-	re = LuaConnectMyServer[id] // 这是全局变量，所以要加锁， 读写都要加
+	re = LuaConnectMyServer[serverId] // 这是全局变量，所以要加锁， 读写都要加
 	GlobalVar.RWMutex.RUnlock()
 	return re
 }
