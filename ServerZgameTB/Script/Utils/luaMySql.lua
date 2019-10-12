@@ -14,7 +14,7 @@ MySqlEngineConnect = MySqlEngine.new()
 
 -- mysql数据库连接
 function MysqlConnect(host,port, databaseName, userName, passWord)
-    local ok, err = MySqlEngineConnect:connect({ host = host, port = port, database = databaseName, user = userName, password = passWord })
+    local ok, err = MySqlEngineConnect:connect({ host = host, port = tonumber(port), database = databaseName, user = userName, password = passWord })
 
     if ok then
         print("Mysql is ok")
