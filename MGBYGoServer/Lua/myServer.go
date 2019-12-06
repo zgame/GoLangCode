@@ -10,13 +10,16 @@ import (
 	"sync"
 	"time"
 	"fmt"
+	"bytes"
+	"encoding/binary"
+	"sync/atomic"
 )
 
 // ----------------------------服务器处理的统一接口----------------------------------
 // myServer其实是一个个连接单独处理的模块
 //-----------------------------------------------------------------------------------
 
-var MyServerUUID = 0		// 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
+var MyServerUUID int32 = 1		// 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
 var StaticDataPackageHeadLess = 0  // 统计信息，数据包 头部数据不全
 var StaticDataPackageProtoDataLess = 0  // 统计信息，数据包 pb数据不全
 var StaticDataPackagePasteNum = 0   // 统计信息，拼接次数
@@ -29,7 +32,6 @@ var StaticNetWorkReceiveToSendCostTimeNum = 0   // 统计信息，接收客户�
 
 var LuaConnectMyServer map[int]*MyServer    // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
 var luaUIDConnectMyServer map[int]*MyServer // 将uid跟连接句柄进行哈希
-
 
 
 // MyServer是每个客户端的连接
@@ -50,34 +52,55 @@ type MyServer struct {
 	LastBuf []byte				// 最后一次接收数据包
 	ReceiveMsgNum int		// 接收包数量
 	SendMsgNum int			// 发送包的数量
+
+
+	LuaCallClose bool		// lua申请关闭连接
 }
 
+// 获取唯一的ServerId
+func GetServerUid() int {
 
+
+retry:
+	MyServerUUID = atomic.AddInt32(&MyServerUUID, 1)
+
+	if MyServerUUID > math.MaxInt32 {
+		MyServerUUID = 0		// 如果越界了， 那么重头来过
+	}
+	if  GetMyServerByServerId(int(MyServerUUID)) != nil {
+		// 如果被占用了， 那么尝试下一个
+		goto retry
+		fmt.Printf("serverId  %d 被占用", MyServerUUID)
+	}
+
+	ServerId := int(MyServerUUID)
+	fmt.Println("连接创建了ServerId ： ",ServerId)
+
+	return ServerId
+}
 
 
 
 // 分配一个玩家处理逻辑模块的内存
-func NewMyServer(conn NetWork.Conn,GameManagerLua *MyLua)  *MyServer{
+func NewMyServer(conn NetWork.Conn,ServerId int)  *MyServer{
 	//myLua := NewMyLua()
-	myLua:= GameManagerLua		// 改为统一一个LState
-
-	GlobalVar.GlobalMutex.Lock()
-	ServerId := MyServerUUID
-	MyServerUUID ++
-	if MyServerUUID > int(math.MaxInt32) {
-		MyServerUUID = 0
-	}
-	GlobalVar.GlobalMutex.Unlock()
-	return &MyServer{Conn:conn,myLua:myLua,ServerId:ServerId,ReceiveBuf:nil}
+	//myLua:= GameManagerLua		// 改为统一一个LState
+	return &MyServer{Conn:conn,myLua:GameManagerLuaHandle,ServerId:ServerId,ReceiveBuf:nil}
 }
 
 //--------------------------各个玩家连接逻辑主循环------------------------------
 func (a *MyServer) Run() {
-	//fmt.Println("-------------各个玩家连接逻辑主循环---------")
+
 
 
 	a.Init()
 	for {
+		//fmt.Println("-------------各个玩家连接逻辑主循环---------")
+		if a.LuaCallClose {
+			// lua 申请关闭网络连接
+			return    // 那么主动关闭吧
+		}
+
 
 		//a.GlobalMutex.Lock()
 		buf,bufLen, err := a.Conn.ReadMsg()
@@ -88,7 +111,7 @@ func (a *MyServer) Run() {
 		//}
 
 		if err != nil {
-			//log.PrintfLogger("跟对方的连接中断了")
+			log.PrintfLogger("跟对方的连接中断了")
 			// 中断网络连接，关闭网络连接，关闭lua
 			break
 		}
@@ -182,20 +205,19 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	}
 	//-----------------------------解析头部信息----------------------------
 
-	headFlag,msgId, subMsgId, bufferSize, tokenId ,msgSize := NetWork.DealRecvTcpHeaderData(buf)
-	BufAllSize := NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize) + 1    // 整个数据包长度，末尾有标示位
+	msgId, subMsgId, bufferSize, ver := NetWork.DealReceiveTcpDeaderData(buf)
+	BufAllSize := NetWork.TCPHeaderSize + int(bufferSize)
 
-	//-----------------------------头部信息错误----------------------------
-	if headFlag != uint8(254){
-		log.PrintfLogger("%d 数据包头部标识不正确 %x",a.UserId, buf)
+	////-----------------------------头部信息错误----------------------------
+	//if headFlag != uint8(254){
+	//	log.PrintfLogger("%d 数据包头部标识不正确 %x",a.UserId, buf)
+	//
+	//	//GlobalVar.GlobalMutex.Lock()
+	//	StaticDataPackageHeadFlagError ++
+	//	//GlobalVar.GlobalMutex.Unlock()
+	//	return -1 			// 数据包格式校验不正确
+	//}
 
-		//GlobalVar.GlobalMutex.Lock()
-		StaticDataPackageHeadFlagError ++
-		//GlobalVar.GlobalMutex.Unlock()
-		return -1 			// 数据包格式校验不正确
-	}
-
-	fmt.Println("")
 
 	//fmt.Println("len(buf)",len(buf))
 	//fmt.Println("offset",offset)
@@ -220,27 +242,48 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 		return  0 //int(bufferSize) + offset
 	}
 
-	// ------------------------数据包尾部的判断----------------------
-	endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
-	if endData!= uint8(NetWork.TCPEnd){		// EE
-		log.PrintfLogger("%d数据包尾部判断不正确 %x ",a.UserId, buf)
-		return -1
-	}
+	//// ------------------------数据包尾部的判断----------------------
+	//endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
+	//if endData!= uint8(NetWork.TCPEnd){		// EE
+	//	log.PrintfLogger("%d数据包尾部判断不正确 %x ",a.UserId, buf)
+	//	return -1
+	//}
 
 	//-----------------------------数据包重复----------------------------
-	if int(tokenId) == a.TokenId{
-		//log.PrintLogger( strconv.Itoa(a.UserId)+" 出现重复的数据包,包id："+ strconv.Itoa(int(tokenId)))
-		//return BufAllSize  // 如果重复，那么跳过解析这个数据包
-	}
+	//if int(ver) == a.TokenId{
+	//	log.PrintLogger( strconv.Itoa(a.UserId)+" 出现重复的数据包,包id："+ strconv.Itoa(int(ver)))
+	//	//return BufAllSize  // 如果重复，那么跳过解析这个数据包
+	//}
 
 	//-----------------------------取出proto buffer的内容----------------------------
-	finalBuffer := buf[NetWork.TCPHeaderSize:NetWork.TCPHeaderSize + int(bufferSize)]
+	//var finalBuffer []byte
+
+	offset := NetWork.TCPHeaderSize
+	token := 0
+	if ver > 0{
+		offset = 12		// version == 1 的时候， 加了一个token
+
+		buf1 := bytes.NewBuffer( buf[NetWork.TCPHeaderSize:offset])
+		binary.Read(buf1,binary.LittleEndian,&token)
+	}
+	//fmt.Println("token: ",token)
+	finalBuffer := buf[offset: NetWork.TCPHeaderSize + int(bufferSize)]
+	// 解密
+	if ver > 0 {
+		//fmt.Printf("buffer: %x\n", finalBuffer)
+		//fmt.Println("开始解密")
+		finalBuffer = NetWork.Decryp(finalBuffer)
+		//fmt.Printf("解密后buffer: %x\n", finalBuffer)
+	}
+
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
 	//fmt.Println("")
 
-	a.TokenId = int(tokenId)		// 记录当前最后接收的数据包编号，防止重复
+	a.TokenId = int(ver) // 记录当前最后接收的数据包编号，防止重复
 	a.TokenTime = ztimer.GetOsTimeMillisecond()
-	a.myLua.GoCallLuaNetWorkReceive( a.ServerId,  a.UserId,int(msgId),int(subMsgId),string(finalBuffer),int(tokenId))		// 把收到的数据传递给lua进行处理
+
+	QueueAdd(a, a.ServerId, a.UserId, int(msgId), int(subMsgId), string(finalBuffer), int(ver)) // 把收到的数据传递给队列， 后期进行lua进行处理
+
 	a.ReceiveMsgNum++
 	a.SuccessBuf = buf 	// 记录最后一次成功的buf
 
@@ -259,10 +302,10 @@ func (a *MyServer) OnClose() {
 
 
 
-	if a.UserId > 0 {
+	//if a.UserId > 0 {
 		// 连接关闭了， 通知lua， 这个玩家网络中断了
-		a.myLua.GoCallLuaLogicInt("GoCallLuaPlayerNetworkBroken", a.UserId)
-	}
+	a.myLua.GoCallLuaLogicInt2("GoCallLuaPlayerNetworkBroken", a.UserId, a.ServerId)
+	//}
 
 	// 清理掉一些调用关系
 	GlobalVar.RWMutex.Lock()
@@ -278,8 +321,8 @@ func (a *MyServer) OnClose() {
 
 // ---------------------发送数据到网络-------------------------
 
-func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int , token int) bool{
-	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, token) // token始终是0，服务器不用发token
+func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int ) bool{
+	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
 
 	//if token!=0 {
 	//	fmt.Println("token", token)
@@ -287,31 +330,31 @@ func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int , to
 	//}
 
 	// 计算一下从消息的接收 --  消息的处理  --- 消息的发送  所消耗的时间
-	if token==a.TokenId {
-
-		now := ztimer.GetOsTimeMillisecond()
-		cost := int(now - a.TokenTime)
-
-		if cost > GlobalVar.WarningTimeCost {
-			log.PrintfLogger("UID: %d  处理消息花费时间 %d  mainCmd   %d  subCmd  %d", a.UserId, int(cost), mainCmd, subCmd)
-		}
-		if StaticNetWorkReceiveToSendCostTimeAll> 99999999 {
-			StaticNetWorkReceiveToSendCostTimeAll = 0	// 定期清理，防止数字过大
-			StaticNetWorkReceiveToSendCostTimeNum = 0
-		}
-
-		StaticNetWorkReceiveToSendCostTimeNum++
-		StaticNetWorkReceiveToSendCostTimeAll+= cost
-		StaticNetWorkReceiveToSendCostTime = StaticNetWorkReceiveToSendCostTimeAll/StaticNetWorkReceiveToSendCostTimeNum
-		//GlobalVar.RWMutex.Lock()
-		//if StaticNetWorkReceiveToSendCostTime == 0{
-		//	StaticNetWorkReceiveToSendCostTime = cost
-		//}else {
-		//	StaticNetWorkReceiveToSendCostTime = (StaticNetWorkReceiveToSendCostTime+cost)/2	//求平均值
-		//}
-		//GlobalVar.RWMutex.Unlock()
-		//log.PrintfLogger("UID: %d  处理消息花费时间 %d", a.UserId, int(cost))
-	}
+	//if token==a.TokenId {
+	//
+	//	now := ztimer.GetOsTimeMillisecond()
+	//	cost := int(now - a.TokenTime)
+	//
+	//	if cost > GlobalVar.WarningTimeCost {
+	//		log.PrintfLogger("UID: %d  处理消息花费时间 %d  mainCmd   %d  subCmd  %d", a.UserId, int(cost), mainCmd, subCmd)
+	//	}
+	//	if StaticNetWorkReceiveToSendCostTimeAll> 99999999 {
+	//		StaticNetWorkReceiveToSendCostTimeAll = 0	// 定期清理，防止数字过大
+	//		StaticNetWorkReceiveToSendCostTimeNum = 0
+	//	}
+	//
+	//	StaticNetWorkReceiveToSendCostTimeNum++
+	//	StaticNetWorkReceiveToSendCostTimeAll+= cost
+	//	StaticNetWorkReceiveToSendCostTime = StaticNetWorkReceiveToSendCostTimeAll/StaticNetWorkReceiveToSendCostTimeNum
+	//	//GlobalVar.RWMutex.Lock()
+	//	//if StaticNetWorkReceiveToSendCostTime == 0{
+	//	//	StaticNetWorkReceiveToSendCostTime = cost
+	//	//}else {
+	//	//	StaticNetWorkReceiveToSendCostTime = (StaticNetWorkReceiveToSendCostTime+cost)/2	//求平均值
+	//	//}
+	//	//GlobalVar.RWMutex.Unlock()
+	//	//log.PrintfLogger("UID: %d  处理消息花费时间 %d", a.UserId, int(cost))
+	//}
 	return a.WriteMsg(bufferEnd)
 }
 
@@ -372,6 +415,7 @@ func (a *MyServer) Init() {
 	LuaConnectMyServer[a.ServerId] = a
 	GlobalVar.RWMutex.Unlock()
 
+	a.myLua.GoCallLuaNetWorkInit(a.ServerId)
 	// 以后这里可以初始化玩家自己solo的游戏服务器
 
 
@@ -396,3 +440,28 @@ func (a *MyServer) Init() {
 //	}
 //}
 
+
+// ----------------------------要跟其他服务器做一个连接-------------------------------------------
+func ConnectOtherServer(ServerAddressAndPort string) int{
+	client := new(NetWork.TCPClient)
+	client.Addr = ServerAddressAndPort
+	client.ConnNum = 1  //废了
+	client.ConnectInterval = 3 * time.Second	// 客户端自动重连
+	client.PendingWriteNum = 1000	// 发送缓冲区
+	client.LenMsgLen = 4
+	client.MaxMsgLen = math.MaxUint32
+	client.AutoReconnect = true		// 支持断线重联
+
+	fmt.Println("0")
+	//serverId :=  MyServerUUID 		// serverId
+	serverId :=  GetServerUid() 		// serverId
+
+	client.NewAgent = func(conn *NetWork.TCPConn,index int) NetWork.Agent {
+		b := NewMyServer(conn,serverId)				// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+		return b
+	}
+
+	fmt.Println("开始连接 -- 服务器 -- ", client.Addr, serverId)
+	client.Start(serverId, serverId)
+	return serverId
+}

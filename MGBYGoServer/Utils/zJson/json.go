@@ -1,4 +1,4 @@
-package json
+package zJson
 
 import (
 	"encoding/json"
