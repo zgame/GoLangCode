@@ -1,0 +1,6 @@
+module('mgby_monster')
+
+ mgby_monster = {
+["1"] = {  name_id = 0,  resources = "0",  HP = 2500,  normal_min = 50,  normal_max = 75,  crit_min = 80,  crit_max = 100,  bullet_num = 30,  violent_num = 5,  violent_time = 10, drop_gold_num = {1000,2000,3000,4000,5000}, drop_gold_weights = {4500,2500,1500,1000,500}, drop_item_id = {101,102,103,120}, drop_item_weights = {3500,2000,3500,1000}, drop_item_num = {3,2,3,1},  drop_puzzle_probability = 10000, drop_puzzle_id = {10017,10018,10019,10020,10021,10022,10023,10024,10025}, drop_puzzle_weights = {1125,1125,1100,1125,1050,1125,1125,1100,1125}, drop_puzzle_num = {1,1,1,1,1,1,1,1,1}, puzzle_1 = {10017,1}, puzzle_2 = {10018,1}, puzzle_3 = {10019,1}, puzzle_4 = {10020,1}, puzzle_5 = {10021,1}, puzzle_6 = {10022,1}, puzzle_7 = {10023,1}, puzzle_8 = {10024,1}, puzzle_9 = {10025,1}, puzzle_gold_num = {40000,60000,80000,100000}, puzzle_gold_weights = {7100,1700,800,400}, puzzle_item_id = {120,131,107,108,109}, puzzle_item_probability = {5000,400,4000,500,100}, puzzle_item_num = {4,1,1,1,1},  },
+} 
+ 
