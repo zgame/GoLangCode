@@ -3,7 +3,6 @@ package ZServer
 import (
 	"net"
 	"../NetWork"
-	"../../GlobalVar"
 	"../Utils/log"
 	"../Utils/ztimer"
 	"math"
@@ -19,6 +18,10 @@ import (
 // myServer其实是一个个连接单独处理的模块
 //-----------------------------------------------------------------------------------
 
+
+var	GlobalMutex   sync.Mutex   // 主要用于lua逻辑调用时候的加锁
+var	RWMutex       sync.RWMutex // 主要用于针对map进行读写时候的锁
+
 var MyServerUUID int32 = 1		// 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
 var StaticDataPackageHeadLess = 0  // 统计信息，数据包 头部数据不全
 var StaticDataPackageProtoDataLess = 0  // 统计信息，数据包 pb数据不全
@@ -33,9 +36,13 @@ var StaticNetWorkReceiveToSendCostTimeNum = 0   // 统计信息，接收客户�
 var ServerIdConnectMyServer map[int]*MyServer // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
 var UidConnectMyServer map[int]*MyServer      // 将uid跟连接句柄进行哈希
 
-type ReceiveFuncCallback func(serverId int,userId int, msgId int, subMsgId int, data  []byte, token int)		// 定义收到数据包的回调函数
+type ReceiveFuncCallBack func(serverId int,userId int, msgId int, subMsgId int, data  []byte, token int) // 定义收到数据包的回调函数
+type NetWorkInitCallBack func(serverId int)				// 网络连接成功之后的初始化
+type NetworkBrokenCallBack func(uid int, serverId int) 		// 网络中断回调
 
-var NetWorkReceive ReceiveFuncCallback 		// 回调函数地址
+var NetWorkReceive ReceiveFuncCallBack // 接收消息回调函数地址
+var NetWorkInit NetWorkInitCallBack   //  网络连接成功回调
+var NetworkBroken NetworkBrokenCallBack  // 网络中断回调
 
 // MyServer是每个客户端的连接 , 每一个连接一个协程
 type MyServer struct {
@@ -102,16 +109,16 @@ func InitGlobalVar() {
 
 // 通过lua堆栈找到对应的是哪个myServer
 func GetMyServerByServerId(serverId int) *MyServer {
-	GlobalVar.RWMutex.RLock()
+	RWMutex.RLock()
 	re := ServerIdConnectMyServer[serverId] // 这是全局变量，所以要加锁， 读写都要加
-	GlobalVar.RWMutex.RUnlock()
+	RWMutex.RUnlock()
 	return re
 }
 // 通过 user id 找到对应的是哪个myServer
 func GetMyServerByUID(uid int) *MyServer {
-	GlobalVar.RWMutex.RLock()
+	RWMutex.RLock()
 	re:= UidConnectMyServer[uid] // 这是全局变量，所以要加锁， 读写都要加
-	GlobalVar.RWMutex.RUnlock()
+	RWMutex.RUnlock()
 	return re
 }
 
@@ -334,15 +341,16 @@ func (a *MyServer) OnClose() {
 
 
 	//if a.UserId > 0 {
-		// 连接关闭了， 通知lua， 这个玩家网络中断了
+	// 连接关闭了， 通知lua， 这个玩家网络中断了
+	NetworkBroken(a.UserId, a.ServerId)
 	//a.myLua.GoCallLuaLogicInt2("GoCallLuaPlayerNetworkBroken", a.UserId, a.ServerId)
 	//}
 
 	// 清理掉一些调用关系
-	GlobalVar.RWMutex.Lock()
+	RWMutex.Lock()
 	delete(ServerIdConnectMyServer, a.ServerId)
 	delete(UidConnectMyServer, a.UserId)
-	GlobalVar.RWMutex.Unlock()
+	RWMutex.Unlock()
 
 	//runtime.GC()
 
@@ -419,11 +427,13 @@ func (a *MyServer) RemoteAddr() net.Addr {
 //--------------------------lua 启动-------------------------------
 func (a *MyServer) Init() {
 
-	GlobalVar.RWMutex.Lock()
+	RWMutex.Lock()
 	if ServerIdConnectMyServer[a.ServerId] != nil {
 		log.PrintfLogger("ServerIdConnectMyServer  已经有了, map重复了", a.ServerId,  a.UserId)
 	}
 	ServerIdConnectMyServer[a.ServerId] = a
-	GlobalVar.RWMutex.Unlock()
+	RWMutex.Unlock()
+
+	NetWorkInit(a.ServerId)
 
 }

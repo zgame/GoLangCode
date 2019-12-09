@@ -19,7 +19,7 @@ import (
 	"./Core/ZServer"
 	"./Core/Utils/ztimer"
 	//"github.com/yuin/gopher-lua"
-	"./GlobalVar"
+	//"./GlobalVar"
 	"runtime"
 	"flag"
 	"net/http"
@@ -303,26 +303,13 @@ func initVar(){
 }
 
 
-//-------------------------定期更新后台的配置数据---------------------------------------------------------
-func UpdateLuaReload() {
-	// 以后增加读取数据库的代码
-	//...
-
-	// 从服务器更新lua热更新的时间戳
-	//GlobalVar.LuaReloadTime = 1111
-	//GameManagerLuaReloadCheck() //共有逻辑检查一下是否需要更新, 玩家部分每个连接自己检查
-	//GoroutineTableLuaReloadCheck()
-	
-
-
-}
 
 
 //-----------------------------------游戏公共逻辑处理-------------------------------------------------------
 func GameManagerInit() {
 
+	Games.NetWorkFuncRegister()		// 回调注册
 
-	ZServer.NetWorkReceive = Games.NetWorkReceive		// 绑定接收网络消息处理函数回调地址
 	//GameManagerLua = ZServer.NewMyLua()
 
 	//GameManagerLua.Init() // 绑定lua脚本
@@ -350,22 +337,23 @@ func GameManagerInit() {
 func TimerCommonLogicStart() {
 	// -------------------创建计时器，定期去run公共逻辑---------------------
 	ztimer.TimerCheckUpdate(func() {
-		connectShow, successSendMsg, successRecMsg, WriteChan := GetAllConnectMsg()
-		memoryShow, heapInUse := log.GetSysMemInfo()
+		connectShow, _, _, _ := GetAllConnectMsg()
+		memoryShow, _ := log.GetSysMemInfo()
 
-		log.PrintfLogger("[%s] 拼接成功%d    标识错误%d   %s   %s  处理消息平均时间：%d  ", ServerAddress+":"+strconv.Itoa(SocketPort),
-			ZServer.StaticDataPackagePasteSuccess, ZServer.StaticDataPackageHeadFlagError, connectShow, memoryShow, ZServer.StaticNetWorkReceiveToSendCostTime)
+		log.PrintfLogger("[%s]   %s   %s      处理消息平均时间：%d  ", ServerAddress+":"+strconv.Itoa(SocketPort),
+			connectShow, memoryShow, ZServer.StaticNetWorkReceiveToSendCostTime)
 
 		// 把服务器的状态信息，传递给lua
-		GameManagerLua.GoCallLuaSetIntVar("ServerStateSendNum", successSendMsg)
-		GameManagerLua.GoCallLuaSetIntVar("ServerStateReceiveNum", successRecMsg)
-		GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)
-		GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", ZServer.StaticDataPackageHeadFlagError)
-		GameManagerLua.GoCallLuaSetIntVar("ServerHeapInUse", heapInUse)
-		GameManagerLua.GoCallLuaSetIntVar("ServerNetWorkDelay", ZServer.StaticNetWorkReceiveToSendCostTime)
+		//GameManagerLua.GoCallLuaSetIntVar("ServerStateSendNum", successSendMsg)
+		//GameManagerLua.GoCallLuaSetIntVar("ServerStateReceiveNum", successRecMsg)
+		//GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)
+		//GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", ZServer.StaticDataPackageHeadFlagError)
+		//GameManagerLua.GoCallLuaSetIntVar("ServerHeapInUse", heapInUse)
+		//GameManagerLua.GoCallLuaSetIntVar("ServerNetWorkDelay", ZServer.StaticNetWorkReceiveToSendCostTime)
 
 		ztimer.CheckRunTimeCost(func() {
-			GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
+			//GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
+			Games.CommonLogicRun()
 		}, "GoCallLuaCommonLogicRun")
 
 	}, 1)
@@ -393,7 +381,8 @@ func TimerCommonLogicStart() {
 	//---------------------创建计时器，夜里12点触发---------------------
 	ztimer.TimerClock0(func() {
 		ztimer.CheckRunTimeCost(func() {
-			GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
+			//GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
+			Games.CommonLogic12clock()
 		}, "GoCallLuaCommonLogic12clock")
 	})
 
@@ -437,7 +426,7 @@ func GetAllConnectMsg() (string,int,int,int)  {
 	WriteChan := 0
 	AllConnect :=0
 
-	GlobalVar.RWMutex.RLock()
+	ZServer.RWMutex.RLock()
 	for _,v := range ZServer.ServerIdConnectMyServer {
 		if v!=nil {
 			AllConnect ++
@@ -458,9 +447,9 @@ func GetAllConnectMsg() (string,int,int,int)  {
 	//if AllConnect>0{
 	//	WriteChan = WriteChan/AllConnect
 	//}
-	GlobalVar.RWMutex.RUnlock()
-	GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)                           // 发送缓冲区大小
-	GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", ZServer.StaticDataPackageHeadFlagError) // 把数据头尾错误发送给lua
+	ZServer.RWMutex.RUnlock()
+	//GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)                           // 发送缓冲区大小
+	//GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", ZServer.StaticDataPackageHeadFlagError) // 把数据头尾错误发送给lua
 	str:=fmt.Sprintf(" 发送连接数量 %d  接收连接数量  %d 每秒发送 %d  每秒接收 %d    发送缓存WriteChan %d  ",   successSendClients, successRecClients, successSendMsg , successRecMsg, WriteChan)
 	return "所有连接数量："+ strconv.Itoa(AllConnect) + str , successSendMsg , successRecMsg, WriteChan
 }
