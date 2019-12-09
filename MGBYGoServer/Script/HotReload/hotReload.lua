@@ -308,7 +308,7 @@ function ReloadAll()
     -- 所有玩家的数据刷新（如果结构定义有修改的话）
     for _,player in pairs(AllPlayerList) do
         User:Reload(player.User)
-        Player:Reload(player)
+        UserSave:Reload(player)
     end
 
 

@@ -39,7 +39,7 @@ function ChatTable:HandleUserLogin(ServerID, UserID, data)
         -- 做异或
         local nTempData = Bit32Xor(Bit32Or(UserID, nGameID), nRandNum)
         --检查token
-        local sSrc = "Im#Player!" .. nTempData .. "&(" .. nRandNum .. ")+" .. nRandNum2
+        local sSrc = "Im#UserSave!" .. nTempData .. "&(" .. nRandNum .. ")+" .. nRandNum2
         local sRealToken = string.upper(MD5Get(sSrc))
         if sRealToken ~= sToken then
             print("非法连接，token不匹配：userid=" .. UserID .. ",gameid=" .. nGameID .. ",rand=" .. nRandNum .. ",token=" .. sToken)

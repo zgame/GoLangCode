@@ -33,7 +33,7 @@ function ChatServerLogic:ClientSubLoginAction(serverId, userId, data, token)
         --生成时间
         local llCreateTime = Bit32Xor(nRandNum2, nTempData);
         --检查token
-        local sSrc = "Im#Player!" .. nTempData .. "&(" .. nRandNum .. ")+" .. nRandNum2;
+        local sSrc = "Im#UserSave!" .. nTempData .. "&(" .. nRandNum .. ")+" .. nRandNum2;
         local sRealToken = string.upper(MD5Get(sSrc));
         --print(string.format("sSrc=%s,sRealToken=%s,sToken=%s", sSrc, sRealToken, sToken))
         if sRealToken ~= sToken then

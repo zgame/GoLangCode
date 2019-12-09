@@ -33,7 +33,7 @@ function HandleUserFire(userId, buf)
 
 
     --local data = {}
-    --data.Player = MyPlayer
+    --data.UserSave = MyPlayer
     --data.LockFishId =  msg.lock_fish_id     -- 要打击的鱼id
     --local result = MultiThreadChannelGameManagerToPlayer("HandleUserFire",data)
     --if result.error ~= nil then
@@ -67,7 +67,7 @@ function HandleCatchFish(userId, buf)
 
 
     --local data = {}
-    --data.Player = MyPlayer
+    --data.UserSave = MyPlayer
     --data.LockFishIdList = {}      -- 要打击的鱼id
     --data.LockFishIdList[1] =  msg.fish_uid     -- 要打击的鱼id
     --data.BulletId =  msg.bullet_id
