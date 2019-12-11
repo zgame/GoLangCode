@@ -3,7 +3,6 @@ package Common
 import "../Model/UserSave"
 import (
 	"../../Const"
-	"net"
 )
 
 //----------------------------------------------------------------------------------
@@ -13,38 +12,42 @@ import (
 
 
 
-// -------------------------玩家的统一定义接口-------------------------------------
-type PlayerInterface interface{
-	NewPlayer(uid int) PlayerInterface
-	GetUID() int			// 获取玩家的uid
-	GetTableID() int		// 获取玩家的桌子
-	SetTableID(tid int)	// 设置玩家的桌子
-	GetChairID() int		// 获取玩家的椅子
-	SetChairID(ChairID int)	// 设置玩家的椅子
-
-	GetActivityBulletNum() int		// 获取玩家的发射子弹数量
-	SetActivityBulletNum(num int)	// 设置玩家的发射子弹数量
-
-	GetPlayer() *UserSave.UserSave       // 获取玩家的总数据
-	SetPlayer(player *UserSave.UserSave) // 设定玩家的总数据
-
-	GetConn() net.Conn			// 获取玩家的socket
-	SetConn(conn net.Conn)			// 设置玩家的socket句柄
-
-	CheckIsRobot() bool			// 是不是机器人判断
-	SetIsRobot(isRobot bool)	// 设定是机器人
-}
+//// -------------------------玩家的统一定义接口-------------------------------------
+//type Player interface{
+//	NewPlayer(uid int) Player
+//	GetUID() int			// 获取玩家的uid
+//	GetTableID() int		// 获取玩家的桌子
+//	SetTableID(tid int)	// 设置玩家的桌子
+//	GetChairID() int		// 获取玩家的椅子
+//	SetChairID(ChairID int)	// 设置玩家的椅子
+//
+//	GetGameID() int
+//	SetGameID(gameID int)
+//
+//	GetActivityBulletNum() int		// 获取玩家的发射子弹数量
+//	SetActivityBulletNum(num int)	// 设置玩家的发射子弹数量
+//
+//	GetUser() *UserSave.UserSave       // 获取玩家的总数据
+//	SetUser(player *UserSave.UserSave) // 设定玩家的总数据
+//
+//	//GetConn() net.Conn			// 获取玩家的socket
+//	//SetConn(conn net.Conn)			// 设置玩家的socket句柄
+//
+//	CheckIsRobot() bool			// 是不是机器人判断
+//	SetIsRobot(isRobot bool)	// 设定是机器人
+//}
 
 
 
 // ------------------------玩家的结构----------------------------
-type CommonPlayer struct {
-	conn    net.Conn
-	user    * UserSave.UserSave
-	UID     int  // 用户uid
-	TableID int  // 桌子id
-	ChairID int  // 椅子id
-	IsRobot bool // 是不是机器人
+type Player struct {
+	//conn    net.Conn
+	UserSave * UserSave.UserSave
+	UID      int  // 用户uid
+	GameID   int  // 游戏id
+	TableID  int  // 桌子id
+	ChairID  int  // 椅子id
+	IsRobot  bool // 是不是机器人
 
 	ActivityBulletNum int  //当前已经发射的子弹数量
 	//BulletMulriple int 	// 炮的倍率
@@ -57,69 +60,71 @@ type CommonPlayer struct {
 
 
 // -------------------------构造函数-------------------------
-func (user *CommonPlayer) NewPlayer(uid int) PlayerInterface {
-	return &CommonPlayer{UID:uid,TableID:Const.TABLE_CHAIR_NOBODY,ChairID:Const.TABLE_CHAIR_NOBODY, IsRobot:false}
+func  NewPlayer(uid int) *Player {
+	return &Player{UID:uid,TableID:Const.TABLE_CHAIR_NOBODY,ChairID:Const.TABLE_CHAIR_NOBODY, IsRobot:false}
 }
 
 // 获取玩家的uid
-func (user *CommonPlayer) GetUID() int {
-	return user.UID
+func (player *Player) GetUID() int {
+	return player.UID
 }
 
-// 获取玩家的socket
-func (user *CommonPlayer) GetConn() net.Conn {
-	return user.conn
+// 获取玩家游戏类型
+func (player *Player) GetGameID() int{
+	return player.GameID
 }
-// 设置玩家的socket句柄
-func (user *CommonPlayer) SetConn(conn net.Conn) {
-	user.conn = conn
+
+//  设置玩家游戏类型
+func (player *Player) SetGameID(gameID int) {
+	player.GameID = gameID
 }
+
 
 
 // 获取玩家的总数据
-func (user *CommonPlayer) GetPlayer() *UserSave.UserSave {
-	return user.user
+func (player *Player) GetUser() *UserSave.UserSave {
+	return player.UserSave
 }
 // 设置玩家的总数据
-func (user *CommonPlayer) SetPlayer(player *UserSave.UserSave) {
-	user.user = player
+func (player *Player) SetUser(save *UserSave.UserSave) {
+	player.UserSave = save
 }
 
 
 // 是不是机器人判断
-func (user *CommonPlayer) CheckIsRobot() bool {
-	return user.IsRobot
+func (player *Player) CheckIsRobot() bool {
+	return player.IsRobot
 }
 // 设定是机器人
-func (user *CommonPlayer) SetIsRobot(isRobot bool) {
-	user.IsRobot = isRobot
+func (player *Player) SetIsRobot(isRobot bool) {
+	player.IsRobot = isRobot
 }
 
 
 // 获取玩家的桌子
-func (user *CommonPlayer) GetTableID() int {
-	return user.TableID
+func (player *Player) GetTableID() int {
+	return player.TableID
 }
 // 设置玩家的桌子
-func (user *CommonPlayer) SetTableID(tid int)  {
-	user.TableID = tid
+func (player *Player) SetTableID(tid int)  {
+	player.TableID = tid
 }
 // 获取玩家的椅子
-func (user *CommonPlayer) GetChairID() int {
-	return user.ChairID
+func (player *Player) GetChairID() int {
+	return player.ChairID
 }
 // 设置玩家的椅子
-func (user *CommonPlayer) SetChairID(ChairID int)  {
-	user.ChairID = ChairID
+func (player *Player) SetChairID(ChairID int)  {
+	player.ChairID = ChairID
 }
 
 // 获取玩家的发射子弹数量
-func (user *CommonPlayer) GetActivityBulletNum() int {
-	return user.ActivityBulletNum
+func (player *Player) GetActivityBulletNum() int {
+	return player.ActivityBulletNum
 }
 // 设置玩家的发射子弹数量
-func (user *CommonPlayer) SetActivityBulletNum(num int)  {
-	user.ActivityBulletNum = num
+func (player *Player) SetActivityBulletNum(num int)  {
+	player.ActivityBulletNum = num
 }
 
 

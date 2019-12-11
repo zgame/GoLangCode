@@ -24,12 +24,12 @@ type TableInterface interface{
 	RunTable()						// 桌子的逻辑启动
 
 	// 椅子逻辑
-	GetEmptySeatInTable()	int                    // 获取空椅子的编号
-	PlayerSeat(seatId int, user PlayerInterface)    // 玩家坐到椅子上
-	PlayerStandUp(seatId int, user PlayerInterface) // 玩家离开椅子
+	GetEmptySeatInTable()	int           // 获取空椅子的编号
+	PlayerSeat(seatId int, user *Player)    // 玩家坐到椅子上
+	PlayerStandUp(seatId int, user *Player) // 玩家离开椅子
 
-	FireBullet(user PlayerInterface, lockFishId int)	int // 发射一个新的子弹
-	CreateFish() FishInterface                              // 新建一个新的鱼
+	FireBullet(user *Player, lockFishId int)	int // 发射一个新的子弹
+	CreateFish() FishInterface                     // 新建一个新的鱼
 
 	GetUsersSeatInTable() []int		// 获取桌子上的所有玩家uid
 	CheckTableEmpty() bool			// 判断桌子是有人，还是空桌子
@@ -37,25 +37,24 @@ type TableInterface interface{
 	ClearTable()					// 清空桌子
 
 
-	GetBulletInterface() BulletInterface     // 获取桌子管理子弹的句柄类型
-	SetBulletInterface()                     // 设置桌子管理子弹的句柄类型
-	GetFishInterface() FishInterface         // 获取桌子管理鱼的句柄类型
-	SetFishInterface()                       // 设置桌子管理鱼的句柄类型
-	GetUserInterfaceHandle() PlayerInterface // 获取桌子管理玩家的句柄类型
-	SetUserInterfaceHandle()                 // 设置桌子管理玩家的句柄类型
+	GetBulletInterface() BulletInterface // 获取桌子管理子弹的句柄类型
+	SetBulletInterface()                 // 设置桌子管理子弹的句柄类型
+	GetFishInterface() FishInterface     // 获取桌子管理鱼的句柄类型
+	SetFishInterface()                   // 设置桌子管理鱼的句柄类型
+
 
 	GetRoomScore() int						// 获取房间的分数
 	SetRoomScore(roomScore int)				// 设定房间的分数
 
 
-	SendSceneFishes(user PlayerInterface) // 玩家登陆的时候，同步给鱼群数据
-	SendNewFishes(fish FishInterface)     // 同步新建一条鱼的数据
+	SendSceneFishes(user *Player)      // 玩家登陆的时候，同步给鱼群数据
+	SendNewFishes(fish FishInterface) // 同步新建一条鱼的数据
 
 	InitDistributeInfo(roomScore int)			// 初始化鱼池的刷新
 	//GetTableState() int		// 获取桌子状态
 	//SetTableState(state int )	// 设置桌子状态
 	//GetTableBulletArray() map[int]GetBulletInterface		// 获取桌子的子弹列表
-	HitFish(userId PlayerInterface, bulletId int, fishId int) // 击中一条鱼
+	HitFish(userId *Player, bulletId int, fishId int) // 击中一条鱼
 
 	DelBullet(bulletId int) //  删除特定uid的子弹
 	DelBullets(userId int)  //  删除所有子弹， 1 如果传入玩家uid，删除玩家的  ； 2  如果传入 -1 ，那么删除所有的
@@ -77,8 +76,8 @@ type CommonTable struct {
 	RoomScore int // 房间分数
 	//State int			//桌子状态		0 开放中，有玩家正在玩 ； 1 关闭中，没有玩家在游戏
 
-	UserSeatArray       map[int]PlayerInterface // 座椅对应玩家uid的哈希表 ， key ： seat ，value： 玩家uid
-	UserInterfaceHandle PlayerInterface         // 玩家的句柄类型
+	UserSeatArray       map[int]*Player // 座椅对应玩家uid的哈希表 ， key ： seat ，value： 玩家uid
+
 	//UserCnt int			// 玩家数量
 	//StateChgTime time.Time	 // 状态变更时间
 
@@ -138,16 +137,8 @@ func (table *CommonTable) SetFishInterface() {
 	var fish * CommonFish
 	table.FishInterfaceHandle = fish
 }
-// 获取玩家的句柄类型
-func (table *CommonTable) GetUserInterfaceHandle() PlayerInterface {
-	return table.UserInterfaceHandle
-}
 
-// 设定玩家的句柄类型
-func (table *CommonTable) SetUserInterfaceHandle() {
-	var user *CommonPlayer
-	table.UserInterfaceHandle = user
-}
+
 
 // 获取房间的分数
 func (table *CommonTable) GetRoomScore() int {
@@ -201,7 +192,7 @@ func (table *CommonTable)GetEmptySeatInTable() int{
 }
 
 // ---------------------------玩家坐到椅子上-------------------------------
-func (table * CommonTable)PlayerSeat(seatId int, user PlayerInterface)  {
+func (table * CommonTable)PlayerSeat(seatId int, user *Player)  {
 	table.UserSeatArray[seatId] = user
 }
 
@@ -210,14 +201,14 @@ func (table *CommonTable) InitTable()  {
 	if table.CheckTableEmpty(){
 		table.BulletArray = make(map[int]BulletInterface )
 		table.FishArray = make(map[int]FishInterface )
-		table.UserSeatArray = make(map[int]PlayerInterface)
+		table.UserSeatArray = make(map[int]*Player)
 
 		table.InitDistributeInfo(table.GetRoomScore())	//玩家进来之后，如果是第一个玩家，那么房间开始初始化一下
 	}
 }
 
 // --------------------------- 玩家离开椅子 -----------------------
-func (table * CommonTable)PlayerStandUp(seatId int, user PlayerInterface) {
+func (table * CommonTable)PlayerStandUp(seatId int, user *Player) {
 	table.UserSeatArray[seatId] = nil
 	// 清理掉玩家的所有子弹
 	table.DelBullets(user.GetUID())
@@ -272,15 +263,15 @@ func (table *CommonTable)RunTable() {
 //------------------------------bullet 子弹-----------------------------------------
 //----------------------------------------------------------------------------
 // 玩家发射一个新的子弹
-func (table *CommonTable)FireBullet(user PlayerInterface, lockFishId int) int{
-	num := user.GetActivityBulletNum()
+func (table *CommonTable)FireBullet(player *Player, lockFishId int) int{
+	num := player.GetActivityBulletNum()
 	if num > Const.MAX_BULLET_NUMBER{
 		fmt.Println("子弹数量超上限了")
 		return -1
 	}
 
 	cost := table.RoomScore  // 底分
-	if user.GetPlayer().Score < int64(cost) {
+	if player.GetUser().Score < int64(cost) {
 		fmt.Println("玩家没钱了")
 		return -1
 	}
@@ -291,14 +282,14 @@ func (table *CommonTable)FireBullet(user PlayerInterface, lockFishId int) int{
 	bulletT := bullet.NewBullet(table.GenerateBulletUid) // 生成子弹
 	table.GenerateBulletUid ++
 	table.BulletArray[bulletT.GetBulletUID()] = bulletT // 把bullet加入列表
-	bulletT.SetBulletPlayerUID(user.GetUID())           //子弹的主人
+	bulletT.SetBulletPlayerUID(player.GetUID())         //子弹的主人
 	bulletT.SetLockFishID(lockFishId)                   // 锁定鱼
-	user.SetActivityBulletNum(num+1)                    //玩家已激活子弹增加
+	player.SetActivityBulletNum(num+1)                  //玩家已激活子弹增加
 	return bulletT.GetBulletUID()
 }
 
 //  击中一条鱼
-func (table *CommonTable) HitFish(userid PlayerInterface, bulletid int, fishid int) {
+func (table *CommonTable) HitFish(userid *Player, bulletid int, fishid int) {
 	// 增加CD判断，不可以太频繁
 
 	// 删除子弹
@@ -396,7 +387,7 @@ func (table *CommonTable)DelFishes() {
 
 
 // 玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
-func (table *CommonTable) SendSceneFishes(user PlayerInterface){
+func (table *CommonTable) SendSceneFishes(user *Player){
 	var SceneFishs []*CMD.TagSceneFish
 
 	fmt.Println("玩家登陆，鱼数量",len(table.FishArray))
@@ -412,7 +403,7 @@ func (table *CommonTable) SendSceneFishes(user PlayerInterface){
 		SceneFishs:SceneFishs,
 	}
 	ZServer.NetWorkSendByUid(user.GetUID(), sendCmd1, MDM_GF_GAME, SUB_S_SCENE_FISH)
-	//NetWork.Send(user.GetConn(), sendCmd1, MDM_GF_GAME, SUB_S_SCENE_FISH,"")  // 场景鱼刷新
+	//NetWork.Send(UserSave.GetConn(), sendCmd1, MDM_GF_GAME, SUB_S_SCENE_FISH,"")  // 场景鱼刷新
 }
 
 // 给所有玩家同步新建的鱼的信息
@@ -440,20 +431,20 @@ func (table *CommonTable) SendNewFishes(fish FishInterface) {
 
 // 给桌上的所有玩家同步消息
 func (table *CommonTable) SendMsgToAllUsers(sendCmd proto.Message, mainCmd int, subCmd int) {
-	for _,user := range table.UserSeatArray {
-		if user != nil && user.CheckIsRobot() == false {		// 有玩家，不是我，并且还不是机器人，那么发送
-			//fmt.Println("给玩家",user.GetUID(),"发送消息", subCmd)
-			ZServer.NetWorkSendByUid(user.GetUID(), sendCmd,mainCmd,subCmd)
+	for _, player := range table.UserSeatArray {
+		if player != nil && player.CheckIsRobot() == false { // 有玩家，不是我，并且还不是机器人，那么发送
+			//fmt.Println("给玩家",UserSave.GetUID(),"发送消息", subCmd)
+			ZServer.NetWorkSendByUid(player.GetUID(), sendCmd,mainCmd,subCmd)
 		}
 	}
 }
 
 // 给桌上的其他玩家同步消息
 func (table *CommonTable) SendMsgToOtherUsers(uid int, sendCmd proto.Message, mainCmd int, subCmd int) {
-	for _,user := range table.UserSeatArray {
-		if user != nil && user.GetUID() != uid && user.CheckIsRobot() == false {		// 有玩家，不是我，并且还不是机器人，那么发送
-			//fmt.Println("给玩家",user.GetUID(),"发送消息", subCmd)
-			ZServer.NetWorkSendByUid(user.GetUID(), sendCmd,mainCmd,subCmd)
+	for _, player := range table.UserSeatArray {
+		if player != nil && player.GetUID() != uid && player.CheckIsRobot() == false { // 有玩家，不是我，并且还不是机器人，那么发送
+			//fmt.Println("给玩家",UserSave.GetUID(),"发送消息", subCmd)
+			ZServer.NetWorkSendByUid(player.GetUID(), sendCmd,mainCmd,subCmd)
 		}
 	}
 }

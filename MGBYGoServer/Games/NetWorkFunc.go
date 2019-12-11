@@ -5,6 +5,8 @@ import (
 	"fmt"
 	. "../Const"
 	"./BY"
+	//"../Core/Utils/zLog"
+	"./Common"
 )
 
 // 回调函数注册
@@ -19,7 +21,16 @@ func NetWorkFuncRegister()  {
 
 // 分发处理消息
 func NetWorkReceive(serverId int,userId int, msgId int, subMsgId int, finalBuffer  []byte, token int) {
-
+	var table Common.TableInterface
+	var game  *Games
+	var player *Common.Player
+	if userId > 0 {
+		player = GetPlayerByUID(userId)
+		game = GetGameByID(player.GetGameID())
+		if game != nil {
+			table = game.GetTableByUID(player.GetTableID())
+		}
+	}
 	//# -----------------login server msg-----------------
 	if msgId == MDM_MB_LOGON {
 		if subMsgId == SUB_MB_GUESTLOGIN {
@@ -30,14 +41,14 @@ func NetWorkReceive(serverId int,userId int, msgId int, subMsgId int, finalBuffe
 	} else if msgId == MDM_GR_LOGON {
 		if subMsgId == SUB_GR_LOGON_USERID {
 			fmt.Println("**************游客登录游戏服申请******************* ")
-			//client.SevLoginGSGuest(finalBuffer)
+			BY.HandleLoginGameServerGuest(finalBuffer)
 		}
 
 		//# -----------------游戏场景 msg -----------------
 	}else if msgId == MDM_GF_FRAME {
 		if subMsgId == SUB_GF_GAME_OPTION {
 			fmt.Println("**************游客进入大厅申请******************* ")
-			//client.SevEnterScence(finalBuffer)
+			BY.HandelEnterScence(finalBuffer)
 
 		}
 		//# -----------------场景内 msg------------------
@@ -65,9 +76,9 @@ func NetWorkReceive(serverId int,userId int, msgId int, subMsgId int, finalBuffe
 		//------------------捕鱼----------------------
 
 		if subMsgId == SUB_C_USER_FIRE {
-			BY.HandleUserFire(userId,finalBuffer) // 客户端开火
+			BY.HandleUserFire(player, game, table ,finalBuffer) // 客户端开火
 		}else if subMsgId == SUB_C_CATCH_FISH {
-			client.handleCatchFish(finalBuffer) //	客户端抓鱼
+			BY.HandleCatchFish(player, game, table ,finalBuffer) //	客户端抓鱼
 		}
 	}
 }

@@ -26,6 +26,7 @@ import (
 	_ "net/http/pprof"
 	oldLog "log"
 	"./Games"
+	"./Games/Common"
 )
 
 
@@ -314,6 +315,7 @@ func GameManagerInit() {
 
 	Games.NetWorkFuncRegister()		// 回调注册
 	Games.AllGamesList = make(map[int]*Games.Games)
+	Games.AllPlayerList = make(map[int]Common.Player)
 	//GameManagerLua = ZServer.NewMyLua()
 
 	//GameManagerLua.Init() // 绑定lua脚本

@@ -32,11 +32,6 @@ func (table *Table) SetFishInterface() {
 	table.FishInterfaceHandle = fish
 }
 
-// 设定玩家的句柄类型
-func (table *Table) SetUserInterfaceHandle() {
-	var user * User
-	table.UserInterfaceHandle = user
-}
 
 ////---------------------------------桌子------------------------------------------
 //

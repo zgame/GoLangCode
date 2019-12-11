@@ -7,6 +7,8 @@ import (
 	"../../Core/Utils/zLog"
 	. "../../Const"
 	"encoding/json"
+	"../../Games"
+	"../Common"
 )
 
 
@@ -161,23 +163,23 @@ import (
 
 
 // --------------------------------------------客户端发子弹-----------------------------------------
-func HandleUserFire(buf []byte){
+func HandleUserFire(player *Common.Player, game *Games.Games ,  table Common.TableInterface ,  buf []byte){
 	protocolBuffer := buf
 	msg := &CMD.CMD_C_USER_FIRE{}
 	err := proto.Unmarshal(protocolBuffer, msg)
 	zLog.CheckError(err)
 	dataJ, _ := json.MarshalIndent(msg, "", " ")
 	fmt.Printf("%s", dataJ)
-	fmt.Printf("----------------开火完成，处理子弹消息,------------%d",client.User.GetUID())
+	fmt.Printf("----------------开火完成，处理子弹消息,------------%d",player.GetUID())
 	fmt.Println("")
 
 	// ----------------------------------------逻辑处理-----------------------------------------------
-	newBullet := uint32(client.Table.FireBullet(client.User,int(msg.GetLockFishId())))		// 获取子弹的uid
+	newBullet := uint32(table.FireBullet( player ,int(msg.GetLockFishId())))		// 获取子弹的uid
 	// -------------------------------------------发送消息--------------------------------------------
 	BulletId := newBullet
-	ChairId := int32(client.User.GetChairID())
+	ChairId := int32(player.GetChairID())
 	LockFishId := uint32(msg.GetLockFishId())
-	CurrScore := client.Player.Score
+	CurrScore := player.GetUser().Score
 	sendCmd := &CMD.CMD_S_USER_FIRE{
 		BulletId:&BulletId,
 		ChairId:&ChairId,
@@ -193,20 +195,23 @@ func HandleUserFire(buf []byte){
 		LockFishId:&LockFishId,
 		CurrScore:&CurrScore,
 	}
-	client.Table.SendMsgToAllUsers(sendCmd, MDM_GF_GAME, SUB_S_USER_FIRE)		//发给桌子上面的所有玩家，广播发子弹
+
+
+
+	table.SendMsgToAllUsers(sendCmd, MDM_GF_GAME, SUB_S_USER_FIRE)		//发给桌子上面的所有玩家，广播发子弹
 	//client.SendToTableOtherUsers(sendCmd, MDM_GF_GAME, SUB_S_USER_FIRE)
 
 }
 
 // ---------------------------------------------客户端申请捕获鱼--------------------------------------------------------
-func (client *Client)handleCatchFish(buf []byte){
+func HandleCatchFish(player *Common.Player, game *Games.Games ,  table Common.TableInterface , buf []byte){
 	protocolBuffer := buf
 	msg := &CMD.CMD_C_CATCH_FISH{}
 	err := proto.Unmarshal(protocolBuffer, msg)
 	zLog.CheckError(err)
 	dataJ, _ := json.MarshalIndent(msg, "", " ")
 	fmt.Printf("%s", dataJ)
-	fmt.Printf("----------------申请捕获鱼,------------%d",client.User.GetUID())
+	fmt.Printf("----------------申请捕获鱼,------------%d",player.GetUID())
 	fmt.Println("")
 
 
@@ -216,26 +221,26 @@ func (client *Client)handleCatchFish(buf []byte){
 	//	ChairId:&ChairId,
 	//	CatchFishs:&CatchFishs,
 	//}
-	//BulletId := uint32(client.Table.FireBullet(client.User,int(msg.GetLockFishId())))		// 获取子弹的uid
-	//ChairId := int32(client.User.GetChairID())
+	//BulletId := uint32(client.Table.FireBullet(client.Player,int(msg.GetLockFishId())))		// 获取子弹的uid
+	//ChairId := int32(client.Player.GetChairID())
 	//LockFishId := uint32(msg.GetLockFishId())
 
 	// 捕鱼成功
-	chairId := int32(client.User.GetChairID())
+	chairId := int32(player.GetChairID())
 	bulletId:= msg.GetBulletId()
 	fishUid := msg.GetFishUid()
 	addExp := int32(20)
 
 	CurrScore := uint32(220)
-	fishI:= client.Table.GetFish(int(fishUid))
+	fishI:= table.GetFish(int(fishUid))
 	if fishI != nil {
 		fmt.Println("鱼的分数",fishI.GetFishScore())
 		CurrScore = uint32(fishI.GetFishScore())
 	}
 
-	client.Table.DelBullet(int(bulletId))		//删掉子弹
-	client.Table.DelFish(int(fishUid))			// 清理掉鱼
-	client.Player.Score += int64(CurrScore)			// 给玩家把分数加上
+	table.DelBullet(int(bulletId))		//删掉子弹
+	table.DelFish(int(fishUid))			// 清理掉鱼
+	player.GetUser().Score += int64(CurrScore)			// 给玩家把分数加上
 	// 把分数保存到数据库
 
 
@@ -246,12 +251,12 @@ func (client *Client)handleCatchFish(buf []byte){
 	sendCmd := &CMD.CMD_S_CATCH_FISH{
 		ChairId:&chairId,
 		AddExp:&addExp,
-		CurrScore:&client.Player.Score,
+		CurrScore:&player.GetUser().Score,
 		CatchFishs:CatchFishs,
 
 	}
 	//client.Send(sendCmd, MDM_GF_GAME, SUB_S_CATCH_FISH)  		// 确认客户端申请捕鱼
-	client.Table.SendMsgToAllUsers(sendCmd,MDM_GF_GAME, SUB_S_CATCH_FISH)		//发给桌子上面的所有玩家，广播玩家捕到了鱼
+	table.SendMsgToAllUsers(sendCmd,MDM_GF_GAME, SUB_S_CATCH_FISH)		//发给桌子上面的所有玩家，广播玩家捕到了鱼
 	//for _,v := range msg.GetCatchFishs(){
 	//	for i,v2 := range this.MyGameInfo.fish_pool{
 	//		if v.GetFishUid() == uint32(v2.uid) {

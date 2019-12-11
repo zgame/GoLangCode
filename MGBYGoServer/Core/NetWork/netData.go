@@ -22,17 +22,27 @@ func DealSendData(sendCmd proto.Message, msg string, mainCmd int, subCmd int,tok
 	//tokenBuf := buffertt.Bytes()
 	tokenSize :=  0
 
+
 	//  proto buffer 处理
-	protoData, _ := proto.Marshal(sendCmd)
-	protoDataSize := len(protoData)
-	//// 增加服务器的错误提示msg
-	//msgData := []byte(msg)
-	//msgSize := len(msgData)
+	var protoData []byte
+	protoDataSize := 0
+	if sendCmd != nil{
+		protoData, _ = proto.Marshal(sendCmd)
+		protoDataSize = len(protoData)
+	}
 
 	// 生成数据包头部信息
 	bufferHead := getSendTcpHeaderData(uint16(mainCmd), uint16(subCmd), uint16(protoDataSize))
 	headSize := len(bufferHead)
 
+	if sendCmd == nil{
+		return bufferHead
+	}
+
+
+	//// 增加服务器的错误提示msg
+	//msgData := []byte(msg)
+	//msgSize := len(msgData)
 
 	// 开始加密
 	bufferData := make([]byte, protoDataSize + tokenSize)

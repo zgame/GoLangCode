@@ -26,7 +26,7 @@ type UserSave struct {
 	Diamond      int64  //  # 钻石数量
 }
 
-func (u *UserSave) NewPlayer() *UserSave {
+func  NewUser() *UserSave {
 	return &UserSave{FaceId:0,Gender:0, UserId:0, GameId:0,Exp:0,Loveliness:0,Score:0, NickName:"",Level:0, VipLevel:0, AccountLevel:0, SiteLevel:0, CurLevelExp:0, NextLevelExp:0, PayTotal:0,Diamond:0}
 }
 

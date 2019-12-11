@@ -4,11 +4,14 @@ import (
 	"github.com/golang/protobuf/proto"
 	//. "./constd"
 	"fmt"
-	"../CMD"
-	. "../Const"
-	"../Utils/log"
-	"../Games"
-	"../Utils/zRedis"
+	"../../ProtocolBuffer/CMD"
+	. "../../Const"
+	"../../Core/Utils/zLog"
+	"../../Games"
+	//"../../Core/Utils/zRedis"
+	"../../Core/ZServer"
+	"../Common"
+	"../Model/UserSave"
 	"strconv"
 	"bytes"
 	"encoding/binary"
@@ -36,7 +39,7 @@ import (
 //	// ----------------------处理用户------------------------
 //	// 如果不存在， 就创建新的
 //
-//	client.Player = client.Player.NewPlayer()
+//	client.Player = client.Player.NewUser()
 //	client.Player.FaceId = 0
 //	client.Player.Gender = 0
 //	client.Player.UserId = 2027445
@@ -79,43 +82,51 @@ import (
 //}
 
 //****************************************************游客登录游戏服申请****************************************************
-func (client *Client)SevLoginGSGuest(buf []byte){
+func HandleLoginGameServerGuest(serverId int,  buf []byte){
 	protocolBuffer := buf
 	msg := &CMD.CMD_GR_LogonUserID{}
 	err := proto.Unmarshal(protocolBuffer, msg)
-	log.CheckError(err)
+	zLog.CheckError(err)
 
 	fmt.Println("客户端申请登录游戏服务器, UserId: ",msg.GetUserId())
 
 	// --------------------游戏类型-------------------
 	fmt.Println("gamekind id :", msg.GetKindId())
-	client.Games = Games.GetGameByID(int(msg.GetKindId())) //根据客户端要登录的游戏类型，赋值游戏类型指针
+	gameID := int(msg.GetKindId())						 //根据客户端要登录的游戏类型，赋值游戏类型指针
 
 
-	client.Player = client.Player.NewPlayer()
-	client.Player.FaceId = 0
-	client.Player.Gender = 0
-	client.Player.UserId = 2027445
-	client.Player.GameId = 320395999
-	client.Player.Exp = 254
-	client.Player.Loveliness = 0
-	client.Player.Score = 100000009
-	client.Player.NickName = "玩家320395999"
-	client.Player.Level = 1
-	client.Player.VipLevel = 0
-	client.Player.AccountLevel = 3
-	client.Player.SiteLevel = 0
-	client.Player.CurLevelExp = 0
-	client.Player.NextLevelExp = 457
-	client.Player.PayTotal = 0
-	client.Player.Diamond = 29
+	uid := 2027445
 
+	// 从数据库读取玩家信息
+	player := Common.NewPlayer(uid)
+
+	user := UserSave.NewUser()
+	user.FaceId = 0
+	user.Gender = 0
+	user.UserId = uint32(uid)
+	user.GameId = 320395999
+	user.Exp = 254
+	user.Loveliness = 0
+	user.Score = 100000009
+	user.NickName = "玩家320395999"
+	user.Level = 1
+	user.VipLevel = 0
+	user.AccountLevel = 3
+	user.SiteLevel = 0
+	user.CurLevelExp = 0
+	user.NextLevelExp = 457
+	user.PayTotal = 0
+	user.Diamond = 29
+
+	player.SetUser(user)
+	player.GameID = gameID
 
 	AllUserClientList[client.Player.UserId] = client //把新客户端地址增加到哈希表中保存，方便以后遍历
 
-	zRedis.SavePlayerToRedis(client.Player)
-	re := zRedis.GetPlayerFromRedis(int(client.Player.UserId))
-	fmt.Println("",re.UserId)
+
+	//zRedis.SavePlayerToRedis(client.Player)
+	//re := zRedis.GetPlayerFromRedis(int(client.Player.UserId))
+	//fmt.Println("",re.UserId)
 
 	//dataJ, _ := json.MarshalIndent(msg, "", " ")
 	//fmt.Printf("%s", dataJ)
@@ -131,19 +142,26 @@ func (client *Client)SevLoginGSGuest(buf []byte){
 	sendCmd := &CMD.CMD_GR_LogonSuccess{
 		ServerId: &serverid,
 	}
-	client.Send(sendCmd, MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS,"1111111111111111111111玩家账号出现异常，需要重新登录，本次提示为测试提示，客户端需要打印出来，看看是否正常显示！！！")
-	client.SendCmd(MDM_GR_LOGON, SUB_GR_LOGON_FINISH) // 发送登录结束
+
+	ZServer.ResisterUID(serverId , uid )
+	ZServer.NetWorkSendByUid(uid,sendCmd, MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS)
+	ZServer.NetWorkSendByUid(uid,nil, MDM_GR_LOGON, SUB_GR_LOGON_FINISH)
+	//client.Send(sendCmd, MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS,"1111111111111111111111玩家账号出现异常，需要重新登录，本次提示为测试提示，客户端需要打印出来，看看是否正常显示！！！")
+	//client.SendCmd(MDM_GR_LOGON, SUB_GR_LOGON_FINISH) // 发送登录结束
+
+
+	//ZServer.NetWorkSendByUid(player.GetUID(), sendCmd,mainCmd,subCmd)
 }
 
 
 
-//*******************************************************进入大厅申请******************************************************
-func (client *Client)SevEnterScence(buf []byte){
+//*******************************************************进入游戏大厅申请******************************************************
+func HandelEnterScence(buf []byte){
 	fmt.Println("------------客户端申请进入大厅-------------")
 	protocolBuffer := buf
 	msg := &CMD.CMD_GF_GameOption{}
 	err := proto.Unmarshal(protocolBuffer, msg)
-	log.CheckError(err)
+	zLog.CheckError(err)
 
 	fmt.Println("客户端申请进入大厅, GetClientVersion: ", msg.GetClientVersion())
 
@@ -222,7 +240,7 @@ func luaCallGoGetPWD(user_id int, mac string) string {
 //	tokenBuf := buffertt.Bytes()
 //	//fmt.Println("", tokenBuf)
 //
-//	h:= md5.NewPlayer()
+//	h:= md5.NewUser()
 //	h.Write(tokenBuf)
 //	cips := h.Sum(nil)			// h.Sum(nil) 将h的hash转成[]byte格式
 //	pwdmd5 := hex.EncodeToString(cips)
