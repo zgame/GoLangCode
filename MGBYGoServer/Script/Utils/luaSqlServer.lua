@@ -9,7 +9,7 @@
 ------------------------------------------------------------------------
 
 
-SqlServerEngine = require('sqlServer')
+SqlServerEngine = require('zSqlServerForLua')
 --SqlServerEngineConnect = SqlServerEngine.new()
 
 --- 创建数据库句柄

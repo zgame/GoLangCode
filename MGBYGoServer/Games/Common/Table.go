@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"time"
 	"../../Const"
-	"github.com/golang/protobuf/proto"
-	"../../Core/NetWork"
-	"../../CMD"
 	. "../../Const"
+	"github.com/golang/protobuf/proto"
+	//"../../Core/NetWork"
+	"../../Core/ZServer"
+	"../../ProtocolBuffer/CMD"
+	//. "../../Const"
+
 )
 
 //--------------------------------------------------------------------------------------
@@ -61,8 +64,8 @@ type TableInterface interface{
 	DelFishes()						// 清空所有的鱼群
 	GetFish(fishId int) FishInterface		// 获取鱼的句柄
 
-	SendMsgToOtherUsers(uid int, sendCmd proto.Message, mainCmd uint16, subCmd uint16)		// 给桌上的其他玩家同步消息
-	SendMsgToAllUsers(sendCmd proto.Message, mainCmd uint16, subCmd uint16)		// 给桌上的所有玩家同步消息
+	SendMsgToOtherUsers(uid int, sendCmd proto.Message, mainCmd int, subCmd int)		// 给桌上的其他玩家同步消息
+	SendMsgToAllUsers(sendCmd proto.Message, mainCmd int, subCmd int)		// 给桌上的所有玩家同步消息
 }
 
 
@@ -244,7 +247,7 @@ func (table * CommonTable)ClearTable()  {
 func (table *CommonTable)RunTable() {
 	for {
 		if table.CheckTableEmpty()  {
-			//fmt.Println("这是一个空桌子")
+			fmt.Println("这是一个空桌子")
 		}else{
 		//	fmt.Println("运行桌子", table.TableID, "游戏类型", table.GameID)
 			table.RunDistributeInfo(table.GetRoomScore())
@@ -408,7 +411,8 @@ func (table *CommonTable) SendSceneFishes(user PlayerInterface){
 	sendCmd1 := &CMD.CMD_S_SCENE_FISH{
 		SceneFishs:SceneFishs,
 	}
-	NetWork.Send(user.GetConn(), sendCmd1, MDM_GF_GAME, SUB_S_SCENE_FISH,"")  // 场景鱼刷新
+	ZServer.NetWorkSendByUid(user.GetUID(), sendCmd1, MDM_GF_GAME, SUB_S_SCENE_FISH)
+	//NetWork.Send(user.GetConn(), sendCmd1, MDM_GF_GAME, SUB_S_SCENE_FISH,"")  // 场景鱼刷新
 }
 
 // 给所有玩家同步新建的鱼的信息
@@ -435,21 +439,21 @@ func (table *CommonTable) SendNewFishes(fish FishInterface) {
 //----------------------------------------------------------------------------
 
 // 给桌上的所有玩家同步消息
-func (table *CommonTable) SendMsgToAllUsers(sendCmd proto.Message, mainCmd uint16, subCmd uint16) {
+func (table *CommonTable) SendMsgToAllUsers(sendCmd proto.Message, mainCmd int, subCmd int) {
 	for _,user := range table.UserSeatArray {
 		if user != nil && user.CheckIsRobot() == false {		// 有玩家，不是我，并且还不是机器人，那么发送
 			//fmt.Println("给玩家",user.GetUID(),"发送消息", subCmd)
-			NetWork.Send(user.GetConn(), sendCmd,mainCmd,subCmd,"")
+			ZServer.NetWorkSendByUid(user.GetUID(), sendCmd,mainCmd,subCmd)
 		}
 	}
 }
 
 // 给桌上的其他玩家同步消息
-func (table *CommonTable) SendMsgToOtherUsers(uid int, sendCmd proto.Message, mainCmd uint16, subCmd uint16) {
+func (table *CommonTable) SendMsgToOtherUsers(uid int, sendCmd proto.Message, mainCmd int, subCmd int) {
 	for _,user := range table.UserSeatArray {
 		if user != nil && user.GetUID() != uid && user.CheckIsRobot() == false {		// 有玩家，不是我，并且还不是机器人，那么发送
 			//fmt.Println("给玩家",user.GetUID(),"发送消息", subCmd)
-			NetWork.Send(user.GetConn(), sendCmd,mainCmd,subCmd,"")
+			ZServer.NetWorkSendByUid(user.GetUID(), sendCmd,mainCmd,subCmd)
 		}
 	}
 }

@@ -1,17 +1,15 @@
-package zMySql
+package zSqlServer
 
 import (
-	"fmt"
-	"github.com/go-xorm/xorm"
-	"log"
-	_ "github.com/go-sql-driver/mysql"
-	"../ztimer"
+"fmt"
+"github.com/go-xorm/xorm"
+"log"
+//_ "github.com/go-sql-driver/"
+"../ztimer"
 )
-var MySqlEngine *xorm.Engine
+var SqlEngine *xorm.Engine
 //------------------------------------------------------------------------------------------
-//--- 这里有2种方式调用mysql
-//--- 第一种是通过go调用，适用于对性能有要求，并且没有返回的情况    zMySql
-//--- 第二种是通过lua调用， 性能会差很多，会有延迟， 但是可以获取到select的返回值，并且是table类型的     gluasql_mysql
+
 //------------------------------------------------------------------------------------------
 
 // 这个是go调用mysql
@@ -32,8 +30,8 @@ func ConnectDB(ServerIP string,ServerPort string ,Database string, uid string, p
 	fmt.Println("开始连接mysql数据库！")
 
 	// 从sql中获取数据
-	//Engine, err := xorm.NewEngine("odbc", "driver={SQL Server};Server="+ServerIP+";Database="+Database+";uid="+uid+";pwd="+pwd+";")
-	engine, err := xorm.NewEngine("zMysqlForLua", uid+":"+pwd+"@tcp("+ServerIP+":"+ ServerPort +")/"+Database+"?charset=utf8")
+	engine, err := xorm.NewEngine("odbc", "driver={SQL Server};Server="+ServerIP+";Database="+Database+";uid="+uid+";pwd="+pwd+";")
+	//engine, err := xorm.NewEngine("zMysqlForLua", uid+":"+pwd+"@tcp("+ServerIP+":"+ ServerPort +")/"+Database+"?charset=utf8")
 
 
 	if err != nil {
@@ -47,7 +45,7 @@ func ConnectDB(ServerIP string,ServerPort string ,Database string, uid string, p
 		fmt.Println("数据库ping不通！", err)
 		return false
 	}
-	MySqlEngine = engine
+	SqlEngine = engine
 
 	//SqlExec("use "+ Database)
 	//SqlExec("select * from game_state")
@@ -72,15 +70,15 @@ func ConnectDB(ServerIP string,ServerPort string ,Database string, uid string, p
 //
 //		//fmt.Println("select_sql",select_sql)
 //
-//		result,err:=	MySqlEngine.Query(select_sql)
+//		result,err:=	SqlEngine.Query(select_sql)
 //		if err!=nil{
 //			fmt.Println("Query error ", err.Error())
 //		}
 //
 //		if len(result) == 0 {
-//			_,err = MySqlEngine.Exec(insert_sql)
+//			_,err = SqlEngine.Exec(insert_sql)
 //		}else {
-//			_,err = MySqlEngine.Exec(update_sql)
+//			_,err = SqlEngine.Exec(update_sql)
 //		}
 //		if err!=nil{
 //			fmt.Println("Exec error ", err.Error())
@@ -93,7 +91,7 @@ func ConnectDB(ServerIP string,ServerPort string ,Database string, uid string, p
 func SqlExec(sql string){
 
 	ztimer.CheckRunTimeCost(func() {
-		_,err := MySqlEngine.Exec(sql)
+		_,err := SqlEngine.Exec(sql)
 		if err!=nil{
 			fmt.Println("SqlExec error ", err.Error())
 		}
@@ -106,7 +104,7 @@ func SqlExec(sql string){
 
 //func test()  {
 //	//fmt.Println("判断表是否存在")
-//	engine:= MySqlEngine
+//	engine:= SqlEngine
 //	//has,err := engine.IsTableExist(new(Test_ip))
 //	//if has{
 //	//	fmt.Println("表存在，那么读一下")

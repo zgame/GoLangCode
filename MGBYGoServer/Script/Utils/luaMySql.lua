@@ -9,7 +9,7 @@
 ------------------------------------------------------------------------
 
 
-MySqlEngine = require('mysql')
+MySqlEngine = require('zMysqlForLua')
 MySqlEngineConnect = MySqlEngine.new()
 
 -- mysql数据库连接

@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------------------
-// mysql  的数据库查询
+// zMysqlForLua  的数据库查询
 //------------------------------------------------------------------------------------------
-package mysql
+package zMysqlForLua
 
 import (
 	"reflect"
@@ -78,7 +78,7 @@ func clientExecMethod(L *lua.LState) int {
 
 	result, err := client.DB.Exec(exec)
 	if err != nil {
-		fmt.Println("mysql 数据库 exec error",err.Error())
+		fmt.Println("zMysqlForLua 数据库 exec error",err.Error())
 		fmt.Println("result",result)
 		return 0
 	}

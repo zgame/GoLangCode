@@ -6,6 +6,7 @@ package ztimer
 
 import (
 	"time"
+	"../zLog"
 )
 
 // 计时器，用来定期检查配置的更新，包括后台控制的活动，开关，配置文件更新，用数据版本号来控制
@@ -80,6 +81,6 @@ func CheckRunTimeCost(f func(), msg string)  {
 	startTime := GetOsTimeMillisecond()
 	f()
 	if GetOsTimeMillisecond()-startTime > WarningTimeCost {
-		//log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]    %s     消耗时间: %d", msg, int(GetOsTimeMillisecond()-startTime))
+		zLog.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]    %s     消耗时间: %d", msg, int(GetOsTimeMillisecond()-startTime))
 	}
 }

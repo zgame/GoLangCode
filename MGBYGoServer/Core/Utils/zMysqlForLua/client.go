@@ -1,25 +1,23 @@
 //------------------------------------------------------------------------------------------
-// sql server 的数据库
+// zMysqlForLua  的数据库
 //------------------------------------------------------------------------------------------
-
-
-package sqlServer
+package zMysqlForLua
 
 import (
 	"database/sql"
 	"time"
 
-	//_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/yuin/gopher-lua"
 )
 
 const (
-	CLIENT_TYPENAME = "sqlServer{client}"
+	CLIENT_TYPENAME = "zMysqlForLua{client}"
 )
 
 var GlobalDB *sql.DB
 
-// Client mysql
+// Client zMysqlForLua
 type Client struct {
 	DB      *sql.DB
 	Timeout time.Duration

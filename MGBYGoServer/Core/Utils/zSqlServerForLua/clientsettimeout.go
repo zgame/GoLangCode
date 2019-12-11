@@ -1,4 +1,4 @@
-package sqlServer
+package zSqlServerForLua
 
 import (
 	"time"

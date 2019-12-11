@@ -8,14 +8,14 @@ import (
 	"fmt"
 	"github.com/go-ini/ini"
 	"strconv"
-	"./Core/Utils/log"
-	"./Core/Utils/zIP"
 	//"./Games"
 	//"./Logic/UserSave"
-	//"./CSV"
+	"./CSV"
 	"time"
 	//"math"
 	//"./Core/NetWork"
+	"./Core/Utils/zLog"
+	"./Core/Utils/zIP"
 	"./Core/ZServer"
 	"./Core/Utils/ztimer"
 	//"github.com/yuin/gopher-lua"
@@ -53,8 +53,8 @@ var RedisAddress string		// redis 服务器地址
 var RedisPass string		// redis pwd
 var err error
 
-var MySqlServerIP string		// mysql
-var MySqlServerPort string		// mysql port
+var MySqlServerIP string		// zMysqlForLua
+var MySqlServerPort string		// zMysqlForLua port
 var MySqlDatabase string
 var MySqlUid string
 var MySqlPwd string
@@ -101,33 +101,34 @@ func main() {
 			time.Sleep(time.Second)
 		}
 	}
-	log.ServerPort = SocketPort		// 传递给log日志，让日志记录的时候区分服务器端口
+	zLog.ServerPort = SocketPort // 传递给log日志，让日志记录的时候区分服务器端口
 	fmt.Println("-------------------读取本地配置文件---------------------------")
 	initSetting()
 
 
-
-	//fmt.Println("-------------------Redis 数据库连接---------------------------")
-	//if zRedis.InitRedis(RedisAddress,RedisPass) == false{
-	//	return
-	//}
-	//fmt.Println("-------------------MySql 数据库连接---------------------------")
-	//if zMySql.ConnectDB(MySqlServerIP, MySqlServerPort , MySqlDatabase,MySqlUid,MySqlPwd) == false{
-	//	return
-	//}
-	//fmt.Println("-------------------Sql server 数据库连接---------------------------")
-	//if zMySql.ConnectDB(MySqlServerIP, MySqlServerPort , MySqlDatabase,MySqlUid,MySqlPwd) == false{
-	//	return
-	//}
-
-	//fmt.Println("-------------------读取CVS数据文件---------------------------")
-	//CSV.LoadFishServerExcel()
+	fmt.Println("-------------------读取CVS数据文件---------------------------")
+	CSV.LoadFishServerExcel()
 
 	fmt.Println("-------------------服务器初始化---------------------------")
 	initVar()
 	//ZServer.QueueInit()
 
 	//UserSave.GetALLUserUUID()			// 获取玩家的总体分配UUID
+
+	//fmt.Println("-------------------Redis 数据库连接---------------------------")
+	//if zRedis.InitRedis(RedisAddress, RedisPass) == false {
+	//	return
+	//}
+	//fmt.Println("-------------------MySql 数据库连接---------------------------")
+	//if zMySql.ConnectDB(MySqlServerIP, MySqlServerPort, MySqlDatabase, MySqlUid, MySqlPwd) == false {
+	//	return
+	//}
+	//fmt.Println("-------------------Sql server 数据库连接---------------------------")
+	//if zSqlServer.ConnectDB(SqlServerIP, SqlServerPort, SqlServerDatabase, SqlServerUid, SqlServerPwd) == false {
+	//	return
+	//}
+
+
 
 	////-------------------------------------创建各个游戏，以后新增游戏，要在这里增加进去即可-----------------------------------
 	//Games.AddGame("满贯捕鱼", Games.GameTypeBY)
@@ -148,13 +149,13 @@ func main() {
 
 
 
-	fmt.Println("-------------------Lua逻辑处理器---------------------------")
+	fmt.Println("-------------------游戏服务器初始化---------------------------")
 	GameManagerInit()
-	fmt.Println("ZServer 代码初始化完成")
+	//fmt.Println("ZServer 代码初始化完成")
 
 	//fmt.Println("-------------------启动 ZServer 访问 MySql ---------------------------")
 	//if GameManagerLua.GoCallLuaConnectMysql(MySqlServerIP, MySqlServerPort , MySqlDatabase,MySqlUid,MySqlPwd) == false{
-	//	fmt.Println("lua mysql 数据库没有连接成功")
+	//	fmt.Println("lua zMysqlForLua 数据库没有连接成功")
 	//	return
 	//}
 	//fmt.Println("-------------------启动 ZServer 访问 Sql Server---------------------------")
@@ -166,15 +167,15 @@ func main() {
 	//fmt.Println("-------------------多核桌子逻辑处理器---------------------------")
 	//CreateGoroutineForLuaGameTable()
 
-	fmt.Println("-------------------启动gameManager---------------------------")
+	//fmt.Println("-------------------启动gameManager---------------------------")
 	//if GameManagerLua.GoCallLuaConnectMysql(MySqlServerIP,Database,MySqlUid,MySqlPwd) == false{
-	//	fmt.Println("lua mysql 数据库没有连接成功")
+	//	fmt.Println("lua zMysqlForLua 数据库没有连接成功")
 	//	return
 	//}
 	//GameManagerLua.GoCallLuaLogic("GoCallLuaStartGamesServers")
 	//StartMultiThreadChannelPlayerToGameManager()
 
-	TimerCommonLogicStart()
+
 
 	//fmt.Println("-------------------读取数据库设置---------------------------")
 	//UpdateLuaReload()
@@ -184,14 +185,17 @@ func main() {
 
 
 	//-------------------------------------创建各个游戏，以后新增游戏，要在这里增加进去即可-----------------------------------
-	Games.AddGame("满贯捕鱼", Games.GameTypeBY)
+	fmt.Println("-------------------启动游戏服务器---------------------------")
+	Games.StartGamesServers()
+	fmt.Println("-------------------启动Common定时处理器---------------------------")
+	TimerCommonLogicStart()
 
 	//service := "127.0.0.1:"+strconv.Itoa(SocketPort)
 	//listener, err := net.Listen("tcp", service)
-	//log.CheckError(err)
+	//zLog.CheckError(err)
 	//for {
 	//	conn, err := listener.Accept()
-	//	if log.CheckError(err){
+	//	if zLog.CheckError(err){
 	//		continue
 	//	}
 	//
@@ -218,17 +222,17 @@ func main() {
 
 		//UpdateDBSetting()
 
-		ztimer.CheckRunTimeCost(func() {
-				GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
-			}, "桌子循环GoCallLuaGoRoutineForLuaGameTable"		)
+		//ztimer.CheckRunTimeCost(func() {
+		//		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
+		//	}, "桌子循环GoCallLuaGoRoutineForLuaGameTable"		)
 
 		//startTime := ztimer.GetOsTimeMillisecond()
 		//GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
 		//if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		//	log.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 桌子循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		//	zLog.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 桌子循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		//}
 		runtime.GC()
-		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
+		time.Sleep(time.Millisecond * 1000 * 6)                                //给其他协程让出60秒的时间， 这个可以后期调整
 		//end:= ztimer.GetOsTimeMillisecond()
 		//if end - start > 120 {
 			//fmt.Println("一个循环用时", end-start)
@@ -268,7 +272,7 @@ func initSetting()  {
 	//	SocketPort, err = f.Section("Server").Key("SocketPort").Int()
 	//}
 
-	log.ShowLog,err  = f.Section("Server").Key("ShowLog").Bool()
+	zLog.ShowLog,err  = f.Section("Server").Key("ShowLog").Bool()
 	//WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
 	//SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
 	RedisAddress = f.Section("Server").Key("RedisAddress").String()
@@ -288,9 +292,9 @@ func initSetting()  {
 	SqlServerUid = f.Section("Server").Key("SqlServerUid").Value()
 	SqlServerPwd = f.Section("Server").Key("SqlServerPwd").Value()
 
-	log.CheckError(err)
+	zLog.CheckError(err)
 
-	ServerAddress = string(zIP.GetInternal(0))		// 获取本机内网ip
+	ServerAddress = string(zIP.GetInternal(-1))		// 获取本机内网ip
 	fmt.Println("本机内网ip :",ServerAddress)
 }
 
@@ -309,7 +313,7 @@ func initVar(){
 func GameManagerInit() {
 
 	Games.NetWorkFuncRegister()		// 回调注册
-
+	Games.AllGamesList = make(map[int]*Games.Games)
 	//GameManagerLua = ZServer.NewMyLua()
 
 	//GameManagerLua.Init() // 绑定lua脚本
@@ -338,9 +342,9 @@ func TimerCommonLogicStart() {
 	// -------------------创建计时器，定期去run公共逻辑---------------------
 	ztimer.TimerCheckUpdate(func() {
 		connectShow, _, _, _ := GetAllConnectMsg()
-		memoryShow, _ := log.GetSysMemInfo()
+		memoryShow, _ := zLog.GetSysMemInfo()
 
-		log.PrintfLogger("[%s]   %s   %s      处理消息平均时间：%d  ", ServerAddress+":"+strconv.Itoa(SocketPort),
+		zLog.PrintfLogger("[%s]   %s   %s      处理消息平均时间：%d  ", ServerAddress+":"+strconv.Itoa(SocketPort),
 			connectShow, memoryShow, ZServer.StaticNetWorkReceiveToSendCostTime)
 
 		// 把服务器的状态信息，传递给lua

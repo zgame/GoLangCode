@@ -9,12 +9,13 @@ package NetWork
 import (
 	"bytes"
 	"encoding/binary"
+	"github.com/golang/protobuf/proto"
 )
 
 
 // lua 使用的是下面的方法
 // 把要发送出去的proto buf -- data， 错误消息 msg， 命令，组合成buffer，准备发送
-func DealSendData(data string, msg string, mainCmd int, subCmd int,token int) []byte {
+func DealSendData(sendCmd proto.Message, msg string, mainCmd int, subCmd int,token int) []byte {
 	// 服务器不发token
 	//buffertt := new(bytes.Buffer)
 	//binary.Write(buffertt, binary.LittleEndian, int16(token))
@@ -22,7 +23,7 @@ func DealSendData(data string, msg string, mainCmd int, subCmd int,token int) []
 	tokenSize :=  0
 
 	//  proto buffer 处理
-	protoData := []byte(data)
+	protoData, _ := proto.Marshal(sendCmd)
 	protoDataSize := len(protoData)
 	//// 增加服务器的错误提示msg
 	//msgData := []byte(msg)
@@ -36,7 +37,7 @@ func DealSendData(data string, msg string, mainCmd int, subCmd int,token int) []
 	// 开始加密
 	bufferData := make([]byte, protoDataSize + tokenSize)
 	//copy(bufferData, tokenBuf)
-	copy(bufferData[0:], data)
+	copy(bufferData[0:], protoData)
 	//bufferEncryp := Encryp(bufferData)
 	bufferEncryp := bufferData
 	//fmt.Printf("发送 buffer : %x \n",bufferData)

@@ -100,7 +100,7 @@ end
 --require("luaSqlServer")
 --require("zMySql")
 --MySerpent = require("serpent")
----------------------------------------Redis mysql----------------------------------------
+---------------------------------------Redis zMysqlForLua----------------------------------------
 --package.path = "Script/DataBase/?.lua;"..package.path
 --require("redisConst")
 --require("redisGame")

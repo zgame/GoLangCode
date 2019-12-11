@@ -1,4 +1,4 @@
-package log
+package zLog
 
 import (
 	"os"
@@ -16,7 +16,7 @@ var ShowLog bool
 var ServerPort int
 func CheckError(e error) bool{
 	if e!=nil{
-		file, _ := os.OpenFile("error.log",os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
+		file, _ := os.OpenFile("error.zLog",os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
 		logger := log.New(file, "", log.LstdFlags|log.Llongfile)
 		logger.Println("...error:...",e.Error())
 		if ShowLog{
@@ -77,7 +77,7 @@ func _logger(str string)  {
 		t1:=time.Now()
 		t11 := t1.Format("2006-01-02")
 
-		file, _ := os.OpenFile(logDir+"/Logger_"+t11+"_" + strconv.Itoa(ServerPort) +".log", os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
+		file, _ := os.OpenFile(logDir+"/Logger_"+t11+"_" + strconv.Itoa(ServerPort) +".zLog", os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
 		logger := log.New(file, "", log.LstdFlags)
 		logger.Println("[Log:]", str)
 	}()

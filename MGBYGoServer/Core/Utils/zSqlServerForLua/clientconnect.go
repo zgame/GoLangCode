@@ -2,7 +2,7 @@
 // sql server 的数据库连接
 //------------------------------------------------------------------------------------------
 
-package sqlServer
+package zSqlServerForLua
 
 import (
 	"database/sql"

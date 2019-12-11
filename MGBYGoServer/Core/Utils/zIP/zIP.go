@@ -52,5 +52,9 @@ func GetInternal(index int) string{
 			}
 		}
 	}
-	return re[index]
+	if index >=0 {
+		return re[index]
+	}else {
+		return re[len(re)-1]
+	}
 }

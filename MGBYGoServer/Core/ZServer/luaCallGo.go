@@ -2,7 +2,7 @@ package ZServer
 //
 //import (
 //	"github.com/yuin/gopher-lua"
-//	"../Utils/log"
+//	"../Utils/zLog"
 //	"../Utils/ztimer"
 //	"../Utils/zRedis"
 //	"../Utils/zMySql"
@@ -11,9 +11,9 @@ package ZServer
 //	"../Utils/zProtocol"
 //	"../Utils/zJson"
 //	"time"
-//	"../Utils/mysql"
-//	"../Utils/sqlServer"
-//	//mysql "github.com/tengattack/gluasql/mysql"
+//	"../Utils/zMysqlForLua"
+//	"../Utils/zSqlServerForLua"
+//	//zMysqlForLua "github.com/tengattack/gluasql/zMysqlForLua"
 //	"strconv"
 //	"bytes"
 //	"encoding/binary"
@@ -57,7 +57,7 @@ package ZServer
 //	m.L.SetGlobal("luaCallGoRedisDelLast", m.L.NewFunction(luaCallGoRedisDelLast))		//注册到lua redis del last
 //
 //	//m.L.SetGlobal("luaCallGoSqlSaveGameState", m.L.NewFunction(luaCallGoSqlSaveGameState))		//lua要保存房间的信息到mysql
-//	m.L.SetGlobal("luaCallGoSqlInit", m.L.NewFunction(luaCallGoSqlInit))		//lua mysql init
+//	m.L.SetGlobal("luaCallGoSqlInit", m.L.NewFunction(luaCallGoSqlInit))		//lua zMysqlForLua init
 //	m.L.SetGlobal("luaCallGoSqlExec", m.L.NewFunction(luaCallGoSqlExec))		//lua 执行sql语句， 不带返回， 需要select用lua自己的mysql
 //
 //	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
@@ -70,8 +70,8 @@ package ZServer
 //	zBit32.LuaBit32Load(m.L)    // 加载bit32
 //	zJson.Preload(m.L)    // 加载bit32
 //
-//	m.L.PreloadModule("mysql", mysql.Loader)         //加载mysql的lua调用 ，性能一般，写起来方便
-//	m.L.PreloadModule("sqlServer", sqlServer.Loader) //加载sql server 的lua调用
+//	m.L.PreloadModule("zMysqlForLua", zMysqlForLua.Loader)         //加载mysql的lua调用 ，性能一般，写起来方便
+//	m.L.PreloadModule("zSqlServerForLua", zSqlServerForLua.Loader) //加载sql server 的lua调用
 //}
 //
 //
@@ -105,7 +105,7 @@ package ZServer
 //	//go func() {
 //	//bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
 //	//_, err := Conn.Write(bufferEnd)
-//	//log.CheckError(err)
+//	//zLog.CheckError(err)
 //
 //
 //	var result bool
@@ -168,7 +168,7 @@ package ZServer
 //		if GetMyServerByUID(userId) != nil {
 //			GetMyServerByUID(userId).LuaCallClose = true
 //		}else {
-//			log.PrintfLogger("玩家 %d ,连接并不存在" ,userId)
+//			zLog.PrintfLogger("玩家 %d ,连接并不存在" ,userId)
 //		}
 //	}else{
 //		GetMyServerByServerId(serverId).LuaCallClose = true
@@ -183,7 +183,7 @@ package ZServer
 //// lua的日志处理
 //func luaCallGoPrintLogger(L * lua.LState) int  {
 //	str := L.ToString(1)
-//	log.PrintLogger(str)
+//	zLog.PrintLogger(str)
 //	return 0
 //}
 //
@@ -319,7 +319,7 @@ package ZServer
 //}
 //
 //
-////----------------------------------mysql-------------------------------------------
+////----------------------------------zMysqlForLua-------------------------------------------
 //// lua要保存服务器的房间信息到mysql， 因为性能问题，所以用go , 后来作废了，改用duplicate
 ////func luaCallGoSqlSaveGameState(L * lua.LState) int  {
 ////	ServerIP_Port := L.ToString(1)

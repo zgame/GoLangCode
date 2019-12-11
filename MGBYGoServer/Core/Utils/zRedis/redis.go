@@ -3,7 +3,7 @@ package zRedis
 import (
 	"github.com/gomodule/redigo/redis"
 	//"github.com/garyburd/redigo/redis"
-	"../log"
+	"../zLog"
 	"../ztimer"
 	"../../GlobalVar"
 	"fmt"
@@ -17,13 +17,13 @@ var RRedis redis.Conn
 func InitRedis(address string, pwd string) bool{
 	re, err := redis.Dial("tcp", address)
 	if err != nil {
-		log.PrintLogger("Redis 服务器连接不上"+ address + err.Error())
+		zLog.PrintLogger("Redis 服务器连接不上"+ address + err.Error())
 		return false
 	}
 	// 密码验证
 	if _, err := re.Do("AUTH", pwd); err != nil {
 		re.Close()
-		log.PrintLogger("Redis 服务器密码不正确")
+		zLog.PrintLogger("Redis 服务器密码不正确")
 		return false
 	}
 	RRedis = re
@@ -44,11 +44,11 @@ func SaveStringToRedis(dir string, key string,value string)  {
 	//fmt.Println("保存",dir, key,value)
 	_, err := RRedis.Do("hset", dir, key,value)
 	if err !=nil {
-		log.PrintfLogger("============redis=========== 保存 %s   时候出错了: %s",dir,err.Error())
+		zLog.PrintfLogger("============redis=========== 保存 %s   时候出错了: %s",dir,err.Error())
 		panic("redis 保存出错 " + key + "  " + err.Error())
 	}
 	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]SaveStringToRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		zLog.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]SaveStringToRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 	}
 	//if ret == '1'{
 	//	fmt.Println("save success", ret)
@@ -74,18 +74,18 @@ func GetStringFromRedis(dir string,key string) string {
 	//fmt.Println("=======redis======== 读取 ", dir, key , reflect.TypeOf(ret))
 
 	if err !=nil {
-		log.PrintfLogger("=======redis========= 读取 %s  %s 出错了: %s", dir, key ,err.Error())
+		zLog.PrintfLogger("=======redis========= 读取 %s  %s 出错了: %s", dir, key ,err.Error())
 		panic("redis 读取出错 " + key + "  " + err.Error())
 	}
 	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]GetStringFromRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		zLog.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]GetStringFromRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 	}
 	//fmt.Println(ret.(string))
 	//var player UserSave.UserSave
 	if ret!= nil {
 		//fmt.Println("收到",string(ret.([]byte)))
 		//if err := json.Unmarshal(ret.([]byte), &player); err != nil {
-		//	log.Fatalf("JSON unmarshaling failed: %s", err)
+		//	zLog.Fatalf("JSON unmarshaling failed: %s", err)
 		//}
 
 
@@ -108,11 +108,11 @@ func DelKeyToRedis(dir string,key string){
 	startTime := ztimer.GetOsTimeMillisecond()
 	_, err :=  RRedis.Do("hdel",dir, key)
 	if err !=nil {
-		log.PrintfLogger("redis 删除key %s 出错了:"+err.Error(), key)
+		zLog.PrintfLogger("redis 删除key %s 出错了:"+err.Error(), key)
 		panic("redis 删除key  出错了:   "+key+"      "+err.Error())
 	}
 	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]DelKeyToRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		zLog.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]DelKeyToRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 	}
 }
 
@@ -128,11 +128,11 @@ func ExistKeyInRedis(key string,hashKey string) int{
 		result, err = RRedis.Do("hexists", key, hashKey)
 	}
 	if err !=nil {
-		log.PrintfLogger("redis 获取 key %s  hashKey %s 是否存在出错了:"+err.Error(), key, hashKey)
+		zLog.PrintfLogger("redis 获取 key %s  hashKey %s 是否存在出错了:"+err.Error(), key, hashKey)
 		panic("redis 获取键值是否存在出错 ! key :   "+key+"   hashKey: "+ hashKey + "   " +  err.Error())
 	}
 	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]DelKeyToRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		zLog.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]DelKeyToRedis消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 	}
 	return int(result.(int64))
 }
@@ -160,12 +160,12 @@ func ExistKeyInRedis(key string,hashKey string) int{
 //	startTime := ztimer.GetOsTimeMillisecond()
 //	v, err := AddScript.Do(RRedis, dir,key, num)
 //	if err != nil {
-//		log.PrintLogger("AddNumberToRedis Error: " + err.Error())
+//		zLog.PrintLogger("AddNumberToRedis Error: " + err.Error())
 //		panic("AddNumberToRedis Error: " + err.Error())
 //		os.Exit(0)
 //	}
 //	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-//		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] AddNumberToRedis 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+//		zLog.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] AddNumberToRedis 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 //	}
 //	//fmt.Println("AddNumberToRedis",v , reflect.TypeOf(v))
 //	re := int(v.(int64))
@@ -181,12 +181,12 @@ func RedisRunLuaScript(luaScript string ,name string)  int{
 	var AddScript = redis.NewScript(0,luaScript)
 	v, err := AddScript.Do(RRedis)
 	if err != nil {
-		log.PrintLogger(  name + "  RedisRunLuaScript Error: " + err.Error())
+		zLog.PrintLogger(  name + "  RedisRunLuaScript Error: " + err.Error())
 		panic(name + "  RedisRunLuaScript Error: " + err.Error())
 		os.Exit(0)
 	}
 	if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] RedisRunLuaScript  %s 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime),  name)
+		zLog.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ] RedisRunLuaScript  %s 消耗时间: %d", int(ztimer.GetOsTimeMillisecond()-startTime),  name)
 	}
 	re := int(v.(int64))
 	return re
@@ -201,7 +201,7 @@ func RedisRunLuaScript(luaScript string ,name string)  int{
 func AddListFromRedis(dir string, value string) int {
 	ret, err :=   RRedis.Do("lpush",dir, value)
 	if err !=nil {
-		log.PrintfLogger("=======redis  list ========= add %s  %s 出错了: %s", dir, err.Error())
+		zLog.PrintfLogger("=======redis  list ========= add %s  %s 出错了: %s", dir, err.Error())
 		panic("redis list 读取出错 " + dir + "  " + err.Error())
 	}
 	if ret!= nil {
@@ -216,7 +216,7 @@ func AddListFromRedis(dir string, value string) int {
 func GetListFromRedis(dir string) string {
 	ret, err :=   redis.Values( RRedis.Do("lrange",dir, 0,-1))
 	if err !=nil {
-		log.PrintfLogger("=======redis  list ========= 读取 %s  %s 出错了: %s", dir, err.Error())
+		zLog.PrintfLogger("=======redis  list ========= 读取 %s  %s 出错了: %s", dir, err.Error())
 		panic("redis list 读取出错 " + dir + "  " + err.Error())
 	}
 	if ret!= nil {
@@ -237,7 +237,7 @@ func GetListFromRedis(dir string) string {
 func DelListFromRedis(dir string, value string) int {
 	ret, err :=   RRedis.Do("lrem",dir, 0,value)
 	if err !=nil {
-		log.PrintfLogger("=======redis  list del ========= 读取 %s  %s 出错了: %s", dir, err.Error())
+		zLog.PrintfLogger("=======redis  list del ========= 读取 %s  %s 出错了: %s", dir, err.Error())
 		panic("redis list del 出错 " + dir + "  " + err.Error())
 	}
 	if ret!= nil {
@@ -253,7 +253,7 @@ func DelListFromRedis(dir string, value string) int {
 func DelLastFromRedis(dir string) int {
 	_, err := RRedis.Do("rpop",dir)
 	if err !=nil {
-		log.PrintfLogger("=======redis  list del rpop =========  %s  %s 出错了: %s", dir, err.Error())
+		zLog.PrintfLogger("=======redis  list del rpop =========  %s  %s 出错了: %s", dir, err.Error())
 		panic("redis list del  rpop 出错 " + dir + "  " + err.Error())
 	}
 	//if ret!= nil {
@@ -278,7 +278,7 @@ func DelLastFromRedis(dir string) int {
 func GetSetFromRedis(dir string, value string) int {
 	ret, err :=   RRedis.Do("sismember",dir, value)
 	if err !=nil {
-		log.PrintfLogger("=======redis  set ========= 读取 %s  %s 出错了: %s", dir, err.Error())
+		zLog.PrintfLogger("=======redis  set ========= 读取 %s  %s 出错了: %s", dir, err.Error())
 		panic("redis set 读取出错 " + dir + "  " + err.Error())
 	}
 	if ret!= nil {
@@ -294,7 +294,7 @@ func GetSetFromRedis(dir string, value string) int {
 func DelSetFromRedis(dir string, value string) int {
 	ret, err :=   RRedis.Do("srem",dir, value)
 	if err !=nil {
-		log.PrintfLogger("=======redis  set del ========= 读取 %s  %s 出错了: %s", dir, err.Error())
+		zLog.PrintfLogger("=======redis  set del ========= 读取 %s  %s 出错了: %s", dir, err.Error())
 		panic("redis set del 出错 " + dir + "  " + err.Error())
 	}
 	if ret!= nil {

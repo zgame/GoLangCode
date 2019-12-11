@@ -4,7 +4,7 @@ package ZServer
 //	"github.com/yuin/gopher-lua"
 //	"fmt"
 //	"../../GlobalVar"
-//	"../Utils/log"
+//	"../Utils/zLog"
 //)
 //
 ////--------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ package ZServer
 //		NRet: 0,
 //		Protect: true,
 //	}); err != nil {		// 参数
-//		log.PrintLogger("GoCallLuaLogic error :"+funcName+"      "+err.Error())
+//		zLog.PrintLogger("GoCallLuaLogic error :"+funcName+"      "+err.Error())
 //	}
 //	GlobalVar.GlobalMutex.Unlock()
 //}
@@ -54,7 +54,7 @@ package ZServer
 //		NRet: 0,
 //		Protect: true,
 //	}, lua.LNumber(serverId)); err != nil {		// 参数
-//		log.PrintfLogger("GoCallLuaNetWorkInit  error :  serverId:%d error:%s",serverId, err.Error())
+//		zLog.PrintfLogger("GoCallLuaNetWorkInit  error :  serverId:%d error:%s",serverId, err.Error())
 //	}
 //	GlobalVar.GlobalMutex.Unlock()
 //}
@@ -67,7 +67,7 @@ package ZServer
 //		NRet: 0,
 //		Protect: true,
 //	}, lua.LNumber(serverId),lua.LNumber(userId),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf),  lua.LNumber(token)); err != nil {		// 参数
-//		log.PrintfLogger("GoCallLuaNetWorkReceive  error :  msgId:%d  subMsgId %d  buf:%s   error:%s",msgId , subMsgId, buf, err.Error())
+//		zLog.PrintfLogger("GoCallLuaNetWorkReceive  error :  msgId:%d  subMsgId %d  buf:%s   error:%s",msgId , subMsgId, buf, err.Error())
 //	}
 //	GlobalVar.GlobalMutex.Unlock()
 //}
@@ -80,7 +80,7 @@ package ZServer
 //		NRet: 0,
 //		Protect: true,
 //	},lua.LNumber(ii)); err != nil {		// 参数
-//		log.PrintLogger("GoCallLuaLogicInt error :"+ funcName+"      "+err.Error())
+//		zLog.PrintLogger("GoCallLuaLogicInt error :"+ funcName+"      "+err.Error())
 //	}
 //	GlobalVar.GlobalMutex.Unlock()
 //}
@@ -92,7 +92,7 @@ package ZServer
 //		NRet: 0,
 //		Protect: true,
 //	},lua.LNumber(ii),lua.LNumber(ii2)); err != nil {		// 参数
-//		log.PrintLogger("GoCallLuaLogicInt2 error :"+ funcName+"      "+err.Error())
+//		zLog.PrintLogger("GoCallLuaLogicInt2 error :"+ funcName+"      "+err.Error())
 //	}
 //	GlobalVar.GlobalMutex.Unlock()
 //}
@@ -110,7 +110,7 @@ package ZServer
 //
 //	GlobalVar.GlobalMutex.Unlock()
 //	if err != nil {
-//		log.PrintLogger("热更新出错 "+err.Error())
+//		zLog.PrintLogger("热更新出错 "+err.Error())
 //	}
 //	return err
 //}
@@ -124,7 +124,7 @@ package ZServer
 //		NRet: 1,
 //		Protect: true,
 //	},lua.LString(addr),lua.LString(port),lua.LString(db),lua.LString(user),lua.LString(pwd)); err != nil {		// 参数
-//		log.PrintLogger("GoCallLuaConnectMysql error :"+err.Error())
+//		zLog.PrintLogger("GoCallLuaConnectMysql error :"+err.Error())
 //	}
 //	ret := m.L.Get(1) // returned value
 //	//fmt.Println("ret",ret, reflect.TypeOf(ret))
@@ -145,7 +145,7 @@ package ZServer
 //		NRet: 1,
 //		Protect: true,
 //	},lua.LString(addr),lua.LString(port),lua.LString(db),lua.LString(user),lua.LString(pwd)); err != nil {		// 参数
-//		log.PrintLogger("GoCallLuaConnectSqlServer error :"+err.Error())
+//		zLog.PrintLogger("GoCallLuaConnectSqlServer error :"+err.Error())
 //	}
 //	ret := m.L.Get(1) // returned value
 //	//fmt.Println("ret",ret, reflect.TypeOf(ret))

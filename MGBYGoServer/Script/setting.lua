@@ -13,7 +13,7 @@ ConstServerAddressChatServer = "192.168.101.58"         -- 聊天服的地址
 ---------------------- redis -------------------
 ConstRedisAddress = "192.168.101.94:6382"   -- redis 服务器地址
 ConstRedisPass = "123456"                -- redis 密码
----------------------- mysql -------------------
+---------------------- zMysqlForLua -------------------
 ConstMySqlServerIP = "192.168.0.207"
 ConstMySqlServerPort = "3307"
 ConstMySqlDatabase = "game_by"
@@ -24,7 +24,7 @@ ConstSqlServerIP = "192.168.0.207"
 ConstSqlServerDatabase = "DataBase"
 ConstSqlServerUid = "sa"
 ConstSqlServerPwd = "Aa123456"
---------------------- sql server log --------------------------
+--------------------- sql server zLog --------------------------
 ConstSqlServerIP_Log = "192.168.0.207"
 ConstSqlServerDatabase_Log = "BY_Log"
 ConstSqlServerUid_Log = "sa"

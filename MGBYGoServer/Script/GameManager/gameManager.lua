@@ -27,13 +27,13 @@ function GoCallLuaStartGamesServers()
         print("redis 服务器启动错误!")
         return
     end
-    print("-------------------启动 mysql ---------------------------")
+    print("-------------------启动 zMysqlForLua ---------------------------")
     local result, err = MysqlConnect(ConstMySqlServerIP, ConstMySqlServerPort, ConstMySqlDatabase, ConstMySqlUid, ConstMySqlPwd)
     if result == false then
         print("redis 服务器启动错误: " .. err)
         return
     end
-    print("-------------------启动 mysql 带协程的 ---------------------------")
+    print("-------------------启动 zMysqlForLua 带协程的 ---------------------------")
     if ZMySQlInit(ConstMySqlServerIP, ConstMySqlServerPort, ConstMySqlDatabase, ConstMySqlUid, ConstMySqlPwd) == false  then
         print("redis 服务器启动错误!")
         return
@@ -45,11 +45,11 @@ function GoCallLuaStartGamesServers()
         print("sql server by 服务器启动错误!")
         return
     end
-    print("-------------------启动 sql server  log 数据库---------------------------")
+    print("-------------------启动 sql server  zLog 数据库---------------------------")
     SqlServerDataBaseHandleLog = SqlServerNew()
     local result, err = SqlServerConnect(SqlServerDataBaseHandleLog, ConstSqlServerIP_Log, "" , ConstSqlServerDatabase_Log, ConstSqlServerUid_Log, ConstSqlServerPwd_Log)
     if result == false then
-        print("sql server log 服务器启动错误!")
+        print("sql server zLog 服务器启动错误!")
         return
     end
     print("-------------------启动 sql 好友库  数据库---------------------------")

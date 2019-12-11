@@ -1,10 +1,10 @@
 package NetWork
 
 import (
-	//"github.com/name5566/leaf/log"
+	//"github.com/name5566/leaf/zLog"
 	"net"
 	"sync"
-	"../../Utils/log"
+	"../Utils/zLog"
 )
 
 //---------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ func newTCPConn(conn net.Conn, pendingWriteNum int) *TCPConn {
 
 			_, err := conn.Write(b)
 			if err != nil {
-				log.PrintfLogger("tcpConn.writeChan Error 发送数据出错 %s", err.Error())
+				zLog.PrintfLogger("tcpConn.writeChan Error 发送数据出错 %s", err.Error())
 				break
 			}
 		}
@@ -81,15 +81,15 @@ func (tcpConn *TCPConn) Close() {
 
 func (tcpConn *TCPConn) doWrite(b []byte) {
 	//if len(tcpConn.writeChan) > cap(tcpConn.writeChan)/2 {
-	//	log.PrintfLogger("发送数据包的缓冲区大于1/2!!!")
+	//	zLog.PrintfLogger("发送数据包的缓冲区大于1/2!!!")
 	//	time.Sleep(time.Millisecond * 500)
 	//}
 	//if len(tcpConn.writeChan) > cap(tcpConn.writeChan)*2/3 {
-	//	log.PrintfLogger("发送数据包的缓冲区大于2/3!!!")
+	//	zLog.PrintfLogger("发送数据包的缓冲区大于2/3!!!")
 	//	time.Sleep(time.Millisecond * 2000)
 	//}
 	if len(tcpConn.writeChan) == cap(tcpConn.writeChan) {
-		log.PrintfLogger("发送数据包的缓冲区已经满了，关闭该连接!!!")
+		zLog.PrintfLogger("发送数据包的缓冲区已经满了，关闭该连接!!!")
 		tcpConn.doDestroy()
 		return
 	}

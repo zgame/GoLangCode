@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------------------
-// mysql  的数据库连接
+// zMysqlForLua  的数据库连接
 //------------------------------------------------------------------------------------------
-package mysql
+package zMysqlForLua
 
 import (
 	"database/sql"
@@ -64,17 +64,17 @@ func clientConnectMethod(L *lua.LState) int {
 
 	//fmt.Println("dsn:",dsn)
 	var err error
-	client.DB, err = sql.Open("mysql", dsn)
+	client.DB, err = sql.Open("zMysqlForLua", dsn)
 	if err != nil {
 		L.Push(lua.LBool(false))
 		L.Push(lua.LString(err.Error()))
 
-		fmt.Println("mysql 数据库连接错误")
+		fmt.Println("zMysqlForLua 数据库连接错误")
 		return 2		// 返回两个参数
 	}
 
 	GlobalDB = client.DB
-	//fmt.Println("mysql 数据库连接成功")
+	//fmt.Println("zMysqlForLua 数据库连接成功")
 	L.Push(lua.LBool(true))
 	return 1
 }
