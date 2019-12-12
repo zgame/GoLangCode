@@ -74,7 +74,7 @@ func main() {
 		log.Println(http.ListenAndServe("localhost:8080", nil))
 	}()
 
-	GetEngine()
+	//GetEngine()
 	getGoldFishMap()
 
 	addr := LoginServer

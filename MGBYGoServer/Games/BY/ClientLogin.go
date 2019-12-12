@@ -98,7 +98,7 @@ func HandleLoginGameServerGuest(serverId int,  buf []byte){
 	uid := 2027445
 
 	// 从数据库读取玩家信息
-	player := Common.NewPlayer(uid)
+
 
 	user := UserSave.NewUser()
 	user.FaceId = 0
@@ -118,11 +118,12 @@ func HandleLoginGameServerGuest(serverId int,  buf []byte){
 	user.PayTotal = 0
 	user.Diamond = 29
 
+	player := Common.NewPlayer(user)
 	player.SetUser(user)
-	player.GameID = gameID
+	player.SetGameID(gameID)
 
-	AllUserClientList[client.Player.UserId] = client //把新客户端地址增加到哈希表中保存，方便以后遍历
 
+	Games.AddPlayerToAllPlayerList(player)		//把新客户端地址增加到哈希表中保存，方便以后遍历
 
 	//zRedis.SavePlayerToRedis(client.Player)
 	//re := zRedis.GetPlayerFromRedis(int(client.Player.UserId))
@@ -156,7 +157,7 @@ func HandleLoginGameServerGuest(serverId int,  buf []byte){
 
 
 //*******************************************************进入游戏大厅申请******************************************************
-func HandelEnterScence(buf []byte){
+func HandelEnterScence(player *Common.Player, game *Games.Games ,  buf []byte){
 	fmt.Println("------------客户端申请进入大厅-------------")
 	protocolBuffer := buf
 	msg := &CMD.CMD_GF_GameOption{}
@@ -166,11 +167,11 @@ func HandelEnterScence(buf []byte){
 	fmt.Println("客户端申请进入大厅, GetClientVersion: ", msg.GetClientVersion())
 
 	//-------------------------------------------逻辑------------------------------------------------------------
-	tableUid := client.Games.PlayerLoginGame(client.Player, 1) // 玩家登陆游戏，分配桌子
-	client.Table = client.Games.GetTableByUID(tableUid)     // 设置桌子句柄
-	client.User = client.Games.GetUserByUID(int(client.Player.UserId))	// 设置玩家的句柄
-	client.User.SetConn(client.Conn)								// 设置玩家的连接句柄
-	client.User.SetIsRobot(false)							// 连接进来的都不是机器人
+	tableUid := game.PlayerLoginGame(player, 1 ) // 玩家登陆游戏，分配桌子
+	table := game.GetTableByUID(tableUid)     // 设置桌子句柄
+	//client.User = client.Games.GetUserByUID(int(client.Player.UserId))	// 设置玩家的句柄
+	//client.User.SetConn(client.Conn)								// 设置玩家的连接句柄
+	//client.User.SetIsRobot(false)							// 连接进来的都不是机器人
 	//-------------------------------------------------------------------------------------------------------
 	// 发送用户信息给客户端
 	sendCmd := &CMD.CMD_S_ENTER_SCENE{
@@ -180,12 +181,12 @@ func HandelEnterScence(buf []byte){
 	//this.Send(sendCmd, MDM_GF_FRAME, SUB_GF_SYSTEM_MESSAGE)  // 系统消息
 	//this.Send(sendCmd, MDM_GF_FRAME, SUB_GF_USER_SKILL)  // 玩家技能
 
-	client.Send(sendCmd, MDM_GF_GAME, SUB_S_ENTER_SCENE,"") // 进入房间
+	ZServer.NetWorkSendByUid(player.GetUID(),sendCmd, MDM_GF_GAME, SUB_S_ENTER_SCENE) // 进入房间
 	//this.Send(sendCmd, MDM_GF_GAME, SUB_S_OTHER_ENTER_SCENE)  // 其他玩家进入房间
 
 
 	//-------------------------------------------------------------------------------------------------------
-	client.Table.SendSceneFishes(client.User)			// 同步一下渔场的所有鱼
+	table.SendSceneFishes(player)			// 同步一下渔场的所有鱼
 	//sendCmd1 := &CMD.CMD_S_SCENE_FISH{
 	//
 	//}

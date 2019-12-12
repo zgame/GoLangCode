@@ -41,14 +41,14 @@ func NetWorkReceive(serverId int,userId int, msgId int, subMsgId int, finalBuffe
 	} else if msgId == MDM_GR_LOGON {
 		if subMsgId == SUB_GR_LOGON_USERID {
 			fmt.Println("**************游客登录游戏服申请******************* ")
-			BY.HandleLoginGameServerGuest(finalBuffer)
+			BY.HandleLoginGameServerGuest(serverId ,finalBuffer)
 		}
 
 		//# -----------------游戏场景 msg -----------------
 	}else if msgId == MDM_GF_FRAME {
 		if subMsgId == SUB_GF_GAME_OPTION {
 			fmt.Println("**************游客进入大厅申请******************* ")
-			BY.HandelEnterScence(finalBuffer)
+			BY.HandelEnterScence(player,game, table, finalBuffer)
 
 		}
 		//# -----------------场景内 msg------------------

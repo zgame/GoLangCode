@@ -1,8 +1,9 @@
 package Common
 
-import "../Model/UserSave"
+
 import (
 	"../../Const"
+	"../Model/UserSave"
 )
 
 //----------------------------------------------------------------------------------
@@ -43,7 +44,7 @@ import (
 type Player struct {
 	//conn    net.Conn
 	UserSave * UserSave.UserSave
-	UID      int  // 用户uid
+	//UID      int  // 用户uid
 	GameID   int  // 游戏id
 	TableID  int  // 桌子id
 	ChairID  int  // 椅子id
@@ -60,13 +61,13 @@ type Player struct {
 
 
 // -------------------------构造函数-------------------------
-func  NewPlayer(uid int) *Player {
-	return &Player{UID:uid,TableID:Const.TABLE_CHAIR_NOBODY,ChairID:Const.TABLE_CHAIR_NOBODY, IsRobot:false}
+func  NewPlayer(user *UserSave.UserSave) *Player {
+	return &Player{UserSave:user,TableID:Const.TABLE_CHAIR_NOBODY,ChairID:Const.TABLE_CHAIR_NOBODY, IsRobot:false}
 }
 
 // 获取玩家的uid
 func (player *Player) GetUID() int {
-	return player.UID
+	return int(player.UserSave.UserId)
 }
 
 // 获取玩家游戏类型

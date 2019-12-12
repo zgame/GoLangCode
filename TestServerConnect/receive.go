@@ -132,7 +132,7 @@ func (this *Client)handlerRead(buf []byte) int {
 			//fmt.Println("发送gm命令，送金币")
 			this.SendGmCmd("@设置金币 10000000")
 
-			GMAddSkill( this.User.user_id , SkillID)
+			//GMAddSkill( this.User.user_id , SkillID)
 			//this.do_fire()
 			this.StartAI = true
 

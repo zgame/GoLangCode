@@ -6,8 +6,7 @@ import (
 	"./BY2"
 	"./BY3"
 	"./Common"
-	//"../Const"
-	"./Model/UserSave"
+
 	"sync"
 )
 
@@ -50,7 +49,7 @@ type Games struct {
 }
 
 func (games *Games)NewGame(name string, gameid int, open bool) *Games {
-	return &Games{GameName:name, GameID:gameid, GameSwitch:open, AllTableList:make(map[int]Common.TableInterface), TableUUID:0}
+	return &Games{GameName:name, GameID:gameid, GameSwitch:open, AllTableList:make(map[int]Common.TableInterface), TableUUID:1}
 }
 
 //----------------------------------------------------------------
@@ -97,8 +96,11 @@ func AddGame(name string, gameType int) {
 
 
 // 根据桌子uid 返回桌子的句柄
-func  (games *Games)GetTableByUID(uid int) Common.TableInterface{
-	return games.AllTableList[uid]
+func  (games *Games)GetTableByUID(tableId int) Common.TableInterface{
+	if tableId <= 0{
+		return nil
+	}
+	return games.AllTableList[tableId]
 }
 
 
@@ -143,25 +145,25 @@ func   GetPlayerByUID(uid int) *Common.Player {
 // 添加到所有玩家列表中
 func AddPlayerToAllPlayerList(player *Common.Player)  {
 	AllPlayerListRWMutex.Lock()
-	AllPlayerList[int(player.UserSave.UserId)] = player
+	AllPlayerList[int(player.GetUID())] = player
 	AllPlayerListRWMutex.Unlock()
 }
 
 
 // 有玩家登陆游戏，想进入对应分数的房间
-func (games *Games)PlayerLoginGame(User *UserSave.UserSave, gameID int, gameScore int) int{
+func (games *Games)PlayerLoginGame(newPlayer *Common.Player,  gameScore int) int{
 	// 根据游戏类型创建游戏中玩家的句柄
-	uid := int(User.UserId)
+	uid := newPlayer.GetUID()
 	//userHandle := games.AllTableList[0].GetUserInterfaceHandle() // 获取玩家类型句柄
-	newPlayer := Common.NewPlayer(uid)                       // 创建游戏中玩家数据
-	newPlayer.SetUser(User)                                      // 设置player的句柄给user
-	newPlayer.SetGameID(gameID)
+	//newPlayer := Common.NewPlayer(uid)                       // 创建游戏中玩家数据
+	//newPlayer.SetUser(User)                                      // 设置player的句柄给user
+	//newPlayer.SetGameID(gameID)
 
 
-	// 创建好之后加入玩家总列表
-	AllPlayerListRWMutex.Lock()
-	AllPlayerList[uid] = newPlayer
-	AllPlayerListRWMutex.Unlock()
+	//// 创建好之后加入玩家总列表
+	//AllPlayerListRWMutex.Lock()
+	//AllPlayerList[uid] = newPlayer
+	//AllPlayerListRWMutex.Unlock()
 
 	//newPlayer := games.GetPlayerByUID(uid)
 	//games := GetGameByID(gameid)

@@ -47,7 +47,7 @@ type TableInterface interface{
 	SetRoomScore(roomScore int)				// 设定房间的分数
 
 
-	SendSceneFishes(user *Player)      // 玩家登陆的时候，同步给鱼群数据
+	SendSceneFishes(player *Player)   // 玩家登陆的时候，同步给鱼群数据
 	SendNewFishes(fish FishInterface) // 同步新建一条鱼的数据
 
 	InitDistributeInfo(roomScore int)			// 初始化鱼池的刷新
@@ -387,7 +387,7 @@ func (table *CommonTable)DelFishes() {
 
 
 // 玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
-func (table *CommonTable) SendSceneFishes(user *Player){
+func (table *CommonTable) SendSceneFishes(player *Player){
 	var SceneFishs []*CMD.TagSceneFish
 
 	fmt.Println("玩家登陆，鱼数量",len(table.FishArray))
@@ -402,7 +402,7 @@ func (table *CommonTable) SendSceneFishes(user *Player){
 	sendCmd1 := &CMD.CMD_S_SCENE_FISH{
 		SceneFishs:SceneFishs,
 	}
-	ZServer.NetWorkSendByUid(user.GetUID(), sendCmd1, MDM_GF_GAME, SUB_S_SCENE_FISH)
+	ZServer.NetWorkSendByUid(player.GetUID(), sendCmd1, MDM_GF_GAME, SUB_S_SCENE_FISH)
 	//NetWork.Send(UserSave.GetConn(), sendCmd1, MDM_GF_GAME, SUB_S_SCENE_FISH,"")  // 场景鱼刷新
 }
 
