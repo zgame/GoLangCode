@@ -6,16 +6,17 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-ini/ini"
+	//"github.com/go-ini/ini"
 	"strconv"
 	//"./Games"
-	//"./Logic/UserSave"
+	//"./Logic/UserModel"
 	"./CSV"
 	"time"
 	//"math"
 	//"./Core/NetWork"
 	"./Core/Utils/zLog"
-	"./Core/Utils/zIP"
+	//"./Core/Utils/zIP"
+	"./Core/Utils/zRedis"
 	"./Core/ZServer"
 	"./Core/Utils/ztimer"
 	//"github.com/yuin/gopher-lua"
@@ -26,7 +27,14 @@ import (
 	_ "net/http/pprof"
 	oldLog "log"
 	"./Games"
-	"./Games/Common"
+	"./Games/Model/PlayerModel"
+	"./Core/GameCore"
+	"./Games/CommonLogic"
+	"./Games/DataBase/SQLSeverDB/SqlServerBy"
+	"./Games/DataBase/SQLSeverDB/SqlServerLog"
+	"./Games/DataBase/SQLSeverDB/SqlServerFriend"
+	"./Games/DataBase/MySqlDB"
+	//"github.com/go-ini/ini"
 )
 
 
@@ -48,23 +56,6 @@ var GameRoomServerID int	// 游戏原有的ServerID(来源于GameRoomInfo中对�
 var ServerAddress string    // ServerAddress 服务器地址
 //var WebSocketAddress string // WebSocketAddress 服务器地址
 
-
-// 数据库变量
-var RedisAddress string		// redis 服务器地址
-var RedisPass string		// redis pwd
-var err error
-
-var MySqlServerIP string		// zMysqlForLua
-var MySqlServerPort string		// zMysqlForLua port
-var MySqlDatabase string
-var MySqlUid string
-var MySqlPwd string
-
-var SqlServerIP string		// sql server
-var SqlServerPort string		// sql  server port
-var SqlServerDatabase string
-var SqlServerUid string
-var SqlServerPwd string
 
 //
 
@@ -104,7 +95,9 @@ func main() {
 	}
 	zLog.ServerPort = SocketPort // 传递给log日志，让日志记录的时候区分服务器端口
 	fmt.Println("-------------------读取本地配置文件---------------------------")
-	initSetting()
+	if !initSetting() {
+		return
+	}
 
 
 	fmt.Println("-------------------读取CVS数据文件---------------------------")
@@ -113,21 +106,28 @@ func main() {
 	fmt.Println("-------------------服务器初始化---------------------------")
 	initVar()
 	//ZServer.QueueInit()
+	//UserModel.GetALLUserUUID()			// 获取玩家的总体分配UUID
 
-	//UserSave.GetALLUserUUID()			// 获取玩家的总体分配UUID
-
-	//fmt.Println("-------------------Redis 数据库连接---------------------------")
-	//if zRedis.InitRedis(RedisAddress, RedisPass) == false {
-	//	return
-	//}
-	//fmt.Println("-------------------MySql 数据库连接---------------------------")
-	//if zMySql.ConnectDB(MySqlServerIP, MySqlServerPort, MySqlDatabase, MySqlUid, MySqlPwd) == false {
-	//	return
-	//}
-	//fmt.Println("-------------------Sql server 数据库连接---------------------------")
-	//if zSqlServer.ConnectDB(SqlServerIP, SqlServerPort, SqlServerDatabase, SqlServerUid, SqlServerPwd) == false {
-	//	return
-	//}
+	fmt.Println("-------------------Redis 数据库连接---------------------------")
+	if zRedis.InitRedis(RedisAddress, RedisPass) == false {
+		return
+	}
+	fmt.Println("-------------------MySql 数据库连接---------------------------")
+	if !MySqlDB.ConnectMySqlDB(MySqlServerIP, MySqlServerPort, MySqlDatabase, MySqlUid, MySqlPwd){
+		return
+	}
+	fmt.Println("-------------------Sql server 数据库连接---------------------------")
+	if !SqlServerBy.BYConnectSqlDB(SqlServerIP,  SqlServerDatabase, SqlServerUid, SqlServerPwd) {
+		return
+	}
+	fmt.Println("-------------------Sql server Log 数据库连接---------------------------")
+	if !SqlServerLog.LogConnectSqlDB(SqlServerIPLog,  SqlServerDatabaseLog, SqlServerUidLog, SqlServerPwdLog)  {
+		return
+	}
+	fmt.Println("-------------------Sql server Friend 数据库连接---------------------------")
+	if !SqlServerFriend.FriendConnectSqlDB(SqlServerIPFriend,  SqlServerDatabaseFriend, SqlServerUidFriend, SqlServerPwdFriend)  {
+		return
+	}
 
 
 
@@ -233,7 +233,7 @@ func main() {
 		//	zLog.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 桌子循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		//}
 		runtime.GC()
-		time.Sleep(time.Millisecond * 1000 * 6)                                //给其他协程让出60秒的时间， 这个可以后期调整
+		time.Sleep(time.Millisecond * 1000 * 60)                                //给其他协程让出60秒的时间， 这个可以后期调整
 		//end:= ztimer.GetOsTimeMillisecond()
 		//if end - start > 120 {
 			//fmt.Println("一个循环用时", end-start)
@@ -255,50 +255,6 @@ func main() {
 
 
 
-// -WebSocketPort=8089 -SocketPort=8124
-//-----------------------------本地配置文件---------------------------------------------------
-func initSetting()  {
-	f, err := ini.Load("Setting.ini")
-	if err != nil{
-		fmt.Println("读取配置文件出错")
-		return
-	}
-
-	//-------------------------------------------------------------------
-	//if WebSocketPort == 0 {
-	//	WebSocketPort, err = f.Section("Server").Key("WebSocketPort").Int()
-	//}
-	//if SocketPort == 0 {
-	//	fmt.Println("Warning!!!! You sould write arguments like : -WebSocketPort=8089 -SocketPort=8124")
-	//	SocketPort, err = f.Section("Server").Key("SocketPort").Int()
-	//}
-
-	zLog.ShowLog,err  = f.Section("Server").Key("ShowLog").Bool()
-	//WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
-	//SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
-	RedisAddress = f.Section("Server").Key("RedisAddress").String()
-	RedisPass = f.Section("Server").Key("RedisPass").String()
-	ServerAddress = f.Section("Server").Key("ServerAddress").String()
-	//WebSocketAddress = f.Section("Server").Key("WebSocketAddress").String()
-	//GoroutineMax ,err  = f.Section("Server").Key("GoroutineMax").Int()
-
-	MySqlServerIP = f.Section("Server").Key("MySqlServerIP").Value()
-	MySqlServerPort = f.Section("Server").Key("MySqlServerPort").Value()
-	MySqlDatabase = f.Section("Server").Key("MySqlDatabase").Value()
-	MySqlUid = f.Section("Server").Key("MySqlUid").Value()
-	MySqlPwd = f.Section("Server").Key("MySqlPwd").Value()
-
-	SqlServerIP = f.Section("Server").Key("SqlServerIP").Value()
-	SqlServerDatabase = f.Section("Server").Key("SqlServerDatabase").Value()
-	SqlServerUid = f.Section("Server").Key("SqlServerUid").Value()
-	SqlServerPwd = f.Section("Server").Key("SqlServerPwd").Value()
-
-	zLog.CheckError(err)
-
-	ServerAddress = string(zIP.GetInternal(-1))		// 获取本机内网ip
-	fmt.Println("本机内网ip :",ServerAddress)
-}
-
 //----------------------------变量的初始化---------------------------------------------------------------
 func initVar(){
 	//Client.AllClientsList = make(map[*Client.Client]struct{})
@@ -314,8 +270,8 @@ func initVar(){
 func GameManagerInit() {
 
 	Games.NetWorkFuncRegister()		// 回调注册
-	Games.AllGamesList = make(map[int]*Games.Games)
-	Games.AllPlayerList = make(map[int]Common.Player)
+	GameCore.AllGamesList = make(map[int]*GameCore.Games)
+	GameCore.AllPlayerList = make(map[int] *PlayerModel.Player)
 	//GameManagerLua = ZServer.NewMyLua()
 
 	//GameManagerLua.Init() // 绑定lua脚本
@@ -357,12 +313,17 @@ func TimerCommonLogicStart() {
 		//GameManagerLua.GoCallLuaSetIntVar("ServerHeapInUse", heapInUse)
 		//GameManagerLua.GoCallLuaSetIntVar("ServerNetWorkDelay", ZServer.StaticNetWorkReceiveToSendCostTime)
 
+		for k,v := range GameCore.AllGamesList {
+			zLog.PrintfLogger("游戏id   %d   桌子数量：%d   玩家数量：  %d", k, len(v.AllTableList),  len(GameCore.AllPlayerList))
+		}
+
+
 		ztimer.CheckRunTimeCost(func() {
 			//GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
-			Games.CommonLogicRun()
+			CommonLogic.CommonLogicRun()
 		}, "GoCallLuaCommonLogicRun")
 
-	}, 1)
+	}, 10)
 
 	//// ---------------------创建计时器，定期去保存服务器状态---------------------
 	//ztimer.TimerCheckUpdate(func() {
@@ -388,7 +349,7 @@ func TimerCommonLogicStart() {
 	ztimer.TimerClock0(func() {
 		ztimer.CheckRunTimeCost(func() {
 			//GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
-			Games.CommonLogic12clock()
+			CommonLogic.CommonLogic12clock()
 		}, "GoCallLuaCommonLogic12clock")
 	})
 
@@ -432,7 +393,7 @@ func GetAllConnectMsg() (string,int,int,int)  {
 	WriteChan := 0
 	AllConnect :=0
 
-	ZServer.RWMutex.RLock()
+	ZServer.RWMutexServerIdConnect.RLock()
 	for _,v := range ZServer.ServerIdConnectMyServer {
 		if v!=nil {
 			AllConnect ++
@@ -453,7 +414,7 @@ func GetAllConnectMsg() (string,int,int,int)  {
 	//if AllConnect>0{
 	//	WriteChan = WriteChan/AllConnect
 	//}
-	ZServer.RWMutex.RUnlock()
+	ZServer.RWMutexServerIdConnect.RUnlock()
 	//GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)                           // 发送缓冲区大小
 	//GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", ZServer.StaticDataPackageHeadFlagError) // 把数据头尾错误发送给lua
 	str:=fmt.Sprintf(" 发送连接数量 %d  接收连接数量  %d 每秒发送 %d  每秒接收 %d    发送缓存WriteChan %d  ",   successSendClients, successRecClients, successSendMsg , successRecMsg, WriteChan)

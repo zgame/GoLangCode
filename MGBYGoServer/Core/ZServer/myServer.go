@@ -20,10 +20,10 @@ import (
 //-----------------------------------------------------------------------------------
 
 
-var	GlobalMutex   sync.Mutex   // 主要用于lua逻辑调用时候的加锁
-var	RWMutex       sync.RWMutex // 主要用于针对map进行读写时候的锁
+var	RWMutexServerIdConnect   sync.RWMutex       // 主要用于lua逻辑调用时候的加锁
+var	RWMutexUidConnect sync.RWMutex // 主要用于针对map进行读写时候的锁
 
-var MyServerUUID int32 = 1		// 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
+var MyServerUUID int32 = 0		// 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
 var StaticDataPackageHeadLess = 0  // 统计信息，数据包 头部数据不全
 var StaticDataPackageProtoDataLess = 0  // 统计信息，数据包 pb数据不全
 var StaticDataPackagePasteNum = 0   // 统计信息，拼接次数
@@ -110,16 +110,16 @@ func InitGlobalVar() {
 
 // 通过lua堆栈找到对应的是哪个myServer
 func GetMyServerByServerId(serverId int) *MyServer {
-	RWMutex.RLock()
+	RWMutexServerIdConnect.RLock()
 	re := ServerIdConnectMyServer[serverId] // 这是全局变量，所以要加锁， 读写都要加
-	RWMutex.RUnlock()
+	RWMutexServerIdConnect.RUnlock()
 	return re
 }
 // 通过 user id 找到对应的是哪个myServer
 func GetMyServerByUID(uid int) *MyServer {
-	RWMutex.RLock()
+	RWMutexUidConnect.RLock()
 	re:= UidConnectMyServer[uid] // 这是全局变量，所以要加锁， 读写都要加
-	RWMutex.RUnlock()
+	RWMutexUidConnect.RUnlock()
 	return re
 }
 
@@ -348,10 +348,13 @@ func (a *MyServer) OnClose() {
 	//}
 
 	// 清理掉一些调用关系
-	RWMutex.Lock()
+	RWMutexServerIdConnect.Lock()
 	delete(ServerIdConnectMyServer, a.ServerId)
+	RWMutexServerIdConnect.Unlock()
+
+	RWMutexUidConnect.Lock()
 	delete(UidConnectMyServer, a.UserId)
-	RWMutex.Unlock()
+	RWMutexUidConnect.Unlock()
 
 	//runtime.GC()
 
@@ -384,13 +387,13 @@ func (a *MyServer) SendMsg(data proto.Message, msg string, mainCmd int, subCmd i
 	//	StaticNetWorkReceiveToSendCostTimeNum++
 	//	StaticNetWorkReceiveToSendCostTimeAll+= cost
 	//	StaticNetWorkReceiveToSendCostTime = StaticNetWorkReceiveToSendCostTimeAll/StaticNetWorkReceiveToSendCostTimeNum
-	//	//GlobalVar.RWMutex.Lock()
+	//	//GlobalVar.RWMutexSeatArray.Lock()
 	//	//if StaticNetWorkReceiveToSendCostTime == 0{
 	//	//	StaticNetWorkReceiveToSendCostTime = cost
 	//	//}else {
 	//	//	StaticNetWorkReceiveToSendCostTime = (StaticNetWorkReceiveToSendCostTime+cost)/2	//求平均值
 	//	//}
-	//	//GlobalVar.RWMutex.Unlock()
+	//	//GlobalVar.RWMutexSeatArray.Unlock()
 	//	//zLog.PrintfLogger("UID: %d  处理消息花费时间 %d", a.UserId, int(cost))
 	//}
 	return a.WriteMsg(bufferEnd)
@@ -428,12 +431,15 @@ func (a *MyServer) RemoteAddr() net.Addr {
 //--------------------------lua 启动-------------------------------
 func (a *MyServer) Init() {
 
-	RWMutex.Lock()
+	RWMutexServerIdConnect.RLock()
 	if ServerIdConnectMyServer[a.ServerId] != nil {
 		zLog.PrintfLogger("ServerIdConnectMyServer  已经有了, map重复了", a.ServerId,  a.UserId)
 	}
+	RWMutexServerIdConnect.RUnlock()
+
+	RWMutexServerIdConnect.Lock()
 	ServerIdConnectMyServer[a.ServerId] = a
-	RWMutex.Unlock()
+	RWMutexServerIdConnect.Unlock()
 
 	NetWorkInit(a.ServerId)
 

@@ -7,9 +7,9 @@ package ZServer
 //	"../Utils/zRedis"
 //	"../Utils/zMySql"
 //	"../Utils/zCrypto"
-//	"../Utils/zBit32"
-//	"../Utils/zProtocol"
-//	"../Utils/zJson"
+//	"../Utils/zBit32ForLua"
+//	"../Utils/zProtocolForLua"
+//	"../Utils/zJsonForLua"
 //	"time"
 //	"../Utils/zMysqlForLua"
 //	"../Utils/zSqlServerForLua"
@@ -66,9 +66,9 @@ package ZServer
 //	m.L.SetGlobal("luaCallGoBASE64EncodeStr", m.L.NewFunction(luaCallGoBASE64EncodeStr))		//注册到lua md5验证
 //	m.L.SetGlobal("luaCallGoBASE64DecodeStr", m.L.NewFunction(luaCallGoBASE64DecodeStr))		//注册到lua md5验证
 //
-//	zProtocol.LuaProtocolLoad(m.L) //加载protobuf的lua调用
-//	zBit32.LuaBit32Load(m.L)    // 加载bit32
-//	zJson.Preload(m.L)    // 加载bit32
+//	zProtocolForLua.LuaProtocolLoad(m.L) //加载protobuf的lua调用
+//	zBit32ForLua.LuaBit32Load(m.L)    // 加载bit32
+//	zJsonForLua.Preload(m.L)    // 加载bit32
 //
 //	m.L.PreloadModule("zMysqlForLua", zMysqlForLua.Loader)         //加载mysql的lua调用 ，性能一般，写起来方便
 //	m.L.PreloadModule("zSqlServerForLua", zSqlServerForLua.Loader) //加载sql server 的lua调用
@@ -133,9 +133,9 @@ package ZServer
 //	serverId := L.ToNumber(2)                      //
 //	server := GetMyServerByServerId(int(serverId)) // my server
 //
-//	GlobalVar.RWMutex.Lock()
+//	GlobalVar.RWMutexSeatArray.Lock()
 //	UidConnectMyServer[int(uid)] = server // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
-//	GlobalVar.RWMutex.Unlock()
+//	GlobalVar.RWMutexSeatArray.Unlock()
 //
 //	server.UserId = int(uid)                       // 保存uid
 //	return 0

@@ -7,56 +7,39 @@ package BY3
 
 import (
 	"../BY"
-	"../Common"
 	"time"
-	"../../Const"
+	"../../Core/GameCore"
+	"fmt"
 )
 
-type Table struct {
-	BY.Table // 这里的例子是继承自BY这个， 这说明BY3跟BY的逻辑还是比较像的，  也就是说继承的时候，选择逻辑近似的去继承即可
+//---------------------------------------------------------------------
+// 这是一个模板例子
+//---------------------------------------------------------------------
 
+
+type BY3Table struct {
+	BY.BYTable
 
 }
-//
-func (table *Table) NewTable(uid int, gameId int)  Common.TableInterface{
-	return &Table{BY.Table{Common.CommonTable{TableID:uid,GameID: gameId, TableMax:Const.BY_TABLE_MAX_PLAYER}}}
+// -------------------------构造函数-------------------------
+func (table *BY3Table) NewTable(uid int, gameId int) GameCore.TableInterface {
+	fmt.Println("创建 捕鱼 BY3  桌子")
+	//var tableBase *GameCore.TableBase
+	//tableInterface := tableBase.NewTable(uid, gameId)
+	//by3Table := GetBY3TableHandle(tableInterface)
+	//by3Table.SetTableMax(Const.BY_TABLE_MAX_PLAYER)
+	return table.BYTable.NewTable(uid,gameId)
+	//return GameCore.TableBase.NewTable(uid , gameId)
+}
+
+// 当获取到桌子接口的时候， 我们可以强转成我们当前table的指针
+func GetBY3TableHandle(tableInterface GameCore.TableInterface) *BY3Table{
+	return tableInterface.(*BY3Table)
 }
 
 
-// 设定子弹的句柄类型
-func (table *Table) SetBulletInterface() {
-	var bullet * Bullet
-	table.BulletInterfaceHandle = bullet
-}
-
-// 设定鱼的句柄类型
-func (table *Table) SetFishInterface() {
-	var fish * Fish
-	table.FishInterfaceHandle = fish
-}
-
-////---------------------------------桌子------------------------------------------
-//
-//
-//// 返回桌子的UID
-//func  (tt *CommonTable)GetTableUID() uint64{
-//	return tt.TableID
-//
-//}
-//
-//// 新建桌子
-//func CreateTable() {
-//
-//}
-//
-//
-//// 销毁桌子
-//func ClearTable() {
-//
-//}
-//
 // ----------------------------- Run 桌子 -------------------------------
-func (table *Table)RunTable() {
+func (table *BY3Table)RunTable() {
 	//fmt.Println("我重载了， 如果把我函数改名字，或者删除， 那么调用父类的函数")
 	for {
 		//select {

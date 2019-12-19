@@ -33,9 +33,9 @@ func NetWorkSendByUid(uid int, data proto.Message,mainCmd int, subCmd int)  bool
 func ResisterUID(serverId int, uid int)  {
 	server := GetMyServerByServerId(int(serverId)) // my server
 
-	RWMutex.Lock()
+	RWMutexUidConnect.Lock()
 	UidConnectMyServer[int(uid)] = server // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
-	RWMutex.Unlock()
+	RWMutexUidConnect.Unlock()
 
 	server.UserId = int(uid)                       // 保存uid
 }
