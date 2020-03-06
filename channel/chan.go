@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"runtime"
 	"sync"
+	"sync/atomic"
 )
 
 var num int32
 var zcha chan int
 var wg sync.WaitGroup
+
 func main()  {
 	runtime.GOMAXPROCS(runtime.NumCPU()) //设置cpu的核的数量，从而实现高并发
 
@@ -25,7 +27,7 @@ func main()  {
 	go func() {
 		for i:=0;i<countt;i++{
 			//<- zcha
-			fmt.Println("---------------")
+			fmt.Println("---------------",zcha)
 			temp := <- zcha
 			fmt.Println("zcha:::::", temp)
 		}
@@ -40,9 +42,9 @@ func main()  {
 }
 
 func test(index int)  {
-	//tmp := atomic.LoadInt32(&num)
-	//num = atomic.AddInt32(&tmp, 1)
-	num++
+	tmp := atomic.LoadInt32(&num)
+	num = atomic.AddInt32(&tmp, 1)
+	//num++
 	fmt.Println("this is ", index, "    num:", num)
 	wg.Done()
 	zcha <- index

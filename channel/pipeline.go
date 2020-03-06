@@ -8,7 +8,7 @@ func main() {
 	// Counter
 	go func() {
 		for x := 1; x<100 ; x++ {
-			naturals <- x
+			naturals <- x							// 处理完之后， 传递给 naturals
 			//fmt.Println("ddddddddddddd",x)
 		}
 		defer close(naturals)
@@ -17,7 +17,7 @@ func main() {
 	go func() {
 		for {
 			x := <-naturals
-			squares <- x * x
+			squares <- x * x					// 接收到  naturals  ，处理完之后， 传递给 squares
 		}
 		defer close(squares)
 	}()

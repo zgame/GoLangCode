@@ -12,9 +12,9 @@ func main() {
 
 	select {
 	case <-tt:
-		fmt.Println("ddddddddddtttttttt")
+		fmt.Println("tt receive")
 	}
-	fmt.Println("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
+	fmt.Println("  end  ")
 	close(tt)
 
 }
@@ -24,6 +24,7 @@ func test1(chaa chan int)  {
 
 		fmt.Println("test----",i)
 	}
+	fmt.Println("tell chaa ")
 	chaa <- 1
 }
 
@@ -31,14 +32,15 @@ func test2(chaa chan int,tt chan int)  {
 	for {
 		select {
 		case <-chaa:
-			fmt.Println("over")
+			fmt.Println(" receive chaa")
+			fmt.Println("tell tt ")
 			close(chaa)
 			tt<-1
 			return
 		default:
 
 		}
-		fmt.Printf("run")
+		//fmt.Printf("run \n")
 
 
 	}
