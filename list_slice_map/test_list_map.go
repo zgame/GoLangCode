@@ -5,7 +5,7 @@ import "fmt"
 func main(){
 
 	fmt.Println("-------------------------------数组---------------------")
-	var list1 =[6]int{1,2,3,4,5,6}
+	var list1 =[...]int{1,2,3,4,5,6}
 	fmt.Printf("%v",list1)
 	fmt.Println("")
 
