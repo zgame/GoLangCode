@@ -10,7 +10,9 @@ func Ping(c *gin.Context) {
 		"message": "pong",
 	})
 }
-
+//http://localhost:8097/get?ss=1&name=zsw
 func Get(c *gin.Context)  {
-	fmt.Println("", c.Param("ss"))
+	ss:= c.Query("ss")		// 获取get的参数
+	name:= c.Query("name")		// 获取get的参数
+	fmt.Println(ss +"      "+name )
 }
