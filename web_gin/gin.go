@@ -19,4 +19,6 @@ func Routes(r *gin.Engine) {
 	r.GET("/get", Action.Get)
 	//r.GET("/user/login", Action.Login)
 	r.POST("/user/login", Action.Login)
+	r.GET("/user/info", Action.Info)
+	r.POST("/user/logout", Action.Logout)
 }
