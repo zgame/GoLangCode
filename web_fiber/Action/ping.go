@@ -5,6 +5,10 @@ import (
 	"github.com/gofiber/fiber"
 )
 
+func Index(c *fiber.Ctx) {
+	c.Send("Hello, " + c.Hostname())
+}
+
 func Ping(c *fiber.Ctx) {
 	c.Send("Hello, World!")
 	c.JSON( fiber.Map{"hello":"me"})
