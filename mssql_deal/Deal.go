@@ -103,7 +103,7 @@ func DealUserList(idStart int) {
 					//fmt.Println("", resultGetColumns)
 				}
 				mssql.CloseQuery(rowsGetColumns)
-				// ----------------------------------------------------------
+				// ----------------------------开始执行insert------------------------------
 				strTmp := strings.Replace(resultGetColumns, "UserID", strconv.Itoa(userInfo.uid), -1)
 				tableRes1 := strings.Replace(strTmp, "RecordTime", fmt.Sprintf("dateadd(day,%d,RecordTime) as RecordTime", userInfo.dayNum), -1)
 				insertSql := fmt.Sprintf("insert into %s (%s) ", dbName+".dbo."+table1 , resultGetColumns)
