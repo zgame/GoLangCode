@@ -2,12 +2,12 @@ package main
 
 import (
 	"./mssql"
+	"./zLog"
 	"database/sql"
 	"fmt"
 	_ "github.com/denisenkom/go-mssqldb"
-	"strconv"
 	"strings"
-	"./zLog"
+
 )
 
 func DealUserList(idStart int) {
@@ -36,7 +36,7 @@ func DealUserList(idStart int) {
 			continue
 		}
 
-		zLog.PrintfLogger(" --------------开始处理id--------------", userInfo.id)
+		zLog.PrintfLogger(" --------------开始处理id : %d--------------", userInfo.id)
 
 		// -----------------------------获取一行数据------------------------
 		//fmt.Println("", userInfo.id)
@@ -74,45 +74,53 @@ func DealUserList(idStart int) {
 				//var dbNow,dbNow2 *sql.DB
 				//var dbName string
 				dbNow, dbName := GetMonth(table1,  logDB1,  logDB2)
-				dbNow2, dbName2 := GetMonth(table2,  logDB1,  logDB2)
+				_, dbName2 := GetMonth(table2,  logDB1,  logDB2)
 				//fmt.Println("",dbNow)
+				//fmt.Println("",dbNow2)
 
-				// --------------------------这里各个表的所有列名-----------------------
-				tableColumns := fmt.Sprintf(`
-				use %s
-				select stuff((
-					select
-						',' + c.name
-						from sys.tables t with(nolock)
-						left join sys.columns c with(nolock) on t.object_id=c.object_id
-						where t.object_id=OBJECT_ID('%s')
-						order by c.column_id asc
-						for xml path('')
-						),1,1,'')  as columns_list;
-						`, dbName2, table2)
-
-				//fmt.Println(" table:"  ,tableColumns)
-				_, rowsGetColumns, _ := mssql.Query(dbNow2, tableColumns)
-				var resultGetColumns string
-				for rowsGetColumns.Next() { // 循环遍历
-					err := rowsGetColumns.Scan(&resultGetColumns)
-					if err != nil {
-						fmt.Printf("  获取列名 id：%d     %s \n ", userInfo.id, err.Error())
-						fmt.Println("----------------------------------------")
-						fmt.Println("", tableColumns)
-						fmt.Println("----------------------------------------")
-					}
-					//fmt.Println("", resultGetColumns)
-				}
-				mssql.CloseQuery(rowsGetColumns)
+				//// --------------------------这里各个表的所有列名-----------------------
+				//tableColumns := fmt.Sprintf(`
+				//use %s
+				//select stuff((
+				//	select
+				//		',' + c.name
+				//		from sys.tables t with(nolock)
+				//		left join sys.columns c with(nolock) on t.object_id=c.object_id
+				//		where t.object_id=OBJECT_ID('%s')
+				//		order by c.column_id asc
+				//		for xml path('')
+				//		),1,1,'')  as columns_list;
+				//		`, dbName2, table2)
+				//
+				////fmt.Println(" table:"  ,tableColumns)
+				//_, rowsGetColumns, _ := mssql.Query(dbNow2, tableColumns)
+				var allKeys string
+				//for rowsGetColumns.Next() { // 循环遍历
+				//	err := rowsGetColumns.Scan(&allKeys)
+				//	if err != nil {
+				//		fmt.Printf("  获取列名 id：%d     %s \n ", userInfo.id, err.Error())
+				//		fmt.Println("----------------------------------------")
+				//		fmt.Println("", tableColumns)
+				//		fmt.Println("----------------------------------------")
+				//	}
+				//	//fmt.Println("", allKeys)
+				//}
+				//mssql.CloseQuery(rowsGetColumns)
 				// ----------------------------开始执行insert------------------------------
-				strTmp := strings.Replace(resultGetColumns, "UserID", strconv.Itoa(userInfo.uid), -1)
-				tableRes1 := strings.Replace(strTmp, "RecordTime", fmt.Sprintf("dateadd(day,%d,RecordTime) as RecordTime", userInfo.dayNum), -1)
-				insertSql := fmt.Sprintf("insert into %s (%s) ", dbName+".dbo."+table1 , resultGetColumns)
-				sql :=  insertSql + " select " + tableRes1 + " from " + dbName2 + ".dbo." + table2 + " where UserID=" + strconv.Itoa(userInfo.uid2)
+				allKeys = GetTableKeys(RecordTimeDict[j])
 
-				//fmt.Println("sql:",sql)
-				mssql.Exec(dbNow, sql)
+				// 每个不同的处理方式
+				allKeysDeal := GetTableKeysDeal(RecordTimeDict[j], userInfo)
+
+				// 统一的insert语句
+				insertSql := fmt.Sprintf("insert into %s.dbo.%s (%s) ", dbName, table1, allKeys)
+				selectSql := fmt.Sprintf(" select  %s  from  %s.dbo.%s  WITH(NOLOCK)  where UserID= %d", allKeysDeal, dbName2, table2, userInfo.uid2)
+				sqlString := insertSql + selectSql
+				//zLog.PrintfLogger("sql: %s ",sqlString)
+				err,_ := mssql.Exec(dbNow, sqlString)
+				if err!= nil{
+					zLog.PrintfLogger("insert Exec Error %s",err.Error())
+				}
 			}
 		}
 
