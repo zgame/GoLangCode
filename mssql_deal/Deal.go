@@ -7,6 +7,7 @@ import (
 	_ "github.com/denisenkom/go-mssqldb"
 	"strconv"
 	"strings"
+	"./zLog"
 )
 
 func DealUserList(idStart int) {
@@ -24,17 +25,18 @@ func DealUserList(idStart int) {
 	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
 
 	//fmt.Println(" --------------开始查询玩家列表--------------")
-	sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.a1_user_chongzhi_new_match_2   with(nolock) where id >= %d", Group,idStart)
+	sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.aa_user_chongzhi_new_sortid_match   with(nolock) where id >= %d", Group,idStart)
 	_, rows, _ := mssql.Query(testDB, sqlU)
 
 	for rows.Next() { // 循环遍历
 		var userInfo UserList
 		err := rows.Scan(&userInfo.id, &userInfo.uid, &userInfo.initDate, &userInfo.lastDate, &userInfo.days, &userInfo.uid2, &userInfo.initDate2, &userInfo.lastDate2, &userInfo.days2, &userInfo.matchType, &userInfo.dayNum) // 赋值到结构体中
 		if err != nil {
-			fmt.Printf(" 遍历玩家列表 id %d    , %s \n" , userInfo.id,  err)
+			zLog.PrintfLogger(" 遍历玩家列表 id %d    , %s \n" , userInfo.id,  err)
 			continue
 		}
-		fmt.Println(" --------------开始处理id--------------", userInfo.id)
+
+		zLog.PrintfLogger(" --------------开始处理id--------------", userInfo.id)
 
 		// -----------------------------获取一行数据------------------------
 		//fmt.Println("", userInfo.id)
