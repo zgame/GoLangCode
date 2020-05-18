@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/denisenkom/go-mssqldb"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -36,52 +37,13 @@ func DealUserList(idStart int) {
 
 	for rows.Next() { // 循环遍历
 		var rechargeInfo RechargeList
-		err := rows.Scan(&rechargeInfo.id,
-			&rechargeInfo.orderNo,
-			&rechargeInfo.UserId,
-			&rechargeInfo.name,
-			&rechargeInfo.payType,
-			&rechargeInfo.payStatus,
-			&rechargeInfo.kindId,
-			&rechargeInfo.Money,
-			&rechargeInfo.coin,
-			&rechargeInfo.giftOnceCoin,
-			&rechargeInfo.giftTotalCoin,
-			&rechargeInfo.giftOnePayCoin,
-			&rechargeInfo.createTime,
-			&rechargeInfo.SuccessTime,
-			&rechargeInfo.operateUserId,
-			&rechargeInfo.remark,
-			&rechargeInfo.IP,
-			&rechargeInfo.sendStatus,
-			&rechargeInfo.OnePay,
-			&rechargeInfo.payGiftMoneyLimit,
-			&rechargeInfo.crontabPayCount,
-			&rechargeInfo.CrontabPayDate,
-			&rechargeInfo.ClientKind,
-			&rechargeInfo.AppstoreEnvironment,
-			&rechargeInfo.ditchNumber,
-			&rechargeInfo.coinType,
-			&rechargeInfo.actionId,
-			&rechargeInfo.userGameId,
-			&rechargeInfo.gitPackageId,
-			&rechargeInfo.appStoreProductId,
-			&rechargeInfo.Diamond,
-			&rechargeInfo.giftOnceDiamond,
-			&rechargeInfo.giftTotalDiamond,
-			&rechargeInfo.giftOnePayDiamond,
-			&rechargeInfo.payDiamondMoneyLimit,
-			&rechargeInfo.orderDitch,
-			&rechargeInfo.channelId,
-			&rechargeInfo.registerMachine,
-			&rechargeInfo.otherMoney,
-			&rechargeInfo.registerDate,
-			&rechargeInfo.logonMachine,
-			&rechargeInfo.vipLev,
-			&rechargeInfo.receiptUserName,
-			&rechargeInfo.itemId,
-			&rechargeInfo.discountMoney,
-			&rechargeInfo.payCount) // 赋值到结构体中
+		err := rows.Scan(&rechargeInfo.id, &rechargeInfo.orderNo, &rechargeInfo.UserId, &rechargeInfo.name, &rechargeInfo.payType, &rechargeInfo.payStatus, &rechargeInfo.kindId, &rechargeInfo.Money,
+			&rechargeInfo.coin, &rechargeInfo.giftOnceCoin, &rechargeInfo.giftTotalCoin, &rechargeInfo.giftOnePayCoin, &rechargeInfo.createTime, &rechargeInfo.SuccessTime, &rechargeInfo.operateUserId,
+			&rechargeInfo.remark, &rechargeInfo.IP, &rechargeInfo.sendStatus, &rechargeInfo.OnePay, &rechargeInfo.payGiftMoneyLimit, &rechargeInfo.crontabPayCount, &rechargeInfo.CrontabPayDate,
+			&rechargeInfo.ClientKind, &rechargeInfo.AppstoreEnvironment, &rechargeInfo.ditchNumber, &rechargeInfo.coinType, &rechargeInfo.actionId, &rechargeInfo.userGameId, &rechargeInfo.gitPackageId,
+			&rechargeInfo.appStoreProductId, &rechargeInfo.Diamond, &rechargeInfo.giftOnceDiamond, &rechargeInfo.giftTotalDiamond, &rechargeInfo.giftOnePayDiamond, &rechargeInfo.payDiamondMoneyLimit,
+			&rechargeInfo.orderDitch, &rechargeInfo.channelId, &rechargeInfo.registerMachine, &rechargeInfo.otherMoney, &rechargeInfo.registerDate, &rechargeInfo.logonMachine, &rechargeInfo.vipLev,
+			&rechargeInfo.receiptUserName, &rechargeInfo.itemId, &rechargeInfo.discountMoney, &rechargeInfo.payCount) // 赋值到结构体中
 		if err != nil {
 			zLog.PrintfLogger(" 遍历充值列表 id %d    , %s \n", rechargeInfo.id, err)
 			continue
@@ -91,6 +53,10 @@ func DealUserList(idStart int) {
 
 		// -----------------------------获取单个充值行为------------------------
 		dataTimeStr := time.Unix(int64(rechargeInfo.SuccessTime), 0).Format("2006-01-02 15:04:05")
+		dayString := dataTimeStr[0:10]
+		day1 := strings.Replace(dayString, "-", "", -1) // 去掉-， 整理成表的后缀
+		dbNow, dbName := GetMonth(day1, logDB1, logDB2)
+		dbNow = dbNow
 		//fmt.Println("获取时间戳转日期时间", dataTimeStr)
 		//fmt.Println("获取时间戳转日期", dataTimeStr[0:10])
 
@@ -101,17 +67,40 @@ func DealUserList(idStart int) {
 			// 金币或者钻石
 			if rechargeInfo.coin > 0 {
 				// 金币
-				getGold := rechargeInfo.coin + rechargeInfo.giftOnceCoin	// type =2
-				emailGold:= rechargeInfo.giftOnePayCoin						// type =6
+				getGold := rechargeInfo.coin + rechargeInfo.giftOnceCoin // type =2
+				emailGold := rechargeInfo.giftOnePayCoin                 // type =6
+				lastAllGold := GetHistoryScore(dbName, day1)                                         // 获取玩家的历史金币数量
+
+				// 插入充值金币语句
+				addGoldSql := GetGoldRechargeSql(rechargeInfo, getGold, lastAllGold, dataTimeStr, dbName, day1, 2)
+				zLog.PrintfLogger("插入充值金币语句 %s", addGoldSql)
+				// 插入邮件赠送
+				if emailGold > 0 {
+					mailGoldSql := GetGoldRechargeSql(rechargeInfo, emailGold, lastAllGold, dataTimeStr, dbName, day1, 6)
+					zLog.PrintfLogger("插入邮件充值金币语句 %s", mailGoldSql)
+				}
+				reduceGoldSql := GetGoldReduceSql(rechargeInfo, getGold+emailGold, lastAllGold, dataTimeStr, dbName, day1)
+				zLog.PrintfLogger("插入减少金币语句 %s", reduceGoldSql)
 
 			} else if rechargeInfo.Diamond > 0 {
 				//钻石
-				getDiamond:= rechargeInfo.Diamond + rechargeInfo.giftOnceDiamond	// type =2
-				emailDiamond:= rechargeInfo.giftOnePayDiamond					// type =6
+				getDiamond := rechargeInfo.Diamond + rechargeInfo.giftOnceDiamond // type =2
+				emailDiamond := rechargeInfo.giftOnePayDiamond                    // type =6
+				lastAllDiamond := 0                                               // 获取玩家的历史钻石数量
+
+				// 插入充值钻石语句
+				addGoldSql := GetGoldRechargeSql(rechargeInfo, getDiamond, lastAllDiamond, dataTimeStr, dbName, day1, 2)
+				zLog.PrintfLogger("插入充值钻石语句 %s", addGoldSql)
+				// 插入邮件赠送
+				if emailDiamond > 0 {
+					mailGoldSql := GetGoldRechargeSql(rechargeInfo, emailDiamond, lastAllDiamond, dataTimeStr, dbName, day1, 6)
+					zLog.PrintfLogger("插入邮件充值钻石语句 %s", mailGoldSql)
+				}
+				reduceGoldSql := GetGoldReduceSql(rechargeInfo, getDiamond+emailDiamond, lastAllDiamond, dataTimeStr, dbName, day1)
+				zLog.PrintfLogger("插入减少钻石语句 %s", reduceGoldSql)
 
 			}
 		}
-
 	}
 
 	mssql.CloseQuery(rows)
@@ -135,4 +124,28 @@ func GetMonth(table1 string, logDB1 *sql.DB, logDB2 *sql.DB) (*sql.DB, string) {
 		dbName = "BY_LOG_202002"
 	}
 	return dbNow, dbName
+}
+
+
+// 获取历史遗留分数
+func GetHistoryScore(dbName string, day1 string ,dbNow *sql.DB) int {
+	dayInt,_ := strconv.Atoi(day1)
+	tableName := fmt.Sprintf("%s.dbo.GameScoreChangeRecord_%d",dbName, dayInt)
+	userId := 18811075
+
+	num:= dayInt-202001
+
+	sql := fmt.Sprintf("select top(1)Score from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d ) and UserID = %d", tableName,userId)
+	fmt.Println("sql ",sql)
+
+	_, rows, _ := mssql.Query(dbNow, sql)
+	for rows.Next() { // 循环遍历
+		var score int
+		err := rows.Scan(&score)
+		if err != nil {
+			zLog.PrintfLogger(" 遍历历史分数遗留表 id %d    , %s \n", score, err)
+			continue
+		}
+	}
+	return 0
 }

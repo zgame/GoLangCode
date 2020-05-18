@@ -3,8 +3,20 @@ package main
 import (
 	"./zLog"
 	"fmt"
+	"math/rand"
 	"time"
 )
+
+
+// 随机[ min, max)
+func ZRandomTo(min int, max int) int {
+	if min >= max || max == 0 {
+		//fmt.Println("随机数格式不正确")
+		return max
+	}
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(max-min) + min
+}
 
 type RechargeList struct {
 	id        int			//自增编号
