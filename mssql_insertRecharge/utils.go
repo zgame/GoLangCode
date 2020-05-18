@@ -3,23 +3,61 @@ package main
 import (
 	"./zLog"
 	"fmt"
-	"strconv"
-	"strings"
 	"time"
 )
 
-type UserList struct {
-	id        int
-	uid       int // 充值用户uid
-	initDate  string
-	lastDate  string
-	days      int
-	uid2      int // 免费用户uid
-	initDate2 string
-	lastDate2 string
-	days2     int
-	matchType int
-	dayNum    int
+type RechargeList struct {
+	id        int			//自增编号
+	orderNo       string
+	UserId		int			// 用户
+	name  string
+	payType      int
+	payStatus      int
+	kindId	int
+	Money int
+	coin     int		//金币
+	giftOnceCoin int    // 赠送金币
+	giftTotalCoin    int
+
+	giftOnePayCoin    int	// 邮件发送金币
+	createTime    int
+	SuccessTime    int
+	operateUserId    int
+	remark    string
+	IP    string
+	sendStatus    int
+
+	OnePay    int
+	payGiftMoneyLimit    int
+	crontabPayCount    int
+	CrontabPayDate    string
+	ClientKind    int
+	AppstoreEnvironment    int
+	ditchNumber    int
+	coinType    int
+
+	actionId    int
+	userGameId    int
+	gitPackageId    int			// 礼包id
+	appStoreProductId    string
+	Diamond    int			// 钻石
+	giftOnceDiamond    int		// 赠送钻石
+	giftTotalDiamond    int
+	giftOnePayDiamond    int		// 邮件赠送钻石
+	payDiamondMoneyLimit    int
+
+	orderDitch    int
+	channelId    int
+	registerMachine    string
+	otherMoney    int
+	registerDate    string
+	logonMachine    string
+	vipLev	int
+	receiptUserName string
+	itemId	int
+	discountMoney int
+	payCount int
+
 }
 
 // 获取玩家持续时间的日期列表
@@ -41,26 +79,27 @@ func getTimeList(start string, days int) []string {
 }
 
 var RecordTimeDict = []string{
-	"GameCoinChangeRecord_",
-	"GameDiamondChangeRecord_",
-	"GameItemChangeRecord_",
-	"GameLotteryChangeRecord_",
-	"GameScoreChangeRecord_",
-	"HDBZExchangeInfo_",
-	"HunGameChipRecord_",
-	"RecordArenaStarBalanceInfo_",
-	"RecordArenaStarSignUpInfo_",
-	"RecordGame_MiniGame_",
-	"RecordGrantTreasure_",
-	"RecordLogon_",
-	"RecordUserBombJackpotChange_",
-	"RecordUserCommonJackpotChange_",
-	"RecordUserRealGoldStockChange_",
-	"RecordWorldGodJoinReward_",
-	"FishTideUserRecord_",
-	"RecordWorldGodReward_",
-	"RecordUserInout_",
-	"UserLuckySevenDayRecord_"}
+	"GameCoinChangeRecord_",		//灵力
+	"GameDiamondChangeRecord_",		// 钻石
+	"GameItemChangeRecord_",		// 道具
+	//"GameLotteryChangeRecord_",
+	"GameScoreChangeRecord_",		// 金币
+	//"HDBZExchangeInfo_",
+	//"HunGameChipRecord_",
+	//"RecordArenaStarBalanceInfo_",
+	//"RecordArenaStarSignUpInfo_",
+	//"RecordGame_MiniGame_",
+	//"RecordGrantTreasure_",
+	//"RecordLogon_",
+	//"RecordUserBombJackpotChange_",
+	//"RecordUserCommonJackpotChange_",
+	//"RecordUserRealGoldStockChange_",
+	//"RecordWorldGodJoinReward_",
+	//"FishTideUserRecord_",
+	//"RecordWorldGodReward_",
+	//"RecordUserInout_",
+	//"UserLuckySevenDayRecord_",
+}
 
 // 获取表的字段
 func GetTableKeys(name string) string {
@@ -114,48 +153,12 @@ func GetTableKeys(name string) string {
 }
 
 // 获取表的字段， 并且经过处理之后的
-func GetTableKeysDeal(name string, userInfo UserList) string {
+func GetTableKeysDeal(name string, userInfo RechargeList) string {
 	var allKeysDeal = ""
-	allKeys := GetTableKeys(name)
-	strTmp := strings.Replace(allKeys, "UserID", strconv.Itoa(userInfo.uid), -1)		// 首先把所有keys 替换uid
+	//allKeys := GetTableKeys(name)
+	//strTmp := strings.Replace(allKeys, "UserID", strconv.Itoa(userInfo.uid), -1)		// 首先把所有keys 替换uid
 
-	switch name {
-	case "GameCoinChangeRecord_", "GameDiamondChangeRecord_","GameItemChangeRecord_","GameLotteryChangeRecord_",
-	"GameScoreChangeRecord_","HDBZExchangeInfo_","HunGameChipRecord_","RecordArenaStarBalanceInfo_","RecordArenaStarSignUpInfo_","RecordGame_MiniGame_":
-		// 替换 RecordTime
-		allKeysDeal = strings.Replace(strTmp, "RecordTime", fmt.Sprintf("dateadd(day,%d,RecordTime) as RecordTime", userInfo.dayNum), -1)
-		break
-	case "RecordGrantTreasure_":
-		allKeysDeal = strings.Replace(strTmp, "CollectDate", fmt.Sprintf("dateadd(day,%d,CollectDate) as CollectDate", userInfo.dayNum), -1)
-		break
-	case "RecordLogon_":
-		allKeysDeal = strings.Replace(strTmp, "LogonTime", fmt.Sprintf("dateadd(day,%d,LogonTime) as LogonTime", userInfo.dayNum), -1)
-		break
-	case "RecordUserBombJackpotChange_", "RecordUserCommonJackpotChange_", "RecordUserRealGoldStockChange_":
-		allKeysDeal = strings.Replace(strTmp, "RecordDate", fmt.Sprintf("dateadd(day,%d,RecordDate) as RecordDate", userInfo.dayNum), -1)
-		break
-	case "RecordWorldGodJoinReward_":
-		allKeysDeal = strings.Replace(strTmp, "UpdateTime", fmt.Sprintf("dateadd(day,%d,UpdateTime) as UpdateTime", userInfo.dayNum), -1)
-		break
-	case "FishTideUserRecord_":
-		allKeysDeal = strings.Replace(strTmp, "RecordTime", fmt.Sprintf("RecordTime + ( %d * 86400 ) AS RecordTime ", userInfo.dayNum), -1)
-		break
-	case "RecordWorldGodReward_":
-		allKeysDeal = strings.Replace(strTmp, "CreateTime", fmt.Sprintf("CreateTime + ( %d * 86400 ) AS CreateTime ", userInfo.dayNum), -1)
-		break
-	case "RecordUserInout_":
-		allKeysDeal = strings.Replace(strTmp, "EnterTime", fmt.Sprintf("dateadd(day,%d,EnterTime) as EnterTime", userInfo.dayNum), -1)
-		allKeysDeal = strings.Replace(strTmp, "LeaveTime", fmt.Sprintf("dateadd(day,%d,LeaveTime) as LeaveTime", userInfo.dayNum), -1)
-		allKeysDeal = strings.Replace(strTmp, "LeaveRoomTime", fmt.Sprintf("LeaveRoomTime + ( %d * 86400 ) AS LeaveRoomTime ", userInfo.dayNum), -1)
-		break
-	case "UserLuckySevenDayRecord_":
-		allKeysDeal = strings.Replace(strTmp, "ActionDate", fmt.Sprintf("dateadd(day,%d,ActionDate) as ActionDate", userInfo.dayNum), -1)
-		allKeysDeal = strings.Replace(strTmp, "ActionTime", fmt.Sprintf("ActionTime + ( %d * 86400 ) AS ActionTime ", userInfo.dayNum), -1)
-	default:
-		zLog.PrintfLogger("GetTableKeysDeal Error where %s", name)
-		allKeysDeal =  ""
 
-	}
 
 	return allKeysDeal
 
