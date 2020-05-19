@@ -25,7 +25,7 @@ func DealUserList(idStart int) {
 	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
 
 	//fmt.Println(" --------------开始查询玩家列表--------------")
-	sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.aa_user_chongzhi_new_sortid_match   with(nolock) where id >= %d", Group,idStart)
+	sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.a1_user_free_new_sortid_match   with(nolock) where id >= %d", Group,idStart)
 	_, rows, _ := mssql.Query(testDB, sqlU)
 
 	for rows.Next() { // 循环遍历
@@ -38,91 +38,40 @@ func DealUserList(idStart int) {
 
 		zLog.PrintfLogger(" --------------开始处理id : %d--------------", userInfo.id)
 
-		// -----------------------------获取一行数据------------------------
-		//fmt.Println("", userInfo.id)
-		//fmt.Println("", userInfo.uid)
-		//fmt.Println("", userInfo.initDate)
-		//fmt.Println("", userInfo.lastDate)
-		//fmt.Println("", userInfo.days)
-		//fmt.Println("", userInfo.uid2)
-		//fmt.Println("", userInfo.initDate2)
-		//fmt.Println("", userInfo.lastDate2)
-		//fmt.Println("", userInfo.days2)
-		//fmt.Println("", userInfo.matchType)
-		//fmt.Println("", userInfo.dayNum)
-
-		dayList := getTimeList(userInfo.initDate, userInfo.days) // 玩家的日期列表
-		dayList2 := getTimeList(userInfo.initDate2, userInfo.days2)
-		//fmt.Println("day list: ", dayList[0])
-		//fmt.Printf("%v \n ", dayList2)
-
-		// -----------------------------用户所有天数--------------------------------
-		for i := 0; i < userInfo.days; i++ { // 按照日期遍历
-			day1 := dayList[i]
-			day2 := dayList2[i]
-			day1 = strings.Replace(day1, "-", "", -1)
-			day2 = strings.Replace(day2, "-", "", -1)
-
-			// -----------------------------用户所有表格--------------------------------
-			for j := range RecordTimeDict { // 按照表遍历
-				table1 := RecordTimeDict[j] + day1
-				table2 := RecordTimeDict[j] + day2
-
-				//fmt.Println("day1",day1)
-				//fmt.Println("table1",table1)
-				//fmt.Println("table2",table2)
-				//var dbNow,dbNow2 *sql.DB
-				//var dbName string
-				dbNow, dbName := GetMonth(table1,  logDB1,  logDB2)
-				_, dbName2 := GetMonth(table2,  logDB1,  logDB2)
-				//fmt.Println("",dbNow)
-				//fmt.Println("",dbNow2)
-
-				//// --------------------------这里各个表的所有列名-----------------------
-				//tableColumns := fmt.Sprintf(`
-				//use %s
-				//select stuff((
-				//	select
-				//		',' + c.name
-				//		from sys.tables t with(nolock)
-				//		left join sys.columns c with(nolock) on t.object_id=c.object_id
-				//		where t.object_id=OBJECT_ID('%s')
-				//		order by c.column_id asc
-				//		for xml path('')
-				//		),1,1,'')  as columns_list;
-				//		`, dbName2, table2)
-				//
-				////fmt.Println(" table:"  ,tableColumns)
-				//_, rowsGetColumns, _ := mssql.Query(dbNow2, tableColumns)
-				var allKeys string
-				//for rowsGetColumns.Next() { // 循环遍历
-				//	err := rowsGetColumns.Scan(&allKeys)
-				//	if err != nil {
-				//		fmt.Printf("  获取列名 id：%d     %s \n ", userInfo.id, err.Error())
-				//		fmt.Println("----------------------------------------")
-				//		fmt.Println("", tableColumns)
-				//		fmt.Println("----------------------------------------")
-				//	}
-				//	//fmt.Println("", allKeys)
-				//}
-				//mssql.CloseQuery(rowsGetColumns)
-				// ----------------------------开始执行insert------------------------------
-				allKeys = GetTableKeys(RecordTimeDict[j])
+				tableColumns:=fmt.Sprintf("select top 1 UserID, InitLogonDate, LastLogonDate from testdb.dbo.a0_user_RecordLogon_lost_lx_sortid with(nolock) where TheDays=%d order by newid()", userInfo.days)
+				zLog.PrintfLogger("tableColumns: %s ",tableColumns)
+				_, rowsGetColumns, _ := mssql.Query(testDB, tableColumns)
+				var UserID_2 int
+				var InitLogonDate_2 string
+				var LastLogonDate_2 string
+				for rowsGetColumns.Next() { // 循环遍历
+					err := rowsGetColumns.Scan(&UserID_2,&InitLogonDate_2,&LastLogonDate_2)
+					if err != nil {
+						fmt.Printf("  select id：%d     %s \n ", userInfo.id, err.Error())
+						fmt.Println("----------------------------------------")
+						fmt.Println("", tableColumns)
+						fmt.Println("----------------------------------------")
+					}
+					//fmt.Println("", allKeys)
+				}
+				mssql.CloseQuery(rowsGetColumns)
+				// ----------------------------开始执行update------------------------------
+				//allKeys = GetTableKeys(RecordTimeDict[j])
 
 				// 每个不同的处理方式
-				allKeysDeal := GetTableKeysDeal(RecordTimeDict[j], userInfo)
+				//allKeysDeal := GetTableKeysDeal(RecordTimeDict[j], userInfo)
 
 				// 统一的insert语句
-				insertSql := fmt.Sprintf("insert into %s.dbo.%s (%s) ", dbName, table1, allKeys)
-				selectSql := fmt.Sprintf(" select  %s  from  %s.dbo.%s  WITH(NOLOCK)  where UserID= %d", allKeysDeal, dbName2, table2, userInfo.uid2)
-				sqlString := insertSql + selectSql
-				//zLog.PrintfLogger("sql: %s ",sqlString)
-				err,_ := mssql.Exec(dbNow, sqlString)
+				insertSql := fmt.Sprintf("update testdb.dbo.a1_user_free_new_sortid_match with(rowlock,updlock) set UserID_2=%d, InitLogonDate_2=%s, LastLogonDate_2=%s, TheDays_2=%d, MatchType=1, daynum=datediff(DAY,%s,%s) where id=%d",UserID_2,InitLogonDate_2,LastLogonDate_2,userInfo.days,InitLogonDate_2,userInfo.initDate,userInfo.id)
+				//selectSql := fmt.Sprintf(" select  %s  from  %s.dbo.%s  WITH(NOLOCK)  where UserID= %d", allKeysDeal, dbName2, table2, userInfo.uid2)
+				//sqlString := insertSql + selectSql
+				zLog.PrintfLogger("sql: %s ",insertSql)
+				err,_ = mssql.Exec(testDB, insertSql)
 				if err!= nil{
 					zLog.PrintfLogger("insert Exec Error %s",err.Error())
 				}
-			}
-		}
+			//}
+		//}
 
 	}
 	mssql.CloseQuery(rows)

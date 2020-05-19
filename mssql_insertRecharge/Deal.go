@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/denisenkom/go-mssqldb"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -23,15 +22,21 @@ func DealUserList(idStart int) {
 		//passwordReadOnly   = "35A20E7966ECDC93"
 		PlatformDBName   = "PlatformDB_202001"
 		DataBaseBYDBName = "DataBaseBY_202002"
+		TestDBName = "testdb"
 	)
 	fmt.Println(" --------------开始连接数据库-------------- ")
 	platformDB := mssql.ConnectDB(userId, password, server, PlatformDBName)
 	DataBaseBYDB := mssql.ConnectDB(userId, password, server, DataBaseBYDBName)
 	logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
 	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
+	TestDB := mssql.ConnectDB(userId, password, server, TestDBName)
 
 	//fmt.Println(" --------------开始查询充值列表--------------")
-	sqlU := fmt.Sprintf("select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1578672000") // 一天
+	daySecond := 86400		// 一天秒数
+	day110 := 1578585600	// 1月10号
+	day1:= day110 + (daySecond * idStart)
+	day2:=day1 + daySecond
+	sqlU := fmt.Sprintf("select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= %d and SuccessTime < %d",day1,day2) // 一天
 	//sqlU:= fmt.Sprintf( "select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1581264000") // 一个月
 	_, rows, _ := mssql.Query(platformDB, sqlU)
 
@@ -69,7 +74,7 @@ func DealUserList(idStart int) {
 				// 金币
 				getGold := rechargeInfo.coin + rechargeInfo.giftOnceCoin // type =2
 				emailGold := rechargeInfo.giftOnePayCoin                 // type =6
-				lastAllGold := GetHistoryScore(dbName, day1)                                         // 获取玩家的历史金币数量
+				lastAllGold := GetHistoryScore(TestDB, dbName, day1,dbNow,rechargeInfo.UserId)     // 获取玩家的历史金币数量
 
 				// 插入充值金币语句
 				addGoldSql := GetGoldRechargeSql(rechargeInfo, getGold, lastAllGold, dataTimeStr, dbName, day1, 2)
@@ -86,7 +91,7 @@ func DealUserList(idStart int) {
 				//钻石
 				getDiamond := rechargeInfo.Diamond + rechargeInfo.giftOnceDiamond // type =2
 				emailDiamond := rechargeInfo.giftOnePayDiamond                    // type =6
-				lastAllDiamond := 0                                               // 获取玩家的历史钻石数量
+				lastAllDiamond := GetHistoryDiamond(TestDB, dbName, day1,dbNow,rechargeInfo.UserId)                                               // 获取玩家的历史钻石数量
 
 				// 插入充值钻石语句
 				addGoldSql := GetGoldRechargeSql(rechargeInfo, getDiamond, lastAllDiamond, dataTimeStr, dbName, day1, 2)
@@ -108,6 +113,7 @@ func DealUserList(idStart int) {
 	mssql.CloseDB(DataBaseBYDB)
 	mssql.CloseDB(logDB1)
 	mssql.CloseDB(logDB2)
+	mssql.CloseDB(TestDB)
 
 	wg.Done()
 }
@@ -124,28 +130,4 @@ func GetMonth(table1 string, logDB1 *sql.DB, logDB2 *sql.DB) (*sql.DB, string) {
 		dbName = "BY_LOG_202002"
 	}
 	return dbNow, dbName
-}
-
-
-// 获取历史遗留分数
-func GetHistoryScore(dbName string, day1 string ,dbNow *sql.DB) int {
-	dayInt,_ := strconv.Atoi(day1)
-	tableName := fmt.Sprintf("%s.dbo.GameScoreChangeRecord_%d",dbName, dayInt)
-	userId := 18811075
-
-	num:= dayInt-202001
-
-	sql := fmt.Sprintf("select top(1)Score from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d ) and UserID = %d", tableName,userId)
-	fmt.Println("sql ",sql)
-
-	_, rows, _ := mssql.Query(dbNow, sql)
-	for rows.Next() { // 循环遍历
-		var score int
-		err := rows.Scan(&score)
-		if err != nil {
-			zLog.PrintfLogger(" 遍历历史分数遗留表 id %d    , %s \n", score, err)
-			continue
-		}
-	}
-	return 0
 }
