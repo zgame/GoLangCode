@@ -11,14 +11,16 @@ import (
 // 处理新增充值用户的行为记录
 //------------------------------------------------------------------
 
-var Group = 1000 // 每次处理人数
+var Group = 5000 // 每次处理人数
 var wg sync.WaitGroup
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU()) //设置cpu的核的数量，从而实现高并发
 	fmt.Println("-----------------start--------------------------")
 
-	for i := 0; i < 140; i++ {
+	//497299
+
+	for i := 99; i < 280; i++ {
 		wg.Add(1)
 		go DealUserList(i * Group)
 	}

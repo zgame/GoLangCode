@@ -24,12 +24,12 @@ func DealUserList(idStart int) {
 	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
 
 	//fmt.Println(" --------------开始查询玩家列表--------------")
-	sqlU := fmt.Sprintf("select top(%d)* from testdb.dbo.a1_user_free_new_sortid_match   with(nolock) where id >= %d", Group, idStart)
+	sqlU := fmt.Sprintf("select top(%d)id, UserID, TheDays  from testdb.dbo.a1_user_free_new_sortid_match   with(nolock) where id >= %d and UserID_2 is NULL", Group, idStart)
 	_, rows, _ := mssql.Query(testDB, sqlU)
 
 	for rows.Next() { // 循环遍历
 		var userInfo UserList
-		err := rows.Scan(&userInfo.id, &userInfo.uid, &userInfo.initDate, &userInfo.lastDate, &userInfo.days, &userInfo.uid2, &userInfo.initDate2, &userInfo.lastDate2, &userInfo.days2, &userInfo.matchType, &userInfo.dayNum) // 赋值到结构体中
+		err := rows.Scan(&userInfo.id, &userInfo.uid, &userInfo.days) // 赋值到结构体中
 		if err != nil {
 			zLog.PrintfLogger(" 遍历玩家列表 id %d    , %s \n", userInfo.id, err)
 			continue
@@ -61,7 +61,7 @@ func DealUserList(idStart int) {
 		//allKeysDeal := GetTableKeysDeal(RecordTimeDict[j], userInfo)
 
 		// 统一的insert语句
-		UpdateSql := fmt.Sprintf("update testdb.dbo.a1_user_free_new_sortid_match with(rowlock,updlock) set UserID_2=%d, InitLogonDate_2='%s', LastLogonDate_2='%s', TheDays_2=%d, MatchType=1, daynum=datediff(DAY,'%s','%s') where id=%d", UserID_2, InitLogonDate_2[0:10], LastLogonDate_2[0:10], userInfo.days, InitLogonDate_2[0:10], userInfo.initDate[0:10], userInfo.id)
+		UpdateSql := fmt.Sprintf("update testdb.dbo.a1_user_free_new_sortid_match with(rowlock,updlock) set UserID_2=%d, InitLogonDate_2='%s', LastLogonDate_2='%s', TheDays_2=%d, MatchType=1, daynum=datediff(DAY,'%s',InitLogonDate) where id=%d", UserID_2, InitLogonDate_2[0:10], LastLogonDate_2[0:10], userInfo.days, InitLogonDate_2[0:10],  userInfo.id)
 		//selectSql := fmt.Sprintf(" select  %s  from  %s.dbo.%s  WITH(NOLOCK)  where UserID= %d", allKeysDeal, dbName2, table2, userInfo.uid2)
 		//sqlString := UpdateSql + selectSql
 		zLog.PrintfLogger("sql: %s ", UpdateSql)

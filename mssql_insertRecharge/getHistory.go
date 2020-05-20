@@ -9,19 +9,18 @@ import (
 )
 
 //遗留分数
-func GetHistoryScore(testDB *sql.DB, dbName string, day1 string ,dbNow *sql.DB, userId int) int {
-	return GetHistory(testDB,dbName,day1,dbNow,userId,"GameScoreChangeRecord","Score")
+func GetHistoryScore( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int) int {
+	return GetHistory(dbName,day1,dbNow,userId,"GameScoreChangeRecord","Score",GetTimeFromInt(rechargeTime))
 }
 
 //遗留钻石
-func GetHistoryDiamond(testDB *sql.DB, dbName string, day1 string ,dbNow *sql.DB, userId int) int {
-	return GetHistory(testDB,dbName,day1,dbNow,userId,"GameDiamondChangeRecord","Diamond")
+func GetHistoryDiamond( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int) int {
+	return GetHistory(dbName,day1,dbNow,userId,"GameDiamondChangeRecord","Diamond",GetTimeFromInt(rechargeTime))
 }
 
 
-
 // 获取历史遗留
-func GetHistory(testDB *sql.DB, dbName string, day1 string ,dbNow *sql.DB, userId int, tableName string, keyName string) int {
+func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableName string, keyName string , rechargeTime string) int {
 	dayInt,_ := strconv.Atoi(day1)
 
 	for i:=30;i>0;i-- {
@@ -33,7 +32,7 @@ func GetHistory(testDB *sql.DB, dbName string, day1 string ,dbNow *sql.DB, userI
 		}
 		if dayInt == 20200100{
 			zLog.PrintfLogger(" dayInt 太往前了，已经要搜到12月份了, userid: %d ", userId)
-			InsertUserIdWhenCanNotFindOut(testDB,userId,keyName)
+			InsertUserIdWhenCanNotFindOut(userId,keyName)
 			return 0
 			//dayInt = 20191230	// 跳到12月份
 		}
@@ -45,7 +44,7 @@ func GetHistory(testDB *sql.DB, dbName string, day1 string ,dbNow *sql.DB, userI
 		//	return 0
 		//}
 
-		sql := fmt.Sprintf("select top(1)%s from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d ) and UserID = %d", keyName,tableName, tableName, userId,userId)
+		sql := fmt.Sprintf("select top(1)%s from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d and RecordTime < '%s') and UserID = %d", keyName,tableName, tableName, userId,userId, rechargeTime)
 		zLog.PrintfLogger("获取%s历史sql: %s ", keyName, sql)
 
 		_, rows, _ := mssql.Query(dbNow, sql)
@@ -67,7 +66,7 @@ func GetHistory(testDB *sql.DB, dbName string, day1 string ,dbNow *sql.DB, userI
 
 
 // 把没有找到数据的玩家uid insert到表中
-func InsertUserIdWhenCanNotFindOut(db *sql.DB, userId int, keyName string)  {
+func InsertUserIdWhenCanNotFindOut(userId int, keyName string)  {
 	sql := fmt.Sprintf("insert into dbo.can_not_find_last_%s(userId) values (%d)", keyName, userId)
-	mssql.Exec(db, sql)
+	mssql.Exec(TestDB, sql)
 }
