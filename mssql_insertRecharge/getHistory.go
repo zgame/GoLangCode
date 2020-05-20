@@ -17,6 +17,14 @@ func GetHistoryScore( dbName string, day1 string ,dbNow *sql.DB, userId int, rec
 func GetHistoryDiamond( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int) int {
 	return GetHistory(dbName,day1,dbNow,userId,"GameDiamondChangeRecord","Diamond",GetTimeFromInt(rechargeTime))
 }
+//遗留灵力
+func GetHistoryCoin( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int) int {
+	return GetHistory(dbName,day1,dbNow,userId,"GameCoinChangeRecord","Coin",GetTimeFromInt(rechargeTime))
+}
+//遗留道具
+func GetHistoryItem( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int) int {
+	return GetHistory(dbName,day1,dbNow,userId,"GameItemChangeRecord","ItemIndbNum",GetTimeFromInt(rechargeTime))
+}
 
 
 // 获取历史遗留
