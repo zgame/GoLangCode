@@ -10,20 +10,22 @@ import (
 	"time"
 )
 
-func DealUserList(idStart int) {
-	var (
-		userId     = "dbuser"
-		password   = "CEDFE2CDA7DB84AC"
-		server     = "172.16.140.89"
-		logDBName1 = "BY_LOG_202001"
-		logDBName2 = "BY_LOG_202002"
+var (
+	userId     = "dbuser"
+	password   = "CEDFE2CDA7DB84AC"
+	server     = "172.16.140.89"
+	logDBName1 = "BY_LOG_202001"
+	logDBName2 = "BY_LOG_202002"
 
-		//userIdReadOnly     = "dbuser_ro"
-		//passwordReadOnly   = "35A20E7966ECDC93"
-		PlatformDBName   = "PlatformDB_202001"
-		DataBaseBYDBName = "DataBaseBY_202002"
-		TestDBName = "testdb"
-	)
+	//userIdReadOnly     = "dbuser_ro"
+	//passwordReadOnly   = "35A20E7966ECDC93"
+	PlatformDBName   = "PlatformDB_202001"
+	DataBaseBYDBName = "DataBaseBY_202002"
+	TestDBName = "testdb"
+)
+
+func DealUserList(idStart int) {
+
 	fmt.Println(" --------------开始连接数据库-------------- ")
 	platformDB := mssql.ConnectDB(userId, password, server, PlatformDBName)
 	DataBaseBYDB := mssql.ConnectDB(userId, password, server, DataBaseBYDBName)
@@ -67,7 +69,7 @@ func DealUserList(idStart int) {
 
 		if rechargeInfo.gitPackageId > 0 {
 			// 购买礼包
-
+			GetGiftPackageRechargeSql()
 		} else {
 			// 金币或者钻石
 			if rechargeInfo.coin > 0 {
@@ -94,14 +96,14 @@ func DealUserList(idStart int) {
 				lastAllDiamond := GetHistoryDiamond(TestDB, dbName, day1,dbNow,rechargeInfo.UserId)                                               // 获取玩家的历史钻石数量
 
 				// 插入充值钻石语句
-				addGoldSql := GetGoldRechargeSql(rechargeInfo, getDiamond, lastAllDiamond, dataTimeStr, dbName, day1, 2)
+				addGoldSql := GetDiamondRechargeSql(rechargeInfo, getDiamond, lastAllDiamond, dataTimeStr, dbName, day1, 2)
 				zLog.PrintfLogger("插入充值钻石语句 %s", addGoldSql)
 				// 插入邮件赠送
 				if emailDiamond > 0 {
-					mailGoldSql := GetGoldRechargeSql(rechargeInfo, emailDiamond, lastAllDiamond, dataTimeStr, dbName, day1, 6)
+					mailGoldSql := GetDiamondRechargeSql(rechargeInfo, emailDiamond, lastAllDiamond, dataTimeStr, dbName, day1, 6)
 					zLog.PrintfLogger("插入邮件充值钻石语句 %s", mailGoldSql)
 				}
-				reduceGoldSql := GetGoldReduceSql(rechargeInfo, getDiamond+emailDiamond, lastAllDiamond, dataTimeStr, dbName, day1)
+				reduceGoldSql := GetDiamondReduceSql(rechargeInfo, getDiamond+emailDiamond, lastAllDiamond, dataTimeStr, dbName, day1)
 				zLog.PrintfLogger("插入减少钻石语句 %s", reduceGoldSql)
 
 			}
