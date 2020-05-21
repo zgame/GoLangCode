@@ -40,9 +40,10 @@ func DealUserList(idStart int) {
 	daySecond := 86400		// 一天秒数
 	day110 := 1578585600	// 1月10号
 	day1:= day110 + (daySecond * idStart)
-	day2:=day1 + daySecond
-	sqlU := fmt.Sprintf("select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= %d and SuccessTime < %d",day1,day2) // 一天
+	day2:= day1 + daySecond
+	sqlU := fmt.Sprintf("select top(1) * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= %d and SuccessTime < %d and GiftPackageID = 7 ",day1,day2) // 一天
 	//sqlU:= fmt.Sprintf( "select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1581264000") // 一个月
+	//fmt.Println("sql:",sqlU)
 	_, rows, _ := mssql.Query(platformDB, sqlU)
 
 	for rows.Next() { // 循环遍历
@@ -81,15 +82,12 @@ func DealUserList(idStart int) {
 				emailGold := rechargeInfo.giftOnePayCoin                 // type =6
 
 				// 插入充值金币语句
-				addGoldSql := GetScoreRechargeSql(rechargeInfo, getGold, dbNow, dataTimeStr, dbName, day1, 2,1,"充值金币赠送", rechargeInfo.Money)
-				zLog.PrintfLogger("插入充值金币语句 %s", addGoldSql)
+				lastAllScore:=GetScoreRechargeSql(rechargeInfo, getGold, dbNow, dataTimeStr, dbName, day1, 2,1,"充值金币赠送", rechargeInfo.Money)
 				// 插入邮件赠送
 				if emailGold > 0 {
-					mailGoldSql := GetScoreRechargeSql(rechargeInfo, emailGold, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money)
-					zLog.PrintfLogger("插入邮件充值金币语句 %s", mailGoldSql)
+					GetScoreRechargeSql(rechargeInfo, emailGold, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money)
 				}
-				reduceGoldSql := GetScoreReduceSql(rechargeInfo, getGold+emailGold, dbNow, dataTimeStr, dbName, day1)
-				zLog.PrintfLogger("插入减少金币语句 %s", reduceGoldSql)
+				GetScoreReduceSql(rechargeInfo, getGold+emailGold, dbNow, dataTimeStr, dbName, day1,lastAllScore)
 
 			} else if rechargeInfo.Diamond > 0 {
 				//钻石
@@ -97,15 +95,13 @@ func DealUserList(idStart int) {
 				emailDiamond := rechargeInfo.giftOnePayDiamond                    // type =6
 
 				// 插入充值钻石语句
-				addDiamondSql := GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, 2,1,"充值钻石赠送", rechargeInfo.Money)
-				zLog.PrintfLogger("插入充值钻石语句 %s", addDiamondSql)
+				lastAllDiamond:=GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, 2,1,"充值钻石赠送", rechargeInfo.Money)
 				// 插入邮件赠送
 				if emailDiamond > 0 {
-					mailDiamondSql := GetDiamondRechargeSql(rechargeInfo, emailDiamond, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money)
-					zLog.PrintfLogger("插入邮件充值钻石语句 %s", mailDiamondSql)
+					GetDiamondRechargeSql(rechargeInfo, emailDiamond, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money)
 				}
-				reduceGoldSql := GetDiamondReduceSql(rechargeInfo, getDiamond+emailDiamond, dbNow, dataTimeStr, dbName, day1)
-				zLog.PrintfLogger("插入减少钻石语句 %s", reduceGoldSql)
+				GetDiamondReduceSql(rechargeInfo, getDiamond+emailDiamond, dbNow, dataTimeStr, dbName, day1,lastAllDiamond)
+
 
 			}
 		}

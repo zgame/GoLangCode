@@ -3,7 +3,6 @@ package main
 import (
 	"./zLog"
 	"database/sql"
-	"fmt"
 )
 
 type GiftItem struct {
@@ -260,33 +259,78 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 		title = "充值追击海神礼包赠送"
 		ItemArray = AddItemArray(120, 28, ItemArray)
 	case 14002: // 金币
+		getScore = 26000000
+		title = "充值围捕海神礼包赠送"
+		ItemArray = AddItemArray(120, 66, ItemArray)
 	case 15005: // 金币
+		getScore = 1320000
+		title = "充值玄武礼盒赠送"
+		ItemArray = AddItemArray(103, 30, ItemArray)
+		ItemArray = AddItemArray(101, 30, ItemArray)
 	case 15006: // 金币
+		getScore = 4160000
+		title = "充值白虎礼盒赠送"
+		ItemArray = AddItemArray(131, 2, ItemArray)
 	case 15007: // 金币
+		getScore = 13760000
+		title = "充值朱雀礼盒赠送"
+		ItemArray = AddItemArray(131, 4, ItemArray)
 	case 15008: // 金币
+		getScore = 26760000
+		title = "充值青龙礼盒赠送"
+		ItemArray = AddItemArray(131, 8, ItemArray)
 	case 16005: // 只有道具
-
+		title = "充值新竞技礼包赠送"
+		ItemArray = AddItemArray(151, 20, ItemArray)
+		ItemArray = AddItemArray(101, 100, ItemArray)
+		ItemArray = AddItemArray(120, 20, ItemArray)
+		ItemArray = AddItemArray(131, 4, ItemArray)
 	}
 
 	if getScore > 0 {
 		// 插入充值金币
-		addScoreSql := GetScoreRechargeSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId)
-		zLog.PrintfLogger("礼包 %d 插入充值金币语句 %s", rechargeInfo.gitPackageId, addScoreSql)
+		zLog.PrintfLogger("-----------------礼包 %d 插入金币 %d", rechargeInfo.gitPackageId , getScore)
+		lastAllScore:=GetScoreRechargeSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId)
+		GetScoreReduceSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1,lastAllScore)
+		//zLog.PrintfLogger("礼包 %d 插入充值金币语句 ", rechargeInfo.gitPackageId)
 	}
 	if getDiamond > 0 {
 		// 插入充值钻石语句
-		addDiamondSql := GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId)
-		zLog.PrintfLogger("礼包 %d 插入充值钻石语句 %s", rechargeInfo.gitPackageId, addDiamondSql)
+		zLog.PrintfLogger("-----------------礼包 %d 插入钻石 %d", rechargeInfo.gitPackageId , getDiamond)
+		lastAllDiamond:=GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId)
+		GetDiamondReduceSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1,lastAllDiamond)
+		//zLog.PrintfLogger("礼包 %d 插入充值钻石语句 %s", rechargeInfo.gitPackageId, addDiamondSql)
 	}
 	if getCoin > 0 {
 		// 插入灵力
-		addCoinSql := GetCoinRechargeSql(rechargeInfo, getCoin, dbNow, dataTimeStr, dbName, day1, Type, SubType, title)
-		zLog.PrintfLogger("礼包 %d 插入充值灵力语句 %s", rechargeInfo.gitPackageId, addCoinSql)
+		zLog.PrintfLogger("-----------------礼包 %d 插入灵力 %d", rechargeInfo.gitPackageId , getCoin)
+		lastAllCoin:=GetCoinRechargeSql(rechargeInfo, getCoin, dbNow, dataTimeStr, dbName, day1, Type, SubType, title)
+		GetCoinReduceSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1,lastAllCoin)
+
 	}
 	for _, item := range ItemArray {
-		fmt.Println(item.ItemId, "道具", item.ItemNum)
-		addItemSql := GetItemRechargeSql(rechargeInfo, item.ItemId, item.ItemNum, dbNow, dataTimeStr, dbName, day1, title)
-		zLog.PrintfLogger("礼包 %d 插入充值道具语句 %s", rechargeInfo.gitPackageId, addItemSql)
+		// 插入道具
+		zLog.PrintfLogger("-----------------礼包 %d 插入道具 %d 数量 %d", rechargeInfo.gitPackageId , item.ItemId, item.ItemNum)
+		lastAllItem:=GetItemRechargeSql(rechargeInfo, item.ItemId, item.ItemNum, dbNow, dataTimeStr, dbName, day1, title)
+		GetItemReduceSql(rechargeInfo, item.ItemId, item.ItemNum, dbNow, dataTimeStr, dbName, day1,lastAllItem)
+		if item.ItemId >=108 && item.ItemId <=111 {
+
+			// 弹头产生金币消耗
+			BombScore:= 0
+			switch item.ItemId {
+			case 108:
+				BombScore = ZRandomTo(90000,110000)
+			case 109:
+				BombScore = ZRandomTo(430000,570000)
+			case 110:
+				BombScore = ZRandomTo(5500000,6500000)
+			case 111:
+				BombScore = ZRandomTo(13000000,18000000)
+			}
+			zLog.PrintfLogger("-----------------因为包含弹头 %d，所以金币有所变化 %d", item.ItemId, BombScore)
+			lastAllScore:= GetScoreRechargeSql(rechargeInfo, BombScore, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId)
+			GetScoreReduceSql(rechargeInfo, BombScore, dbNow, dataTimeStr, dbName, day1,lastAllScore)
+		}
 	}
 
 }

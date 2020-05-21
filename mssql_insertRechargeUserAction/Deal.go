@@ -25,7 +25,8 @@ func DealUserList(idStart int) {
 	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
 
 	//fmt.Println(" --------------开始查询玩家列表--------------")
-	sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.aa_user_chongzhi_new_sortid_match   with(nolock) where id >= %d", Group,idStart)
+	//sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.aa_user_chongzhi_new_sortid_match   with(nolock) where id >= %d", Group,idStart)	// 充值的用户
+	sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.a1_user_free_new_sortid_match   with(nolock) where id >= %d", Group,idStart)    // 免费的用户
 	_, rows, _ := mssql.Query(testDB, sqlU)
 
 	for rows.Next() { // 循环遍历
