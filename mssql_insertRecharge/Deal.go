@@ -28,6 +28,7 @@ var (
 
 
 func DealUserList(idStart int) {
+	dataBaseArray := make([]RechargeList,0)
 
 	fmt.Println(" --------------开始连接数据库-------------- ")
 	platformDB := mssql.ConnectDB(userId, password, server, PlatformDBName)
@@ -41,25 +42,26 @@ func DealUserList(idStart int) {
 	day110 := 1578585600	// 1月10号
 	day1:= day110 + (daySecond * idStart)
 	day2:= day1 + daySecond
-	sqlU := fmt.Sprintf("select top(1) * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= %d and SuccessTime < %d and GiftPackageID = 7 ",day1,day2) // 一天
+	sqlU := fmt.Sprintf("select ID,UserID,PayStatus,KindID,Money,Coin,GiftOnceCoin,GiftOnePayCoin,SuccessTime,ClientKind,GiftPackageID,Diamond,GiftOnceDiamond,GiftOnePayDiamond,ChannelID  from testdb.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= %d and SuccessTime < %d ",day1,day2) // 一天
 	//sqlU:= fmt.Sprintf( "select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1581264000") // 一个月
 	//fmt.Println("sql:",sqlU)
-	_, rows, _ := mssql.Query(platformDB, sqlU)
+	_, rows, _ := mssql.Query(TestDB, sqlU)
 
 	for rows.Next() { // 循环遍历
 		var rechargeInfo RechargeList
-		err := rows.Scan(&rechargeInfo.id, &rechargeInfo.orderNo, &rechargeInfo.UserId, &rechargeInfo.name, &rechargeInfo.payType, &rechargeInfo.payStatus, &rechargeInfo.kindId, &rechargeInfo.Money,
-			&rechargeInfo.coin, &rechargeInfo.giftOnceCoin, &rechargeInfo.giftTotalCoin, &rechargeInfo.giftOnePayCoin, &rechargeInfo.createTime, &rechargeInfo.SuccessTime, &rechargeInfo.operateUserId,
-			&rechargeInfo.remark, &rechargeInfo.IP, &rechargeInfo.sendStatus, &rechargeInfo.OnePay, &rechargeInfo.payGiftMoneyLimit, &rechargeInfo.crontabPayCount, &rechargeInfo.CrontabPayDate,
-			&rechargeInfo.ClientKind, &rechargeInfo.AppstoreEnvironment, &rechargeInfo.ditchNumber, &rechargeInfo.coinType, &rechargeInfo.actionId, &rechargeInfo.userGameId, &rechargeInfo.gitPackageId,
-			&rechargeInfo.appStoreProductId, &rechargeInfo.Diamond, &rechargeInfo.giftOnceDiamond, &rechargeInfo.giftTotalDiamond, &rechargeInfo.giftOnePayDiamond, &rechargeInfo.payDiamondMoneyLimit,
-			&rechargeInfo.orderDitch, &rechargeInfo.channelId, &rechargeInfo.registerMachine, &rechargeInfo.otherMoney, &rechargeInfo.registerDate, &rechargeInfo.logonMachine, &rechargeInfo.vipLev,
-			&rechargeInfo.receiptUserName, &rechargeInfo.itemId, &rechargeInfo.discountMoney, &rechargeInfo.payCount) // 赋值到结构体中
+		err := rows.Scan(&rechargeInfo.id, &rechargeInfo.UserId, &rechargeInfo.payStatus, &rechargeInfo.kindId, &rechargeInfo.Money,
+			&rechargeInfo.coin, &rechargeInfo.giftOnceCoin, &rechargeInfo.giftOnePayCoin, &rechargeInfo.SuccessTime,
+			&rechargeInfo.ClientKind, &rechargeInfo.gitPackageId,
+			&rechargeInfo.Diamond, &rechargeInfo.giftOnceDiamond, &rechargeInfo.giftOnePayDiamond, &rechargeInfo.channelId) // 赋值到结构体中
 		if err != nil {
 			zLog.PrintfLogger(" 遍历充值列表 id %d    , %s \n", rechargeInfo.id, err)
 			continue
 		}
+		dataBaseArray = append(dataBaseArray, rechargeInfo) //添加到列表
 
+	}
+	zLog.PrintfLogger(" --------------一共有 : %d  条数据--------------", len(dataBaseArray))
+	for _,rechargeInfo := range dataBaseArray{
 		zLog.PrintfLogger(" --------------开始处理充值id : %d--------------", rechargeInfo.id)
 
 		// -----------------------------获取单个充值行为------------------------

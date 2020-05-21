@@ -22,7 +22,7 @@ func main() {
 
 	TestDB = mssql.ConnectDB(userId, password, server, TestDBName)
 
-	for i := 0; i < 1; i++ {
+	for i := 0; i < 31; i++ {
 		wg.Add(1)
 		go DealUserList(i )
 	}

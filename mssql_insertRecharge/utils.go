@@ -18,55 +18,55 @@ func ZRandomTo(min int, max int) int {
 
 type RechargeList struct {
 	id        int			//自增编号
-	orderNo       string
+	//orderNo       string
 	UserId		int			// 用户
-	name  string
-	payType      int
+	//name  string
+	//payType      int
 	payStatus      int
 	kindId	int
 	Money int
 	coin     int		//金币
 	giftOnceCoin int    // 赠送金币
-	giftTotalCoin    int
+	//giftTotalCoin    int
 
 	giftOnePayCoin    int	// 邮件发送金币
-	createTime    int
+	//createTime    int
 	SuccessTime    int
-	operateUserId    int
-	remark    string
-	IP    string
-	sendStatus    int
+	//operateUserId    int
+	//remark    string
+	//IP    string
+	//sendStatus    int
 
-	OnePay    int
-	payGiftMoneyLimit    int
-	crontabPayCount    int
-	CrontabPayDate    string
+	//OnePay    int
+	//payGiftMoneyLimit    int
+	//crontabPayCount    int
+	//CrontabPayDate    string
 	ClientKind    int
-	AppstoreEnvironment    int
-	ditchNumber    int
-	coinType    int
+	//AppstoreEnvironment    int
+	//ditchNumber    int
+	//coinType    int
 
-	actionId    int
-	userGameId    int
+	//actionId    int
+	//userGameId    int
 	gitPackageId    int			// 礼包id
-	appStoreProductId    string
+	//appStoreProductId    string
 	Diamond    int			// 钻石
 	giftOnceDiamond    int		// 赠送钻石
-	giftTotalDiamond    int
+	//giftTotalDiamond    int
 	giftOnePayDiamond    int		// 邮件赠送钻石
-	payDiamondMoneyLimit    int
+	//payDiamondMoneyLimit    int
 
-	orderDitch    int
+	//orderDitch    int
 	channelId    int
-	registerMachine    string
-	otherMoney    int
-	registerDate    string
-	logonMachine    string
-	vipLev	int
-	receiptUserName string
-	itemId	int
-	discountMoney int
-	payCount int
+	//registerMachine    string
+	//otherMoney    int
+	//registerDate    string
+	//logonMachine    string
+	//vipLev	int
+	//receiptUserName string
+	//itemId	int
+	//discountMoney int
+	//payCount int
 
 }
 
