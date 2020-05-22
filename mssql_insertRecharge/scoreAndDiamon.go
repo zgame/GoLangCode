@@ -52,15 +52,30 @@ func GetScoreRechargeSql(rechargeInfo RechargeList, getGold int, dbNow *sql.DB,d
 
 // 生成金币减少的语句
 func GetScoreReduceSql(rechargeInfo RechargeList, reduceGold int, dbNow *sql.DB, dataTimeStr string,dbName string, day1 string,lastAllGold int)  {
+	reduceGoldPart1 := int( reduceGold / 3)
+	reduceGoldPart2 := reduceGold - reduceGoldPart1
 	//lastAllGold := GetHistoryScore(dbName, day1,dbNow,rechargeInfo.UserId,rechargeInfo.SuccessTime)     // 获取玩家的历史金币数量
 	randTime:= ZRandomTo(20,60)
 	table:= ZRandomTo(10,200)
+
+	// --------------------第二次减少------------------------------
 	reduceGoldTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
-	goldValues := fmt.Sprintf("%d,%d,2259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0,0,0,1,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceGold, lastAllGold,reduceGoldTimeOff, table,rechargeInfo.channelId)
+	goldValues := fmt.Sprintf("%d,%d,2259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0,0,0,1,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceGoldPart1, lastAllGold,reduceGoldTimeOff, table,rechargeInfo.channelId)
 	reduceGoldSql := GetInsertSql(dbName, "GameScoreChangeRecord", day1, ScoreKeys, goldValues)
 
 	//zLog.PrintfLogger("插入金币减少语句 %s", reduceGoldSql)
 	err, _ := mssql.Exec(dbNow, reduceGoldSql)
+	if err != nil {
+		zLog.PrintfLogger("GetScoreReduceSql Exec Error %s ,sql: %s", err.Error(), reduceGoldSql)
+	}
+
+	// --------------------第二次减少------------------------------
+	reduceGoldTimeOff = fmt.Sprintf("dateadd(ss,%d,'%s')",randTime + 20,dataTimeStr)
+	goldValues = fmt.Sprintf("%d,%d,2259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0,0,0,1,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceGoldPart2, lastAllGold,reduceGoldTimeOff, table,rechargeInfo.channelId)
+	reduceGoldSql = GetInsertSql(dbName, "GameScoreChangeRecord", day1, ScoreKeys, goldValues)
+
+	//zLog.PrintfLogger("插入金币减少语句 %s", reduceGoldSql)
+	err, _ = mssql.Exec(dbNow, reduceGoldSql)
 	if err != nil {
 		zLog.PrintfLogger("GetScoreReduceSql Exec Error %s ,sql: %s", err.Error(), reduceGoldSql)
 	}
