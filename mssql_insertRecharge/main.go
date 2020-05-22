@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./mssql"
+
 	"fmt"
 	"runtime"
 	"sync"
@@ -20,7 +20,7 @@ func main() {
 	fmt.Println("-----------------start--------------------------")
 	fmt.Println("-----------------插入充值记录--------------------------")
 
-	TestDB = mssql.ConnectDB(userId, password, server, TestDBName)
+	//TestDB = mssql.ConnectDB(userId, password, server, TestDBName)
 
 	for i := 0; i < 31; i++ {
 		wg.Add(1)
@@ -33,13 +33,13 @@ func main() {
 	fmt.Println("-----------------END--------------------------")
 	fmt.Println("-----------------END--------------------------")
 
-	mssql.CloseDB(TestDB)
+
 	for {
 		select {
 
 		}
 	}
 
-	fmt.Println(" --------------end-------------- ")
+	//fmt.Println(" --------------end-------------- ")
 
 }

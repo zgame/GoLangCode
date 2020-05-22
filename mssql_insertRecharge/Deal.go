@@ -65,7 +65,7 @@ func DealUserList(idStart int) {
 	}
 	zLog.PrintfLogger(" --------------一共有 : %d  条数据--------------", len(dataBaseArray))
 	for index,rechargeInfo := range dataBaseArray{
-		zLog.PrintfLogger(" --------------开始处理充值index : %d     rechargeinfo:--------------", index,rechargeInfo.id)
+		zLog.PrintfLogger(" --------------开始处理充值index : %d     rechargeinfo.UserId: %d--------------", index,rechargeInfo.UserId)
 		zLog.PrintfLogger(" --------------开始处理充值id : %d--------------", rechargeInfo.id)
 
 		// -----------------------------获取单个充值行为------------------------
@@ -114,11 +114,12 @@ func DealUserList(idStart int) {
 	}
 
 	mssql.CloseQuery(rows)
+
 	mssql.CloseDB(platformDB)
 	mssql.CloseDB(DataBaseBYDB)
 	mssql.CloseDB(logDB1)
 	mssql.CloseDB(logDB2)
-
+	mssql.CloseDB(TestDB)
 
 	wg.Done()
 }

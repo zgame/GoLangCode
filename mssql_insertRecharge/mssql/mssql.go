@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	_ "github.com/denisenkom/go-mssqldb"
+	//_ "github.com/denisenkom/go-mssqldb"
 )
 
 // 连接数据库
@@ -19,9 +19,9 @@ func ConnectDB(userId string,password string,server string,database string) *sql
 		fmt.Println("Cannot connect: ", err.Error())
 		return nil
 	}
-	db.SetMaxIdleConns(100)
-	db.SetMaxOpenConns(200)
-	db.SetConnMaxLifetime(   600 * time.Second )
+	db.SetMaxIdleConns(500)
+	db.SetMaxOpenConns(500)
+	db.SetConnMaxLifetime( 60 * time.Second )
 
 	//defer db.CloseDB()
 	err = db.Ping()
