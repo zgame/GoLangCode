@@ -12,7 +12,8 @@ import (
 // 处理新增充值用户的行为记录
 //------------------------------------------------------------------
 
-//var Group = 1000 // 每次处理人数
+//var Group = 2000 // 每次处理人数
+var Group = 2 // 每次处理人数
 var wg sync.WaitGroup
 
 func main() {
@@ -22,7 +23,8 @@ func main() {
 
 	//TestDB = mssql.ConnectDB(userId, password, server, TestDBName)
 
-	for i := 0; i < 31; i++ {
+	//for i := 0; i < 60; i++ {
+	for i := 0; i < 1; i++ {
 		wg.Add(1)
 		go DealUserList(i )
 	}

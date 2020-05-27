@@ -16,57 +16,15 @@ func ZRandomTo(min int, max int) int {
 	return rand.Intn(max-min) + min
 }
 
-type RechargeList struct {
-	id        int			//自增编号
-	//orderNo       string
-	UserId		int			// 用户
-	//name  string
-	//payType      int
-	payStatus      int
-	kindId	int
-	Money int
-	coin     int		//金币
-	giftOnceCoin int    // 赠送金币
-	//giftTotalCoin    int
-
-	giftOnePayCoin    int	// 邮件发送金币
-	//createTime    int
-	SuccessTime    int
-	//operateUserId    int
-	//remark    string
-	//IP    string
-	//sendStatus    int
-
-	//OnePay    int
-	//payGiftMoneyLimit    int
-	//crontabPayCount    int
-	//CrontabPayDate    string
+type UserList struct {
+	id            int			//自增编号
+	UserId        int			// 用户
+	registerDate  string
+	lastLoginDate string
+	kindId        int
 	ClientKind    int
-	//AppstoreEnvironment    int
-	//ditchNumber    int
-	//coinType    int
+	channelId     int
 
-	//actionId    int
-	//userGameId    int
-	gitPackageId    int			// 礼包id
-	//appStoreProductId    string
-	Diamond    int			// 钻石
-	giftOnceDiamond    int		// 赠送钻石
-	//giftTotalDiamond    int
-	giftOnePayDiamond    int		// 邮件赠送钻石
-	//payDiamondMoneyLimit    int
-
-	//orderDitch    int
-	channelId    int
-	//registerMachine    string
-	//otherMoney    int
-	//registerDate    string
-	//logonMachine    string
-	//vipLev	int
-	//receiptUserName string
-	//itemId	int
-	//discountMoney int
-	//payCount int
 
 }
 
@@ -163,7 +121,7 @@ type RechargeList struct {
 //}
 //
 //// 获取表的字段， 并且经过处理之后的
-//func GetTableKeysDeal(name string, userInfo RechargeList) string {
+//func GetTableKeysDeal(name string, userInfo UserList) string {
 //	var allKeysDeal = ""
 //	//allKeys := GetTableKeys(name)
 //	//strTmp := strings.Replace(allKeys, "UserID", strconv.Itoa(userInfo.uid), -1)		// 首先把所有keys 替换uid
