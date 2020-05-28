@@ -10,25 +10,25 @@ import (
 
 //遗留分数
 func GetForwardScore( dbName string, dayStart string ,dbNow *sql.DB,    rechargeInfo UserList) (int,string) {
-	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameScoreChangeRecord","Score", rechargeInfo.id,0)
+	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameScoreChangeRecord","Score", "ChangeScore", rechargeInfo.id,0)
 }
 
 //遗留钻石
 func GetForwardDiamond( dbName string, dayStart string ,dbNow *sql.DB,  rechargeInfo UserList) (int,string) {
-	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameDiamondChangeRecord","Diamond", rechargeInfo.id,0)
+	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameDiamondChangeRecord","Diamond", "ChangeDiamond",rechargeInfo.id,0)
 }
 //遗留灵力
 func GetForwardCoin( dbName string, dayStart string ,dbNow *sql.DB,   rechargeInfo UserList) (int,string) {
-	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameCoinChangeRecord","Coin", rechargeInfo.id,0)
+	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameCoinChangeRecord","Coin", "ChangeCoin",rechargeInfo.id,0)
 }
 //遗留道具
 func GetForwardItem( dbName string, dayStart string ,dbNow *sql.DB,  rechargeInfo UserList, itemId int) (int,string) {
-	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameItemChangeRecord","ItemIndbNum", rechargeInfo.id,itemId)
+	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameItemChangeRecord","ItemIndbNum", "ItemNum",rechargeInfo.id,itemId)
 }
 
 
 // 获取历史遗留
-func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tableNameT string, keyName string , rechargeId int, itemId int) (int,string) {
+func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tableNameT string, keyName string , changeKey string, rechargeId int, itemId int) (int,string) {
 	dayInt,_ := strconv.Atoi(dayStart)
 	tableName := ""
 
@@ -55,23 +55,25 @@ func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tabl
 		if itemId>0 {
 			itemAdd = fmt.Sprintf(" and ItemID = %d ",itemId)
 		}
-		sqlStr := fmt.Sprintf("select top(1)%s,RecordTime from %s where RecordTime = (select min(RecordTime) from %s where UserID = %d ) and UserID = %d %s", keyName,tableName, tableName, userId, userId,itemAdd)
+		sqlStr := fmt.Sprintf("select top(1)%s,%s,RecordTime from %s where RecordTime = (select min(RecordTime) from %s where UserID = %d ) and UserID = %d %s", keyName, changeKey, tableName, tableName, userId, userId,itemAdd)
 		zLog.PrintfLogger("获取%s未来sql: %s ", keyName, sqlStr)
 
 		_, rows, _ := mssql.Query(dbNow, sqlStr)
 		for rows.Next() { // 循环遍历
 			var result int
+			var change int
 			var timeS string
-			err := rows.Scan(&result,&timeS)
+			err := rows.Scan(&result, &change, &timeS)
 			if err != nil {
 				zLog.PrintfLogger(" %s历史遗留表 rechargeId %d    , %s \n", keyName, result, err)
 				continue
 			}
-			if result >= 0 {
+			//if result >= 0 {
+			result = result - change		// 这里要注意， 因为获取出来的数据是经过变化的， 那么要去掉这个新的变化才是上一个遗留值
 				zLog.PrintfLogger("userId : %d,   %s   id:%d 获取数量： %d", userId,  keyName, itemId, result)
 				mssql.CloseQuery(rows)
 				return result,timeS
-			}
+			//}
 		}
 		mssql.CloseQuery(rows)
 	}
