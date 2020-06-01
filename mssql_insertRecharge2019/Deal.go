@@ -31,7 +31,7 @@ func DealUserList(idStart int) {
 	dataBaseArray := make([]RechargeList,0)
 
 	fmt.Println(" --------------开始连接数据库-------------- ")
-	platformDB := mssql.ConnectDB(userId, password, server, PlatformDBName)
+	//platformDB := mssql.ConnectDB(userId, password, server, PlatformDBName)
 	DataBaseBYDB := mssql.ConnectDB(userId, password, server, DataBaseBYDBName)
 	logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
 	//logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
@@ -39,7 +39,7 @@ func DealUserList(idStart int) {
 
 
 	//fmt.Println(" --------------开始查询充值列表--------------")
-	daySecond := 8640		// 一天秒数/10
+	daySecond := 86400		// 一天秒数/10
 	day110 := 1554825600	// 2019 - 4月10号
 	day1:= day110 + (daySecond * idStart)
 	day2:= day1 + daySecond
@@ -113,7 +113,7 @@ func DealUserList(idStart int) {
 
 	mssql.CloseQuery(rows)
 
-	mssql.CloseDB(platformDB)
+	//mssql.CloseDB(platformDB)
 	mssql.CloseDB(DataBaseBYDB)
 	mssql.CloseDB(logDB1)
 	//mssql.CloseDB(logDB2)
