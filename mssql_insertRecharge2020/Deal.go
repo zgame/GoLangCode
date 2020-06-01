@@ -38,8 +38,6 @@ func DealUserList(idStart int) {
 	TestDB := mssql.ConnectDB(userId, password, server, TestDBName)
 
 
-
-
 	//fmt.Println(" --------------开始查询充值列表--------------")
 	daySecond := 86400		// 一天秒数
 	day110 := 1578585600	// 1月10号
@@ -107,7 +105,6 @@ func DealUserList(idStart int) {
 					GetDiamondRechargeSql(rechargeInfo, emailDiamond, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,TestDB)
 				}
 				GetDiamondReduceSql(rechargeInfo, getDiamond+emailDiamond, dbNow, dataTimeStr, dbName, day1,lastAllDiamond)
-
 
 			}
 		}

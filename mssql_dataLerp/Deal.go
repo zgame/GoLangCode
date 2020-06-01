@@ -96,6 +96,7 @@ func DealUserList(idStart int) {
 			forwardDiamond, recordTimeDiamond := GetForwardDiamond(dbName, dayStart,dbNow,  userInfo) // 获取玩家的最终数量
 			forwardCoin, recordTimeCoin := GetForwardCoin(dbName, dayStart,dbNow,  userInfo) // 获取玩家的最终数量
 
+
 			// 历史遗留数据量
 			dayStart = "20200109"
 			lastAllScore,_ := GetHistoryScore(dbName, dayStart,dbNow,  userInfo,nil) // 获取玩家的历史金币数量
@@ -219,6 +220,10 @@ func GetDBNow(dataTimeStr string, logDB1 *sql.DB, logDB2 *sql.DB) (string, *sql.
 
 // 做平金币
 func DealScore(score int,userInfo UserList, logDB1 *sql.DB, dataTimeStr string, logDB2  *sql.DB,  lastAllScore int , addTime int)  {
+	if dataTimeStr == ""{
+		zLog.PrintfLogger(" 没有插入的时间，没有找到记录, userId: %d  id :%d  addTime: %d", userInfo.UserId, userInfo.id, addTime)
+		return
+	}
 	dayStart, dbNow, dbName := GetDBNow(dataTimeStr, logDB1, logDB2)
 	if score > 0 {
 		GetScoreAddSql(userInfo, score, dbNow, dataTimeStr, dbName, dayStart, lastAllScore, addTime)
@@ -230,6 +235,10 @@ func DealScore(score int,userInfo UserList, logDB1 *sql.DB, dataTimeStr string, 
 
 // 做平diamond
 func DealDiamond(diamond int,userInfo UserList, logDB1 *sql.DB, dataTimeStr string, logDB2  *sql.DB, lastAllDiamond int , addTime int)  {
+	if dataTimeStr == ""{
+		zLog.PrintfLogger(" 没有插入的时间，没有找到记录, userId: %d  id :%d  addTime: %d", userInfo.UserId, userInfo.id, addTime)
+		return
+	}
 	dayStart, dbNow, dbName := GetDBNow(dataTimeStr, logDB1, logDB2)
 	if diamond >0 {
 		GetDiamondAddSql(userInfo , diamond, dbNow ,dataTimeStr ,dbName , dayStart , lastAllDiamond,addTime)
@@ -240,6 +249,10 @@ func DealDiamond(diamond int,userInfo UserList, logDB1 *sql.DB, dataTimeStr stri
 }
 // 做平coin
 func DealCoin(coin int,userInfo UserList, logDB1 *sql.DB, dataTimeStr string, logDB2  *sql.DB, lastAllCoin int , addTime int)  {
+	if dataTimeStr == ""{
+		zLog.PrintfLogger(" 没有插入的时间，没有找到记录, userId: %d  id :%d  addTime: %d", userInfo.UserId, userInfo.id, addTime)
+		return
+	}
 	dayStart, dbNow, dbName := GetDBNow(dataTimeStr, logDB1, logDB2)
 	if coin >0 {
 		GetCoinAddSql(userInfo , coin, dbNow ,dataTimeStr ,dbName , dayStart , lastAllCoin,addTime)
@@ -250,6 +263,10 @@ func DealCoin(coin int,userInfo UserList, logDB1 *sql.DB, dataTimeStr string, lo
 }
 // 做平道具
 func DealItem(ItemId int,ItemNum int,userInfo UserList, logDB1 *sql.DB, dataTimeStr string, logDB2  *sql.DB, lastAllItem int , addTime int)  {
+	if dataTimeStr == ""{
+		zLog.PrintfLogger(" 没有插入的时间，没有找到记录, userId: %d  id :%d  itemId:%d   addTime: %d", userInfo.UserId, userInfo.id, ItemId, addTime)
+		return
+	}
 	dayStart, dbNow, dbName := GetDBNow(dataTimeStr, logDB1, logDB2)
 	if ItemNum >0 {
 		GetItemAddSql(userInfo ,ItemId, ItemNum, dbNow ,dataTimeStr ,dbName , dayStart , lastAllItem,addTime)

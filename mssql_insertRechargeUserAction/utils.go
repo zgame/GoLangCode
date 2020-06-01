@@ -46,21 +46,22 @@ var RecordTimeDict = []string{
 	"GameItemChangeRecord_",
 	"GameLotteryChangeRecord_",
 	"GameScoreChangeRecord_",
-	"HDBZExchangeInfo_",
+	//"HDBZExchangeInfo_",
 	"HunGameChipRecord_",
-	"RecordArenaStarBalanceInfo_",
-	"RecordArenaStarSignUpInfo_",
-	"RecordGame_MiniGame_",
+	//"RecordArenaStarBalanceInfo_",
+	//"RecordArenaStarSignUpInfo_",
+	//"RecordGame_MiniGame_",
 	"RecordGrantTreasure_",
 	"RecordLogon_",
-	"RecordUserBombJackpotChange_",
-	"RecordUserCommonJackpotChange_",
-	"RecordUserRealGoldStockChange_",
-	"RecordWorldGodJoinReward_",
+	//"RecordUserBombJackpotChange_",
+	//"RecordUserCommonJackpotChange_",
+	//"RecordUserRealGoldStockChange_",
+	//"RecordWorldGodJoinReward_",
 	"FishTideUserRecord_",
-	"RecordWorldGodReward_",
+	//"RecordWorldGodReward_",
 	"RecordUserInout_",
-	"UserLuckySevenDayRecord_"}
+	//"UserLuckySevenDayRecord_",
+}
 
 // 获取表的字段
 func GetTableKeys(name string) string {
@@ -78,7 +79,8 @@ func GetTableKeys(name string) string {
 	case "HDBZExchangeInfo_":
 		return "ServerID,UserID,RecordTime,ExchangeTypeID,ExchangeNum,ExhangeItemType1,ExhangeItemNum1,ExhangeItemType2,ExhangeItemNum2,ExhangeItemType3,ExhangeItemNum3,ExhangeItemType4,ExhangeItemNum4,BaseRewardType,BaseRewardSubType,BaseRewardQuantity,RandomRewardType,RandomRewardSubType,RandomRewardQuantity,GiftRewardType1,GiftRewardSubType1,GiftRewardQuantity1,GiftRewardType2,GiftRewardSubType2,GiftRewardQuantity2"
 	case "HunGameChipRecord_":
-		return " UserID,KindID,ServerID,ClientKind,GameNum,ChipTotal,WinScore,ChipItem,HitDst,RecordTime,TableArea,UserScore,UserInsure,ControlID,WinLottery,UserLottery,WinDiamond,UserDiamond,GmControlStatus,FishKindID,WinCoin,UserCoin,PumpStoreChange,CurrentStore,WinCoinExtra,iDitchId,status,Mul,FishMul"
+		//return " UserID,KindID,ServerID,ClientKind,GameNum,ChipTotal,WinScore,ChipItem,HitDst,RecordTime,TableArea,UserScore,UserInsure,ControlID,WinLottery,UserLottery,WinDiamond,UserDiamond,GmControlStatus,FishKindID,WinCoin,UserCoin,PumpStoreChange,CurrentStore,WinCoinExtra,iDitchId,status,Mul,FishMul"
+		return " UserID,KindID,ServerID,ClientKind,GameNum,ChipTotal,WinScore,ChipItem,HitDst,RecordTime,TableArea,UserScore,UserInsure,ControlID,WinLottery,UserLottery,WinDiamond,UserDiamond,GmControlStatus,FishKindID,WinCoin,UserCoin,PumpStoreChange,CurrentStore,WinCoinExtra,iDitchId"
 	case "RecordArenaStarBalanceInfo_":
 		return "UserID,KindID,ServerID,ClientKind,ArenaID,PlayTimes,BaseScore,ExtraScore,TotalScore,RecordTime"
 	case "RecordArenaStarSignUpInfo_":
