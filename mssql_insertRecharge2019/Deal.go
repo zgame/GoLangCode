@@ -62,8 +62,8 @@ func DealUserList(idStart int) {
 
 	}
 	zLog.PrintfLogger(" --------------一共有 : %d  条数据--------------", len(dataBaseArray))
-	for index,rechargeInfo := range dataBaseArray{
-		zLog.PrintfLogger(" --------------开始处理充值index : %d     rechargeinfo.UserId: %d--------------", index,rechargeInfo.UserId)
+	for _,rechargeInfo := range dataBaseArray{
+		//zLog.PrintfLogger(" --------------开始处理充值index : %d     rechargeinfo.UserId: %d--------------", index,rechargeInfo.UserId)
 		zLog.PrintfLogger(" --------------开始处理充值id : %d--------------", rechargeInfo.id)
 
 		// -----------------------------获取单个充值行为------------------------
@@ -78,7 +78,7 @@ func DealUserList(idStart int) {
 
 		if rechargeInfo.gitPackageId > 0 {
 			// 购买礼包
-			GetGiftPackageRechargeSql(  rechargeInfo, dbNow, dataTimeStr, dbName, day1 ,DataBaseBYDB)
+			GetGiftPackageRechargeSql(  rechargeInfo, dbNow, dataTimeStr, dbName, day1 ,DataBaseBYDB ,TestDB)
 		} else {
 			// 金币或者钻石
 			if rechargeInfo.coin > 0 {
@@ -87,10 +87,10 @@ func DealUserList(idStart int) {
 				emailGold := rechargeInfo.giftOnePayCoin                 // type =6
 
 				// 插入充值金币语句
-				lastAllScore:= GetScoreRechargeSql(rechargeInfo, getGold, dbNow, dataTimeStr, dbName, day1, 2,1,"充值金币赠送", rechargeInfo.Money,DataBaseBYDB)
+				lastAllScore:= GetScoreRechargeSql(rechargeInfo, getGold, dbNow, dataTimeStr, dbName, day1, 2,1,"充值金币赠送", rechargeInfo.Money,DataBaseBYDB, TestDB)
 				// 插入邮件赠送
 				if emailGold > 0 {
-					GetScoreRechargeSql(rechargeInfo, emailGold, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,DataBaseBYDB)
+					GetScoreRechargeSql(rechargeInfo, emailGold, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,DataBaseBYDB,TestDB)
 				}
 				GetScoreReduceSql(rechargeInfo, getGold+emailGold, dbNow, dataTimeStr, dbName, day1,lastAllScore)
 
@@ -100,10 +100,10 @@ func DealUserList(idStart int) {
 				emailDiamond := rechargeInfo.giftOnePayDiamond                    // type =6
 
 				// 插入充值钻石语句
-				lastAllDiamond:=GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, 2,1,"充值钻石赠送", rechargeInfo.Money,DataBaseBYDB)
+				lastAllDiamond:=GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, 2,1,"充值钻石赠送", rechargeInfo.Money,DataBaseBYDB,TestDB)
 				// 插入邮件赠送
 				if emailDiamond > 0 {
-					GetDiamondRechargeSql(rechargeInfo, emailDiamond, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,DataBaseBYDB)
+					GetDiamondRechargeSql(rechargeInfo, emailDiamond, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,DataBaseBYDB,TestDB)
 				}
 				GetDiamondReduceSql(rechargeInfo, getDiamond+emailDiamond, dbNow, dataTimeStr, dbName, day1,lastAllDiamond)
 
@@ -134,4 +134,57 @@ func GetMonth(table1 string, logDB1 *sql.DB, logDB2 *sql.DB) (*sql.DB, string) {
 		dbName = "BY_LOG_202002"
 	}
 	return dbNow, dbName
+}
+
+
+// 获取游戏库资源
+func GetDataBaseBY(dbNow *sql.DB, userId int )  (int,int,int){
+
+	sqlStr := fmt.Sprintf("select top(1)Score,Diamond,Coin from dbo.GameScoreInfo_20190401 where UserID = %d ",  userId)
+	zLog.PrintfLogger("获取uid:%d  游戏库资源sql: %s ", userId, sqlStr)
+
+	_, rows, _ := mssql.Query(dbNow, sqlStr)
+	for rows.Next() { // 循环遍历
+		var Score int
+		var Diamond int
+		var Coin int
+		err := rows.Scan(&Score,&Diamond,&Coin)
+		if err != nil {
+			zLog.PrintfLogger(" %d 游戏库资源 , %s \n", userId,  err)
+			continue
+		}
+		//if Score >= 0 {
+			zLog.PrintfLogger("GetDataBaseBY userId : %d,     获取数量： %d", userId,    Score)
+		mssql.CloseQuery(rows)
+		return Score, Diamond,Coin
+		//}
+	}
+	//mssql.CloseQuery(rows)
+	//return Score, Diamond,Coin
+	return 0, 0, 0
+}
+// 获取游戏库资源
+func GetDataBaseBYItem(dbNow *sql.DB, userId int ,itemId int)  int{
+	sqlStr := fmt.Sprintf("select top(1)Total,Used from dbo.UserSkillInfo_20190401 where UserID = %d and ItemID = %d",  userId,itemId)
+	zLog.PrintfLogger("获取uid:%d  游戏库资源sql: %s ", userId, sqlStr)
+
+	_, rows, _ := mssql.Query(dbNow, sqlStr)
+	for rows.Next() { // 循环遍历
+		var Num int
+		var total int
+		var used int
+		err := rows.Scan(&total,&used)
+		if err != nil {
+			zLog.PrintfLogger(" %d 游戏库资源    , %s \n", userId,  err)
+			continue
+		}
+		Num = total - used
+		//if Num >= 0 {
+		zLog.PrintfLogger("GetDataBaseBYItem  userId : %d,    id:%d 获取数量： %d", userId,  itemId, Num)
+		mssql.CloseQuery(rows)
+		return Num
+		//}
+	}
+	return 0
+
 }

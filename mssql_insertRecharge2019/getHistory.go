@@ -9,26 +9,26 @@ import (
 )
 
 //遗留分数
-func GetHistoryScore( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int, rechargeInfo RechargeList, TestDB *sql.DB) int {
-	return GetHistory(dbName,day1,dbNow,userId,"GameScoreChangeRecord","Score",GetTimeFromInt(rechargeTime), rechargeInfo.id,0,TestDB)
+func GetHistoryScore( gameDbName string, day1 string , gameDb *sql.DB, userId int, rechargeTime int, rechargeInfo RechargeList, logDB *sql.DB, TestDB *sql.DB) int {
+	return GetHistory(gameDbName,day1, gameDb,userId,"GameScoreChangeRecord","Score",GetTimeFromInt(rechargeTime), rechargeInfo.id,0, logDB,TestDB)
 }
 
 //遗留钻石
-func GetHistoryDiamond( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, TestDB *sql.DB) int {
-	return GetHistory(dbName,day1,dbNow,userId,"GameDiamondChangeRecord","Diamond",GetTimeFromInt(rechargeTime), rechargeInfo.id,0,TestDB)
+func GetHistoryDiamond( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, logDB *sql.DB, TestDB *sql.DB) int {
+	return GetHistory(dbName,day1,dbNow,userId,"GameDiamondChangeRecord","Diamond",GetTimeFromInt(rechargeTime), rechargeInfo.id,0,logDB,TestDB)
 }
 //遗留灵力
-func GetHistoryCoin( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, TestDB *sql.DB) int {
-	return GetHistory(dbName,day1,dbNow,userId,"GameCoinChangeRecord","Coin",GetTimeFromInt(rechargeTime), rechargeInfo.id,0,TestDB)
+func GetHistoryCoin( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, logDB *sql.DB, TestDB *sql.DB) int {
+	return GetHistory(dbName,day1,dbNow,userId,"GameCoinChangeRecord","Coin",GetTimeFromInt(rechargeTime), rechargeInfo.id,0,logDB,TestDB)
 }
 //遗留道具
-func GetHistoryItem( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, itemId int, TestDB *sql.DB) int {
-	return GetHistory(dbName,day1,dbNow,userId,"GameItemChangeRecord","ItemIndbNum",GetTimeFromInt(rechargeTime), rechargeInfo.id,itemId,TestDB)
+func GetHistoryItem( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, itemId int, logDB *sql.DB, TestDB *sql.DB) int {
+	return GetHistory(dbName,day1,dbNow,userId,"GameItemChangeRecord","ItemIndbNum",GetTimeFromInt(rechargeTime), rechargeInfo.id,itemId,logDB,TestDB)
 }
 
 
 // 获取历史遗留
-func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNameT string, keyName string , rechargeTime string , rechargeId int, itemId int, TestDB *sql.DB) int {
+func GetHistory( gameDbName string, day1 string ,dbNow *sql.DB, userId int, tableNameT string, keyName string , rechargeTime string , rechargeId int, itemId int, LogDB *sql.DB, TestDB *sql.DB) int {
 	dayInt,_ := strconv.Atoi(day1)
 	tableName := ""
 
@@ -38,16 +38,43 @@ func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNam
 		//if dayInt==20200200{
 		//	dayInt = 20200131	// 跳到1月份
 		//}
-		if dayInt == 20190100{
+		if dayInt == 20190400{
+
+			// 如果找不到， 那么去游戏表里面找
 			zLog.PrintfLogger(" dayInt 太往前了，已经要搜到3月份了, userid: %d  id :%d ", userId, rechargeId)
-			//InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,TestDB,itemId)
+
+
+			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(TestDB, userId)
+			forwardItem := 0
+			if itemId>0 {
+				forwardItem = GetDataBaseBYItem(TestDB,userId, itemId)
+			}
+			switch tableNameT {
+			case "Score":
+				zLog.PrintfLogger(" score %d ", forwardScore)
+				return forwardScore
+			case "Diamond":
+				zLog.PrintfLogger(" Diamond %d ", forwardDiamond)
+				return forwardDiamond
+			case "Coin":
+				zLog.PrintfLogger(" Coin %d ", forwardCoin)
+				return forwardCoin
+			case "ItemIndbNum":
+				zLog.PrintfLogger(" ItemIndbNum %d ", forwardItem)
+				return forwardItem
+
+			}
+
+			zLog.PrintfLogger(" 没有找到 %d ", 0)
+			//InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,LogDB,itemId)
 			return 0
 			//dayInt = 20191230	// 跳到12月份
 		}
-		tableName = fmt.Sprintf("%s.dbo.%s_%d", dbName, tableNameT,dayInt)
-		//if dayInt < 20200200{
-		//	tableName = fmt.Sprintf("BY_LOG_202001.dbo.%s_%d",  tableNameT, dayInt)
-		//}
+		tableName = fmt.Sprintf("%s.dbo.%s_%d", gameDbName, tableNameT,dayInt)
+		if dayInt >= 20190410{
+			tableName = fmt.Sprintf("BY_LOG_201905.dbo.%s_%d",  tableNameT, dayInt)
+			dbNow = LogDB
+		}
 		//if dayInt < 20200100{
 		//	tableName = fmt.Sprintf("BY_LOG_201912.dbo.%s_%d",  tableNameT, dayInt)
 		//}
@@ -63,7 +90,7 @@ func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNam
 			itemAdd = fmt.Sprintf(" and ItemID = %d ",itemId)
 		}
 		sql := fmt.Sprintf("select top(1)%s from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d and RecordTime < '%s') and UserID = %d %s", keyName,tableName, tableName, userId, rechargeTime,userId,itemAdd)
-		zLog.PrintfLogger("获取%s历史sql: %s ", keyName, sql)
+		//zLog.PrintfLogger("获取%s历史sql: %s ", keyName, sql)
 
 		_, rows, _ := mssql.Query(dbNow, sql)
 		for rows.Next() { // 循环遍历
@@ -74,7 +101,7 @@ func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNam
 				continue
 			}
 			//if result >= 0 {
-				zLog.PrintfLogger("userid : %d,   %s   id:%d 获取数量： %d", userId,  keyName, itemId, result)
+			//	zLog.PrintfLogger("userid : %d,   %s   id:%d 获取数量： %d", userId,  keyName, itemId, result)
 				mssql.CloseQuery(rows)
 				return result
 			//}

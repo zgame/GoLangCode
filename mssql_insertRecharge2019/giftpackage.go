@@ -1,7 +1,6 @@
 package main
 
 import (
-	"./zLog"
 	"database/sql"
 )
 
@@ -17,7 +16,7 @@ func AddItemArray(id int, num int, array []GiftItem) []GiftItem {
 }
 
 // 礼包处理
-func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTimeStr string, dbName string, day1 string, DataBaseBYDB *sql.DB) {
+func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTimeStr string, dbName string, day1 string, DataBaseBYDB *sql.DB ,  TestDb *sql.DB) {
 	// 变量初始化
 	getScore := 0   // 金币
 	getDiamond := 0 // 钻石
@@ -26,292 +25,269 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 	Type := 2
 	SubType := 3 // 子分类
 	ItemArray := make([]GiftItem, 0)
-	rate := ZRandomTo(3,5)		// 倍率
+	rate := ZRandomTo(3,10)		// 倍率
 
 	switch rechargeInfo.gitPackageId {
-	case 6: // 金币 钻石
-		getScore = 200000
+	case 2: // 金币 钻石
+		getScore = 100000
 		getDiamond = 10
 		title = "充值青铜礼包赠送"
 		// 还差道具的
 		ItemArray = AddItemArray(108, 1, ItemArray)
 		ItemArray = AddItemArray(101, 10, ItemArray)
 
-	case 7: // 金币 钻石
-		getScore = 400000
+	case 3: // 金币 钻石
+		getScore = 200000
 		getDiamond = 20
 		title = "充值白银礼包赠送"
 		ItemArray = AddItemArray(109, 1, ItemArray)
 		ItemArray = AddItemArray(120, 5, ItemArray)
 
-	case 8: // 金币 钻石
-		getScore = 1000000
+	case 4: // 金币 钻石
+		getScore = 300000
 		getDiamond = 50
 		title = "充值黄金礼包赠送"
 		ItemArray = AddItemArray(110, 1, ItemArray)
 		ItemArray = AddItemArray(120, 10, ItemArray)
 
-	case 9: // 金币 钻石
-		getScore = 2000000
+	case 5: // 金币 钻石
+		getScore = 500000
 		getDiamond = 100
 		title = "充值白金礼包赠送"
 		ItemArray = AddItemArray(111, 1, ItemArray)
-		ItemArray = AddItemArray(120, 20, ItemArray)
+		ItemArray = AddItemArray(120, 10, ItemArray)
 
 	case 101: //金币 钻石
 		getScore = 800000
 		getDiamond = 100
 		title = "充值至尊礼包月卡赠送"
 
+	case 901: //金币 钻石
+		getScore = 150000 * rate
+		title = "充值首充返利礼包赠送"
+
+
+	case 3001: // 只有道具
+		title = "充值红钻礼包赠送"
+		ItemArray = AddItemArray(120, 10, ItemArray)
+
 	case 3101: // 只有道具
 	case 3102: // 只有道具
+	case 3103: // 只有道具
+	case 3104: // 只有道具
 	case 3105: // 只有道具
 
+	case 10001: // 只有道具
+		getScore = 400000
+		title = "充值满贯起航礼包赠送"
+
+	case 10002: // 只有道具
+		getScore = 120000
+		getDiamond = 60
+		title = "充值每日成长礼包赠送"
+
+	case 10003: // 只有道具
+		title = "充值满贯进阶礼包赠送"
+		getScore = 2000000
+		getDiamond = 200
+		ItemArray = AddItemArray(120, 5, ItemArray)
+		ItemArray = AddItemArray(131, 4, ItemArray)
+
 	case 10004: // 只有道具
-		title = "充值礼包特殊奖励加赠"
+		title = "充值每日导弹达人礼包赠送"
 		ItemArray = AddItemArray(108, 2, ItemArray)
-		ItemArray = AddItemArray(109, 2, ItemArray)
-		ItemArray = AddItemArray(110, 1, ItemArray)
-		Type = 3
-		SubType = 13
+		ItemArray = AddItemArray(109, 1, ItemArray)
+		ItemArray = AddItemArray(111, 2, ItemArray)
+		//Type = 3
+		//SubType = 13
 	case 10005: // 金币
-		getScore = 600000
+		getScore = 300000
 		title = "充值新起航礼包赠送"
-		ItemArray = AddItemArray(2007, 300, ItemArray)
-		ItemArray = AddItemArray(3102, 18, ItemArray)
+		ItemArray = AddItemArray(2007, 180, ItemArray)
+		ItemArray = AddItemArray(108, 1, ItemArray)
 
 	case 10006: //  灵力
-		getCoin = 2400000
-		title = "充值妖精场每日98元礼包1赠送"
+		//getCoin = 2400000
+		title = "充值妖精场每日58元礼包1赠送"
+		ItemArray = AddItemArray(111, 1, ItemArray)
 		ItemArray = AddItemArray(120, 20, ItemArray)
 		ItemArray = AddItemArray(7003, 20, ItemArray)
 	case 10007: //  灵力
-		getCoin = 3000000
-		title = "充值妖精场每日98元礼包2赠送"
+		//getCoin = 3000000
+		title = "充值妖精场每日58元礼包2赠送"
+		ItemArray = AddItemArray(111, 1, ItemArray)
 		ItemArray = AddItemArray(120, 30, ItemArray)
 		ItemArray = AddItemArray(7003, 30, ItemArray)
 	case 10008: //  灵力
-		getCoin = 12000000
-		title = "充值妖精场每日648元礼包1赠送"
+		//getCoin = 12000000
+		title = "充值妖精场每日588元礼包1赠送"
 		ItemArray = AddItemArray(7003, 300, ItemArray)
+		ItemArray = AddItemArray(111, 5, ItemArray)
 	case 10009: //  灵力
-		getCoin = 13000000
-		title = "充值妖精场每日648元礼包2赠送"
+		//getCoin = 13000000
+		title = "充值妖精场每日588元礼包2赠送"
 		ItemArray = AddItemArray(7003, 350, ItemArray)
+		ItemArray = AddItemArray(111, 6, ItemArray)
 	case 10010: // 金币
-		getScore = 360000
+		getScore = 120000
 		title = "充值每日6元礼包1赠送"
 		ItemArray = AddItemArray(2007, 30, ItemArray)
 		ItemArray = AddItemArray(101, 5, ItemArray)
 		ItemArray = AddItemArray(102, 2, ItemArray)
 	case 10011: // 金币
-		getScore = 400000
+		getScore = 150000
 		title = "充值每日6元礼包2赠送"
 		ItemArray = AddItemArray(2007, 50, ItemArray)
 		ItemArray = AddItemArray(101, 7, ItemArray)
 		ItemArray = AddItemArray(102, 3, ItemArray)
 	case 10012: // 金币
-		getScore = 480000
+		getScore = 180000
 		title = "充值每日6元礼包3赠送"
 		ItemArray = AddItemArray(2007, 100, ItemArray)
 		ItemArray = AddItemArray(101, 10, ItemArray)
 		ItemArray = AddItemArray(102, 5, ItemArray)
 	case 10013: // 金币
-		getScore = 1320000
+		getScore = 330000
 		title = "充值每日30元礼包1赠送"
-		ItemArray = AddItemArray(2007, 180, ItemArray)
+		ItemArray = AddItemArray(2007, 150, ItemArray)
 		ItemArray = AddItemArray(101, 20, ItemArray)
 		ItemArray = AddItemArray(102, 10, ItemArray)
+		ItemArray = AddItemArray(108, 1, ItemArray)
 	case 10014: // 金币
-		getScore = 1540000
+		getScore = 390000
 		title = "充值每日30元礼包2赠送"
-		ItemArray = AddItemArray(2007, 240, ItemArray)
+		ItemArray = AddItemArray(2007, 180, ItemArray)
 		ItemArray = AddItemArray(101, 30, ItemArray)
 		ItemArray = AddItemArray(102, 15, ItemArray)
+		ItemArray = AddItemArray(108, 1, ItemArray)
 	case 10015: // 金币
-		getScore = 1760000
+		getScore = 450000
 		title = "充值每日30元礼包3赠送"
-		ItemArray = AddItemArray(2007, 300, ItemArray)
+		ItemArray = AddItemArray(2007, 210, ItemArray)
 		ItemArray = AddItemArray(101, 40, ItemArray)
 		ItemArray = AddItemArray(102, 20, ItemArray)
+		ItemArray = AddItemArray(108, 2, ItemArray)
+
+
+
+
+
 	case 10016: // 金币  灵力
-		getScore = 4000000
-		getCoin = 100000
+		getScore = 1000000
+		//getCoin = 100000
 		title = "充值每日98元礼包1赠送"
-		ItemArray = AddItemArray(2007, 400, ItemArray)
+		ItemArray = AddItemArray(2007, 300, ItemArray)
 		ItemArray = AddItemArray(120, 5, ItemArray)
 		ItemArray = AddItemArray(109, 1, ItemArray)
 	case 10017: // 金币  灵力
-		getScore = 4400000
-		getCoin = 120000
+		getScore = 1100000
+		//getCoin = 120000
 		title = "充值每日98元礼包2赠送"
-		ItemArray = AddItemArray(2007, 500, ItemArray)
+		ItemArray = AddItemArray(2007, 350, ItemArray)
 		ItemArray = AddItemArray(120, 7, ItemArray)
 		ItemArray = AddItemArray(109, 1, ItemArray)
 	case 10018: // 金币  灵力
-		getScore = 4800000
-		getCoin = 150000
+		getScore = 1300000
+		//getCoin = 150000
 		title = "充值每日98元礼包3赠送"
-		ItemArray = AddItemArray(2007, 600, ItemArray)
+		ItemArray = AddItemArray(2007, 400, ItemArray)
 		ItemArray = AddItemArray(120, 10, ItemArray)
 		ItemArray = AddItemArray(109, 2, ItemArray)
 	case 10019: // 金币  灵力
-		getScore = 7600000
-		getCoin = 200000
+		getScore = 2000000
+		//getCoin = 200000
 		title = "充值每日198元礼包1赠送"
-		ItemArray = AddItemArray(2007, 666, ItemArray)
+		ItemArray = AddItemArray(2007, 500, ItemArray)
 		ItemArray = AddItemArray(120, 10, ItemArray)
 		ItemArray = AddItemArray(131, 2, ItemArray)
+		ItemArray = AddItemArray(110, 1, ItemArray)
 	case 10020: // 金币  灵力
-		getScore = 8000000
-		getCoin = 250000
+		getScore = 2200000
+		//getCoin = 250000
 		title = "充值每日198元礼包2赠送"
-		ItemArray = AddItemArray(2007, 777, ItemArray)
+		ItemArray = AddItemArray(2007, 550, ItemArray)
 		ItemArray = AddItemArray(120, 15, ItemArray)
 		ItemArray = AddItemArray(131, 3, ItemArray)
+		ItemArray = AddItemArray(110, 1, ItemArray)
 	case 10021: // 金币  灵力
-		getScore = 8400000
-		getCoin = 300000
+		getScore = 2500000
+		//getCoin = 300000
 		title = "充值每日198元礼包3赠送"
-		ItemArray = AddItemArray(2007, 888, ItemArray)
+		ItemArray = AddItemArray(2007, 600, ItemArray)
 		ItemArray = AddItemArray(120, 20, ItemArray)
 		ItemArray = AddItemArray(131, 4, ItemArray)
+		ItemArray = AddItemArray(110, 2, ItemArray)
 	case 10022: // 金币 钻石  灵力
-		getScore = 24000000
-		getDiamond = 1000
-		getCoin = 500000
+		getScore = 6660000
+		getDiamond = 666
+		//getCoin = 500000
 		title = "充值每日648元礼包1赠送"
-		ItemArray = AddItemArray(110, 1, ItemArray)
+		ItemArray = AddItemArray(111, 1, ItemArray)
 		ItemArray = AddItemArray(120, 20, ItemArray)
 		ItemArray = AddItemArray(131, 4, ItemArray)
 	case 10023: // 金币 钻石  灵力
-		getScore = 26000000
-		getDiamond = 1100
-		getCoin = 600000
+		getScore = 7770000
+		getDiamond = 777
+		//getCoin = 600000
 		title = "充值每日648元礼包2赠送"
-		ItemArray = AddItemArray(110, 1, ItemArray)
+		ItemArray = AddItemArray(111, 1, ItemArray)
 		ItemArray = AddItemArray(120, 30, ItemArray)
 		ItemArray = AddItemArray(131, 6, ItemArray)
 	case 10024: // 金币 钻石  灵力
-		getScore = 30000000
-		getDiamond = 1200
-		getCoin = 800000
+		getScore = 8880000
+		getDiamond = 888
+		//getCoin = 800000
 		title = "充值每日648元礼包3赠送"
-		ItemArray = AddItemArray(110, 2, ItemArray)
+		ItemArray = AddItemArray(111, 2, ItemArray)
 		ItemArray = AddItemArray(120, 50, ItemArray)
 		ItemArray = AddItemArray(131, 8, ItemArray)
-	case 10125: // 金币
-		getScore = 1200000
-		title = "充值海盗宝藏（首次）赠送"
-		ItemArray = AddItemArray(101, 15, ItemArray)
-	case 10126: // 金币
-		getScore = 600000
-		title = "充值海盗宝藏赠送"
-		ItemArray = AddItemArray(101, 15, ItemArray)
-	case 10127: // 金币
-		getScore = 2400000
-		title = "充值海盗王宝藏（首次）赠送"
-		ItemArray = AddItemArray(101, 35, ItemArray)
-	case 10128: // 金币
-		getScore = 1200000
-		title = "充值海盗王宝藏赠送"
-		ItemArray = AddItemArray(101, 35, ItemArray)
-	case 10129: //   灵力
-		getCoin = 3000000
-		title = "充值超值礼包赠送"
-		ItemArray = AddItemArray(7003, 50, ItemArray)
-	case 10130: //   灵力
-		getCoin = 13000000
-		title = "充值豪华超值礼包赠送"
-		ItemArray = AddItemArray(7003, 350, ItemArray)
+
 	case 11001: // 金币
-		getScore = 600000
-		title = "充值初级强化石礼包赠送"
-		ItemArray = AddItemArray(2007, 1288, ItemArray)
+		getScore = 180000
+		title = "充值强化石礼包1赠送"
+		ItemArray = AddItemArray(2007, 666, ItemArray)
 		ItemArray = AddItemArray(101, 30, ItemArray)
 	case 11002: // 金币
-		getScore = 4000000
-		title = "充值中级强化石礼包赠送"
-		ItemArray = AddItemArray(2007, 7500, ItemArray)
+		getScore = 1080000
+		title = "充值强化石礼包2赠送"
+		ItemArray = AddItemArray(2007, 3888, ItemArray)
 		ItemArray = AddItemArray(120, 10, ItemArray)
 	case 11003: // 金币
-		getScore = 16000000
-		title = "充值高级强化石礼包赠送"
-		ItemArray = AddItemArray(2007, 28000, ItemArray)
+		getScore = 3280000
+		title = "充值强化石礼包3赠送"
+		ItemArray = AddItemArray(2007, 13888, ItemArray)
 		ItemArray = AddItemArray(131, 4, ItemArray)
-	case 11004: // 金币
-		getScore = 400000
-		title = "充值6元超值礼包赠送"
-		ItemArray = AddItemArray(2007, 1000, ItemArray)
-		ItemArray = AddItemArray(101, 20, ItemArray)
-		ItemArray = AddItemArray(102, 10, ItemArray)
+
 	case 13001: // 金币
-		getScore = 300000 * rate
-		title = "充值初级超值金币礼包赠送"
-	case 13002: // 金币
-		getScore = 1000000 * rate
-		title = "充值中级超值金币礼包赠送"
-	case 13003: // 金币
-		getScore = 4800000 * rate
-		title = "充值高级超值金币礼包赠送"
-	case 14001: // 金币
-		getScore = 8000000
-		title = "充值追击海神礼包赠送"
-		ItemArray = AddItemArray(120, 28, ItemArray)
-	case 14002: // 金币
-		getScore = 26000000
-		title = "充值围捕海神礼包赠送"
-		ItemArray = AddItemArray(120, 66, ItemArray)
-	case 15005: // 金币
-		getScore = 1320000
-		title = "充值玄武礼盒赠送"
-		ItemArray = AddItemArray(103, 30, ItemArray)
-		ItemArray = AddItemArray(101, 30, ItemArray)
-	case 15006: // 金币
-		getScore = 4160000
-		title = "充值白虎礼盒赠送"
-		ItemArray = AddItemArray(131, 2, ItemArray)
-	case 15007: // 金币
-		getScore = 13760000
-		title = "充值朱雀礼盒赠送"
-		ItemArray = AddItemArray(131, 4, ItemArray)
-	case 15008: // 金币
-		getScore = 26760000
-		title = "充值青龙礼盒赠送"
-		ItemArray = AddItemArray(131, 8, ItemArray)
-	case 16005: // 只有道具
-		title = "充值新竞技礼包赠送"
-		ItemArray = AddItemArray(151, 20, ItemArray)
-		ItemArray = AddItemArray(101, 100, ItemArray)
-		ItemArray = AddItemArray(120, 20, ItemArray)
-		ItemArray = AddItemArray(131, 4, ItemArray)
+		getScore = 150000 * rate
+		title = "充值金币超值礼包赠送"
 	}
 
 	if getScore > 0 {
 		// 插入充值金币
-		zLog.PrintfLogger("-----------------礼包 %d 插入金币 %d", rechargeInfo.gitPackageId , getScore)
-		lastAllScore:=GetScoreRechargeSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId, DataBaseBYDB)
+		//zLog.PrintfLogger("-----------------礼包 %d 插入金币 %d", rechargeInfo.gitPackageId , getScore)
+		lastAllScore:=GetScoreRechargeSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId, DataBaseBYDB,  TestDb)
 		GetScoreReduceSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1,lastAllScore)
 		//zLog.PrintfLogger("礼包 %d 插入充值金币语句 ", rechargeInfo.gitPackageId)
 	}
 	if getDiamond > 0 {
 		// 插入充值钻石语句
-		zLog.PrintfLogger("-----------------礼包 %d 插入钻石 %d", rechargeInfo.gitPackageId , getDiamond)
-		lastAllDiamond:=GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId, DataBaseBYDB)
+		//zLog.PrintfLogger("-----------------礼包 %d 插入钻石 %d", rechargeInfo.gitPackageId , getDiamond)
+		lastAllDiamond:=GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId, DataBaseBYDB,  TestDb)
 		GetDiamondReduceSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1,lastAllDiamond)
 		//zLog.PrintfLogger("礼包 %d 插入充值钻石语句 %s", rechargeInfo.gitPackageId, addDiamondSql)
 	}
 	if getCoin > 0 {
 		// 插入灵力
-		zLog.PrintfLogger("-----------------礼包 %d 插入灵力 %d", rechargeInfo.gitPackageId , getCoin)
-		lastAllCoin:=GetCoinRechargeSql(rechargeInfo, getCoin, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, DataBaseBYDB)
+		//zLog.PrintfLogger("-----------------礼包 %d 插入灵力 %d", rechargeInfo.gitPackageId , getCoin)
+		lastAllCoin:=GetCoinRechargeSql(rechargeInfo, getCoin, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, DataBaseBYDB,  TestDb)
 		GetCoinReduceSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1,lastAllCoin)
 
 	}
 	for _, item := range ItemArray {
 		// 插入道具
-		zLog.PrintfLogger("-----------------礼包 %d 插入道具 %d 数量 %d", rechargeInfo.gitPackageId , item.ItemId, item.ItemNum)
-		lastAllItem:=GetItemRechargeSql(rechargeInfo, item.ItemId, item.ItemNum, dbNow, dataTimeStr, dbName, day1, title, DataBaseBYDB)
+		//zLog.PrintfLogger("-----------------礼包 %d 插入道具 %d 数量 %d", rechargeInfo.gitPackageId , item.ItemId, item.ItemNum)
+		lastAllItem:=GetItemRechargeSql(rechargeInfo, item.ItemId, item.ItemNum, dbNow, dataTimeStr, dbName, day1, title, DataBaseBYDB,  TestDb)
 		GetItemReduceSql(rechargeInfo, item.ItemId, item.ItemNum, dbNow, dataTimeStr, dbName, day1,lastAllItem)
 		if item.ItemId >=108 && item.ItemId <=111 {
 
@@ -328,7 +304,7 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 				BombScore = ZRandomTo(13000000,18000000)
 			}
 			//zLog.PrintfLogger("-----------------因为包含弹头 %d，所以金币有所变化 %d", item.ItemId, BombScore)
-			lastAllScore:= GetScoreRechargeSql(rechargeInfo, BombScore, dbNow, dataTimeStr, dbName, day1, 1, 1, "游戏写分", 10, DataBaseBYDB)
+			lastAllScore:= GetScoreRechargeSql(rechargeInfo, BombScore, dbNow, dataTimeStr, dbName, day1, 1, 1, "游戏写分", 10, DataBaseBYDB,  TestDb)
 			GetScoreReduceSql(rechargeInfo, BombScore, dbNow, dataTimeStr, dbName, day1,lastAllScore)
 		}
 	}
