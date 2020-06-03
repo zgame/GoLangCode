@@ -27,36 +27,35 @@ func GetForwardItem( dbName string, dayStart string ,dbNow *sql.DB,  rechargeInf
 }
 
 
-// 获取历史遗留
+// 获取前项遗留
 func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tableNameT string, keyName string , changeKey string, rechargeId int, itemId int) (int,string) {
 	dayInt,_ := strconv.Atoi(dayStart)
 	tableName := ""
 
 	for i:=0;i<60;i++ {
-
 		//num := dayInt - 20200210
-		if dayInt == 20200132{
-			dayInt = 20200201	// 跳到2月份
-		}
-		if dayInt == 20200230{
-			zLog.PrintfLogger(" dayInt 太往后了，已经要搜到3月份了, userId: %d  id :%d ", userId, rechargeId)
+		//if dayInt == 20200132{
+		//	dayInt = 20200201	// 跳到2月份
+		//}
+		if dayInt == 20190430{
+			//zLog.PrintfLogger(" dayInt 太往后了，已经要搜到5月份了, userId: %d  id :%d ", userId, rechargeId)
 			//InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,TestDB,itemId)
-			return 0,""
+			return -1,""
 			//dayInt = 20191230	// 跳到12月份
 		}
 
 		tableName = fmt.Sprintf("%s.dbo.%s_%d", dbName, tableNameT,dayInt)
-		if dayInt > 20200200{
-			tableName = fmt.Sprintf("BY_LOG_202002.dbo.%s_%d",  tableNameT, dayInt)	// 如果是2月，就用2月的库
-		}
+		//if dayInt > 20200200{
+		//	tableName = fmt.Sprintf("BY_LOG_202002.dbo.%s_%d",  tableNameT, dayInt)	// 如果是2月，就用2月的库
+		//}
 		dayInt++
 
 		itemAdd :=""
 		if itemId>0 {
 			itemAdd = fmt.Sprintf(" and ItemID = %d ",itemId)
 		}
-		sqlStr := fmt.Sprintf("select top(1)%s,%s,RecordTime from %s where RecordTime = (select min(RecordTime) from %s where UserID = %d ) and UserID = %d %s", keyName, changeKey, tableName, tableName, userId, userId,itemAdd)
-		zLog.PrintfLogger("获取%s未来sql: %s ", keyName, sqlStr)
+		sqlStr := fmt.Sprintf("select top(1)%s,%s,RecordTime from %s where RecordTime = (select min(RecordTime) from %s where UserID = %d %s) and UserID = %d %s", keyName, changeKey, tableName, tableName, userId,itemAdd, userId,itemAdd)
+		//zLog.PrintfLogger("获取%s未来sql: %s ", keyName, sqlStr)
 
 		_, rows, _ := mssql.Query(dbNow, sqlStr)
 		for rows.Next() { // 循环遍历
@@ -65,12 +64,12 @@ func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tabl
 			var timeS string
 			err := rows.Scan(&result, &change, &timeS)
 			if err != nil {
-				zLog.PrintfLogger(" %s历史遗留表 rechargeId %d    , %s \n", keyName, result, err)
+				zLog.PrintfLogger(" %s历史遗留表 结果 %d  报错： %s \n", keyName, result, err)
 				continue
 			}
 			//if result >= 0 {
 			result = result - change		// 这里要注意， 因为获取出来的数据是经过变化的， 那么要去掉这个新的变化才是上一个遗留值
-				zLog.PrintfLogger("userId : %d,   %s   id:%d 获取数量： %d", userId,  keyName, itemId, result)
+				//zLog.PrintfLogger("userId : %d,   %s   id:%d 获取数量： %d", userId,  keyName, itemId, result)
 				mssql.CloseQuery(rows)
 				return result,timeS
 			//}

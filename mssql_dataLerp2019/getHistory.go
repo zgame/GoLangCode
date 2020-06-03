@@ -28,25 +28,28 @@ func GetHistoryItem( dbName string, day1 string ,dbNow *sql.DB,  rechargeInfo Us
 
 
 // 获取历史遗留
-func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNameT string, keyName string ,  rechargeId int, itemId int, TestDB *sql.DB) (int,string) {
+func GetHistory( dbName string, day1 string ,dbGame *sql.DB, userId int, tableNameT string, keyName string ,  rechargeId int, itemId int, LogDB *sql.DB) (int,string) {
+	dbNow:= dbGame
 	dayInt,_ := strconv.Atoi(day1)
 	tableName := ""
 
 	for i:=60;i>0;i-- {
 
 		//num := dayInt - 20200210
-		if dayInt==20200200{
-			dayInt = 20200131	// 跳到1月份
+		if dayInt==20190400{
+			dayInt = 20190331	// 跳到1月份
 		}
-		if dayInt == 20200100{
-			zLog.PrintfLogger(" dayInt 太往前了，已经要搜到12月份了, userid: %d  id :%d ", userId, rechargeId)
-			InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,TestDB,itemId)
-			return 0,""
+		if dayInt == 20190321{
+			//zLog.PrintfLogger(" dayInt 太往前了，已经要搜到3月21日了, userid: %d  id :%d ", userId, rechargeId)
+			//InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,TestDB,itemId)
+			return -1,""
 			//dayInt = 20191230	// 跳到12月份
 		}
 		tableName = fmt.Sprintf("%s.dbo.%s_%d", dbName, tableNameT,dayInt)
-		if dayInt < 20200200{
-			tableName = fmt.Sprintf("BY_LOG_202001.dbo.%s_%d",  tableNameT, dayInt)
+		if dayInt > 20190408{
+			// 如果是2019年4月8日之后的数据， 查log库
+			tableName = fmt.Sprintf("BY_LOG_201905.dbo.%s_%d",  tableNameT, dayInt)
+			dbNow = LogDB
 		}
 		//if dayInt < 20200100{
 		//	tableName = fmt.Sprintf("BY_LOG_201912.dbo.%s_%d",  tableNameT, dayInt)
@@ -62,8 +65,8 @@ func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNam
 		if itemId>0 {
 			itemAdd = fmt.Sprintf(" and ItemID = %d ",itemId)
 		}
-		sqlStr := fmt.Sprintf("select top(1)%s from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d ) and UserID = %d %s", keyName,tableName, tableName, userId, userId,itemAdd)
-		zLog.PrintfLogger("获取%s历史sql: %s ", keyName, sqlStr)
+		sqlStr := fmt.Sprintf("select top(1)%s,RecordTime from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d %s) and UserID = %d %s", keyName,tableName, tableName, userId, itemAdd, userId,itemAdd)
+		//zLog.PrintfLogger("获取%s历史sql: %s ", keyName, sqlStr)
 
 		_, rows, _ := mssql.Query(dbNow, sqlStr)
 		for rows.Next() { // 循环遍历
@@ -71,11 +74,11 @@ func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNam
 			var recordTime string
 			err := rows.Scan(&result,&recordTime)
 			if err != nil {
-				zLog.PrintfLogger(" %s历史遗留表 rechargeId %d    , %s \n", keyName, result, err)
+				zLog.PrintfLogger(" %s历史遗留表 结果 %d  报错：  %s \n", keyName, result, err)
 				continue
 			}
 			//if result >= 0 {
-				zLog.PrintfLogger("userid : %d,   %s   id:%d 获取数量： %d", userId,  keyName, itemId, result)
+			//	zLog.PrintfLogger("userid : %d,   %s   id:%d 获取数量： %d", userId,  keyName, itemId, result)
 				mssql.CloseQuery(rows)
 				return result,recordTime
 			//}
