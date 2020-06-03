@@ -266,8 +266,8 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 	if getScore > 0 {
 		// 插入充值金币
 		//zLog.PrintfLogger("-----------------礼包 %d 插入金币 %d", rechargeInfo.gitPackageId , getScore)
-		lastAllScore:=GetScoreRechargeSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId, DataBaseBYDB,  TestDb)
-		GetScoreReduceSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1,lastAllScore)
+		lastAllScore:=GetScoreRechargeSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId, DataBaseBYDB,  TestDb,0)
+		GetScoreReduceSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1,lastAllScore,0)
 		//zLog.PrintfLogger("礼包 %d 插入充值金币语句 ", rechargeInfo.gitPackageId)
 	}
 	if getDiamond > 0 {
@@ -304,8 +304,8 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 				BombScore = ZRandomTo(13000000,18000000)
 			}
 			//zLog.PrintfLogger("-----------------因为包含弹头 %d，所以金币有所变化 %d", item.ItemId, BombScore)
-			lastAllScore:= GetScoreRechargeSql(rechargeInfo, BombScore, dbNow, dataTimeStr, dbName, day1, 1, 1, "游戏写分", 10, DataBaseBYDB,  TestDb)
-			GetScoreReduceSql(rechargeInfo, BombScore, dbNow, dataTimeStr, dbName, day1,lastAllScore)
+			lastAllScore:= GetScoreRechargeSql(rechargeInfo, BombScore, dbNow, dataTimeStr, dbName, day1, 1, 1, "游戏写分", 10, DataBaseBYDB,  TestDb,5)
+			GetScoreReduceSql(rechargeInfo, BombScore, dbNow, dataTimeStr, dbName, day1,lastAllScore,5)
 		}
 	}
 

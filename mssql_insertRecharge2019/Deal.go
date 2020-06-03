@@ -40,7 +40,7 @@ func DealUserList(idStart int) {
 
 	//fmt.Println(" --------------开始查询充值列表--------------")
 	daySecond := 86400		// 一天秒数/10
-	day110 := 1554825600	// 2019 - 4月10号
+	day110 := 1554739200	// 2019 - 4月9号
 	day1:= day110 + (daySecond * idStart)
 	day2:= day1 + daySecond
 	sqlU := fmt.Sprintf("select ID,UserID,PayStatus,KindID,Money,Coin,GiftOnceCoin,GiftOnePayCoin,SuccessTime,ClientKind,GiftPackageID,Diamond,GiftOnceDiamond,GiftOnePayDiamond,ChannelID  from testdb.dbo.PPayCoinOrder_2019 with(nolock) where PayStatus=2 and SuccessTime >= %d and SuccessTime < %d ",day1,day2) // 一天
@@ -87,12 +87,13 @@ func DealUserList(idStart int) {
 				emailGold := rechargeInfo.giftOnePayCoin                 // type =6
 
 				// 插入充值金币语句
-				lastAllScore:= GetScoreRechargeSql(rechargeInfo, getGold, dbNow, dataTimeStr, dbName, day1, 2,1,"充值金币赠送", rechargeInfo.Money,DataBaseBYDB, TestDB)
+				//lastAllGold := GetHistoryScore(DataBaseBYDBName, day1,DataBaseBYDB,rechargeInfo.UserId,rechargeInfo.SuccessTime, rechargeInfo, logDb,TestDb) // 获取玩家的历史金币数量
+				lastAllScore:= GetScoreRechargeSql(rechargeInfo, getGold, dbNow, dataTimeStr, dbName, day1, 2,1,"充值金币赠送", rechargeInfo.Money,DataBaseBYDB, TestDB,0)
 				// 插入邮件赠送
 				if emailGold > 0 {
-					GetScoreRechargeSql(rechargeInfo, emailGold, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,DataBaseBYDB,TestDB)
+					GetScoreRechargeSql(rechargeInfo, emailGold, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,DataBaseBYDB,TestDB,0)
 				}
-				GetScoreReduceSql(rechargeInfo, getGold+emailGold, dbNow, dataTimeStr, dbName, day1,lastAllScore)
+				GetScoreReduceSql(rechargeInfo, getGold+emailGold, dbNow, dataTimeStr, dbName, day1,lastAllScore,0)
 
 			} else if rechargeInfo.Diamond > 0 {
 				//钻石
@@ -141,7 +142,7 @@ func GetMonth(table1 string, logDB1 *sql.DB, logDB2 *sql.DB) (*sql.DB, string) {
 func GetDataBaseBY(dbNow *sql.DB, userId int )  (int,int,int){
 
 	sqlStr := fmt.Sprintf("select top(1)Score,Diamond,Coin from dbo.GameScoreInfo_20190401 where UserID = %d ",  userId)
-	zLog.PrintfLogger("获取uid:%d  游戏库资源sql: %s ", userId, sqlStr)
+	//zLog.PrintfLogger("获取uid:%d  游戏库资源sql: %s ", userId, sqlStr)
 
 	_, rows, _ := mssql.Query(dbNow, sqlStr)
 	for rows.Next() { // 循环遍历
@@ -154,7 +155,7 @@ func GetDataBaseBY(dbNow *sql.DB, userId int )  (int,int,int){
 			continue
 		}
 		//if Score >= 0 {
-			zLog.PrintfLogger("GetDataBaseBY userId : %d,     获取数量： %d", userId,    Score)
+		//	zLog.PrintfLogger("GetDataBaseBY userId : %d,     获取数量： %d", userId,    Score)
 		mssql.CloseQuery(rows)
 		return Score, Diamond,Coin
 		//}
@@ -166,7 +167,7 @@ func GetDataBaseBY(dbNow *sql.DB, userId int )  (int,int,int){
 // 获取游戏库资源
 func GetDataBaseBYItem(dbNow *sql.DB, userId int ,itemId int)  int{
 	sqlStr := fmt.Sprintf("select top(1)Total,Used from dbo.UserSkillInfo_20190401 where UserID = %d and ItemID = %d",  userId,itemId)
-	zLog.PrintfLogger("获取uid:%d  游戏库资源sql: %s ", userId, sqlStr)
+	//zLog.PrintfLogger("获取uid:%d  游戏库资源sql: %s ", userId, sqlStr)
 
 	_, rows, _ := mssql.Query(dbNow, sqlStr)
 	for rows.Next() { // 循环遍历
@@ -180,7 +181,7 @@ func GetDataBaseBYItem(dbNow *sql.DB, userId int ,itemId int)  int{
 		}
 		Num = total - used
 		//if Num >= 0 {
-		zLog.PrintfLogger("GetDataBaseBYItem  userId : %d,    id:%d 获取数量： %d", userId,  itemId, Num)
+		//zLog.PrintfLogger("GetDataBaseBYItem  userId : %d,    id:%d 获取数量： %d", userId,  itemId, Num)
 		mssql.CloseQuery(rows)
 		return Num
 		//}
