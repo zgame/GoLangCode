@@ -11,9 +11,10 @@ var ScoreKeys = "UserID,KindID,ServerID,ClientKind,ChangeScore,Score,Insure,OprA
 var DiamondKeys = "UserID,KindID,ServerID,ClientKind,ChangeDiamond,Diamond,OprAcc,ChangeReson,RecordTime,TableArea,DiamondIndb,IsEmail,Type,SubType,Extend,iDitchId"
 var ItemKeys = "UserID,KindID,ServerID,ClientKind,ItemID,ItemNum,OprAcc,ChangeReson,RecordTime,ItemIndbNum, GetScore,MasterID, IsEmail,Type,SubType,Extend, IsBigMG, iDitchId"
 var CoinKeys = "UserID,KindID,ServerID,ClientKind,ChangeCoin,Coin,Insure,OprAcc,ChangeReson,RecordTime,TableArea, CoinIndb , InsureIndb, IsEmail,Type,SubType,Extend, iDitchId"
+var LotteryKeys = "UserID,KindID,ServerID,ClientKind,ChangeLottery,Lottery,OprAcc,ChangeReson,RecordTime,TableArea, LotteryIndb ,  IsEmail,Type,SubType,Extend, iDitchId"
 
 
-// 获取
+
 
 // insert语句
 func GetInsertSql(dbName string, opType string, day1 string,  keys string, values string )  string{
@@ -185,6 +186,11 @@ func GetItemAddSql(rechargeInfo UserList, itemId int, itemNum int, dbNow *sql.DB
 			typeI = 3
 			subType = 2
 			extend = 0
+			case 150:
+			title = "充值挑战礼包赠送"
+			typeI = 2
+			subType = 3
+			extend = 1001
 	}
 
 	ItemValues := fmt.Sprintf("%d,%d,1995,%d,%d,%d,'游戏操作','%s',%s,%d, 0,0,0,%d,%d,%d,0,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, itemId, itemNum,title,reduceTimeOff,lastAllItem,  typeI, subType,extend,rechargeInfo.channelId)
@@ -211,6 +217,8 @@ func GetItemReduceSql(rechargeInfo UserList, itemId int, itemNum int, dbNow *sql
 	//lastAllItem := GetHistoryItem(dbName, day1,dbNow,rechargeInfo.UserId,rechargeInfo.SuccessTime, rechargeInfo) // 获取玩家的历史灵力数量
 	title := "使用"
 	switch itemId {
+	case 150:
+		title = "扣除：竞技场报名"
 	case 151:
 		title = "雪人大作战活动消耗"
 	case 2007:
@@ -232,12 +240,46 @@ func GetItemReduceSql(rechargeInfo UserList, itemId int, itemNum int, dbNow *sql
 
 
 
+//-------------------------------------奖券---------------------------------------------
 
 
+//生成奖券的增加语句
+func GetLotteryAddSql(rechargeInfo UserList, getLottery int, dbNow *sql.DB,dataTimeStr string,dbName string, day1 string, lastAllLottery int, addTime int)  {
+	randTime:= 1//ZRandomTo(20,60)
+	table:= ZRandomTo(10,200)
+	if addTime < 0 {
+		randTime = -randTime
+	}
+	reduceTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
+	//lastAllLottery := GetHistoryCoin(dbName, day1,dbNow,rechargeInfo.UserId,rechargeInfo.SuccessTime, rechargeInfo,TestDB) // 获取玩家的历史灵力数量
+	LotteryValues := fmt.Sprintf("%d,%d,1044,%d,%d,%d,'游戏操作','捕获',%s,%d, 0,0,1,17,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, getLottery, lastAllLottery,reduceTimeOff,table,  rechargeInfo.channelId)
+	AddLotterySql := GetInsertSql(dbName, "GameLotteryChangeRecord", day1, LotteryKeys, LotteryValues)
+	//zLog.PrintfLogger("增加奖券语句 %s", AddLotterySql)
+	err, _ := mssql.Exec(dbNow, AddLotterySql)
+	if err != nil {
+		zLog.PrintfLogger("GetLotteryRechargeSql Exec Error %s ,sql: %s", err.Error(), AddLotterySql)
+	}
 
+}
 
+// 生成奖券减少的语句
+func GetLotteryReduceSql(rechargeInfo UserList, reduceLottery int, dbNow *sql.DB,dataTimeStr string,dbName string, day1 string, lastAllLottery int, addTime int)  {
+	//lastAllLottery := GetHistoryCoin(dbName, day1,dbNow,rechargeInfo.UserId,rechargeInfo.SuccessTime) // 获取玩家的历史灵力数量
+	randTime:= 2//ZRandomTo(20,60)
+	table:= ZRandomTo(10,200)
+	if addTime < 0 {
+		randTime = -randTime
+	}
+	reduceTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
+	LotteryValues := fmt.Sprintf("%d,%d,1045,%d,%d,%d,'游戏操作','幸运抽奖(奖券)扣除奖券',%s,%d,0 , 0,4,3,0,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, reduceLottery, lastAllLottery, reduceTimeOff, table,rechargeInfo.channelId)
+	reduceLotterySql:= GetInsertSql(dbName, "GameLotteryChangeRecord", day1, LotteryKeys, LotteryValues)
 
-
+	//zLog.PrintfLogger("减少奖券语句 %s", reduceCoinSql)
+	err, _ := mssql.Exec(dbNow, reduceLotterySql)
+	if err != nil {
+		zLog.PrintfLogger("GetLotteryReduceSql Exec Error %s ,sql: %s", err.Error(), reduceLotterySql)
+	}
+}
 
 
 

@@ -66,6 +66,10 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 		getScore = 150000 * rate
 		title = "充值首充返利礼包赠送"
 
+	case 1001: //金币 钻石
+		getScore = 20000
+		title = "充值挑战礼包赠送"
+		ItemArray = AddItemArray(150, 1, ItemArray)
 
 	case 3001: // 只有道具
 		title = "充值红钻礼包赠送"

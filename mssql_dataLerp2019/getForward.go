@@ -9,26 +9,30 @@ import (
 )
 
 //遗留分数
-func GetForwardScore( dbName string, dayStart string ,dbNow *sql.DB,    rechargeInfo UserList) (int,string) {
-	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameScoreChangeRecord","Score", "ChangeScore", rechargeInfo.id,0)
+func GetForwardScore( dbName string, dayStart string ,dbNow *sql.DB,    rechargeInfo UserList,  gameDB *sql.DB) (int,string) {
+	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameScoreChangeRecord","Score", "ChangeScore", rechargeInfo.id,0, gameDB)
 }
 
 //遗留钻石
-func GetForwardDiamond( dbName string, dayStart string ,dbNow *sql.DB,  rechargeInfo UserList) (int,string) {
-	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameDiamondChangeRecord","Diamond", "ChangeDiamond",rechargeInfo.id,0)
+func GetForwardDiamond( dbName string, dayStart string ,dbNow *sql.DB,  rechargeInfo UserList,  gameDB *sql.DB) (int,string) {
+	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameDiamondChangeRecord","Diamond", "ChangeDiamond",rechargeInfo.id,0, gameDB)
 }
 //遗留灵力
-func GetForwardCoin( dbName string, dayStart string ,dbNow *sql.DB,   rechargeInfo UserList) (int,string) {
-	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameCoinChangeRecord","Coin", "ChangeCoin",rechargeInfo.id,0)
+func GetForwardCoin( dbName string, dayStart string ,dbNow *sql.DB,   rechargeInfo UserList,  gameDB *sql.DB) (int,string) {
+	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameCoinChangeRecord","Coin", "ChangeCoin",rechargeInfo.id,0, gameDB)
+}
+//遗留Lottery
+func GetForwardLottery( dbName string, dayStart string ,dbNow *sql.DB,   rechargeInfo UserList,  gameDB *sql.DB) (int,string) {
+	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameLotteryChangeRecord","Lottery", "ChangeLottery",rechargeInfo.id,0, gameDB)
 }
 //遗留道具
-func GetForwardItem( dbName string, dayStart string ,dbNow *sql.DB,  rechargeInfo UserList, itemId int) (int,string) {
-	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameItemChangeRecord","ItemIndbNum", "ItemNum",rechargeInfo.id,itemId)
+func GetForwardItem( dbName string, dayStart string ,dbNow *sql.DB,  rechargeInfo UserList, itemId int,  gameDB *sql.DB) (int,string) {
+	return GetForward(dbName,dayStart,dbNow,rechargeInfo.UserId,"GameItemChangeRecord","ItemIndbNum", "ItemNum",rechargeInfo.id,itemId, gameDB)
 }
 
 
 // 获取前项遗留
-func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tableNameT string, keyName string , changeKey string, rechargeId int, itemId int) (int,string) {
+func GetForward( dbName string, dayStart string , logDB *sql.DB, userId int, tableNameT string, keyName string , changeKey string, rechargeId int, itemId int,  gameDB *sql.DB) (int,string) {
 	dayInt,_ := strconv.Atoi(dayStart)
 	tableName := ""
 
@@ -40,6 +44,32 @@ func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tabl
 		if dayInt == 20190430{
 			//zLog.PrintfLogger(" dayInt 太往后了，已经要搜到5月份了, userId: %d  id :%d ", userId, rechargeId)
 			//InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,TestDB,itemId)
+			endTime := "2019-04-30 00:00:00"
+			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB, userId)
+			forwardItem := 0
+			if itemId>0 {
+				forwardItem = GetDataBaseBYItem(gameDB,userId, itemId)
+			}
+			forwardLottery := GetDataBaseBYLottery(gameDB, userId)
+			switch tableNameT {
+			case "Lottery":
+				return forwardLottery,endTime
+			case "Score":
+				//zLog.PrintfLogger(" score %d ", forwardScore)
+				return forwardScore,endTime
+			case "Diamond":
+				//zLog.PrintfLogger(" Diamond %d ", forwardDiamond)
+				return forwardDiamond,endTime
+			case "Coin":
+				//zLog.PrintfLogger(" Coin %d ", forwardCoin)
+				return forwardCoin,endTime
+			case "ItemIndbNum":
+				//zLog.PrintfLogger(" ItemIndbNum %d ", forwardItem)
+				return forwardItem,endTime
+			}
+
+			//zLog.PrintfLogger(" 没有找到 %d ", 0)
+			//InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,LogDB,itemId)
 			return -1,""
 			//dayInt = 20191230	// 跳到12月份
 		}
@@ -57,7 +87,7 @@ func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tabl
 		sqlStr := fmt.Sprintf("select top(1)%s,%s,RecordTime from %s where RecordTime = (select min(RecordTime) from %s where UserID = %d %s) and UserID = %d %s", keyName, changeKey, tableName, tableName, userId,itemAdd, userId,itemAdd)
 		//zLog.PrintfLogger("获取%s未来sql: %s ", keyName, sqlStr)
 
-		_, rows, _ := mssql.Query(dbNow, sqlStr)
+		_, rows, _ := mssql.Query(logDB, sqlStr)
 		for rows.Next() { // 循环遍历
 			var result int
 			var change int

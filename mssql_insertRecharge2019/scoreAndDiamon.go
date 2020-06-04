@@ -172,6 +172,8 @@ func GetItemReduceSql(rechargeInfo RechargeList, itemId int, itemNum int, dbNow 
 	//lastAllItem := GetHistoryItem(dbName, day1,dbNow,rechargeInfo.UserId,rechargeInfo.SuccessTime, rechargeInfo) // 获取玩家的历史灵力数量
 	title := "使用"
 	switch itemId {
+	case 150:
+		title = "扣除：竞技场报名"
 	case 151:
 		title = "雪人大作战活动消耗"
 	case 2007:
