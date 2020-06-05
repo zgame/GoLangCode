@@ -43,7 +43,7 @@ func DealUserList(idStart int) {
 	day110 := 1554739200	// 2019 - 4月9号
 	day1:= day110 + (daySecond * idStart)
 	day2:= day1 + daySecond
-	sqlU := fmt.Sprintf("select ID,UserID,PayStatus,KindID,Money,Coin,GiftOnceCoin,GiftOnePayCoin,SuccessTime,ClientKind,GiftPackageID,Diamond,GiftOnceDiamond,GiftOnePayDiamond,ChannelID  from testdb.dbo.PPayCoinOrder_2019 with(nolock) where PayStatus=2 and SuccessTime >= %d and SuccessTime < %d ",day1,day2) // 一天
+	sqlU := fmt.Sprintf("select ID,UserID,PayStatus,KindID,Money,Coin,GiftOnceCoin,GiftOnePayCoin,SuccessTime,ClientKind,GiftPackageID,Diamond,GiftOnceDiamond,GiftOnePayDiamond,ChannelID  from testdb.dbo.PPayCoinOrder_2019 with(nolock) where PayStatus=2 and SuccessTime >= %d and SuccessTime < %d and GiftPackageID = 1001",day1,day2) // 一天
 	//sqlU:= fmt.Sprintf( "select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1581264000") // 一个月
 	//fmt.Println("sql:",sqlU)
 	_, rows, _ := mssql.Query(TestDB, sqlU)
