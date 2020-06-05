@@ -15,24 +15,24 @@ func DealUserList(id int) {
 		userId     = "dbuser"
 		password   = "CEDFE2CDA7DB84AC"
 		server     = "172.16.140.89"
-		logDBName1 = "BY_LOG_202001"
-		logDBName2 = "BY_LOG_202002"
+		//logDBName1 = "BY_LOG_202001"
+		//logDBName2 = "BY_LOG_202002"
 		logDBName2019 = "BY_LOG_201905"
 		testDBName = "testdb"
 	)
 	fmt.Println(" --------------开始连接数据库-------------- ")
 	testDB := mssql.ConnectDB(userId, password, server, testDBName)
-	logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
-	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
-	logDB2019 := mssql.ConnectDB(userId, password, server, logDBName2)
+	//logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
+	//logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
+	logDB2019 := mssql.ConnectDB(userId, password, server, logDBName2019)
 
 	idStart:= id * Group
 	idEnd :=  (id + 1)* Group
  	//fmt.Println(" --------------开始查询玩家列表--------------")
 	//sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.aa_user_chongzhi_new_sortid_match   with(nolock) where id >= %d", Group,idStart)	// 2020充值的用户
 	//sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.a1_user_free_new_sortid_match   with(nolock) where id >= %d", Group,idStart)    // 2020免费的用户
-	sqlU:= fmt.Sprintf( "select * from testdb.dbo.bb_user_chongzhi_new_sortid_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019充值的用户
-	//sqlU:= fmt.Sprintf( "select * from testdb.dbo.bb_user_free_new_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019免费的用户
+	//sqlU:= fmt.Sprintf( "select * from testdb.dbo.bb_user_chongzhi_new_sortid_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019充值的用户
+	sqlU:= fmt.Sprintf( "select * from testdb.dbo.b1_user_others_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019免费的用户
 	_, rows, _ := mssql.Query(testDB, sqlU)
 
 	for rows.Next() { // 循环遍历
@@ -86,7 +86,7 @@ func DealUserList(id int) {
 
 				dbNow:= logDB2019
 				dbName := logDBName2019
-				 dbName2 := logDBName2019
+				 dbName2 := "BY_LOG_201905_copy"
 
 
 
@@ -144,8 +144,8 @@ func DealUserList(id int) {
 	}
 	mssql.CloseQuery(rows)
 	mssql.CloseDB(testDB)
-	mssql.CloseDB(logDB1)
-	mssql.CloseDB(logDB2)
+	//mssql.CloseDB(logDB1)
+	//mssql.CloseDB(logDB2)
 
 	wg.Done()
 }
