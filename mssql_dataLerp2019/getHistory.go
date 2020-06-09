@@ -32,8 +32,8 @@ func GetHistoryItem( dbName string, day1 string ,dbNow *sql.DB,  rechargeInfo Us
 
 
 // 获取历史遗留
-func GetHistory( dbName string, day1 string ,dbGame *sql.DB, userId int, tableNameT string, keyName string ,  rechargeId int, itemId int, LogDB *sql.DB,gameDB *sql.DB) (int,string) {
-	dbNow:= dbGame
+func GetHistory( dbName string, day1 string , dbGame04 *sql.DB, userId int, tableNameT string, keyName string ,  rechargeId int, itemId int, LogDB *sql.DB, gameDB03 *sql.DB) (int,string) {
+	dbNow:= dbGame04
 	dayInt,_ := strconv.Atoi(day1)
 	tableName := ""
 
@@ -42,12 +42,12 @@ func GetHistory( dbName string, day1 string ,dbGame *sql.DB, userId int, tableNa
 
 		//num := dayInt - 20200210
 		if dayInt==20190400{
-			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB, userId)
+			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB03, userId)
 			forwardItem := 0
 			if itemId>0 {
-				forwardItem = GetDataBaseBYItem(gameDB,userId, itemId)
+				forwardItem = GetDataBaseBYItem(gameDB03,userId, itemId)
 			}
-			forwardLottery := GetDataBaseBYLottery(gameDB, userId)
+			forwardLottery := GetDataBaseBYLottery(gameDB03, userId)
 			switch tableNameT {
 			case "Lottery":
 				return forwardLottery,endTime

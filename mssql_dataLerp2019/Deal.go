@@ -21,8 +21,8 @@ var (
 	//passwordReadOnly   = "35A20E7966ECDC93"
 	//PlatformDBName   = "PlatformDB_202001"
 	DataBaseBYDBName03 = "DataBaseBY_201903"
-	DataBaseBYDBName = "DataBaseBY_201904"
-	TestDBName       = "testdb"
+	DataBaseBYDBName04 = "DataBaseBY_201904"
+	TestDBName         = "testdb"
 
 	//TestDB *sql.DB
 )
@@ -34,7 +34,7 @@ func DealUserList(idStart int) {
 
 	//fmt.Println(" --------------开始连接数据库-------------- ")
 	//platformDB := mssql.ConnectDB(userId, password, server, PlatformDBName)
-	DataBaseBYDB := mssql.ConnectDB(userId, password, server, DataBaseBYDBName)
+	DataBaseBYDB04 := mssql.ConnectDB(userId, password, server, DataBaseBYDBName04)
 	DataBaseBYDB03 := mssql.ConnectDB(userId, password, server, DataBaseBYDBName03)
 	logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
 	//logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
@@ -45,7 +45,8 @@ func DealUserList(idStart int) {
 	//day110 := 1578585600	// 1月10号
 	day1 := Group * idStart
 	day2 := Group * (idStart + 1)
-	sqlU := fmt.Sprintf("select *  from testdb.dbo.b1_user_chongzhi with(nolock) where id >= %d and id < %d ", day1, day2) // 一天
+	//sqlU := fmt.Sprintf("select *  from testdb.dbo.b1_user_chongzhi with(nolock) where id >= %d and id < %d ", day1, day2) //    充值
+	sqlU := fmt.Sprintf("select *  from testdb.dbo.b1_user_free with(nolock) where id >= %d and id < %d ", day1, day2) //    免费
 	//sqlU:= fmt.Sprintf( "select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1581264000") // 一个月
 	//fmt.Println("sql:",sqlU)
 	_, rows, _ := mssql.Query(TestDB, sqlU)
@@ -93,20 +94,20 @@ func DealUserList(idStart int) {
 		if day1N < 20190409 {
 			// 玩家的注册日期在4月9日之前， 用日志库金额， 要缝合1月10号或者之后的首次记录
 			dayStart = "20190409"
-			//dbNow = DataBaseBYDB
-			//dbName = DataBaseBYDBName//GetMonth(dayStart, logDB1, logDB2)
+			//dbNow = DataBaseBYDB04
+			//dbName = DataBaseBYDBName04//GetMonth(dayStart, logDB1, logDB2)
 
-			forwardScore, recordTimeScore := GetForwardScore(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB)       // 获取玩家的最终金币数量
-			forwardDiamond, recordTimeDiamond := GetForwardDiamond(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB) // 获取玩家的最终数量
-			forwardCoin, recordTimeCoin := GetForwardCoin(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB)          // 获取玩家的最终数量
-			forwardLottery, recordTimeLottery := GetForwardLottery(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB) // 获取玩家的最终数量
+			forwardScore, recordTimeScore := GetForwardScore(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB04)       // 获取玩家的最终金币数量
+			forwardDiamond, recordTimeDiamond := GetForwardDiamond(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB04) // 获取玩家的最终数量
+			forwardCoin, recordTimeCoin := GetForwardCoin(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB04)          // 获取玩家的最终数量
+			forwardLottery, recordTimeLottery := GetForwardLottery(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB04) // 获取玩家的最终数量
 
 			// 历史遗留数据量
 			dayStart = "20190408"
-			lastAllScore, _ := GetHistoryScore(DataBaseBYDBName, dayStart, DataBaseBYDB, userInfo, nil,DataBaseBYDB03)     // 获取玩家的历史金币数量
-			lastAllDiamond, _ := GetHistoryDiamond(DataBaseBYDBName, dayStart, DataBaseBYDB, userInfo, nil,DataBaseBYDB03) // 获取玩家的历史数量
-			lastAllCoin, _ := GetHistoryCoin(DataBaseBYDBName, dayStart, DataBaseBYDB, userInfo, nil,DataBaseBYDB03)       // 获取玩家的历史数量
-			lastAllLottery, _ := GetHistoryLottery(DataBaseBYDBName, dayStart, DataBaseBYDB, userInfo, nil,DataBaseBYDB03) // 获取玩家的历史数量
+			lastAllScore, _ := GetHistoryScore(DataBaseBYDBName04, dayStart, DataBaseBYDB04, userInfo, nil,DataBaseBYDB03)     // 获取玩家的历史金币数量
+			lastAllDiamond, _ := GetHistoryDiamond(DataBaseBYDBName04, dayStart, DataBaseBYDB04, userInfo, nil,DataBaseBYDB03) // 获取玩家的历史数量
+			lastAllCoin, _ := GetHistoryCoin(DataBaseBYDBName04, dayStart, DataBaseBYDB04, userInfo, nil,DataBaseBYDB03)       // 获取玩家的历史数量
+			lastAllLottery, _ := GetHistoryLottery(DataBaseBYDBName04, dayStart, DataBaseBYDB04, userInfo, nil,DataBaseBYDB03) // 获取玩家的历史数量
 
 			// 计算插值
 
@@ -142,10 +143,10 @@ func DealUserList(idStart int) {
 			for _, itemId := range ItemArray {
 				dayStart = "20190409"
 				//dbNow, dbName = GetMonth(dayStart, logDB1, nil)
-				forwardItem, recordTimeItem := GetForwardItem(logDBName1, dayStart, logDB1, userInfo, itemId, DataBaseBYDB) // 获取玩家的最终数量
+				forwardItem, recordTimeItem := GetForwardItem(logDBName1, dayStart, logDB1, userInfo, itemId, DataBaseBYDB04) // 获取玩家的最终数量
 				// 历史遗留数据量
 				dayStart = "20190408"
-				lastAllItem, _ := GetHistoryItem(DataBaseBYDBName, dayStart, DataBaseBYDB, userInfo, itemId, nil,DataBaseBYDB03) // 获取玩家的历史数量
+				lastAllItem, _ := GetHistoryItem(DataBaseBYDBName04, dayStart, DataBaseBYDB04, userInfo, itemId, nil,DataBaseBYDB03) // 获取玩家的历史数量
 				changeItem := forwardItem - lastAllItem
 				if forwardItem == -1 || lastAllItem == -1 {
 					// 如果有找不到的情况， 那么就不插入了
@@ -170,12 +171,12 @@ func DealUserList(idStart int) {
 			// 玩家在4月22日依然留存， 用日志库金额
 			dayStart = "20190422"
 			//dbNow, dbName = GetMonth(dayStart, logDB1, logDB2)
-			forwardScore, _ = GetForwardScore(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB)     // 获取玩家的最终金币数量
-			forwardDiamond, _ = GetForwardDiamond(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB) // 获取玩家的最终数量
-			forwardCoin, _ = GetForwardCoin(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB)       // 获取玩家的最终数量
-			forwardLottery, _ = GetForwardLottery(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB) // 获取玩家的最终数量
+			forwardScore, _ = GetForwardScore(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB04)     // 获取玩家的最终金币数量
+			forwardDiamond, _ = GetForwardDiamond(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB04) // 获取玩家的最终数量
+			forwardCoin, _ = GetForwardCoin(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB04)       // 获取玩家的最终数量
+			forwardLottery, _ = GetForwardLottery(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB04) // 获取玩家的最终数量
 			for _, itemId := range ItemArray {
-				forwardItem, _ := GetForwardItem(logDBName1, dayStart, logDB1, userInfo, itemId, DataBaseBYDB) // 获取玩家的最终数量
+				forwardItem, _ := GetForwardItem(logDBName1, dayStart, logDB1, userInfo, itemId, DataBaseBYDB04) // 获取玩家的最终数量
 				forwardItemArray = append(forwardItemArray, forwardItem)
 			}
 
@@ -183,20 +184,20 @@ func DealUserList(idStart int) {
 			dayStart = "20190421"
 		} else {
 			// 玩家在2月10日前流失了 ， 玩家的结束金额应该是游戏库金额
-			forwardScore, forwardDiamond, forwardCoin = GetDataBaseBY(DataBaseBYDB, userInfo.UserId) // 玩家最终资源
-			forwardLottery = GetDataBaseBYLottery(DataBaseBYDB, userInfo.UserId) // 玩家最终资源
+			forwardScore, forwardDiamond, forwardCoin = GetDataBaseBY(DataBaseBYDB04, userInfo.UserId) // 玩家最终资源
+			forwardLottery = GetDataBaseBYLottery(DataBaseBYDB04, userInfo.UserId)                     // 玩家最终资源
 
 			for _, itemId := range ItemArray {
-				forwardItem := GetDataBaseBYItem(DataBaseBYDB, userInfo.UserId, itemId)
+				forwardItem := GetDataBaseBYItem(DataBaseBYDB04, userInfo.UserId, itemId)
 				forwardItemArray = append(forwardItemArray, forwardItem)
 			}
 			dayStart = day2 // 流失的时候
 		}
 		// 对尾部数据进行缝合
-		lastAllScore, recordTimeScore := GetHistoryScore(DataBaseBYDBName, dayStart, DataBaseBYDB, userInfo, logDB1,DataBaseBYDB03)       // 获取玩家的历史金币数量
-		lastAllDiamond, recordTimeDiamond := GetHistoryDiamond(DataBaseBYDBName, dayStart, DataBaseBYDB, userInfo, logDB1,DataBaseBYDB03) // 获取玩家的历史数量
-		lastAllCoin, recordTimeCoin := GetHistoryCoin(DataBaseBYDBName, dayStart, DataBaseBYDB, userInfo, logDB1,DataBaseBYDB03)          // 获取玩家的历史数量
-		lastAllLottery, recordTimeLottery := GetHistoryLottery(DataBaseBYDBName, dayStart, DataBaseBYDB, userInfo, logDB1,DataBaseBYDB03)          // 获取玩家的历史数量
+		lastAllScore, recordTimeScore := GetHistoryScore(DataBaseBYDBName04, dayStart, DataBaseBYDB04, userInfo, logDB1,DataBaseBYDB03)       // 获取玩家的历史金币数量
+		lastAllDiamond, recordTimeDiamond := GetHistoryDiamond(DataBaseBYDBName04, dayStart, DataBaseBYDB04, userInfo, logDB1,DataBaseBYDB03) // 获取玩家的历史数量
+		lastAllCoin, recordTimeCoin := GetHistoryCoin(DataBaseBYDBName04, dayStart, DataBaseBYDB04, userInfo, logDB1,DataBaseBYDB03)          // 获取玩家的历史数量
+		lastAllLottery, recordTimeLottery := GetHistoryLottery(DataBaseBYDBName04, dayStart, DataBaseBYDB04, userInfo, logDB1,DataBaseBYDB03) // 获取玩家的历史数量
 		//fmt.Println("lastAllScore",lastAllScore)
 
 		// 计算插值
@@ -230,7 +231,7 @@ func DealUserList(idStart int) {
 
 		// 集中处理道具
 		for index, itemId := range ItemArray {
-			lastAllItem, recordTimeItem := GetHistoryItem(DataBaseBYDBName, dayStart, DataBaseBYDB, userInfo, itemId, logDB1,DataBaseBYDB03) // 获取玩家的历史数量
+			lastAllItem, recordTimeItem := GetHistoryItem(DataBaseBYDBName04, dayStart, DataBaseBYDB04, userInfo, itemId, logDB1,DataBaseBYDB03) // 获取玩家的历史数量
 			changeItem := forwardItemArray[index] - lastAllItem
 			if forwardItemArray[index] == -1 || lastAllItem == -1 {
 				// 如果有找不到的情况， 那么就不插入了
@@ -241,7 +242,7 @@ func DealUserList(idStart int) {
 
 	}
 	//mssql.CloseDB(platformDB)
-	mssql.CloseDB(DataBaseBYDB)
+	mssql.CloseDB(DataBaseBYDB04)
 	mssql.CloseDB(DataBaseBYDB03)
 	mssql.CloseDB(logDB1)
 	//mssql.CloseDB(logDB2)
