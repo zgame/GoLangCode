@@ -19,6 +19,9 @@ func DealUserList(id int) {
 		//logDBName2 = "BY_LOG_202002"
 		logDBName2019 = "BY_LOG_201905"
 		testDBName = "testdb"
+
+
+		
 	)
 	fmt.Println(" --------------开始连接数据库-------------- ")
 	testDB := mssql.ConnectDB(userId, password, server, testDBName)
