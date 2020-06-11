@@ -32,7 +32,7 @@ func GetForwardItem( dbName string, dayStart string ,dbNow *sql.DB,  rechargeInf
 
 
 // 获取前项遗留
-func GetForward( dbName string, dayStart string , logDB *sql.DB, userId int, tableNameT string, keyName string , changeKey string, rechargeId int, itemId int,  gameDB *sql.DB) (int,string) {
+func GetForward( dbName string, dayStart string , logDB *sql.DB, userId int, tableNameT string, keyName string , changeKey string, rechargeId int, itemId int,  gameDB04 *sql.DB) (int,string) {
 	dayInt,_ := strconv.Atoi(dayStart)
 	tableName := ""
 
@@ -45,13 +45,13 @@ func GetForward( dbName string, dayStart string , logDB *sql.DB, userId int, tab
 			//zLog.PrintfLogger(" dayInt 太往后了，已经要搜到5月份了, userId: %d  id :%d ", userId, rechargeId)
 			//InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,TestDB,itemId)
 			endTime := "2019-04-30 00:00:00"
-			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB, userId)
+			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB04, userId)
 			forwardItem := 0
 			if itemId>0 {
-				forwardItem = GetDataBaseBYItem(gameDB,userId, itemId)
+				forwardItem = GetDataBaseBYItem(gameDB04,userId, itemId)
 			}
-			forwardLottery := GetDataBaseBYLottery(gameDB, userId)
-			switch tableNameT {
+			forwardLottery := GetDataBaseBYLottery(gameDB04, userId)
+			switch keyName {
 			case "Lottery":
 				return forwardLottery,endTime
 			case "Score":

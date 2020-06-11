@@ -9,28 +9,29 @@ import (
 )
 
 //遗留分数
-func GetHistoryScore( gameDbName string, day1 string , gameDb *sql.DB, userId int, rechargeTime string, rechargeInfo RechargeList, logDB *sql.DB, TestDB *sql.DB) int {
-	return GetHistory(gameDbName,day1, gameDb,userId,"GameScoreChangeRecord","Score",rechargeTime, rechargeInfo.id,0, logDB,TestDB)
+func GetHistoryScore( gameDbName string, day1 string , gameDb *sql.DB, userId int, rechargeTime string, rechargeInfo RechargeList, logDB *sql.DB, gameDB03 *sql.DB) int {
+	return GetHistory(gameDbName,day1, gameDb,userId,"GameScoreChangeRecord","Score",rechargeTime, rechargeInfo.id,0, logDB,gameDB03)
 }
 
 //遗留钻石
-func GetHistoryDiamond( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, logDB *sql.DB, TestDB *sql.DB) int {
-	return GetHistory(dbName,day1,dbNow,userId,"GameDiamondChangeRecord","Diamond",GetTimeFromInt(rechargeTime), rechargeInfo.id,0,logDB,TestDB)
+func GetHistoryDiamond( dbName string, day1 string ,gameDb *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, logDB *sql.DB, gameDB03 *sql.DB) int {
+	return GetHistory(dbName,day1,gameDb,userId,"GameDiamondChangeRecord","Diamond",GetTimeFromInt(rechargeTime), rechargeInfo.id,0,logDB,gameDB03)
 }
 //遗留灵力
-func GetHistoryCoin( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, logDB *sql.DB, TestDB *sql.DB) int {
-	return GetHistory(dbName,day1,dbNow,userId,"GameCoinChangeRecord","Coin",GetTimeFromInt(rechargeTime), rechargeInfo.id,0,logDB,TestDB)
+func GetHistoryCoin( dbName string, day1 string ,gameDb *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, logDB *sql.DB, gameDB03 *sql.DB) int {
+	return GetHistory(dbName,day1,gameDb,userId,"GameCoinChangeRecord","Coin",GetTimeFromInt(rechargeTime), rechargeInfo.id,0,logDB,gameDB03)
 }
 //遗留道具
-func GetHistoryItem( dbName string, day1 string ,dbNow *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, itemId int, logDB *sql.DB, TestDB *sql.DB) int {
-	return GetHistory(dbName,day1,dbNow,userId,"GameItemChangeRecord","ItemIndbNum",GetTimeFromInt(rechargeTime), rechargeInfo.id,itemId,logDB,TestDB)
+func GetHistoryItem( dbName string, day1 string ,gameDb *sql.DB, userId int, rechargeTime int,rechargeInfo RechargeList, itemId int, logDB *sql.DB, gameDB03 *sql.DB) int {
+	return GetHistory(dbName,day1,gameDb,userId,"GameItemChangeRecord","ItemIndbNum",GetTimeFromInt(rechargeTime), rechargeInfo.id,itemId,logDB,gameDB03)
 }
 
 
 // 获取历史遗留
-func GetHistory( gameDbName string, day1 string ,dbNow *sql.DB, userId int, tableNameT string, keyName string , rechargeTime string , rechargeId int, itemId int, LogDB *sql.DB, TestDB *sql.DB) int {
+func GetHistory( gameDbName string, day1 string , gameDb04 *sql.DB, userId int, tableNameT string, keyName string , rechargeTime string , rechargeId int, itemId int, LogDB *sql.DB, gameDB03 *sql.DB) int {
 	dayInt,_ := strconv.Atoi(day1)
 	tableName := ""
+	dbNow := gameDb04
 
 	for i:=30;i>0;i-- {
 
@@ -44,12 +45,12 @@ func GetHistory( gameDbName string, day1 string ,dbNow *sql.DB, userId int, tabl
 			//zLog.PrintfLogger(" dayInt 太往前了，开始搜游戏库, userid: %d  id :%d ", userId, rechargeId)
 
 
-			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(TestDB, userId)
+			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB03, userId)
 			forwardItem := 0
 			if itemId>0 {
-				forwardItem = GetDataBaseBYItem(TestDB,userId, itemId)
+				forwardItem = GetDataBaseBYItem(gameDB03,userId, itemId)
 			}
-			switch tableNameT {
+			switch keyName {
 			case "Score":
 				//zLog.PrintfLogger(" score %d ", forwardScore)
 				return forwardScore

@@ -48,7 +48,7 @@ func GetHistory( dbName string, day1 string , dbGame04 *sql.DB, userId int, tabl
 				forwardItem = GetDataBaseBYItem(gameDB03,userId, itemId)
 			}
 			forwardLottery := GetDataBaseBYLottery(gameDB03, userId)
-			switch tableNameT {
+			switch keyName {
 			case "Lottery":
 				return forwardLottery,endTime
 			case "Score":

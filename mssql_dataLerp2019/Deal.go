@@ -22,7 +22,7 @@ var (
 	//PlatformDBName   = "PlatformDB_202001"
 	DataBaseBYDBName03 = "DataBaseBY_201903"
 	DataBaseBYDBName04 = "DataBaseBY_201904"
-	TestDBName         = "testdb"
+	TestDBName         = "auditdb"
 
 	//TestDB *sql.DB
 )
@@ -43,10 +43,13 @@ func DealUserList(idStart int) {
 	//fmt.Println(" --------------开始查询充值列表--------------")
 	//daySecond := 86400		// 一天秒数
 	//day110 := 1578585600	// 1月10号
+
+
 	day1 := Group * idStart
 	day2 := Group * (idStart + 1)
-	//sqlU := fmt.Sprintf("select *  from testdb.dbo.b1_user_chongzhi with(nolock) where id >= %d and id < %d ", day1, day2) //    充值
-	sqlU := fmt.Sprintf("select *  from testdb.dbo.b1_user_free with(nolock) where id >= %d and id < %d ", day1, day2) //    免费
+	//sqlU := fmt.Sprintf("select *  from %s.dbo.x2019_user_chongzhi_lerp with(nolock) where id = %d ", TestDBName ,3305) //    调试
+	sqlU := fmt.Sprintf("select *  from %s.dbo.x2019_user_chongzhi_lerp with(nolock) where id >= %d and id < %d ", TestDBName, day1, day2) //    充值
+	//sqlU := fmt.Sprintf("select *  from testdb.dbo.b1_user_free with(nolock) where id >= %d and id < %d ", day1, day2) //    免费
 	//sqlU:= fmt.Sprintf( "select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1581264000") // 一个月
 	//fmt.Println("sql:",sqlU)
 	_, rows, _ := mssql.Query(TestDB, sqlU)

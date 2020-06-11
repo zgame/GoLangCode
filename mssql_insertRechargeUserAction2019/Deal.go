@@ -18,7 +18,8 @@ func DealUserList(id int) {
 		//logDBName1 = "BY_LOG_202001"
 		//logDBName2 = "BY_LOG_202002"
 		logDBName2019 = "BY_LOG_201905"
-		testDBName = "testdb"
+		logDBName2019Copy = "BY_LOG_201905_copy"
+		testDBName = "auditdb"
 
 
 		
@@ -35,7 +36,8 @@ func DealUserList(id int) {
 	//sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.aa_user_chongzhi_new_sortid_match   with(nolock) where id >= %d", Group,idStart)	// 2020充值的用户
 	//sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.a1_user_free_new_sortid_match   with(nolock) where id >= %d", Group,idStart)    // 2020免费的用户
 	//sqlU:= fmt.Sprintf( "select * from testdb.dbo.bb_user_chongzhi_new_sortid_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019充值的用户
-	sqlU:= fmt.Sprintf( "select * from testdb.dbo.b1_user_others_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019免费的用户
+	//sqlU:= fmt.Sprintf( "select * from testdb.dbo.b1_user_others_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019免费的用户
+	sqlU:= fmt.Sprintf( "select * from %s.dbo.x2019_user_chongzhi_match  with(nolock) where id >= %d and id < %d", testDBName, idStart ,  idEnd)    // 审计包含历史上充值用户
 	_, rows, _ := mssql.Query(testDB, sqlU)
 
 	for rows.Next() { // 循环遍历
@@ -87,14 +89,6 @@ func DealUserList(id int) {
 				//dbNow, dbName := GetMonth(table1,  logDB1,  logDB2)
 				//_, dbName2 := GetMonth(table2,  logDB1,  logDB2)
 
-				dbNow:= logDB2019
-				dbName := logDBName2019
-				 dbName2 := "BY_LOG_201905_copy"
-
-
-
-
-
 				//fmt.Println("",dbNow)
 				//fmt.Println("",dbNow2)
 
@@ -132,12 +126,19 @@ func DealUserList(id int) {
 				// 每个不同的处理方式
 				allKeysDeal := GetTableKeysDeal(RecordTimeDict[j], userInfo)
 
+				// 先统一删除数据
+				//deleteSql:=  fmt.Sprintf("delete from %s.dbo.%s where UserID = %d ", logDBName2019, table1, userInfo.uid)
+				//err,_ := mssql.Exec(logDB2019, deleteSql)
+				//if err!= nil{
+				//	zLog.PrintfLogger("delete Exec Error %s",err.Error())
+				//}
+
 				// 统一的insert语句
-				insertSql := fmt.Sprintf("insert into %s.dbo.%s (%s) ", dbName, table1, allKeys)
-				selectSql := fmt.Sprintf(" select  %s  from  %s.dbo.%s  WITH(NOLOCK)  where UserID= %d", allKeysDeal, dbName2, table2, userInfo.uid2)
+				insertSql := fmt.Sprintf("insert into %s.dbo.%s (%s) ", logDBName2019, table1, allKeys)
+				selectSql := fmt.Sprintf(" select  %s  from  %s.dbo.%s  WITH(NOLOCK)  where UserID= %d", allKeysDeal, logDBName2019Copy, table2, userInfo.uid2)
 				sqlString := insertSql + selectSql
 				//zLog.PrintfLogger("sql: %s ",sqlString)
-				err,_ := mssql.Exec(dbNow, sqlString)
+				err,_ = mssql.Exec(logDB2019, sqlString)
 				if err!= nil{
 					zLog.PrintfLogger("insert Exec Error %s",err.Error())
 				}
