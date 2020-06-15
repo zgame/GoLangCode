@@ -67,13 +67,14 @@ retry:
 	if MyServerUUID > math.MaxInt32 {
 		MyServerUUID = 0		// 如果越界了， 那么重头来过
 	}
+	ServerId := int(MyServerUUID)
 	if  GetMyServerByServerId(int(MyServerUUID)) != nil {
 		// 如果被占用了， 那么尝试下一个
 		goto retry
 		fmt.Printf("serverId  %d 被占用", MyServerUUID)
 	}
 
-	ServerId := int(MyServerUUID)
+
 	fmt.Println("连接创建了ServerId ： ",ServerId)
 
 	return ServerId
