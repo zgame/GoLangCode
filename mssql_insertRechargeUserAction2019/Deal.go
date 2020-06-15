@@ -18,7 +18,8 @@ func DealUserList(id int) {
 		//logDBName1 = "BY_LOG_202001"
 		//logDBName2 = "BY_LOG_202002"
 		logDBName2019 = "BY_LOG_201905"
-		logDBName2019Copy = "BY_LOG_201905_copy"
+		//logDBName2019Copy = "BY_LOG_201905_copy"
+		logDBName2019Copy = "DataBaseBY_201904"
 		testDBName = "auditdb"
 
 
@@ -36,8 +37,8 @@ func DealUserList(id int) {
 	//sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.aa_user_chongzhi_new_sortid_match   with(nolock) where id >= %d", Group,idStart)	// 2020充值的用户
 	//sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.a1_user_free_new_sortid_match   with(nolock) where id >= %d", Group,idStart)    // 2020免费的用户
 	//sqlU:= fmt.Sprintf( "select * from testdb.dbo.bb_user_chongzhi_new_sortid_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019充值的用户
-	//sqlU:= fmt.Sprintf( "select * from testdb.dbo.b1_user_others_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019免费的用户
-	sqlU:= fmt.Sprintf( "select * from %s.dbo.x2019_user_chongzhi_match  with(nolock) where id >= %d and id < %d", testDBName, idStart ,  idEnd)    // 审计包含历史上充值用户
+	sqlU:= fmt.Sprintf( "select * from %s.dbo.x2019_user_free_match   with(nolock) where id >= %d and id < %d", testDBName, idStart ,  idEnd)    // 2019免费的用户
+	//sqlU:= fmt.Sprintf( "select * from %s.dbo.x2019_user_chongzhi_match  with(nolock) where id >= %d and id < %d", testDBName, idStart ,  idEnd)    // 审计包含历史上充值用户
 	_, rows, _ := mssql.Query(testDB, sqlU)
 
 	for rows.Next() { // 循环遍历

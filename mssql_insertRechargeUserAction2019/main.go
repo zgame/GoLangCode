@@ -11,7 +11,7 @@ import (
 // 处理新增充值用户的行为记录
 //------------------------------------------------------------------
 
-var Group = 5000 // 每次处理人数
+var Group = 20000 // 每次处理人数
 var wg sync.WaitGroup
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	fmt.Println("-----------------start--------------------------")
 
 	//617471
-	for i := 0; i < 24; i++ {
+	for i := 0; i < 26; i++ {
 		wg.Add(1)
 		go DealUserList(i)
 	}
