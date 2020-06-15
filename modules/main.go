@@ -1,11 +1,13 @@
 package main
 
 import (
-	"./mssql"
-	"database/sql"
+	"modules/mssql"
+	"modules/zLog"
+
+	//"mssql/"
 	"fmt"
 	_ "github.com/denisenkom/go-mssqldb"
-	"strings"
+	"runtime"
 )
 
 func DealUserList(idStart int) {
@@ -17,39 +19,39 @@ func DealUserList(idStart int) {
 		logDBName2 = "BY_LOG_202002"
 		testDBName = "testdb"
 	)
-	fmt.Println(" --------------开始连接数据库-------------- ")
+	zLog.PrintLogger(" --------------开始连接数据库-------------- ")
 	testDB := mssql.ConnectDB(userId, password, server, testDBName)
 	logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
 	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
 
 	//fmt.Println(" --------------开始查询玩家列表--------------")
-	sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.aa_user_chongzhi_new_sortid_match   with(nolock) where id >= %d", Group,idStart)
+	sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.aa_user_chongzhi_new_sortid_match   with(nolock) where id >= %d", 1,idStart)
 	fmt.Println("sql:",sqlU)
 
-	//_, rows, _ := mssql.Query(testDB, sqlU)
+	_, rows, _ := mssql.Query(testDB, sqlU)
+
+	for rows.Next() { // 循环遍历
+		var userInfo UserList
+		err := rows.Scan(&userInfo.id, &userInfo.uid, &userInfo.initDate, &userInfo.lastDate, &userInfo.days, &userInfo.uid2, &userInfo.initDate2, &userInfo.lastDate2, &userInfo.days2, &userInfo.matchType, &userInfo.dayNum) // 赋值到结构体中
+		if err != nil {
+			zLog.PrintfLogger(" 遍历玩家列表 id %d    , %s \n" , userInfo.id,  err)
+			continue
+		}
+
+		zLog.PrintfLogger(" --------------开始处理id--------------", userInfo.id)
 	//
-	//for rows.Next() { // 循环遍历
-	//	var userInfo UserList
-	//	err := rows.Scan(&userInfo.id, &userInfo.uid, &userInfo.initDate, &userInfo.lastDate, &userInfo.days, &userInfo.uid2, &userInfo.initDate2, &userInfo.lastDate2, &userInfo.days2, &userInfo.matchType, &userInfo.dayNum) // 赋值到结构体中
-	//	if err != nil {
-	//		zLog.PrintfLogger(" 遍历玩家列表 id %d    , %s \n" , userInfo.id,  err)
-	//		continue
-	//	}
-	//
-	//	zLog.PrintfLogger(" --------------开始处理id--------------", userInfo.id)
-	//
-	//	// -----------------------------获取一行数据------------------------
-	//	//fmt.Println("", userInfo.id)
-	//	//fmt.Println("", userInfo.uid)
-	//	//fmt.Println("", userInfo.initDate)
-	//	//fmt.Println("", userInfo.lastDate)
-	//	//fmt.Println("", userInfo.days)
-	//	//fmt.Println("", userInfo.uid2)
-	//	//fmt.Println("", userInfo.initDate2)
-	//	//fmt.Println("", userInfo.lastDate2)
-	//	//fmt.Println("", userInfo.days2)
-	//	//fmt.Println("", userInfo.matchType)
-	//	//fmt.Println("", userInfo.dayNum)
+	//	-----------------------------获取一行数据------------------------
+		fmt.Println("", userInfo.id)
+		fmt.Println("", userInfo.uid)
+		fmt.Println("", userInfo.initDate)
+		fmt.Println("", userInfo.lastDate)
+		fmt.Println("", userInfo.days)
+		fmt.Println("", userInfo.uid2)
+		fmt.Println("", userInfo.initDate2)
+		fmt.Println("", userInfo.lastDate2)
+		fmt.Println("", userInfo.days2)
+		fmt.Println("", userInfo.matchType)
+		fmt.Println("", userInfo.dayNum)
 	//
 	//	dayList := getTimeList(userInfo.initDate, userInfo.days) // 玩家的日期列表
 	//	dayList2 := getTimeList(userInfo.initDate2, userInfo.days2)
@@ -116,25 +118,28 @@ func DealUserList(idStart int) {
 	//		}
 	//	}
 	//
-	//}
-	//mssql.CloseQuery(rows)
+	}
+	mssql.CloseQuery(rows)
 	mssql.CloseDB(testDB)
 	mssql.CloseDB(logDB1)
 	mssql.CloseDB(logDB2)
 
-	wg.Done()
+	//wg.Done()
 }
 
-// 获取当前的月份
-func GetMonth(table1 string,  logDB1 *sql.DB, logDB2 *sql.DB) (*sql.DB, string) {
-	var dbNow *sql.DB
-	var dbName string
-	if strings.Contains(table1, "202001") {
-		dbNow = logDB1
-		dbName = "BY_LOG_202001"
-	} else {
-		dbNow = logDB2
-		dbName = "BY_LOG_202002"
+func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU()) //设置cpu的核的数量，从而实现高并发
+	fmt.Println("-----------------start--------------------------")
+
+		go DealUserList(1)
+
+
+	for {
+		select {
+
+		}
 	}
-	return dbNow, dbName
+
+	fmt.Println(" --------------end-------------- ")
+
 }
