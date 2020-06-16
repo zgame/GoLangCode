@@ -161,36 +161,36 @@ func GetItemAddSql(rechargeInfo UserList, itemId int, itemNum int, dbNow *sql.DB
 	extend := 0
 
 	switch itemId {
-		case 108,109,110,111:
-			title = "寻宝抽奖"
-			typeI = 3
-			subType = 7
-			extend = 10
-		case 101,102,2007:
-			title = "捕获"
-			typeI = 1
-			subType = 17
-			extend = 10
-			case 103,120,7003:
-			title = "购买"
-			typeI = 3
-			subType = 19
-			extend = 300
-			case 131:
-			title = "网页活动"
-			typeI = 6
-			subType = 17
-			extend = 0
-			case 151:
-			title = "增加：排行榜奖励"
-			typeI = 3
-			subType = 2
-			extend = 0
-			case 150:
-			title = "充值挑战礼包赠送"
-			typeI = 2
-			subType = 3
-			extend = 1001
+	case 108, 109, 110, 111:
+		title = "寻宝抽奖"
+		typeI = 3
+		subType = 7
+		extend = 10
+	case 101, 102, 2007:
+		title = "捕获"
+		typeI = 1
+		subType = 17
+		extend = 10
+	case 103, 120, 7003:
+		title = "购买"
+		typeI = 3
+		subType = 19
+		extend = 300
+	case 131:
+		title = "网页活动"
+		typeI = 6
+		subType = 17
+		extend = 0
+	case 151:
+		title = "增加：排行榜奖励"
+		typeI = 3
+		subType = 2
+		extend = 0
+	case 150:
+		title = "赠送"
+		typeI = 7
+		subType = 3
+		extend = 1001
 	}
 
 	ItemValues := fmt.Sprintf("%d,%d,1995,%d,%d,%d,'游戏操作','%s',%s,%d, 0,0,0,%d,%d,%d,0,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, itemId, itemNum,title,reduceTimeOff,lastAllItem,  typeI, subType,extend,rechargeInfo.channelId)
