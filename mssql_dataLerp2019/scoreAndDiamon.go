@@ -187,7 +187,7 @@ func GetItemAddSql(rechargeInfo UserList, itemId int, itemNum int, dbNow *sql.DB
 		subType = 2
 		extend = 0
 	case 150:
-		title = "赠送"
+		title = "活动赠送"
 		typeI = 7
 		subType = 3
 		extend = 1001
