@@ -5,6 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func Welcome(c *gin.Context) {
+	c.JSON(200, "Hello Welcome to my site !!")
+}
 func Ping(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "pong",
