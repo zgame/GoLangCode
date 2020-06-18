@@ -1,11 +1,12 @@
 package main
 
 import (
-	"./Action"
 	"github.com/gofiber/cors"
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/logger"
 	"github.com/gofiber/recover"
+	"log"
+	"web_fiber/Action"
 )
 
 func main() {
@@ -29,9 +30,16 @@ func main() {
 
 
 	Routes(app)
-	app.Listen(8097)
+	// Last middleware to match anything
+	app.Use(func(c *fiber.Ctx) {
+		c.SendStatus(404)
+		// => 404 "Not Found"
+	})
+	log.Fatal(app.Listen(8097))
 }
 
+
+// 路由
 func Routes(app *fiber.App) {
 	app.Get("/", Action.Index)
 	app.Get("/ping", Action.Ping)
