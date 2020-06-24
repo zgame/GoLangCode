@@ -151,6 +151,7 @@ func DealUserList(id int) {
 	mssql.CloseDB(testDB)
 	//mssql.CloseDB(logDB1)
 	//mssql.CloseDB(logDB2)
+	mssql.CloseDB(logDB2019)
 
 	wg.Done()
 }

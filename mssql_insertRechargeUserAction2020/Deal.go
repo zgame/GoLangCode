@@ -17,21 +17,21 @@ func DealUserList(id int) {
 		server     = "172.16.140.89"
 		logDBName1 = "BY_LOG_202001"
 		logDBName2 = "BY_LOG_202002"
-		logDBName2019 = "BY_LOG_201905"
-		testDBName = "testdb"
+		logDBName2019 = "BY_LOG_201912"
+		testDBName = "auditdb"
 	)
 	fmt.Println(" --------------开始连接数据库-------------- ")
 	testDB := mssql.ConnectDB(userId, password, server, testDBName)
 	logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
 	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
-	logDB2019 := mssql.ConnectDB(userId, password, server, logDBName2)
+	//logDB2019 := mssql.ConnectDB(userId, password, server, logDBName2)
 
 	idStart:= id * Group
 	idEnd :=  (id + 1)* Group
  	//fmt.Println(" --------------开始查询玩家列表--------------")
-	//sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.aa_user_chongzhi_new_sortid_match   with(nolock) where id >= %d", Group,idStart)	// 2020充值的用户
+	sqlU:= fmt.Sprintf( "select * from %s.dbo.x2020_user_chongzhi_match   with(nolock) where id >= %d  and id < %d ", testDBName, idStart ,idEnd)	// 2020充值的用户
 	//sqlU:= fmt.Sprintf( "select top(%d)* from testdb.dbo.a1_user_free_new_sortid_match   with(nolock) where id >= %d", Group,idStart)    // 2020免费的用户
-	sqlU:= fmt.Sprintf( "select * from testdb.dbo.bb_user_chongzhi_new_sortid_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019充值的用户
+	//sqlU:= fmt.Sprintf( "select * from testdb.dbo.bb_user_chongzhi_new_sortid_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019充值的用户
 	//sqlU:= fmt.Sprintf( "select * from testdb.dbo.bb_user_free_new_match  with(nolock) where id >= %d and id < %d", idStart ,  idEnd)    // 2019免费的用户
 	_, rows, _ := mssql.Query(testDB, sqlU)
 
@@ -81,12 +81,12 @@ func DealUserList(id int) {
 				//var dbNow,dbNow2 *sql.DB
 				//var dbName string
 
-				//dbNow, dbName := GetMonth(table1,  logDB1,  logDB2)
+				dbNow, dbName := GetMonth(table1,  logDB1,  logDB2)
 				//_, dbName2 := GetMonth(table2,  logDB1,  logDB2)
-
-				dbNow:= logDB2019
-				dbName := logDBName2019
-				 dbName2 := logDBName2019
+				//
+				//dbNow:= logDB2019
+				//dbName := logDBName2019
+				// dbName2 := logDBName2019
 
 
 
@@ -131,7 +131,7 @@ func DealUserList(id int) {
 
 				// 统一的insert语句
 				insertSql := fmt.Sprintf("insert into %s.dbo.%s (%s) ", dbName, table1, allKeys)
-				selectSql := fmt.Sprintf(" select  %s  from  %s.dbo.%s  WITH(NOLOCK)  where UserID= %d", allKeysDeal, dbName2, table2, userInfo.uid2)
+				selectSql := fmt.Sprintf(" select  %s  from  %s.dbo.%s  WITH(NOLOCK)  where UserID= %d", allKeysDeal, logDBName2019, table2, userInfo.uid2)
 				sqlString := insertSql + selectSql
 				//zLog.PrintfLogger("sql: %s ",sqlString)
 				err,_ := mssql.Exec(dbNow, sqlString)
@@ -146,6 +146,7 @@ func DealUserList(id int) {
 	mssql.CloseDB(testDB)
 	mssql.CloseDB(logDB1)
 	mssql.CloseDB(logDB2)
+	//mssql.CloseDB(logDB2019)
 
 	wg.Done()
 }
