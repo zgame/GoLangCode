@@ -17,7 +17,7 @@ func DealUserList(id int) {
 		server     = "172.16.140.89"
 		logDBName1 = "BY_LOG_202001"
 		logDBName2 = "BY_LOG_202002"
-		logDBName2019 = "BY_LOG_201912"
+		//logDBName2019 = "BY_LOG_201912"
 		testDBName = "auditdb"
 	)
 	fmt.Println(" --------------开始连接数据库-------------- ")
@@ -131,7 +131,7 @@ func DealUserList(id int) {
 
 				// 统一的insert语句
 				insertSql := fmt.Sprintf("insert into %s.dbo.%s (%s) ", dbName, table1, allKeys)
-				selectSql := fmt.Sprintf(" select  %s  from  %s.dbo.%s  WITH(NOLOCK)  where UserID= %d", allKeysDeal, logDBName2019, table2, userInfo.uid2)
+				selectSql := fmt.Sprintf(" select  %s  from  %s.dbo.%s  WITH(NOLOCK)  where UserID= %d", allKeysDeal, testDBName, table2, userInfo.uid2)
 				sqlString := insertSql + selectSql
 				//zLog.PrintfLogger("sql: %s ",sqlString)
 				err,_ := mssql.Exec(dbNow, sqlString)
