@@ -61,7 +61,7 @@ func TimerClock(f func(),clock int) {
 				next = now
 			}
 			next = time.Date(next.Year(), next.Month(), next.Day(), clock, 0, 0, 0, next.Location())
-			t := time.NewTimer(next.Sub(now))
+			t := time.NewTimer(next.Sub(now)+1) 	// 这里加一秒， 或者向上取整，是为了防止临界点问题， 防止偶尔59:59秒因为毫秒问题导致没有到整点
 			<-t.C
 			f()
 		}
