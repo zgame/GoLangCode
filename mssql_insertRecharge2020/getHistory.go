@@ -28,7 +28,7 @@ func GetHistoryItem( dbName string, day1 string ,dbNow *sql.DB, userId int, rech
 
 
 // 获取历史遗留
-func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNameT string, keyName string , rechargeTime string , rechargeId int, itemId int, TestDB *sql.DB) int {
+func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNameT string, keyName string , rechargeTime string , rechargeId int, itemId int, gameDB03 *sql.DB) int {
 	dayInt,_ := strconv.Atoi(day1)
 	tableName := ""
 
@@ -39,8 +39,32 @@ func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNam
 			dayInt = 20200131	// 跳到1月份
 		}
 		if dayInt == 20200100{
-			zLog.PrintfLogger(" dayInt 太往前了，已经要搜到12月份了, userid: %d  id :%d ", userId, rechargeId)
-			InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,TestDB,itemId)
+			// 如果找不到， 那么去游戏表里面找
+			//zLog.PrintfLogger(" dayInt 太往前了，开始搜游戏库, userid: %d  id :%d ", userId, rechargeId)
+
+
+			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB03, userId)
+			forwardItem := 0
+			if itemId>0 {
+				forwardItem = GetDataBaseBYItem(gameDB03,userId, itemId)
+			}
+			switch keyName {
+			case "Score":
+				//zLog.PrintfLogger(" score %d ", forwardScore)
+				return forwardScore
+			case "Diamond":
+				//zLog.PrintfLogger(" Diamond %d ", forwardDiamond)
+				return forwardDiamond
+			case "Coin":
+				//zLog.PrintfLogger(" Coin %d ", forwardCoin)
+				return forwardCoin
+			case "ItemIndbNum":
+				//zLog.PrintfLogger(" ItemIndbNum %d ", forwardItem)
+				return forwardItem
+			}
+
+			//zLog.PrintfLogger(" 没有找到 %d ", 0)
+			//InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,LogDB,itemId)
 			return 0
 			//dayInt = 20191230	// 跳到12月份
 		}

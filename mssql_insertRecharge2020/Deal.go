@@ -19,9 +19,9 @@ var (
 
 	//userIdReadOnly     = "dbuser_ro"
 	//passwordReadOnly   = "35A20E7966ECDC93"
-	PlatformDBName   = "PlatformDB_202001"
-	DataBaseBYDBName = "DataBaseBY_202002"
-	TestDBName = "testdb"
+	//PlatformDBName   = "PlatformDB_202001"
+	DataBaseBYDBName = "DataBaseBY_201912"
+	TestDBName = "auditdb"
 
 	//TestDB *sql.DB
 )
@@ -31,7 +31,7 @@ func DealUserList(idStart int) {
 	dataBaseArray := make([]RechargeList,0)
 
 	fmt.Println(" --------------开始连接数据库-------------- ")
-	platformDB := mssql.ConnectDB(userId, password, server, PlatformDBName)
+	//platformDB := mssql.ConnectDB(userId, password, server, PlatformDBName)
 	DataBaseBYDB := mssql.ConnectDB(userId, password, server, DataBaseBYDBName)
 	logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
 	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
@@ -40,10 +40,10 @@ func DealUserList(idStart int) {
 
 	//fmt.Println(" --------------开始查询充值列表--------------")
 	daySecond := 86400		// 一天秒数
-	day110 := 1578585600	// 1月10号
+	day110 := 1578499200	// 1月9号
 	day1:= day110 + (daySecond * idStart)
 	day2:= day1 + daySecond
-	sqlU := fmt.Sprintf("select ID,UserID,PayStatus,KindID,Money,Coin,GiftOnceCoin,GiftOnePayCoin,SuccessTime,ClientKind,GiftPackageID,Diamond,GiftOnceDiamond,GiftOnePayDiamond,ChannelID  from testdb.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= %d and SuccessTime < %d ",day1,day2) // 一天
+	sqlU := fmt.Sprintf("select ID,UserID,PayStatus,KindID,Money,Coin,GiftOnceCoin,GiftOnePayCoin,SuccessTime,ClientKind,GiftPackageID,Diamond,GiftOnceDiamond,GiftOnePayDiamond,ChannelID  from auditdb.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= %d and SuccessTime < %d ",day1,day2) // 一天
 	//sqlU:= fmt.Sprintf( "select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1581264000") // 一个月
 	//fmt.Println("sql:",sqlU)
 	_, rows, _ := mssql.Query(TestDB, sqlU)
@@ -62,8 +62,8 @@ func DealUserList(idStart int) {
 
 	}
 	zLog.PrintfLogger(" --------------一共有 : %d  条数据--------------", len(dataBaseArray))
-	for index,rechargeInfo := range dataBaseArray{
-		zLog.PrintfLogger(" --------------开始处理充值index : %d     rechargeinfo.UserId: %d--------------", index,rechargeInfo.UserId)
+	for _,rechargeInfo := range dataBaseArray{
+		//zLog.PrintfLogger(" --------------开始处理充值index : %d     rechargeinfo.UserId: %d--------------", index,rechargeInfo.UserId)
 		zLog.PrintfLogger(" --------------开始处理充值id : %d--------------", rechargeInfo.id)
 
 		// -----------------------------获取单个充值行为------------------------
@@ -77,7 +77,7 @@ func DealUserList(idStart int) {
 
 		if rechargeInfo.gitPackageId > 0 {
 			// 购买礼包
-			GetGiftPackageRechargeSql(  rechargeInfo, dbNow, dataTimeStr, dbName, day1 ,TestDB)
+			GetGiftPackageRechargeSql(  rechargeInfo, dbNow, dataTimeStr, dbName, day1 ,DataBaseBYDB)
 		} else {
 			// 金币或者钻石
 			if rechargeInfo.coin > 0 {
@@ -86,10 +86,10 @@ func DealUserList(idStart int) {
 				emailGold := rechargeInfo.giftOnePayCoin                 // type =6
 
 				// 插入充值金币语句
-				lastAllScore:=GetScoreRechargeSql(rechargeInfo, getGold, dbNow, dataTimeStr, dbName, day1, 2,1,"充值金币赠送", rechargeInfo.Money,TestDB)
+				lastAllScore:=GetScoreRechargeSql(rechargeInfo, getGold, dbNow, dataTimeStr, dbName, day1, 2,1,"充值金币赠送", rechargeInfo.Money,DataBaseBYDB)
 				// 插入邮件赠送
 				if emailGold > 0 {
-					GetScoreRechargeSql(rechargeInfo, emailGold, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,TestDB)
+					GetScoreRechargeSql(rechargeInfo, emailGold, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,DataBaseBYDB)
 				}
 				GetScoreReduceSql(rechargeInfo, getGold+emailGold, dbNow, dataTimeStr, dbName, day1,lastAllScore)
 
@@ -99,10 +99,10 @@ func DealUserList(idStart int) {
 				emailDiamond := rechargeInfo.giftOnePayDiamond                    // type =6
 
 				// 插入充值钻石语句
-				lastAllDiamond:=GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, 2,1,"充值钻石赠送", rechargeInfo.Money,TestDB)
+				lastAllDiamond:=GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, 2,1,"充值钻石赠送", rechargeInfo.Money,DataBaseBYDB)
 				// 插入邮件赠送
 				if emailDiamond > 0 {
-					GetDiamondRechargeSql(rechargeInfo, emailDiamond, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,TestDB)
+					GetDiamondRechargeSql(rechargeInfo, emailDiamond, dbNow, dataTimeStr, dbName, day1, 6,4,"首充赠送", rechargeInfo.Money,DataBaseBYDB)
 				}
 				GetDiamondReduceSql(rechargeInfo, getDiamond+emailDiamond, dbNow, dataTimeStr, dbName, day1,lastAllDiamond)
 
@@ -112,7 +112,7 @@ func DealUserList(idStart int) {
 
 	mssql.CloseQuery(rows)
 
-	mssql.CloseDB(platformDB)
+	//mssql.CloseDB(platformDB)
 	mssql.CloseDB(DataBaseBYDB)
 	mssql.CloseDB(logDB1)
 	mssql.CloseDB(logDB2)

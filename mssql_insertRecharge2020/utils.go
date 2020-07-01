@@ -1,6 +1,10 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
+	"./mssql"
+	"./zLog"
 	"math/rand"
 	"time"
 )
@@ -178,5 +182,60 @@ type RechargeList struct {
 // 时间戳换成字符串
 func GetTimeFromInt(TimeInt int)  string{
 	return time.Unix(int64(TimeInt), 0).Format("2006-01-02 15:04:05")
+
+}
+
+
+
+
+// 获取游戏库资源
+func GetDataBaseBY(gameDB03 *sql.DB, userId int )  (int,int,int){
+
+	sqlStr := fmt.Sprintf("select top(1)Score,Diamond,Coin from dbo.GameScoreInfo where UserID = %d ",  userId)
+	//zLog.PrintfLogger("获取uid:%d  游戏库资源sql: %s ", userId, sqlStr)
+
+	_, rows, _ := mssql.Query(gameDB03, sqlStr)
+	for rows.Next() { // 循环遍历
+		var Score int
+		var Diamond int
+		var Coin int
+		err := rows.Scan(&Score,&Diamond,&Coin)
+		if err != nil {
+			zLog.PrintfLogger(" %d 游戏库资源 , %s \n", userId,  err)
+			continue
+		}
+		//if Score >= 0 {
+		//	zLog.PrintfLogger("GetDataBaseBY userId : %d,     获取数量： %d", userId,    Score)
+		mssql.CloseQuery(rows)
+		return Score, Diamond,Coin
+		//}
+	}
+	//mssql.CloseQuery(rows)
+	//return Score, Diamond,Coin
+	return 0, 0, 0
+}
+// 获取游戏库资源
+func GetDataBaseBYItem(gameDB03 *sql.DB, userId int ,itemId int)  int{
+	sqlStr := fmt.Sprintf("select top(1)Total,Used from dbo.UserSkillInfo where UserID = %d and ItemID = %d",  userId,itemId)
+	//zLog.PrintfLogger("获取uid:%d  游戏库资源sql: %s ", userId, sqlStr)
+
+	_, rows, _ := mssql.Query(gameDB03, sqlStr)
+	for rows.Next() { // 循环遍历
+		var Num int
+		var total int
+		var used int
+		err := rows.Scan(&total,&used)
+		if err != nil {
+			zLog.PrintfLogger(" %d 游戏库资源    , %s \n", userId,  err)
+			continue
+		}
+		Num = total - used
+		//if Num >= 0 {
+		//zLog.PrintfLogger("GetDataBaseBYItem  userId : %d,    id:%d 获取数量： %d", userId,  itemId, Num)
+		mssql.CloseQuery(rows)
+		return Num
+		//}
+	}
+	return 0
 
 }
