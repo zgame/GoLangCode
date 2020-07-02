@@ -1,7 +1,6 @@
 package main
 
 import (
-	"./zLog"
 	"database/sql"
 )
 
@@ -289,28 +288,28 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 
 	if getScore > 0 {
 		// 插入充值金币
-		zLog.PrintfLogger("-----------------礼包 %d 插入金币 %d", rechargeInfo.gitPackageId , getScore)
+		//zLog.PrintfLogger("-----------------礼包 %d 插入金币 %d", rechargeInfo.gitPackageId , getScore)
 		lastAllScore:=GetScoreRechargeSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId,TestDB)
 		GetScoreReduceSql(rechargeInfo, getScore, dbNow, dataTimeStr, dbName, day1,lastAllScore)
 		//zLog.PrintfLogger("礼包 %d 插入充值金币语句 ", rechargeInfo.gitPackageId)
 	}
 	if getDiamond > 0 {
 		// 插入充值钻石语句
-		zLog.PrintfLogger("-----------------礼包 %d 插入钻石 %d", rechargeInfo.gitPackageId , getDiamond)
+		//zLog.PrintfLogger("-----------------礼包 %d 插入钻石 %d", rechargeInfo.gitPackageId , getDiamond)
 		lastAllDiamond:=GetDiamondRechargeSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1, Type, SubType, title, rechargeInfo.gitPackageId,TestDB)
 		GetDiamondReduceSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1,lastAllDiamond)
 		//zLog.PrintfLogger("礼包 %d 插入充值钻石语句 %s", rechargeInfo.gitPackageId, addDiamondSql)
 	}
 	if getCoin > 0 {
 		// 插入灵力
-		zLog.PrintfLogger("-----------------礼包 %d 插入灵力 %d", rechargeInfo.gitPackageId , getCoin)
+		//zLog.PrintfLogger("-----------------礼包 %d 插入灵力 %d", rechargeInfo.gitPackageId , getCoin)
 		lastAllCoin:=GetCoinRechargeSql(rechargeInfo, getCoin, dbNow, dataTimeStr, dbName, day1, Type, SubType, title,TestDB)
 		GetCoinReduceSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1,lastAllCoin)
 
 	}
 	for _, item := range ItemArray {
 		// 插入道具
-		zLog.PrintfLogger("-----------------礼包 %d 插入道具 %d 数量 %d", rechargeInfo.gitPackageId , item.ItemId, item.ItemNum)
+		//zLog.PrintfLogger("-----------------礼包 %d 插入道具 %d 数量 %d", rechargeInfo.gitPackageId , item.ItemId, item.ItemNum)
 		lastAllItem:=GetItemRechargeSql(rechargeInfo, item.ItemId, item.ItemNum, dbNow, dataTimeStr, dbName, day1, title,TestDB)
 		GetItemReduceSql(rechargeInfo, item.ItemId, item.ItemNum, dbNow, dataTimeStr, dbName, day1,lastAllItem)
 		if item.ItemId >=108 && item.ItemId <=111 {

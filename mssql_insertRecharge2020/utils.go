@@ -1,10 +1,10 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"./mssql"
 	"./zLog"
+	"database/sql"
+	"fmt"
 	"math/rand"
 	"time"
 )

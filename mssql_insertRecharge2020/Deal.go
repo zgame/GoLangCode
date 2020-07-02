@@ -61,7 +61,7 @@ func DealUserList(idStart int) {
 		dataBaseArray = append(dataBaseArray, rechargeInfo) //添加到列表
 
 	}
-	zLog.PrintfLogger(" --------------一共有 : %d  条数据--------------", len(dataBaseArray))
+	//zLog.PrintfLogger(" --------------一共有 : %d  条数据--------------", len(dataBaseArray))
 	for _,rechargeInfo := range dataBaseArray{
 		//zLog.PrintfLogger(" --------------开始处理充值index : %d     rechargeinfo.UserId: %d--------------", index,rechargeInfo.UserId)
 		zLog.PrintfLogger(" --------------开始处理充值id : %d--------------", rechargeInfo.id)
