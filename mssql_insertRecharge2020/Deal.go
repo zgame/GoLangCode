@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/denisenkom/go-mssqldb"
+	"os"
 	"strings"
 	"time"
 )
@@ -36,6 +37,11 @@ func DealUserList(idStart int) {
 	logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
 	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
 	TestDB := mssql.ConnectDB(userId, password, server, TestDBName)
+
+	if DataBaseBYDB == nil || logDB1 == nil || logDB2 == nil || TestDB == nil {
+		zLog.PrintfLogger("数据库连接出现问题， 程序终止")
+		os.Exit(0)
+	}
 
 
 	//fmt.Println(" --------------开始查询充值列表--------------")
