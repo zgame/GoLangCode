@@ -8,22 +8,19 @@ import (
 	"os"
 )
 
+//Consumers have two modes of operation.
+
 // 消费组2   Users who require access to individual partitions can use the partitioned mode which exposes access to partition-level consumers:
-func clusterConsumer(address, topicName []string, groupId string)  {
+func consumerGroup2(address, topicName []string, groupId string)  {
 
 	config := cluster.NewConfig()
 	config.Group.Mode = cluster.ConsumerModePartitions
-
 
 	consumer, err := cluster.NewConsumer(address, groupId, topicName, config)
 	if err != nil {
 		panic(err)
 	}
 	defer consumer.Close()
-
-	// trap SIGINT to trigger a shutdown.
-	//signals := make(chan os.Signal, 1)
-	//signal.Notify(signals, os.Interrupt)
 
 	// consume partitions
 	for {
@@ -32,7 +29,6 @@ func clusterConsumer(address, topicName []string, groupId string)  {
 			if !ok {
 				return
 			}
-
 			// start a separate goroutine to consume messages
 			go func(pc cluster.PartitionConsumer) {
 				for msg := range pc.Messages() {
@@ -40,13 +36,11 @@ func clusterConsumer(address, topicName []string, groupId string)  {
 					consumer.MarkOffset(msg, "")	// mark message as processed
 				}
 			}(part)
-		//case <-signals:
-		//	return
 		}
 	}
 }
 
-// 消费组1  Consumers have two modes of operation. In the default multiplexed mode messages (and errors) of multiple topics and partitions are all passed to the single channel:
+// 消费组1  In the default multiplexed mode messages (and errors) of multiple topics and partitions are all passed to the single channel:
 func consumerGroup1(address []string, topicName []string , group string) {
 	config := cluster.NewConfig()
 	config.Consumer.Return.Errors = true
@@ -57,10 +51,6 @@ func consumerGroup1(address []string, topicName []string , group string) {
 		panic(err)
 	}
 	defer consumer.Close()
-
-	// trap SIGINT to trigger a shutdown.
-	//signals := make(chan os.Signal, 1)
-	//signal.Notify(signals, os.Interrupt)
 
 	// consume errors
 	go func() {
@@ -84,8 +74,6 @@ func consumerGroup1(address []string, topicName []string , group string) {
 				fmt.Fprintf(os.Stdout, "%s/%d/%d\t%s\t%s\n", msg.Topic, msg.Partition, msg.Offset, msg.Key, msg.Value)
 				consumer.MarkOffset(msg, "")	// mark message as processed
 			}
-		//case <-signals:
-		//	return
 		}
 	}
 }

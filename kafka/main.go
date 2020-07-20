@@ -11,14 +11,14 @@ func main() {
 
 	//topic := []string{"Hello-zswc"}
 	//广播式消费：消费者1
-	//go clusterConsumer( Address, topic, "group-1")
+	//go consumerGroup2( Address, topic, "group-1")
 	////广播式消费：消费者2
-	//go clusterConsumer( Address, topic, "group-2")
+	//go consumerGroup2( Address, topic, "group-2")
 	//KafKaInfo(Address)
 	//consumer(Address,TopicName)
 	//consumerGroup(Address,TopicName,"group1")
 	//consumerGroup1(Address ,TopicName, GroupName)
-	clusterConsumer(Address ,TopicName, GroupName)
+	consumerGroup2(Address ,TopicName, GroupName)
 
 	for {
 		select {}
