@@ -4,92 +4,123 @@ import (
 	"fmt"
 	"github.com/Shopify/sarama"
 	cluster "github.com/bsm/sarama-cluster"
-	"github.com/sdbaiguanghe/glog"
 	"log"
 	"os"
-	"os/signal"
-	"strings"
 )
 
-// 支持brokers cluster的消费者
-func clusterConsumer(brokers, topics []string, groupId string)  {
+// 消费组2   Users who require access to individual partitions can use the partitioned mode which exposes access to partition-level consumers:
+func clusterConsumer(address, topicName []string, groupId string)  {
 
 	config := cluster.NewConfig()
-	config.Consumer.Return.Errors = true
-	config.Group.Return.Notifications = true
-	config.Consumer.Offsets.Initial = sarama.OffsetNewest
+	config.Group.Mode = cluster.ConsumerModePartitions
 
-	// init consumer
-	consumer, err := cluster.NewConsumer(brokers, groupId, topics, config)
+
+	consumer, err := cluster.NewConsumer(address, groupId, topicName, config)
 	if err != nil {
-		log.Printf("%s: sarama.NewSyncProducer err, message=%s \n", groupId, err)
-		return
+		panic(err)
 	}
 	defer consumer.Close()
 
-	// trap SIGINT to trigger a shutdown
-	signals := make(chan os.Signal, 1)
-	signal.Notify(signals, os.Interrupt)
+	// trap SIGINT to trigger a shutdown.
+	//signals := make(chan os.Signal, 1)
+	//signal.Notify(signals, os.Interrupt)
+
+	// consume partitions
+	for {
+		select {
+		case part, ok := <-consumer.Partitions():
+			if !ok {
+				return
+			}
+
+			// start a separate goroutine to consume messages
+			go func(pc cluster.PartitionConsumer) {
+				for msg := range pc.Messages() {
+					fmt.Fprintf(os.Stdout, "%s/%d/%d\t%s\t%s\n", msg.Topic, msg.Partition, msg.Offset, msg.Key, msg.Value)
+					consumer.MarkOffset(msg, "")	// mark message as processed
+				}
+			}(part)
+		//case <-signals:
+		//	return
+		}
+	}
+}
+
+// 消费组1  Consumers have two modes of operation. In the default multiplexed mode messages (and errors) of multiple topics and partitions are all passed to the single channel:
+func consumerGroup1(address []string, topicName []string , group string) {
+	config := cluster.NewConfig()
+	config.Consumer.Return.Errors = true
+	config.Group.Return.Notifications = true
+	// init consumer
+	consumer, err := cluster.NewConsumer(address, group, topicName, config)
+	if err != nil {
+		panic(err)
+	}
+	defer consumer.Close()
+
+	// trap SIGINT to trigger a shutdown.
+	//signals := make(chan os.Signal, 1)
+	//signal.Notify(signals, os.Interrupt)
 
 	// consume errors
 	go func() {
 		for err := range consumer.Errors() {
-			log.Printf("%s:Error: %s\n", groupId, err.Error())
+			log.Printf("Error: %s\n", err.Error())
 		}
 	}()
 
 	// consume notifications
 	go func() {
 		for ntf := range consumer.Notifications() {
-			log.Printf("%s:Rebalanced: %+v \n", groupId, ntf)
+			log.Printf("Rebalanced: %+v\n", ntf)
 		}
 	}()
 
 	// consume messages, watch signals
-	var successes int
-Loop:
 	for {
 		select {
 		case msg, ok := <-consumer.Messages():
 			if ok {
-				fmt.Fprintf(os.Stdout, "%s:%s/%d/%d\t%s\t%s\n", groupId, msg.Topic, msg.Partition, msg.Offset, msg.Key, msg.Value)
-				consumer.MarkOffset(msg, "")  // mark message as processed
-				successes++
+				fmt.Fprintf(os.Stdout, "%s/%d/%d\t%s\t%s\n", msg.Topic, msg.Partition, msg.Offset, msg.Key, msg.Value)
+				consumer.MarkOffset(msg, "")	// mark message as processed
 			}
-		case <-signals:
-			break Loop
+		//case <-signals:
+		//	return
 		}
 	}
-	fmt.Fprintf(os.Stdout, "%s consume %d messages \n", groupId, successes)
 }
 
 
-func consumer() {
-	groupID := "group-1"
-	config := cluster.NewConfig()
-	config.Group.Return.Notifications = true
-	config.Consumer.Offsets.Initial = sarama.OffsetNewest //初始从最新的offset开始
+// 普通接收者， 只能接收一个主题
+func consumer(address []string,topicName string)  {
+	config := sarama.NewConfig()
+	//接收失败通知
+	config.Consumer.Return.Errors = true
+	//设置使用的kafka版本,如果低于V0_10_0_0版本,消息中的timestrap没有作用.需要消费和生产同时配置
+	config.Version = sarama.V0_11_0_0
+	//新建一个消费者
+	consumer, e := sarama.NewConsumer(address, config)
+	if e != nil {
+		panic("error get consumer")
+	}
+	defer consumer.Close()
 
-	c, err := cluster.NewConsumer(strings.Split("172.16.140.110:9092", ","), groupID, strings.Split("Hello-zswc", ","), config)
+	//根据消费者获取指定的主题分区的消费者,Offset这里指定为获取最新的消息.
+	partitionConsumer, err := consumer.ConsumePartition(topicName , 0, sarama.OffsetNewest)    // 只接收最新消息
+	//partitionConsumer, err := consumer.ConsumePartition(topicName, 0, 1)  // 从第一个开始一直到最后
 	if err != nil {
-		glog.Errorf("Failed open consumer: %v", err)
-		return
+		fmt.Println("error get partition consumer", err)
 	}
-	defer c.Close()
-	go func(c *cluster.Consumer) {
-		errors := c.Errors()
-		noti := c.Notifications()
-		for {
-			select {
-			case err := <-errors:
-				glog.Errorln(err)
-			case <-noti:
-			}
+	defer partitionConsumer.Close()
+	//循环等待接受消息.
+	for {
+		select {
+		//接收消息通道和错误通道的内容.
+		case msg := <-partitionConsumer.Messages():
+			fmt.Println("msg offset: ", msg.Offset, " partition: ", msg.Partition, " timestrap: ", msg.Timestamp.Format("2006-Jan-02 15:04"), " value: ", string(msg.Value))
+		case err := <-partitionConsumer.Errors():
+			fmt.Println(err.Err)
 		}
-	}(c)
-
-	for msg := range c.Messages() {
-		fmt.Fprintf(os.Stdout, "%s/%d/%d\t%s\n", msg.Topic, msg.Partition, msg.Offset, msg.Value)
-		c.MarkOffset(msg, "") //MarkOffset 并不是实时写入kafka，有可能在程序crash时丢掉未提交的offset
 	}
+
 }

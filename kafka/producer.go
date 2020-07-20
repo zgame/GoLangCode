@@ -9,7 +9,7 @@ import (
 )
 
 //同步消息模式
-func SyncProducer(address []string) {
+func SyncProducer(address []string,topicName string) {
 	config := sarama.NewConfig()
 	config.Producer.Return.Successes = true
 	config.Producer.Timeout = 5 * time.Second
@@ -19,12 +19,12 @@ func SyncProducer(address []string) {
 		return
 	}
 	defer p.Close()
-	topic := "Hello-zswc"
+
 	srcValue := "sync: this is a message. index=%d"
 	for i := 0; i < 3; i++ {
 		value := fmt.Sprintf(srcValue, i)
 		msg := &sarama.ProducerMessage{
-			Topic: topic,
+			Topic: topicName,
 			Value: sarama.ByteEncoder(value),
 		}
 		part, offset, err := p.SendMessage(msg)
@@ -38,7 +38,7 @@ func SyncProducer(address []string) {
 }
 
 //异步消息模式
-func AsyncProducer(address []string) {
+func AsyncProducer(address []string,topicName string) {
 
 	config := sarama.NewConfig()
 	//等待服务器所有副本都保存成功后的响应
@@ -83,7 +83,7 @@ func AsyncProducer(address []string) {
 		// 发送的消息,主题。
 		// 注意：这里的msg必须得是新构建的变量，不然你会发现发送过去的消息内容都是一样的，因为批次发送消息的关系。
 		msg := &sarama.ProducerMessage{
-			Topic: "Hello-zswc",
+			Topic: topicName,
 		}
 
 		//将字符串转化为字节数组
