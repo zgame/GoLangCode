@@ -50,7 +50,7 @@ func AsyncProducer(address []string,topicName string) {
 	config.Producer.Return.Errors = true
 	//设置使用的kafka版本,如果低于V0_10_0_0版本,消息中的timestrap没有作用.需要消费和生产同时配置
 	//注意，版本设置不对的话，kafka会返回很奇怪的错误，并且无法成功发送消息
-	config.Version = sarama.V0_10_0_1
+	//config.Version = sarama.V0_10_0_1
 
 	fmt.Println("start make producer")
 	//使用配置,新建一个异步生产者

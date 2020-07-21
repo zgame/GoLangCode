@@ -1,26 +1,33 @@
 package main
 
+import "time"
+
 var Address = []string{"172.16.140.110:9092", "172.16.140.110:9093", "172.16.140.110:9094"}
-var TopicName = []string{"Hello-zswc"}
+var TopicName = []string{"Hello-zswcp"}
 var GroupName = "group1"
 
 func main() {
+
+	// 生产者
 	//SyncProducer(Address)
-	//AsyncProducer(Address)
+	//go AsyncProducer(Address,TopicName[0])
 
 
-	//topic := []string{"Hello-zswc"}
-	//广播式消费：消费者1
-	//go consumerGroup2( Address, topic, "group-1")
-	////广播式消费：消费者2
-	//go consumerGroup2( Address, topic, "group-2")
-	//KafKaInfo(Address)
-	//consumer(Address,TopicName)
-	//consumerGroup(Address,TopicName,"group1")
-	//consumerGroup1(Address ,TopicName, GroupName)
-	consumerGroup2(Address ,TopicName, GroupName)
+	// 消费者
+	//for i:=0;i<10;i++ {
+	//	go consumer(Address, TopicName[0], i)
+	//}
+	// 消费组
+	//go consumerGroup1(Address ,TopicName, "1")
+	//go consumerGroup2(Address ,TopicName, "2")
+	//consumerGroup2(Address ,TopicName, GroupName)
+	consumerGroup1(Address ,TopicName, GroupName)
+	//go consumerGroup1(Address ,TopicName, GroupName)
 
 	for {
-		select {}
+		time.Sleep(time.Minute)
+		select {
+
+		}
 	}
 }

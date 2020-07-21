@@ -15,6 +15,7 @@ func consumerGroup2(address, topicName []string, groupId string)  {
 
 	config := cluster.NewConfig()
 	config.Group.Mode = cluster.ConsumerModePartitions
+	//config.
 
 	consumer, err := cluster.NewConsumer(address, groupId, topicName, config)
 	if err != nil {
@@ -32,7 +33,7 @@ func consumerGroup2(address, topicName []string, groupId string)  {
 			// start a separate goroutine to consume messages
 			go func(pc cluster.PartitionConsumer) {
 				for msg := range pc.Messages() {
-					fmt.Fprintf(os.Stdout, "%s/%d/%d\t%s\t%s\n", msg.Topic, msg.Partition, msg.Offset, msg.Key, msg.Value)
+					fmt.Fprintf(os.Stdout, "Topic:%s/Partition:%d/Offset:%d\t Key:%s\t Value:%s\t GroupId:%s \n", msg.Topic, msg.Partition, msg.Offset, msg.Key, msg.Value,groupId)
 					consumer.MarkOffset(msg, "")	// mark message as processed
 				}
 			}(part)
@@ -44,7 +45,7 @@ func consumerGroup2(address, topicName []string, groupId string)  {
 func consumerGroup1(address []string, topicName []string , group string) {
 	config := cluster.NewConfig()
 	config.Consumer.Return.Errors = true
-	config.Group.Return.Notifications = true
+	config.Group.Return.Notifications = false
 	// init consumer
 	consumer, err := cluster.NewConsumer(address, group, topicName, config)
 	if err != nil {
@@ -71,7 +72,7 @@ func consumerGroup1(address []string, topicName []string , group string) {
 		select {
 		case msg, ok := <-consumer.Messages():
 			if ok {
-				fmt.Fprintf(os.Stdout, "%s/%d/%d\t%s\t%s\n", msg.Topic, msg.Partition, msg.Offset, msg.Key, msg.Value)
+				fmt.Fprintf(os.Stdout, "Topic:%s/Partition:%d/Offset:%d\t Key:%s\t Value:%s\t GroupId:%s \n", msg.Topic, msg.Partition, msg.Offset, msg.Key, msg.Value,group)
 				consumer.MarkOffset(msg, "")	// mark message as processed
 			}
 		}
@@ -80,22 +81,22 @@ func consumerGroup1(address []string, topicName []string , group string) {
 
 
 // 普通接收者， 只能接收一个主题
-func consumer(address []string,topicName string)  {
+func consumer(address []string,topicName string, partition int)  {
 	config := sarama.NewConfig()
 	//接收失败通知
 	config.Consumer.Return.Errors = true
 	//设置使用的kafka版本,如果低于V0_10_0_0版本,消息中的timestrap没有作用.需要消费和生产同时配置
-	config.Version = sarama.V0_11_0_0
+	config.Version = sarama.V2_3_0_0
 	//新建一个消费者
 	consumer, e := sarama.NewConsumer(address, config)
 	if e != nil {
-		panic("error get consumer")
+		panic("error get consumer"+e.Error())
 	}
 	defer consumer.Close()
 
 	//根据消费者获取指定的主题分区的消费者,Offset这里指定为获取最新的消息.
-	partitionConsumer, err := consumer.ConsumePartition(topicName , 0, sarama.OffsetNewest)    // 只接收最新消息
-	//partitionConsumer, err := consumer.ConsumePartition(topicName, 0, 1)  // 从第一个开始一直到最后
+	partitionConsumer, err := consumer.ConsumePartition(topicName , int32(partition), sarama.OffsetNewest)    // 只接收最新消息
+	//partitionConsumer, err := consumer.ConsumePartition(topicName, int32(partition), sarama.OffsetOldest)  // 从第一个开始一直到最后
 	if err != nil {
 		fmt.Println("error get partition consumer", err)
 	}
