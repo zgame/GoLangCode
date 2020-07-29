@@ -83,7 +83,7 @@ func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tabl
 			itemAdd = fmt.Sprintf(" and ItemID = %d ",itemId)
 		}
 		sqlStr := fmt.Sprintf("select top(1)%s,%s,RecordTime from %s where RecordTime = (select min(RecordTime) from %s where UserID = %d %s) and UserID = %d %s", keyName, changeKey, tableName, tableName, userId, itemAdd,userId,itemAdd)
-		//zLog.PrintfLogger("获取%s未来sql: %s ", keyName, sqlStr)
+		//zLog.PrintfLogger("forward 获取%s未来sql: %s ", keyName, sqlStr)
 
 		_, rows, _ := mssql.Query(dbNow, sqlStr)
 		for rows.Next() { // 循环遍历
@@ -97,7 +97,7 @@ func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tabl
 			}
 			//if result >= 0 {
 			result = result - change		// 这里要注意， 因为获取出来的数据是经过变化的， 那么要去掉这个新的变化才是上一个遗留值
-				//zLog.PrintfLogger("往后查找  userId : %d,   %s   id:%d 获取数量： %d", userId,  keyName, itemId, result)
+				//zLog.PrintfLogger("forward 往后查找  userId : %d,   %s   id:%d 获取数量： %d  time: %s", userId,  keyName, itemId, result, timeS)
 				mssql.CloseQuery(rows)
 				return result,timeS
 			//}

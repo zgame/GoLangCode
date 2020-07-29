@@ -50,7 +50,7 @@ func GetScoreAddSql(rechargeInfo UserList, getGold int, dbNow *sql.DB,dataTimeSt
 	reduceGoldTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
 	goldValues := fmt.Sprintf("%d,%d,3240,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0,0,0,1,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, getGold, lastAllGold,reduceGoldTimeOff, table,rechargeInfo.channelId)
 	addGoldSql:=  GetInsertSql(dbName, "GameScoreChangeRecord", day1, ScoreKeys, goldValues)
-	//zLog.PrintfLogger("插入增加金币语句 %s", addGoldSql)
+	zLog.PrintfLogger("插入增加金币语句 %s", addGoldSql)
 	err, _ := mssql.Exec(dbNow, addGoldSql)
 	if err != nil {
 		zLog.PrintfLogger("GetScoreAddSql Exec Error %s ,sql: %s", err.Error(), addGoldSql)
@@ -72,7 +72,7 @@ func GetScoreReduceSql(rechargeInfo UserList, reduceGold int, dbNow *sql.DB, dat
 	goldValues := fmt.Sprintf("%d,%d,3259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0,0,0,1,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, reduceGold, lastAllGold,reduceGoldTimeOff, table,rechargeInfo.channelId)
 	reduceGoldSql := GetInsertSql(dbName, "GameScoreChangeRecord", day1, ScoreKeys, goldValues)
 
-	//zLog.PrintfLogger("插入金币减少语句 %s", reduceGoldSql)
+	zLog.PrintfLogger("插入金币减少语句 %s", reduceGoldSql)
 	err, _ := mssql.Exec(dbNow, reduceGoldSql)
 	if err != nil {
 		zLog.PrintfLogger("GetScoreReduceSql Exec Error %s ,sql: %s", err.Error(), reduceGoldSql)
@@ -269,7 +269,7 @@ func GetItemReduceSql(rechargeInfo UserList, itemId int, itemNum int, dbNow *sql
 		title = "转换消耗道具"
 	}
 
-	ItemValues := fmt.Sprintf("%d,%d,2201,%d,%d,%d,'游戏操作','%s',%s, %d,0,0,0,4,19,0,0,%d ", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, itemId, itemNum, title,  reduceTimeOff, lastAllItem, rechargeInfo.channelId)
+	ItemValues := fmt.Sprintf("%d,%d,2201,%d,%d,%d,'游戏操作','%s',%s, %d,0,0,0,4,19,0,0,%d ", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, itemId,  itemNum, title,  reduceTimeOff, lastAllItem, rechargeInfo.channelId)
 	reduceItemSql:= GetInsertSql(dbName, "GameItemChangeRecord", day1, ItemKeys, ItemValues)
 	//zLog.PrintfLogger("减少道具语句 %s", reduceItemSql)
 	err, _ := mssql.Exec(dbNow, reduceItemSql)

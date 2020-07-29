@@ -104,7 +104,7 @@ func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNam
 				continue
 			}
 			//if result >= 0 {
-			//	zLog.PrintfLogger("往前查找  userid : %d,   %s   id:%d 获取数量： %d", userId,  keyName, itemId, result)
+			//	zLog.PrintfLogger("history 往前查找  userid : %d,   %s   id:%d 获取数量： %d  recordTime :%s", userId,  keyName, itemId, result, recordTime)
 				mssql.CloseQuery(rows)
 				return result,recordTime
 			//}

@@ -31,6 +31,7 @@ var (
 
 
 func DealUserList(idStart int) {
+	//ItemArray := []int{111}
 	ItemArray := []int{101,102,103,120,131,151,2007,7003, 108,109,110,111}
 
 	dataBaseArray := make([]UserList,0)
@@ -53,9 +54,10 @@ func DealUserList(idStart int) {
 	//fmt.Println(" --------------开始查询充值列表--------------")
 	//daySecond := 86400		// 一天秒数
 	//day110 := 1578585600	// 1月10号
-	day1:= Group * idStart
-	day2:= Group * (idStart + 1)
-	sqlU := fmt.Sprintf("select *  from auditdb.dbo.x2020_user_chongzhi_lerp with(nolock) where id >= %d and id < %d ",day1,day2) // 一天
+	//day1:= Group * idStart
+	//day2:= Group * (idStart + 1)
+	sqlU := fmt.Sprintf("select *  from auditdb.dbo.x2020_user_chongzhi_lerp with(nolock) where id = 31851 ") // 一天
+	//sqlU := fmt.Sprintf("select *  from auditdb.dbo.x2020_user_chongzhi_lerp with(nolock) where id >= %d and id < %d ",day1,day2) // 一天
 	//sqlU:= fmt.Sprintf( "select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1581264000") // 一个月
 	//fmt.Println("sql:",sqlU)
 	_, rows, _ := mssql.Query(TestDB, sqlU)
@@ -101,7 +103,7 @@ func DealUserList(idStart int) {
 		//----------------------------------头部缝合-----------------------------------
 
 		if day1N < 20200109 {
-			//zLog.PrintfLogger("----------------------------------头部缝合----------------------------------- %d",userInfo.UserId)
+			zLog.PrintfLogger("----------------------------------头部缝合----------------------------------- %d",userInfo.UserId)
 			// 玩家的注册日期在1月9日之前， 用日志库金额， 要缝合1月9号或者之后的首次记录
 			dayStart = "20200109"
 			dbNow, dbName = GetMonth(dayStart, logDB1, logDB2)
@@ -122,10 +124,10 @@ func DealUserList(idStart int) {
 			changeDiamond = forwardDiamond - lastAllDiamond
 			changeCoin = forwardCoin - lastAllCoin
 			changeLottery = forwardLottery - lastAllLottery
-			//fmt.Println("差额changeScore", changeScore)
-			//fmt.Println("差额changeDiamond", changeDiamond)
-			//fmt.Println("差额changeCoin", changeCoin)
-			//fmt.Println("差额changeLottery", changeLottery)
+			fmt.Println("差额changeScore", changeScore)
+			fmt.Println("差额changeDiamond", changeDiamond)
+			fmt.Println("差额changeCoin", changeCoin)
+			fmt.Println("差额changeLottery", changeLottery)
 
 			if forwardScore == -1 || lastAllScore == -1 {
 				// 如果有找不到的情况， 那么就不插入了
@@ -159,6 +161,7 @@ func DealUserList(idStart int) {
 				dayStart = "20200108"
 				lastAllItem,_ := GetHistoryItem(dbName, dayStart,dbNow,  userInfo, itemId, DataBaseBYDB12) // 获取玩家的历史数量
 				changeItem := forwardItem - lastAllItem
+				fmt.Printf("差额changeItem   %d   数量%d \n", itemId,changeItem)
 				if forwardItem == -1 || lastAllItem == -1 {
 					// 如果有找不到的情况， 那么就不插入了
 					changeItem = 0
@@ -172,7 +175,7 @@ func DealUserList(idStart int) {
 
 		}
 
-		//zLog.PrintfLogger("----------------------------------尾部缝合----------------------------------- %d",userInfo.UserId)
+		zLog.PrintfLogger("----------------------------------尾部缝合----------------------------------- %d",userInfo.UserId)
 		//----------------------------------尾部缝合-----------------------------------
 		forwardScore := 0
 		forwardDiamond := 0
@@ -221,10 +224,10 @@ func DealUserList(idStart int) {
 		changeLottery = forwardLottery - lastAllLottery
 		//fmt.Println("差额", changeScore)
 
-		//fmt.Println("尾部缝合差额changeScore", changeScore)
-		//fmt.Println("尾部缝合差额changeDiamond", changeDiamond)
-		//fmt.Println("尾部缝合差额changeCoin", changeCoin)
-		//fmt.Println("尾部缝合差额changeLottery", changeLottery)
+		fmt.Println("尾部缝合差额changeScore", changeScore)
+		fmt.Println("尾部缝合差额changeDiamond", changeDiamond)
+		fmt.Println("尾部缝合差额changeCoin", changeCoin)
+		fmt.Println("尾部缝合差额changeLottery", changeLottery)
 
 
 		if forwardScore == -1 || lastAllScore == -1 {
@@ -254,6 +257,8 @@ func DealUserList(idStart int) {
 		for index,itemId := range ItemArray{
 			lastAllItem,recordTimeItem := GetHistoryItem(dbName, dayStart,dbNow,  userInfo, itemId, DataBaseBYDB12) // 获取玩家的历史数量
 			changeItem := forwardItemArray[index] - lastAllItem
+
+			fmt.Printf("尾部缝合差额道具%d  数量 %d  forwardItemArray[index] %d  lastAllItem %d \n", itemId, changeItem,forwardItemArray[index] , lastAllItem)
 			if forwardItemArray[index] == -1 || lastAllItem == -1 {
 				// 如果有找不到的情况， 那么就不插入了
 				changeItem = 0
