@@ -86,7 +86,7 @@ func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNam
 		if itemId>0 {
 			itemAdd = fmt.Sprintf(" and ItemID = %d ",itemId)
 		}
-		sql := fmt.Sprintf("select top(1)%s from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d and RecordTime < '%s') and UserID = %d %s", keyName,tableName, tableName, userId, rechargeTime,userId,itemAdd)
+		sql := fmt.Sprintf("select top(1)%s from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d and RecordTime < '%s' %s) and UserID = %d %s", keyName,tableName, tableName, userId, rechargeTime,itemAdd,userId,itemAdd)
 		//zLog.PrintfLogger("获取%s历史sql: %s ", keyName, sql)
 
 		_, rows, _ := mssql.Query(dbNow, sql)
