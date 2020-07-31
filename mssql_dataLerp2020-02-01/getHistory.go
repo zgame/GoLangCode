@@ -5,7 +5,6 @@ import (
 	"./zLog"
 	"database/sql"
 	"fmt"
-	"strconv"
 )
 
 //遗留分数
@@ -32,43 +31,50 @@ func GetHistoryLottery( dbName string, day1 string ,dbNow *sql.DB,  rechargeInfo
 
 // 获取历史遗留
 func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNameT string, keyName string ,   itemId int, gameDB12 *sql.DB) (int,string) {
-	dayInt,_ := strconv.Atoi(day1)
+	dayInt := 20200201
 	tableName := ""
-	endTime := "2020-01-01 00:00:00"
+	//endTime := "2020-01-01 00:00:00"
+	var recordTime string
 
 	for i:=60;i>0;i-- {
+
+		if dayInt==20200201{
+			recordTime = "and RecordTime < '2020-02-01 04:11:59' "
+		}else{
+			recordTime = ""
+		}
 
 		//num := dayInt - 20200210
 		if dayInt==20200200{
 			dayInt = 20200131	// 跳到1月份
 		}
 		if dayInt == 20200100{
-			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB12, userId)
-			forwardItem := 0
-			if itemId>0 {
-				forwardItem = GetDataBaseBYItem(gameDB12,userId, itemId)
-			}
-			forwardLottery := GetDataBaseBYLottery(gameDB12, userId)
-			switch keyName {
-			case "Lottery":
-				return forwardLottery,endTime
-			case "Score":
-				//zLog.PrintfLogger(" score %d ", forwardScore)
-				return forwardScore,endTime
-			case "Diamond":
-				//zLog.PrintfLogger(" Diamond %d ", forwardDiamond)
-				return forwardDiamond,endTime
-			case "Coin":
-				//zLog.PrintfLogger(" Coin %d ", forwardCoin)
-				return forwardCoin,endTime
-			case "ItemIndbNum":
-				//zLog.PrintfLogger(" ItemIndbNum %d ", forwardItem)
-				return forwardItem,endTime
-			}
+			//forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB12, userId)
+			//forwardItem := 0
+			//if itemId>0 {
+			//	forwardItem = GetDataBaseBYItem(gameDB12,userId, itemId)
+			//}
+			//forwardLottery := GetDataBaseBYLottery(gameDB12, userId)
+			//switch keyName {
+			//case "Lottery":
+			//	return forwardLottery,endTime
+			//case "Score":
+			//	//zLog.PrintfLogger(" score %d ", forwardScore)
+			//	return forwardScore,endTime
+			//case "Diamond":
+			//	//zLog.PrintfLogger(" Diamond %d ", forwardDiamond)
+			//	return forwardDiamond,endTime
+			//case "Coin":
+			//	//zLog.PrintfLogger(" Coin %d ", forwardCoin)
+			//	return forwardCoin,endTime
+			//case "ItemIndbNum":
+			//	//zLog.PrintfLogger(" ItemIndbNum %d ", forwardItem)
+			//	return forwardItem,endTime
+			//}
 
 			//zLog.PrintfLogger(" 没有找到 %d ", 0)
 			//InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,LogDB,itemId)
-			return -1,""
+			return -1,"2020-01-00"
 			//dayInt = 20191230	// 跳到12月份
 		}
 
@@ -91,7 +97,7 @@ func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNam
 		if itemId>0 {
 			itemAdd = fmt.Sprintf(" and ItemID = %d ",itemId)
 		}
-		sqlStr := fmt.Sprintf("select top(1)%s,RecordTime from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d %s) and UserID = %d %s", keyName,tableName, tableName, userId, itemAdd,userId,itemAdd)
+		sqlStr := fmt.Sprintf("select top(1)%s,RecordTime from %s where RecordTime = (select max(RecordTime) from %s where UserID = %d %s %s) and UserID = %d %s", keyName,tableName, tableName, userId, itemAdd,recordTime,userId,itemAdd)
 		//zLog.PrintfLogger("获取%s历史sql: %s ", keyName, sqlStr)
 
 		_, rows, _ := mssql.Query(dbNow, sqlStr)

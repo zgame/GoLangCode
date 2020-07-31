@@ -15,14 +15,14 @@ var (
 	userId     = "dbuser"
 	password   = "CEDFE2CDA7DB84AC"
 	server     = "172.16.140.89"
-	logDBName1 = "BY_LOG_202001"
+	//logDBName1 = "BY_LOG_202001"
 	logDBName2 = "BY_LOG_202002"
 
 	//userIdReadOnly     = "dbuser_ro"
 	//passwordReadOnly   = "35A20E7966ECDC93"
 	//PlatformDBName   = "PlatformDB_202001"
-	DataBaseBYDBName02 = "DataBaseBY_202002"
-	DataBaseBYDBName12 = "DataBaseBY_201912"
+	DataBaseBYDBName01 = "DataBaseBY_202001"
+	//DataBaseBYDBName12 = "DataBaseBY_201912"
 	TestDBName         = "auditdb"
 
 	//TestDB *sql.DB
@@ -38,14 +38,14 @@ func DealUserList(idStart int) {
 
 	fmt.Println(" --------------开始连接数据库-------------- ")
 	//platformDB := mssql.ConnectDB(userId, password, server, PlatformDBName)
-	DataBaseBYDB02 := mssql.ConnectDB(userId, password, server, DataBaseBYDBName02)
-	DataBaseBYDB12 := mssql.ConnectDB(userId, password, server, DataBaseBYDBName12)
-	logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
+	DataBaseBYDB01 := mssql.ConnectDB(userId, password, server, DataBaseBYDBName01)
+	//DataBaseBYDB12 := mssql.ConnectDB(userId, password, server, DataBaseBYDBName12)
+	//logDB1 := mssql.ConnectDB(userId, password, server, logDBName1)
 	logDB2 := mssql.ConnectDB(userId, password, server, logDBName2)
 	TestDB := mssql.ConnectDB(userId, password, server, TestDBName)
 
 
-	if logDB2 == nil || logDB1 == nil || TestDB == nil || DataBaseBYDB02 == nil || DataBaseBYDB12 == nil {
+	if logDB2 == nil ||  TestDB == nil || DataBaseBYDB01 == nil  {
 		zLog.PrintfLogger("数据库连接出现异常，程序终止")
 		os.Exit(0)
 	}
@@ -54,10 +54,10 @@ func DealUserList(idStart int) {
 	//fmt.Println(" --------------开始查询充值列表--------------")
 	//daySecond := 86400		// 一天秒数
 	//day110 := 1578585600	// 1月10号
-	//day1:= Group * idStart
-	//day2:= Group * (idStart + 1)
-	sqlU := fmt.Sprintf("select *  from auditdb.dbo.x2020_user_chongzhi_lerp with(nolock) where id = 31851 ") // 一天
-	//sqlU := fmt.Sprintf("select *  from auditdb.dbo.x2020_user_chongzhi_lerp with(nolock) where id >= %d and id < %d ",day1,day2) // 一天
+	day1:= Group * idStart
+	day2:= Group * (idStart + 1)
+	//sqlU := fmt.Sprintf("select *  from auditdb.dbo.x2020_user_chongzhi_lerp with(nolock) where id = 31851 ") // 一天
+	sqlU := fmt.Sprintf("select *  from auditdb.dbo.x2020_user_chongzhi_lerp with(nolock) where id >= %d and id < %d ",day1,day2) // 一天
 	//sqlU:= fmt.Sprintf( "select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1581264000") // 一个月
 	//fmt.Println("sql:",sqlU)
 	_, rows, _ := mssql.Query(TestDB, sqlU)
@@ -76,7 +76,7 @@ func DealUserList(idStart int) {
 	mssql.CloseQuery(rows)
 
 	//zLog.PrintfLogger(" --------------一共有 : %d  条数据--------------", len(dataBaseArray))
-	for _, userInfo := range dataBaseArray{
+	for _, userInfo := range dataBaseArray {
 		//zLog.PrintfLogger(" --------------开始处理index : %d     UserId: %d--------------", index, userInfo.UserId)
 		zLog.PrintfLogger(" --------------开始处理id : %d--------------", userInfo.id)
 
@@ -88,46 +88,56 @@ func DealUserList(idStart int) {
 		dataTimeStr2 := userInfo.lastLoginDate
 		dayString2 := dataTimeStr2[0:10]
 		day2 := strings.Replace(dayString2, "-", "", -1) // 去掉-， 整理成表的后缀
-		dbNow, dbName := GetMonth(dayStart, logDB1, logDB2)
+		dbNow, dbName := GetMonth(dayStart, logDB2, logDB2)
 		//dbNow = dbNow
 		//fmt.Println("获取时间戳转日期时间", dataTimeStr)
 		//fmt.Println("获取时间戳转日期", dataTimeStr[0:10])
-		day1N,_ :=strconv.Atoi(dayStart) // 注册日期
-		day2N,_ :=strconv.Atoi(day2)     // 流失日期
+		//day1N,_ :=strconv.Atoi(dayStart) // 注册日期
+		//day2N,_ :=strconv.Atoi(day2)     // 流失日期
 
-		changeScore :=0
-		changeDiamond :=0
-		changeCoin :=0
+		changeScore := 0
+		changeDiamond := 0
+		changeCoin := 0
 		changeLottery := 0
 
 		//----------------------------------头部缝合-----------------------------------
 
-		if day1N < 20200109 {
-			zLog.PrintfLogger("----------------------------------头部缝合----------------------------------- %d",userInfo.UserId)
+		//if day1N < 20200109
+		{
+			forwardItemArray := make([]int, 0)
+			//zLog.PrintfLogger("----------------------------------头部缝合----------------------------------- %d", userInfo.UserId)
 			// 玩家的注册日期在1月9日之前， 用日志库金额， 要缝合1月9号或者之后的首次记录
-			dayStart = "20200109"
-			dbNow, dbName = GetMonth(dayStart, logDB1, logDB2)
-			forwardScore, recordTimeScore := GetForwardScore(dbName, dayStart,dbNow,  userInfo ,DataBaseBYDB02) // 获取玩家的最终金币数量
-			forwardDiamond, recordTimeDiamond := GetForwardDiamond(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB02) // 获取玩家的最终数量
-			forwardCoin, recordTimeCoin := GetForwardCoin(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB02) // 获取玩家的最终数量
-			forwardLottery, recordTimeLottery := GetForwardLottery(logDBName1, dayStart, logDB1, userInfo,DataBaseBYDB02) // 获取玩家的最终数量
+			//dayStart = "20200109"
+			//dbNow, dbName = GetMonth(dayStart, logDB1, logDB2)
+			forwardScore, forwardDiamond, forwardCoin := GetDataBaseBY(DataBaseBYDB01, userInfo.UserId) // 玩家最终资源
+			forwardLottery := GetDataBaseBYLottery(DataBaseBYDB01, userInfo.UserId)                     // 玩家最终资源
+
+			for _, itemId := range ItemArray {
+				forwardItem := GetDataBaseBYItem(DataBaseBYDB01, userInfo.UserId, itemId)
+				forwardItemArray = append(forwardItemArray, forwardItem)
+			}
+
+			//forwardScore, recordTimeScore := GetForwardScore(dbName, dayStart,dbNow,  userInfo ,DataBaseBYDB02) // 获取玩家的最终金币数量
+			//forwardDiamond, recordTimeDiamond := GetForwardDiamond(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB02) // 获取玩家的最终数量
+			//forwardCoin, recordTimeCoin := GetForwardCoin(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB02) // 获取玩家的最终数量
+			//forwardLottery, recordTimeLottery := GetForwardLottery(logDBName1, dayStart, logDB1, userInfo,DataBaseBYDB02) // 获取玩家的最终数量
 
 			// 历史遗留数据量
-			dayStart = "20200108"
-			lastAllScore,_ := GetHistoryScore(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB12) // 获取玩家的历史金币数量
-			lastAllDiamond,_ := GetHistoryDiamond(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB12) // 获取玩家的历史数量
-			lastAllCoin,_ := GetHistoryCoin(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB12) // 获取玩家的历史数量
-			lastAllLottery, _ := GetHistoryLottery(dbName, dayStart, dbNow, userInfo, DataBaseBYDB12) // 获取玩家的历史数量
+			dayStart = ""
+			lastAllScore, recordTimeScore := GetHistoryScore(dbName, dayStart, dbNow, userInfo, nil)       // 获取玩家的历史金币数量
+			lastAllDiamond, recordTimeDiamond := GetHistoryDiamond(dbName, dayStart, dbNow, userInfo, nil) // 获取玩家的历史数量
+			lastAllCoin, recordTimeCoin := GetHistoryCoin(dbName, dayStart, dbNow, userInfo, nil)          // 获取玩家的历史数量
+			lastAllLottery, recordTimeLottery := GetHistoryLottery(dbName, dayStart, dbNow, userInfo, nil) // 获取玩家的历史数量
 
 			// 计算插值
 			changeScore = forwardScore - lastAllScore
 			changeDiamond = forwardDiamond - lastAllDiamond
 			changeCoin = forwardCoin - lastAllCoin
 			changeLottery = forwardLottery - lastAllLottery
-			fmt.Println("差额changeScore", changeScore)
-			fmt.Println("差额changeDiamond", changeDiamond)
-			fmt.Println("差额changeCoin", changeCoin)
-			fmt.Println("差额changeLottery", changeLottery)
+			//fmt.Println("差额changeScore", changeScore, recordTimeScore)
+			//fmt.Println("差额changeDiamond", changeDiamond, recordTimeDiamond)
+			//fmt.Println("差额changeCoin", changeCoin, recordTimeCoin)
+			//fmt.Println("差额changeLottery", changeLottery, recordTimeLottery)
 
 			if forwardScore == -1 || lastAllScore == -1 {
 				// 如果有找不到的情况， 那么就不插入了
@@ -147,75 +157,76 @@ func DealUserList(idStart int) {
 			}
 
 			// 进行插入校对
-			DealScore(changeScore,userInfo, logDB1 ,recordTimeScore, logDB2, forwardScore, -1)		// 进行修改， 在最终的地方，提前一点，进行缝合
-			DealDiamond(changeDiamond,userInfo,logDB1 ,recordTimeDiamond, logDB2, forwardDiamond, -1)		// 进行修改， 在最终的地方，提前一点，进行缝合
-			DealCoin(changeCoin,userInfo,logDB1 ,recordTimeCoin, logDB2, forwardCoin, -1)		// 进行修改， 在最终的地方，提前一点，进行缝合
-			DealLottery(changeLottery, userInfo, logDB1, recordTimeLottery, logDB2, forwardLottery, -1) // 进行修改， 在最开始的地方，提前一点，进行缝合
+			DealScore(changeScore, userInfo, logDB2, recordTimeScore, logDB2, forwardScore, 1) // 进行修改， 在最终的地方，提前一点，进行缝合
+			DealDiamond(changeDiamond,userInfo,logDB2 ,recordTimeDiamond, logDB2, forwardDiamond, 1)		// 进行修改， 在最终的地方，提前一点，进行缝合
+			DealCoin(changeCoin,userInfo,logDB2 ,recordTimeCoin, logDB2, forwardCoin, 1)		// 进行修改， 在最终的地方，提前一点，进行缝合
+			DealLottery(changeLottery, userInfo, logDB2, recordTimeLottery, logDB2, forwardLottery, 1) // 进行修改， 在最开始的地方，提前一点，进行缝合
 
 			// 集中道具处理
-			for _,itemId := range ItemArray{
-				dayStart = "20200109"
-				dbNow, dbName = GetMonth(dayStart, logDB1, logDB2)
-				forwardItem, recordTimeItem := GetForwardItem(dbName, dayStart,dbNow,  userInfo, itemId, DataBaseBYDB02) // 获取玩家的最终数量
+			for index, itemId := range ItemArray {
+				//dayStart = "20200109"
+				//dbNow, dbName = GetMonth(dayStart, logDB1, logDB2)
+				//forwardItem, recordTimeItem := GetForwardItem(dbName, dayStart,dbNow,  userInfo, itemId, DataBaseBYDB02) // 获取玩家的最终数量
 				// 历史遗留数据量
-				dayStart = "20200108"
-				lastAllItem,_ := GetHistoryItem(dbName, dayStart,dbNow,  userInfo, itemId, DataBaseBYDB12) // 获取玩家的历史数量
-				changeItem := forwardItem - lastAllItem
-				fmt.Printf("差额changeItem   %d   数量%d \n", itemId,changeItem)
-				if forwardItem == -1 || lastAllItem == -1 {
+				//dayStart = "20200108"
+				lastAllItem, recordTimeItem := GetHistoryItem(dbName, dayStart, dbNow, userInfo, itemId, nil) // 获取玩家的历史数量
+				changeItem := forwardItemArray[index] - lastAllItem
+				//fmt.Printf("差额changeItem   %d   数量%d   recordTimeItem:%s \n", itemId, changeItem, recordTimeItem)
+				if forwardItemArray[index] == -1 || lastAllItem == -1 {
 					// 如果有找不到的情况， 那么就不插入了
 					changeItem = 0
 				}
-				DealItem(itemId,changeItem,userInfo,logDB1 ,recordTimeItem, logDB2, forwardItem, -1)		// 进行修改， 在最终的地方，提前一点，进行缝合
+				DealItem(itemId,changeItem,userInfo,logDB2 ,recordTimeItem, logDB2, forwardItemArray[index], 1)		// 进行修改， 在最终的地方，提前一点，进行缝合
 			}
 
-
-		}else {
-			//  新增注册用户，起始是0  ，不用缝合
-
+			//}else {
+			//	//  新增注册用户，起始是0  ，不用缝合
+			//
 		}
 
-		zLog.PrintfLogger("----------------------------------尾部缝合----------------------------------- %d",userInfo.UserId)
+
+		if true{
+		//zLog.PrintfLogger("----------------------------------尾部缝合----------------------------------- %d", userInfo.UserId)
 		//----------------------------------尾部缝合-----------------------------------
-		forwardScore := 0
-		forwardDiamond := 0
-		forwardCoin := 0
-		forwardLottery := 0
-		forwardItemArray := make([]int,0)
-		if day2N > 20200209{
-			// 玩家在2月10日依然留存， 用日志库金额
-			dayStart = "20200210"
-			dbNow, dbName = GetMonth(dayStart, logDB1, logDB2)
-			forwardScore, _ = GetForwardScore(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB02) // 获取玩家的最终金币数量
-			forwardDiamond, _ = GetForwardDiamond(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB02) // 获取玩家的最终数量
-			forwardCoin, _ = GetForwardCoin(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB02) // 获取玩家的最终数量
-			forwardLottery, _ = GetForwardLottery(logDBName1, dayStart, logDB1, userInfo, DataBaseBYDB02) // 获取玩家的最终数量
-			for _,itemId := range ItemArray{
-				forwardItem, _ := GetForwardItem(dbName, dayStart,dbNow,  userInfo, itemId, DataBaseBYDB02) // 获取玩家的最终数量
-				forwardItemArray = append(forwardItemArray,forwardItem)
-			}
+		//forwardScore := 0
+		//forwardDiamond := 0
+		//forwardCoin := 0
+		//forwardLottery := 0
+		lastItemArray := make([]int, 0)
+		//if day2N > 20200209
 
-			// 历史遗留数据量
-			dayStart = "20200209"
-		}else{
-			// 玩家在2月10日前流失了 ， 玩家的结束金额应该是游戏库金额
-			forwardScore,forwardDiamond,forwardCoin = GetDataBaseBY(DataBaseBYDB02,userInfo.UserId) // 玩家最终资源
-			forwardLottery = GetDataBaseBYLottery(DataBaseBYDB02, userInfo.UserId)                  // 玩家最终资源
+		// 玩家在2月10日依然留存， 用日志库金额
+		dayStart = "20200210"
+		dbNow, dbName = GetMonth(dayStart, logDB2, logDB2)
 
-			for _,itemId := range ItemArray{
-				forwardItem := GetDataBaseBYItem(DataBaseBYDB02,userInfo.UserId, itemId)
-				forwardItemArray = append(forwardItemArray,forwardItem)
-			}
-			dayStart = day2		// 流失的时候
+		forwardScore, recordTimeScore := GetForwardScore(dbName, dayStart, dbNow, userInfo, DataBaseBYDB01)       // 获取玩家的最终金币数量
+		forwardDiamond, recordTimeDiamond := GetForwardDiamond(dbName, dayStart, dbNow, userInfo, DataBaseBYDB01) // 获取玩家的最终数量
+		forwardCoin, recordTimeCoin := GetForwardCoin(dbName, dayStart, dbNow, userInfo, DataBaseBYDB01)          // 获取玩家的最终数量
+		forwardLottery, recordTimeLottery := GetForwardLottery(dbName, dayStart, dbNow, userInfo, DataBaseBYDB01) // 获取玩家的最终数量
+		//for _,itemId := range ItemArray{
+		//	forwardItem, recordTimeItem := GetForwardItem(dbName, dayStart,dbNow,  userInfo, itemId, DataBaseBYDB02) // 获取玩家的最终数量
+		//	lastItemArray = append(lastItemArray,forwardItem)
+		//}
+
+		// 历史遗留数据量
+		//dayStart = "20200209"
+
+		// 玩家在2月10日前流失了 ， 玩家的结束金额应该是游戏库金额
+		lastAllScore, lastAllDiamond, lastAllCoin := GetDataBaseBY(DataBaseBYDB01, userInfo.UserId) // 玩家最终资源
+		lastAllLottery := GetDataBaseBYLottery(DataBaseBYDB01, userInfo.UserId)                     // 玩家最终资源
+
+		for _, itemId := range ItemArray {
+			lastItem := GetDataBaseBYItem(DataBaseBYDB01, userInfo.UserId, itemId)
+			lastItemArray = append(lastItemArray, lastItem)
 		}
+		dayStart = day2 // 流失的时候
+
 		// 对尾部数据进行缝合
-		lastAllScore,recordTimeScore := GetHistoryScore(dbName, dayStart ,dbNow,  userInfo,DataBaseBYDB12)     // 获取玩家的历史金币数量
-		lastAllDiamond,recordTimeDiamond := GetHistoryDiamond(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB12) // 获取玩家的历史数量
-		lastAllCoin,recordTimeCoin := GetHistoryCoin(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB12) // 获取玩家的历史数量
-		lastAllLottery, recordTimeLottery := GetHistoryLottery(dbName, dayStart, dbNow, userInfo, DataBaseBYDB12) // 获取玩家的历史数量
+		//lastAllScore,recordTimeScore := GetHistoryScore(dbName, dayStart ,dbNow,  userInfo,DataBaseBYDB12)     // 获取玩家的历史金币数量
+		//lastAllDiamond,recordTimeDiamond := GetHistoryDiamond(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB12) // 获取玩家的历史数量
+		//lastAllCoin,recordTimeCoin := GetHistoryCoin(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB12) // 获取玩家的历史数量
+		//lastAllLottery, recordTimeLottery := GetHistoryLottery(dbName, dayStart, dbNow, userInfo, DataBaseBYDB12) // 获取玩家的历史数量
 		//fmt.Println("lastAllScore",lastAllScore)
-
-
 
 		// 计算插值
 		changeScore = forwardScore - lastAllScore
@@ -224,11 +235,10 @@ func DealUserList(idStart int) {
 		changeLottery = forwardLottery - lastAllLottery
 		//fmt.Println("差额", changeScore)
 
-		fmt.Println("尾部缝合差额changeScore", changeScore)
-		fmt.Println("尾部缝合差额changeDiamond", changeDiamond)
-		fmt.Println("尾部缝合差额changeCoin", changeCoin)
-		fmt.Println("尾部缝合差额changeLottery", changeLottery)
-
+		//fmt.Println("尾部缝合差额changeScore", changeScore,recordTimeScore)
+		//fmt.Println("尾部缝合差额changeDiamond", changeDiamond,recordTimeDiamond)
+		//fmt.Println("尾部缝合差额changeCoin", changeCoin,recordTimeCoin)
+		//fmt.Println("尾部缝合差额changeLottery", changeLottery,recordTimeLottery)
 
 		if forwardScore == -1 || lastAllScore == -1 {
 			// 如果有找不到的情况， 那么就不插入了
@@ -248,29 +258,34 @@ func DealUserList(idStart int) {
 		}
 
 		// 进行插入校对
-		DealScore(changeScore,userInfo,logDB1 ,recordTimeScore, logDB2, forwardScore,1)		// 进行修改，在最后的记录上，增加一点时间进行缝合
-		DealDiamond(changeDiamond,userInfo,logDB1 ,recordTimeDiamond, logDB2, forwardDiamond, 1)		// 进行修改， 在最终的地方，提前一点，进行缝合
-		DealCoin(changeCoin,userInfo,logDB1 ,recordTimeCoin, logDB2, forwardCoin, 1)		// 进行修改， 在最终的地方，提前一点，进行缝合
-		DealLottery(changeLottery, userInfo, logDB1, recordTimeLottery, logDB2, forwardLottery, 1)             // 进行修改，在最后的记录上，增加一点时间进行缝合
+		DealScore(changeScore, userInfo, logDB2, recordTimeScore, logDB2, forwardScore, -1)         // 进行修改，在最后的记录上，增加一点时间进行缝合
+		DealDiamond(changeDiamond, userInfo, logDB2, recordTimeDiamond, logDB2, forwardDiamond, -1) // 进行修改， 在最终的地方，提前一点，进行缝合
+		DealCoin(changeCoin, userInfo, logDB2, recordTimeCoin, logDB2, forwardCoin, -1)             // 进行修改， 在最终的地方，提前一点，进行缝合
+		DealLottery(changeLottery, userInfo, logDB2, recordTimeLottery, logDB2, forwardLottery, -1) // 进行修改，在最后的记录上，增加一点时间进行缝合
 
 		// 集中处理道具
-		for index,itemId := range ItemArray{
-			lastAllItem,recordTimeItem := GetHistoryItem(dbName, dayStart,dbNow,  userInfo, itemId, DataBaseBYDB12) // 获取玩家的历史数量
-			changeItem := forwardItemArray[index] - lastAllItem
+		for index, itemId := range ItemArray {
+			lastAllItem, recordTimeItem := GetForwardItem(dbName, dayStart, dbNow, userInfo, itemId, DataBaseBYDB01) // 获取玩家的最终数量
+			changeItem := lastItemArray[index] - lastAllItem
 
-			fmt.Printf("尾部缝合差额道具%d  数量 %d  forwardItemArray[index] %d  lastAllItem %d \n", itemId, changeItem,forwardItemArray[index] , lastAllItem)
-			if forwardItemArray[index] == -1 || lastAllItem == -1 {
+			//fmt.Printf("尾部缝合差额道具%d  数量 %d  lastItemArray[index] %d  lastAllItem %d recordTimeItem %s\n", itemId, changeItem, lastItemArray[index], lastAllItem, recordTimeItem)
+			if lastItemArray[index] == -1 || lastAllItem == -1 {
 				// 如果有找不到的情况， 那么就不插入了
 				changeItem = 0
 			}
-			DealItem(itemId,changeItem,userInfo,logDB1 ,recordTimeItem, logDB2, forwardItemArray[index], 1)		// 进行修改， 在最终的地方，提前一点，进行缝合
+			DealItem(itemId, changeItem, userInfo, logDB2, recordTimeItem, logDB2, lastItemArray[index], -1) // 进行修改， 在最终的地方，提前一点，进行缝合
 		}
 
 	}
+
+
+
+
+	}
 	//mssql.CloseDB(platformDB)
-	mssql.CloseDB(DataBaseBYDB02)
-	mssql.CloseDB(DataBaseBYDB12)
-	mssql.CloseDB(logDB1)
+	mssql.CloseDB(DataBaseBYDB01)
+	//mssql.CloseDB(DataBaseBYDB12)
+	//mssql.CloseDB(logDB1)
 	mssql.CloseDB(logDB2)
 	mssql.CloseDB(TestDB)
 

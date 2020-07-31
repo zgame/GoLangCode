@@ -5,7 +5,6 @@ import (
 	"./zLog"
 	"database/sql"
 	"fmt"
-	"strconv"
 )
 
 //遗留分数
@@ -32,57 +31,66 @@ func GetForwardLottery( dbName string, dayStart string ,dbNow *sql.DB,   recharg
 
 // 获取历史遗留
 func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tableNameT string, keyName string , changeKey string,  itemId int, gameDB02 *sql.DB) (int,string) {
-	dayInt,_ := strconv.Atoi(dayStart)
+	dayInt := 20200201
+	var recordTime string
+	//recordTime := "2020-02-01 04:11:55"
+	//dayInt,_ := strconv.Atoi(dayStart)
 	tableName := ""
 
 	for i:=0;i<60;i++ {
 
-		//num := dayInt - 20200210
-		if dayInt == 20200132{
-			dayInt = 20200201	// 跳到2月份
+		if dayInt==20200201{
+			recordTime = "and RecordTime > '2020-02-01 04:12:01' "
+		}else{
+			recordTime = ""
 		}
+
+		//num := dayInt - 20200210
+		//if dayInt == 20200132{
+		//	dayInt = 20200201	// 跳到2月份
+		//}
 		if dayInt == 20200230{
-			endTime := "2020-03-01 00:00:00"
-			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB02, userId)
-			forwardItem := 0
-			if itemId>0 {
-				forwardItem = GetDataBaseBYItem(gameDB02,userId, itemId)
-			}
-			forwardLottery := GetDataBaseBYLottery(gameDB02, userId)
-			switch keyName {
-			case "Lottery":
-				return forwardLottery,endTime
-			case "Score":
-				//zLog.PrintfLogger(" score %d ", forwardScore)
-				return forwardScore,endTime
-			case "Diamond":
-				//zLog.PrintfLogger(" Diamond %d ", forwardDiamond)
-				return forwardDiamond,endTime
-			case "Coin":
-				//zLog.PrintfLogger(" Coin %d ", forwardCoin)
-				return forwardCoin,endTime
-			case "ItemIndbNum":
-				//zLog.PrintfLogger(" ItemIndbNum %d ", forwardItem)
-				return forwardItem,endTime
-			}
+			//endTime := "2020-03-01 00:00:00"
+			//forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB02, userId)
+			//forwardItem := 0
+			//if itemId>0 {
+			//	forwardItem = GetDataBaseBYItem(gameDB02,userId, itemId)
+			//}
+			//forwardLottery := GetDataBaseBYLottery(gameDB02, userId)
+			//switch keyName {
+			//case "Lottery":
+			//	return forwardLottery,endTime
+			//case "Score":
+			//	//zLog.PrintfLogger(" score %d ", forwardScore)
+			//	return forwardScore,endTime
+			//case "Diamond":
+			//	//zLog.PrintfLogger(" Diamond %d ", forwardDiamond)
+			//	return forwardDiamond,endTime
+			//case "Coin":
+			//	//zLog.PrintfLogger(" Coin %d ", forwardCoin)
+			//	return forwardCoin,endTime
+			//case "ItemIndbNum":
+			//	//zLog.PrintfLogger(" ItemIndbNum %d ", forwardItem)
+			//	return forwardItem,endTime
+			//}
 
 			//zLog.PrintfLogger(" 没有找到 %d ", 0)
 			//InsertUserIdWhenCanNotFindOut(userId,keyName, rechargeId,LogDB,itemId)
-			return -1,""
+			return -1,"2020-02-30"
 			//dayInt = 20191230	// 跳到12月份
 		}
 
-		tableName = fmt.Sprintf("%s.dbo.%s_%d", dbName, tableNameT,dayInt)
-		if dayInt > 20200200{
+		//tableName = fmt.Sprintf("%s.dbo.%s_%d", dbName, tableNameT,dayInt)
+		//if dayInt > 20200200{
 			tableName = fmt.Sprintf("BY_LOG_202002.dbo.%s_%d",  tableNameT, dayInt)	// 如果是2月，就用2月的库
-		}
+		//}
 		dayInt++
 
 		itemAdd :=""
 		if itemId>0 {
 			itemAdd = fmt.Sprintf(" and ItemID = %d ",itemId)
 		}
-		sqlStr := fmt.Sprintf("select top(1)%s,%s,RecordTime from %s where RecordTime = (select min(RecordTime) from %s where UserID = %d %s) and UserID = %d %s", keyName, changeKey, tableName, tableName, userId, itemAdd,userId,itemAdd)
+		sqlStr := fmt.Sprintf("select top(1)%s,%s,RecordTime from %s where RecordTime = (select min(RecordTime) from %s where UserID = %d %s %s) and UserID = %d %s", keyName, changeKey, tableName, tableName, userId, itemAdd, recordTime, userId,itemAdd)
 		//zLog.PrintfLogger("forward 获取%s未来sql: %s ", keyName, sqlStr)
 
 		_, rows, _ := mssql.Query(dbNow, sqlStr)
