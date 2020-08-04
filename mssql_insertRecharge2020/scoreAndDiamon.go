@@ -60,7 +60,7 @@ func GetScoreReduceSql(rechargeInfo RechargeList, reduceGold int, dbNow *sql.DB,
 
 	// --------------------第二次减少------------------------------
 	reduceGoldTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
-	goldValues := fmt.Sprintf("%d,%d,2259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0,0,0,1,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceGoldPart1, lastAllGold-reduceGoldPart1,reduceGoldTimeOff, table,rechargeInfo.channelId)
+	goldValues := fmt.Sprintf("%d,%d,2259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0,0,0,1,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceGoldPart1, lastAllGold+reduceGoldPart2,reduceGoldTimeOff, table,rechargeInfo.channelId)
 	reduceGoldSql := GetInsertSql(dbName, "GameScoreChangeRecord", day1, ScoreKeys, goldValues)
 
 	//zLog.PrintfLogger("插入金币减少语句 %s", reduceGoldSql)
@@ -71,7 +71,7 @@ func GetScoreReduceSql(rechargeInfo RechargeList, reduceGold int, dbNow *sql.DB,
 
 	// --------------------第二次减少------------------------------
 	reduceGoldTimeOff = fmt.Sprintf("dateadd(ss,%d,'%s')",randTime + 20,dataTimeStr)
-	goldValues = fmt.Sprintf("%d,%d,2259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0,0,0,1,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceGoldPart2, lastAllGold-reduceGold,reduceGoldTimeOff, table,rechargeInfo.channelId)
+	goldValues = fmt.Sprintf("%d,%d,2259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0,0,0,1,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceGoldPart2, lastAllGold,reduceGoldTimeOff, table,rechargeInfo.channelId)
 	reduceGoldSql = GetInsertSql(dbName, "GameScoreChangeRecord", day1, ScoreKeys, goldValues)
 
 	//zLog.PrintfLogger("插入金币减少语句 %s", reduceGoldSql)
@@ -108,7 +108,7 @@ func GetDiamondReduceSql(rechargeInfo RechargeList, reduceDiamond int, dbNow *sq
 	randTime:= ZRandomTo(20,60)
 	table:= ZRandomTo(10,200)
 	reduceTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
-	DiamondValues := fmt.Sprintf("%d,%d,2259,%d,%d,%d,'游戏操作','购买',%s,%d,0,0,4,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, lastAllDiamond-reduceDiamond, lastAllDiamond, reduceTimeOff, table,rechargeInfo.channelId)
+	DiamondValues := fmt.Sprintf("%d,%d,2259,%d,%d,%d,'游戏操作','购买',%s,%d,0,0,4,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceDiamond, lastAllDiamond, reduceTimeOff, table,rechargeInfo.channelId)
 	reduceGoldSql :=  GetInsertSql(dbName, "GameDiamondChangeRecord", day1, DiamondKeys, DiamondValues)
 	//zLog.PrintfLogger("插入减少钻石语句 %s", reduceGoldSql)
 	err, _ := mssql.Exec(dbNow, reduceGoldSql)
@@ -139,7 +139,7 @@ func GetCoinReduceSql(rechargeInfo RechargeList, reduceCoin int, dbNow *sql.DB,d
 	randTime:= ZRandomTo(20,60)
 	table:= ZRandomTo(10,200)
 	reduceTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
-	CoinValues := fmt.Sprintf("%d,%d,1259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0 , 0,0,1,6,0,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceCoin, lastAllCoin-reduceCoin, reduceTimeOff, table,rechargeInfo.channelId)
+	CoinValues := fmt.Sprintf("%d,%d,1259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0 , 0,0,1,6,0,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceCoin, lastAllCoin, reduceTimeOff, table,rechargeInfo.channelId)
 	reduceCoinSql:= GetInsertSql(dbName, "GameCoinChangeRecord", day1, CoinKeys, CoinValues)
 	//zLog.PrintfLogger("减少灵力语句 %s", reduceCoinSql)
 	err, _ := mssql.Exec(dbNow, reduceCoinSql)
@@ -179,7 +179,7 @@ func GetItemReduceSql(rechargeInfo RechargeList, itemId int, itemNum int, dbNow 
 	}
 	randTime:= ZRandomTo(20,60)
 	reduceTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
-	ItemValues := fmt.Sprintf("%d,%d,1201,%d,%d,%d,'游戏操作','%s',%s, %d,0,0,0,4,19,0,0,%d ", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, itemId, lastAllItem-itemNum, title,  reduceTimeOff,lastAllItem, rechargeInfo.channelId)
+	ItemValues := fmt.Sprintf("%d,%d,1201,%d,%d,%d,'游戏操作','%s',%s, %d,0,0,0,4,19,0,0,%d ", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, itemId, -itemNum, title,  reduceTimeOff,lastAllItem, rechargeInfo.channelId)
 	reduceItemSql:= GetInsertSql(dbName, "GameItemChangeRecord", day1, ItemKeys, ItemValues)
 	//zLog.PrintfLogger("减少道具语句 %s", reduceItemSql)
 	err, _ := mssql.Exec(dbNow, reduceItemSql)
