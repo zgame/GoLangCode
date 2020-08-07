@@ -55,7 +55,7 @@ func GetScoreReduceSql(rechargeInfo RechargeList, reduceGold int, dbNow *sql.DB,
 	reduceGoldPart1 := int( reduceGold / 3)
 	reduceGoldPart2 := reduceGold - reduceGoldPart1
 	//lastAllGold := GetHistoryScore(dbName, day1,dbNow,rechargeInfo.UserId,rechargeInfo.SuccessTime)     // 获取玩家的历史金币数量
-	randTime:= ZRandomTo(20,60)
+	randTime:= ZRandomTo(2,4)
 	table:= ZRandomTo(10,200)
 
 	// --------------------第二次减少------------------------------
@@ -70,7 +70,7 @@ func GetScoreReduceSql(rechargeInfo RechargeList, reduceGold int, dbNow *sql.DB,
 	}
 
 	// --------------------第二次减少------------------------------
-	reduceGoldTimeOff = fmt.Sprintf("dateadd(ss,%d,'%s')",randTime + 20,dataTimeStr)
+	reduceGoldTimeOff = fmt.Sprintf("dateadd(ss,%d,'%s')",randTime + 2,dataTimeStr)
 	goldValues = fmt.Sprintf("%d,%d,2259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0,0,0,1,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceGoldPart2, lastAllGold,reduceGoldTimeOff, table,rechargeInfo.channelId)
 	reduceGoldSql = GetInsertSql(dbName, "GameScoreChangeRecord", day1, ScoreKeys, goldValues)
 
@@ -105,7 +105,7 @@ func GetDiamondRechargeSql(rechargeInfo RechargeList, getDiamond int, dbNow *sql
 // 生成钻石减少的语句
 func GetDiamondReduceSql(rechargeInfo RechargeList, reduceDiamond int, dbNow *sql.DB,dataTimeStr string,dbName string, day1 string,lastAllDiamond int)  {
 	//lastAllDiamond := GetHistoryDiamond(dbName, day1,dbNow,rechargeInfo.UserId,rechargeInfo.SuccessTime)
-	randTime:= ZRandomTo(20,60)
+	randTime:= ZRandomTo(2,4)
 	table:= ZRandomTo(10,200)
 	reduceTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
 	DiamondValues := fmt.Sprintf("%d,%d,2259,%d,%d,%d,'游戏操作','购买',%s,%d,0,0,4,1,10,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceDiamond, lastAllDiamond, reduceTimeOff, table,rechargeInfo.channelId)
@@ -136,7 +136,7 @@ func GetCoinRechargeSql(rechargeInfo RechargeList, getCoin int, dbNow *sql.DB,da
 // 生成灵力减少的语句
 func GetCoinReduceSql(rechargeInfo RechargeList, reduceCoin int, dbNow *sql.DB,dataTimeStr string,dbName string, day1 string, lastAllCoin int)  {
 	//lastAllCoin := GetHistoryCoin(dbName, day1,dbNow,rechargeInfo.UserId,rechargeInfo.SuccessTime) // 获取玩家的历史灵力数量
-	randTime:= ZRandomTo(20,60)
+	randTime:= ZRandomTo(2,4)
 	table:= ZRandomTo(10,200)
 	reduceTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
 	CoinValues := fmt.Sprintf("%d,%d,1259,%d,%d,%d,0,'游戏操作','游戏写分',%s,%d,0 , 0,0,1,6,0,%d", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, -reduceCoin, lastAllCoin, reduceTimeOff, table,rechargeInfo.channelId)
@@ -177,7 +177,7 @@ func GetItemReduceSql(rechargeInfo RechargeList, itemId int, itemNum int, dbNow 
 	case 7003:
 		title = "转换消耗道具"
 	}
-	randTime:= ZRandomTo(20,60)
+	randTime:= ZRandomTo(2,4)
 	reduceTimeOff := fmt.Sprintf("dateadd(ss,%d,'%s')",randTime,dataTimeStr)
 	ItemValues := fmt.Sprintf("%d,%d,1201,%d,%d,%d,'游戏操作','%s',%s, %d,0,0,0,4,19,0,0,%d ", rechargeInfo.UserId, rechargeInfo.kindId, rechargeInfo.ClientKind, itemId, -itemNum, title,  reduceTimeOff,lastAllItem, rechargeInfo.channelId)
 	reduceItemSql:= GetInsertSql(dbName, "GameItemChangeRecord", day1, ItemKeys, ItemValues)
