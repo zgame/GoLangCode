@@ -310,7 +310,7 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 		// 插入灵力
 		//zLog.PrintfLogger("-----------------礼包 %d 插入灵力 %d", rechargeInfo.gitPackageId , getCoin)
 		lastAllCoin:=GetCoinRechargeSql(rechargeInfo, getCoin, dbNow, dataTimeStr, dbName, day1, Type, SubType, title,TestDB)
-		GetCoinReduceSql(rechargeInfo, getDiamond, dbNow, dataTimeStr, dbName, day1,lastAllCoin)
+		GetCoinReduceSql(rechargeInfo, getCoin, dbNow, dataTimeStr, dbName, day1,lastAllCoin)
 
 	}
 	for _, item := range ItemArray {
