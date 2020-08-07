@@ -121,18 +121,21 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 		ItemArray = AddItemArray(2007, 180, ItemArray)
 		ItemArray = AddItemArray(101, 20, ItemArray)
 		ItemArray = AddItemArray(102, 10, ItemArray)
+		ItemArray = AddItemArray(108, 1, ItemArray)
 	case 10014: // 金币
 		getScore = 1540000
 		title = "充值每日30元礼包2赠送"
 		ItemArray = AddItemArray(2007, 240, ItemArray)
 		ItemArray = AddItemArray(101, 30, ItemArray)
 		ItemArray = AddItemArray(102, 15, ItemArray)
+		ItemArray = AddItemArray(108, 1, ItemArray)
 	case 10015: // 金币
 		getScore = 1760000
 		title = "充值每日30元礼包3赠送"
 		ItemArray = AddItemArray(2007, 300, ItemArray)
 		ItemArray = AddItemArray(101, 40, ItemArray)
 		ItemArray = AddItemArray(102, 20, ItemArray)
+		ItemArray = AddItemArray(108, 2, ItemArray)
 	case 10016: // 金币  灵力
 		getScore = 4000000
 		getCoin = 100000
@@ -161,6 +164,7 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 		ItemArray = AddItemArray(2007, 666, ItemArray)
 		ItemArray = AddItemArray(120, 10, ItemArray)
 		ItemArray = AddItemArray(131, 2, ItemArray)
+		ItemArray = AddItemArray(109, 2, ItemArray)
 	case 10020: // 金币  灵力
 		getScore = 8000000
 		getCoin = 250000
@@ -168,6 +172,7 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 		ItemArray = AddItemArray(2007, 777, ItemArray)
 		ItemArray = AddItemArray(120, 15, ItemArray)
 		ItemArray = AddItemArray(131, 3, ItemArray)
+		ItemArray = AddItemArray(109, 3, ItemArray)
 	case 10021: // 金币  灵力
 		getScore = 8400000
 		getCoin = 300000
@@ -175,6 +180,7 @@ func GetGiftPackageRechargeSql(rechargeInfo RechargeList, dbNow *sql.DB, dataTim
 		ItemArray = AddItemArray(2007, 888, ItemArray)
 		ItemArray = AddItemArray(120, 20, ItemArray)
 		ItemArray = AddItemArray(131, 4, ItemArray)
+		ItemArray = AddItemArray(109, 4, ItemArray)
 	case 10022: // 金币 钻石  灵力
 		getScore = 24000000
 		getDiamond = 1000
