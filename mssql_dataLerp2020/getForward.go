@@ -42,7 +42,7 @@ func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tabl
 			dayInt = 20200201	// 跳到2月份
 		}
 		if dayInt == 20200230{
-			endTime := "2020-02-09 23:59:00"
+			endTime := "2020-02-01 04:10:25"    // 这个要在2月备份之前
 			forwardScore,forwardDiamond,forwardCoin := GetDataBaseBY(gameDB02, userId)
 			forwardItem := 0
 			if itemId>0 {

@@ -34,7 +34,7 @@ func GetHistoryLottery( dbName string, day1 string ,dbNow *sql.DB,  rechargeInfo
 func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNameT string, keyName string ,   itemId int, gameDB12 *sql.DB) (int,string) {
 	dayInt,_ := strconv.Atoi(day1)
 	tableName := ""
-	endTime := "2020-01-09 04:01:02"
+	endTime := "2020-01-09 04:21:42"
 
 	for i:=60;i>0;i-- {
 

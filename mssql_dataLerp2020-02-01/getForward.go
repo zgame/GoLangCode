@@ -40,7 +40,7 @@ func GetForward( dbName string, dayStart string ,dbNow *sql.DB, userId int, tabl
 	for i:=0;i<60;i++ {
 
 		if dayInt==20200201{
-			recordTime = "and RecordTime > '2020-02-01 04:12:01' "
+			recordTime = "and RecordTime > '2020-02-01 04:12:26' "
 		}else{
 			recordTime = ""
 		}

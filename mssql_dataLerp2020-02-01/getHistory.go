@@ -39,7 +39,7 @@ func GetHistory( dbName string, day1 string ,dbNow *sql.DB, userId int, tableNam
 	for i:=60;i>0;i-- {
 
 		if dayInt==20200201{
-			recordTime = "and RecordTime < '2020-02-01 04:11:59' "
+			recordTime = "and RecordTime < '2020-02-01 04:12:24' "
 		}else{
 			recordTime = ""
 		}
