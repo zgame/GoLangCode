@@ -56,6 +56,7 @@ func DealUserList(idStart int) {
 	day1:= Group * idStart
 	day2:= Group * (idStart + 1)
 	sqlU := fmt.Sprintf("select *  from auditdb.dbo.x2020_user_chongzhi_lerp with(nolock) where id >= %d and id < %d ",day1,day2) // 一天
+	//sqlU := fmt.Sprintf("select *  from auditdb.dbo.x2020_user_chongzhi_lerp with(nolock) where UserID = 23489483") // 调试
 	//sqlU:= fmt.Sprintf( "select  * from PlatformDB_202002.dbo.PPayCoinOrder_2020 with(nolock) where PayStatus=2 and SuccessTime >= 1578585600 and SuccessTime < 1581264000") // 一个月
 	//fmt.Println("sql:",sqlU)
 	_, rows, _ := mssql.Query(TestDB, sqlU)
@@ -210,7 +211,11 @@ func DealUserList(idStart int) {
 		lastAllDiamond,recordTimeDiamond := GetHistoryDiamond(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB12) // 获取玩家的历史数量
 		lastAllCoin,recordTimeCoin := GetHistoryCoin(dbName, dayStart,dbNow,  userInfo,DataBaseBYDB12) // 获取玩家的历史数量
 		lastAllLottery, recordTimeLottery := GetHistoryLottery(dbName, dayStart, dbNow, userInfo, DataBaseBYDB12) // 获取玩家的历史数量
-		//fmt.Println("lastAllScore",lastAllScore)
+
+		//fmt.Println("lastAllScore",recordTimeScore)
+		//fmt.Println("lastAllScore",recordTimeDiamond)
+		//fmt.Println("lastAllScore",recordTimeCoin)
+		//fmt.Println("lastAllScore",recordTimeLottery)
 
 
 
@@ -254,6 +259,7 @@ func DealUserList(idStart int) {
 		for index,itemId := range ItemArray{
 			lastAllItem,recordTimeItem := GetHistoryItem(dbName, dayStart,dbNow,  userInfo, itemId, DataBaseBYDB12) // 获取玩家的历史数量
 			changeItem := forwardItemArray[index] - lastAllItem
+			//fmt.Println("尾部缝合差额changeItem", changeItem)
 			if forwardItemArray[index] == -1 || lastAllItem == -1 {
 				// 如果有找不到的情况， 那么就不插入了
 				changeItem = 0
@@ -295,23 +301,48 @@ func GetDBNow(dataTimeStr string, logDB1 *sql.DB, logDB2 *sql.DB) (string, *sql.
 }
 
 // 对时间进行检查防止前后越界
-func CheckDataTimeStr(dataTimeStr string) string {
+func CheckDataTimeStr(nowDataTimeStr string,userInfo UserList) string {
+	dataTimeStr := userInfo.registerDate
 	dayString := dataTimeStr[0:10]
-	dayOff := dataTimeStr[11:]
+	dayStart := strings.Replace(dayString, "-", "", -1) // 去掉-， 整理成表的后缀
+	dataTimeStr2 := userInfo.lastLoginDate
+	dayString2 := dataTimeStr2[0:10]
+	day2 := strings.Replace(dayString2, "-", "", -1) // 去掉-， 整理成表的后缀
+	//dbNow, dbName := GetMonth(dayStart, logDB1, logDB2)
+	//dbNow = dbNow
+	//fmt.Println("获取时间戳转日期时间", dataTimeStr)
+	//fmt.Println("获取时间戳转日期", dataTimeStr[0:10])
+	day1N,_ :=strconv.Atoi(dayStart) // 注册日期
+	day2N,_ :=strconv.Atoi(day2)     // 流失日期
+
+
+	nowDayString := nowDataTimeStr[0:10]
+	dayOff := nowDataTimeStr[11:]
 	//fmt.Println("dayString",dayString)
 	//fmt.Println("dayOff",dayOff)
-	day1 := strings.Replace(dayString, "-", "", -1) // 去掉-， 整理成表的后缀
-	day1N, _ := strconv.Atoi(day1)
-	if day1N < 20200109 {
-		day1N = 20200109
-		dayString = "2020-01-09"
+	day1 := strings.Replace(nowDayString, "-", "", -1) // 去掉-， 整理成表的后缀
+	dayNow, _ := strconv.Atoi(day1)
+	if dayNow < 20200109 {
+		dayNow = 20200109
+		nowDayString = "2020-01-09"
 	}
-	if day1N > 20200209 {
-		day1N = 20200209
-		dayString = "2020-02-09"
+	if dayNow > 20200209 {
+		dayNow = 20200209
+		nowDayString = "2020-02-09"
 	}
-	result := dayString + " " + dayOff
+	result := nowDayString + " " + dayOff
+
+	//  追加判断是否在用户存活期间
+
+	if dayNow < day1N {
+		result = userInfo.registerDate
+	}
+	if dayNow > day2N{
+		result = userInfo.lastLoginDate
+	}
+
 	//fmt.Println("0000000000000000000000000000=============", result)
+	//os.Exit(0)
 	return result[:19]
 
 }
@@ -325,7 +356,7 @@ func DealScore(score int,userInfo UserList, logDB1 *sql.DB, dataTimeStr string, 
 		zLog.PrintfLogger(" 没有插入的时间，没有找到记录, userId: %d  id :%d  addTime: %d", userInfo.UserId, userInfo.id, addTime)
 		return
 	}
-	dataTimeStr = CheckDataTimeStr(dataTimeStr)
+	dataTimeStr = CheckDataTimeStr(dataTimeStr,userInfo)
 	dayStart, dbNow, dbName := GetDBNow(dataTimeStr, logDB1, logDB2)
 	if score > 0 {
 		GetScoreAddSql(userInfo, score, dbNow, dataTimeStr, dbName, dayStart, lastAllScore, addTime)
@@ -344,7 +375,7 @@ func DealDiamond(diamond int,userInfo UserList, logDB1 *sql.DB, dataTimeStr stri
 		zLog.PrintfLogger(" 没有插入的时间，没有找到记录, userId: %d  id :%d  addTime: %d", userInfo.UserId, userInfo.id, addTime)
 		return
 	}
-	dataTimeStr = CheckDataTimeStr(dataTimeStr)
+	dataTimeStr = CheckDataTimeStr(dataTimeStr,userInfo)
 	dayStart, dbNow, dbName := GetDBNow(dataTimeStr, logDB1, logDB2)
 	if diamond >0 {
 		GetDiamondAddSql(userInfo , diamond, dbNow ,dataTimeStr ,dbName , dayStart , lastAllDiamond,addTime)
@@ -362,7 +393,7 @@ func DealCoin(coin int,userInfo UserList, logDB1 *sql.DB, dataTimeStr string, lo
 		zLog.PrintfLogger(" 没有插入的时间，没有找到记录, userId: %d  id :%d  addTime: %d", userInfo.UserId, userInfo.id, addTime)
 		return
 	}
-	dataTimeStr = CheckDataTimeStr(dataTimeStr)
+	dataTimeStr = CheckDataTimeStr(dataTimeStr,userInfo)
 	dayStart, dbNow, dbName := GetDBNow(dataTimeStr, logDB1, logDB2)
 	if coin >0 {
 		GetCoinAddSql(userInfo , coin, dbNow ,dataTimeStr ,dbName , dayStart , lastAllCoin,addTime)
@@ -380,7 +411,7 @@ func DealItem(ItemId int,ItemNum int,userInfo UserList, logDB1 *sql.DB, dataTime
 		zLog.PrintfLogger(" 没有插入的时间，没有找到记录, userId: %d  id :%d  itemId:%d   addTime: %d", userInfo.UserId, userInfo.id, ItemId, addTime)
 		return
 	}
-	dataTimeStr = CheckDataTimeStr(dataTimeStr)
+	dataTimeStr = CheckDataTimeStr(dataTimeStr,userInfo)
 	dayStart, dbNow, dbName := GetDBNow(dataTimeStr, logDB1, logDB2)
 	if ItemNum >0 {
 		GetItemAddSql(userInfo ,ItemId, ItemNum, dbNow ,dataTimeStr ,dbName , dayStart , lastAllItem,addTime)
@@ -400,7 +431,7 @@ func DealLottery(Lottery int, userInfo UserList, logDB1 *sql.DB, dataTimeStr str
 		zLog.PrintfLogger(" 没有插入的时间，没有找到记录, userId: %d  id :%d  addTime: %d", userInfo.UserId, userInfo.id, addTime)
 		return
 	}
-	dataTimeStr = CheckDataTimeStr(dataTimeStr)
+	dataTimeStr = CheckDataTimeStr(dataTimeStr,userInfo)
 	dayStart, dbNow, dbName := GetDBNow(dataTimeStr, logDB1, logDB2)
 	if Lottery > 0 {
 		GetLotteryAddSql(userInfo, Lottery, dbNow, dataTimeStr, dbName, dayStart, lastAllLottery, addTime)
