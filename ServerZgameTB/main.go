@@ -5,27 +5,27 @@
 package main
 
 import (
+	"ServerZgameTB/Utils/log"
+	"ServerZgameTB/Utils/zMySql"
+	"ServerZgameTB/Utils/zRedis"
 	"fmt"
 	"github.com/go-ini/ini"
 	"strconv"
-	"./Utils/log"
-	"./Utils/zRedis"
-	"./Utils/zMySql"
+	"ServerZgameTB/Lua"
+	"ServerZgameTB/NetWork"
+	"ServerZgameTB/Utils/ztimer"
+	"math"
 	//"./Games"
 	//"./Logic/Player"
 	//"./CSV"
 	"time"
-	"math"
-	"./NetWork"
-	"./Lua"
-	"./Utils/ztimer"
 	//"github.com/yuin/gopher-lua"
-	"./GlobalVar"
-	"runtime"
+	"ServerZgameTB/GlobalVar"
 	"flag"
+	oldLog "log"
 	"net/http"
 	_ "net/http/pprof"
-	oldLog "log"
+	"runtime"
 )
 
 

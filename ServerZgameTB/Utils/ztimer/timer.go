@@ -1,10 +1,9 @@
 package ztimer
 
 import (
+	"ServerZgameTB/GlobalVar"
+	"ServerZgameTB/Utils/log"
 	"time"
-	"../log"
-	"../../GlobalVar"
-
 )
 
 // 计时器，用来定期检查配置的更新，包括后台控制的活动，开关，配置文件更新，用数据版本号来控制

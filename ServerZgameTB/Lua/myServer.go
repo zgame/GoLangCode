@@ -1,12 +1,12 @@
 package Lua
 
 import (
-	"net"
-	"../NetWork"
-	"../GlobalVar"
-	"../Utils/log"
-	"../Utils/ztimer"
+	"ServerZgameTB/GlobalVar"
+	"ServerZgameTB/NetWork"
+	"ServerZgameTB/Utils/log"
+	"ServerZgameTB/Utils/ztimer"
 	"math"
+	"net"
 	"sync"
 	"time"
 )

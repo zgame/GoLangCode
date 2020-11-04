@@ -1,14 +1,13 @@
 package Lua
 
 import (
+	"ServerZgameTB/Utils/log"
+	mysql "ServerZgameTB/Utils/mysql"
+	"ServerZgameTB/Utils/zMySql"
+	"ServerZgameTB/Utils/zRedis"
+	"ServerZgameTB/Utils/ztimer"
 	"github.com/yuin/gopher-lua"
-	"../Utils/log"
-	"../Utils/ztimer"
-	"../Utils/zRedis"
-	"../Utils/zMySql"
 	"time"
-	mysql "../Utils/mysql"
-
 )
 
 //--------------------------------------------------------------------------------

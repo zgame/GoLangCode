@@ -1,11 +1,11 @@
 package zMySql
 
 import (
+	"ServerZgameTB/Utils/ztimer"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"log"
-	_ "github.com/go-sql-driver/mysql"
-	"../ztimer"
 )
 var MySqlEngine *xorm.Engine
 //------------------------------------------------------------------------------------------

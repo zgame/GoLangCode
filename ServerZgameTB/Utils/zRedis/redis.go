@@ -2,14 +2,14 @@ package zRedis
 
 import (
 	"github.com/gomodule/redigo/redis"
+	"ServerZgameTB/GlobalVar"
 	//"github.com/garyburd/redigo/redis"
-	"../log"
-	"../ztimer"
-	"../../GlobalVar"
-	"fmt"
-	"reflect"
-	"os"
+	"ServerZgameTB/Utils/log"
+	"ServerZgameTB/Utils/ztimer"
 	"encoding/json"
+	"fmt"
+	"os"
+	"reflect"
 )
 
 var RRedis redis.Conn
