@@ -1,10 +1,10 @@
 package Lua
 
 import (
-	"github.com/yuin/gopher-lua"
+	"MGBYLuaServer/GlobalVar"
+	"MGBYLuaServer/Utils/log"
 	"fmt"
-	"../GlobalVar"
-	"../Utils/log"
+	"github.com/yuin/gopher-lua"
 )
 
 //--------------------------------------------------------------------------------

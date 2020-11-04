@@ -2,13 +2,13 @@ package zRedis
 
 import (
 	"github.com/gomodule/redigo/redis"
+	"MGBYLuaServer/GlobalVar"
 	//"github.com/garyburd/redigo/redis"
-	"../log"
-	"../ztimer"
-	"../../GlobalVar"
+	"MGBYLuaServer/Utils/log"
+	"MGBYLuaServer/Utils/ztimer"
+	"encoding/json"
 	"fmt"
 	"os"
-	"encoding/json"
 )
 
 var RRedis redis.Conn

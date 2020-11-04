@@ -5,26 +5,26 @@
 package main
 
 import (
+	"MGBYLuaServer/Utils/log"
+	"MGBYLuaServer/Utils/zIP"
 	"fmt"
 	"github.com/go-ini/ini"
 	"strconv"
-	"./Utils/log"
-	"./Utils/zIP"
+	"MGBYLuaServer/Lua"
+	"MGBYLuaServer/NetWork"
+	"MGBYLuaServer/Utils/ztimer"
+	"math"
 	//"./Games"
 	//"./Logic/Player"
 	//"./CSV"
 	"time"
-	"math"
-	"./NetWork"
-	"./Lua"
-	"./Utils/ztimer"
 	//"github.com/yuin/gopher-lua"
-	"./GlobalVar"
-	"runtime"
+	"MGBYLuaServer/GlobalVar"
 	"flag"
+	oldLog "log"
 	"net/http"
 	_ "net/http/pprof"
-	oldLog "log"
+	"runtime"
 )
 
 

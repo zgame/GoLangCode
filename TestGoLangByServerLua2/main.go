@@ -148,7 +148,7 @@ func main() {
 	//fmt.Println("-----------------------------------------------------")
 
 	for{
-		GetStaticPrint()
+		//GetStaticPrint()
 		time.Sleep(time.Second)
 	}
 }

@@ -1,18 +1,18 @@
 package Lua
 
 import (
-	"net"
-	"../NetWork"
-	"../GlobalVar"
-	"../Utils/log"
-	"../Utils/ztimer"
-	"math"
-	"sync"
-	"time"
-	"fmt"
+	"MGBYLuaServer/GlobalVar"
+	"MGBYLuaServer/NetWork"
+	"MGBYLuaServer/Utils/log"
+	"MGBYLuaServer/Utils/ztimer"
 	"bytes"
 	"encoding/binary"
+	"fmt"
+	"math"
+	"net"
+	"sync"
 	"sync/atomic"
+	"time"
 )
 
 // ----------------------------服务器处理的统一接口----------------------------------
