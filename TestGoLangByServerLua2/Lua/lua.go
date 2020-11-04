@@ -1,9 +1,9 @@
 package Lua
 
 import (
-	"github.com/yuin/gopher-lua"
+	"TestGoLangByServerLua2/GlobalVar"
 	"fmt"
-	"../GlobalVar"
+	"github.com/yuin/gopher-lua"
 )
 //--------------------------------------------------------------------------------
 // lua的接口，包含热更新

@@ -1,9 +1,9 @@
 package zRedis
 
 import (
+	"TestGoLangByServerLua2/Utils/log"
 	//"github.com/gomodule/redigo/redis"
 	"github.com/garyburd/redigo/redis"
-	"../log"
 )
 
 var RRedis redis.Conn

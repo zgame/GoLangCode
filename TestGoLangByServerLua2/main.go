@@ -2,23 +2,23 @@
 package main
 
 import (
+	"TestGoLangByServerLua2/GlobalVar"
+	"TestGoLangByServerLua2/Lua"
+	"TestGoLangByServerLua2/NetWork"
+	"TestGoLangByServerLua2/Utils/log"
+	"flag"
 	//"util/logs"
 	//"github.com/astaxie/beego/logs"
 	"fmt"
-	"./NetWork"
-	"time"
 	"github.com/go-ini/ini"
-	"runtime"
-	"flag"
-	"./Lua"
-	"./log"
+	oldLog "log"
+	"math"
 	"net/http"
 	_ "net/http/pprof"
-	oldLog "log"
+	"runtime"
 	"strconv"
-	"math"
 	"sync"
-	"./GlobalVar"
+	"time"
 )
 
 

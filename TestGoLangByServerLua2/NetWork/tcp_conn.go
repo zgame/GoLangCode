@@ -1,10 +1,10 @@
 package NetWork
 
 import (
+	"TestGoLangByServerLua2/Utils/log"
 	//"github.com/name5566/leaf/log"
 	"net"
 	"sync"
-	"../log"
 )
 
 //---------------------------------------------------------------------------------------------------

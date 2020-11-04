@@ -1,12 +1,12 @@
 package Lua
 
 import (
+	"TestGoLangByServerLua2/Utils/log"
+	mysql "TestGoLangByServerLua2/Utils/mysql"
+	"TestGoLangByServerLua2/Utils/zRedis"
+	"TestGoLangByServerLua2/Utils/ztimer"
 	"github.com/yuin/gopher-lua"
-	"../Utils/log"
-	"../Utils/ztimer"
-	"../Utils/zRedis"
 	"time"
-	mysql "../Utils/mysql"
 	//mysql "github.com/tengattack/gluasql/mysql"
 )
 

@@ -2,10 +2,10 @@ package NetWork
 
 import (
 	"github.com/gorilla/websocket"
+	"TestGoLangByServerLua2/Utils/log"
 	//"github.com/name5566/leaf/log"
 	"net"
 	"sync"
-	"../log"
 )
 
 //---------------------------------------------------------------------------------------------------

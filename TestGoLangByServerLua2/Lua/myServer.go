@@ -1,11 +1,11 @@
 package Lua
 
 import (
-	"net"
-	"../NetWork"
-	"../GlobalVar"
-	"../Utils/log"
+	"TestGoLangByServerLua2/GlobalVar"
+	"TestGoLangByServerLua2/NetWork"
+	"TestGoLangByServerLua2/Utils/log"
 	"math"
+	"net"
 	"sync"
 )
 
