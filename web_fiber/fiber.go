@@ -5,7 +5,9 @@ import (
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/logger"
 	"github.com/gofiber/recover"
+	"io"
 	"log"
+	"os"
 	"web_fiber/Action"
 )
 
@@ -19,7 +21,18 @@ func main() {
 	//	},
 	//}
 	//app.Use(basicauth.New(cfg))		// 认证
-	app.Use(logger.New())				//日志
+
+	//--------------------日志---------------------------------
+	//app.Use(logger.New())				//日志
+	file, _ := os.Create("fiber.log")
+	app.Use(logger.New(logger.Config{
+		Format:     "${time} ${method} ${path} - ${ip} - ${status} - ${latency}\n",
+		TimeFormat: "2006-01-02 15:04:05",
+		//TimeZone:   "America/New_York",
+		//Output: os.Stdout ,
+		Output: io.MultiWriter(file, os.Stdout) ,
+	}))
+	//--------------------报错---------------------------------
 	cfg := recover.Config{
 		Handler: func(c *fiber.Ctx, err error) {
 			c.SendString(err.Error())
