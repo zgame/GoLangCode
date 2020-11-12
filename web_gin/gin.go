@@ -11,7 +11,6 @@ import (
 func main() {
 	// 记录到文件。
 	f, _ := os.Create("gin.log")
-	//gin.DefaultWriter = io.MultiWriter(f)
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)			// 如果需要同时将日志写入文件和控制台，请使用以下代码。
 
 	r := gin.Default()
