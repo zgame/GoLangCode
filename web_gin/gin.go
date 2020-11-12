@@ -17,7 +17,7 @@ func main() {
 	r.Use(MiddleWare.Cors()) // 允许使用跨域请求  全局中间件
 	Routes(r)
 
-	r.Run("0.0.0.0:8097") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.RunTLS("0.0.0.0:8097","server.crt", "server.key") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
 func Routes(r *gin.Engine) {
