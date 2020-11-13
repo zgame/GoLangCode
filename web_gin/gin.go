@@ -2,22 +2,22 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"io"
-	"os"
 	"web_gin/Action"
 	"web_gin/MiddleWare"
 )
 
 func main() {
 	// 记录到文件。
-	f, _ := os.Create("gin.log")
-	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)			// 如果需要同时将日志写入文件和控制台，请使用以下代码。
+	//f, _ := os.Create("gin.log")
+	//gin.DefaultWriter = io.MultiWriter(f, os.Stdout)			// 如果需要同时将日志写入文件和控制台，请使用以下代码。
+	CheckLogDir()
 
 	r := gin.Default()
+	r.Use(LoggerToFile())
 	r.Use(MiddleWare.Cors()) // 允许使用跨域请求  全局中间件
 	Routes(r)
 
-	r.RunTLS("0.0.0.0:8097","server.crt", "server.key") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.RunTLS("0.0.0.0:8098","server.crt", "server.key") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
 func Routes(r *gin.Engine) {
