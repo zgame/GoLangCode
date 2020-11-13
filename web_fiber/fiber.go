@@ -3,11 +3,8 @@ package main
 import (
 	"github.com/gofiber/cors"
 	"github.com/gofiber/fiber"
-	"github.com/gofiber/logger"
 	"github.com/gofiber/recover"
-	"io"
 	"log"
-	"os"
 	"web_fiber/Action"
 )
 
@@ -41,7 +38,7 @@ func main() {
 		c.SendStatus(404)
 		// => 404 "Not Found"
 	})
-	log.Fatal(app.Listen(8097))
+	log.Fatal(app.Listen(8097))		// http
 }
 
 

@@ -90,5 +90,5 @@ func CheckLogDir() {
 			fmt.Printf("mkdir %s success!\n", logDir)
 		}
 	}
-	fmt.Println("日志目录检查完成")
+	//fmt.Println("日志目录检查完成")
 }
