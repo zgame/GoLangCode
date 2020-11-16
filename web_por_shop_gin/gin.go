@@ -5,8 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"os"
 	"web_gin/MiddleWare"
+	"web_gin/MiddleWare/aliPay"
 	"web_gin/MiddleWare/zLog"
 	"web_gin/MySql"
+	"web_gin/MiddleWare/wxPay"
 )
 
 func main() {
@@ -24,11 +26,13 @@ func main() {
 		os.Exit(0)
 	}
 
-
 	r := gin.Default()
 	r.Use(zLog.LoggerToFile())
 	r.Use(MiddleWare.Cors()) // 允许使用跨域请求  全局中间件
 	Routes(r)
+
+	wxPay.Init()
+	aliPay.Init()
 
 	r.RunTLS("0.0.0.0:8097","server.crt", "server.key") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

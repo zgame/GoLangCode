@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"web_gin/Action"
+	"web_gin/MiddleWare/aliPay"
+	"web_gin/MiddleWare/wxPay"
 )
 
 func Routes(r *gin.Engine) {
@@ -25,4 +27,8 @@ func Routes(r *gin.Engine) {
 	r.GET("/portia_shop/user", Action.GetUserList)
 	r.GET("/portia_shop/recharge", Action.GetUserRechargeList)
 	r.GET("/portia_shop/buy_list", Action.GetUserBuyList)
+
+	// --------------------- ali wx---------------------------
+	r.GET("/portia_shop/alipay", aliPay.AliPayCallBack)
+	r.GET("/portia_shop/wxpay", wxPay.WxPayCallBack)
 }
