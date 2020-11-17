@@ -9,6 +9,7 @@ import (
 type Recharge struct {
 	Uid          int    `xorm:"int"`
 	Openid       string `xorm:"varchar(100)"`
+	Payno        string `xorm:"varchar(50)"`
 	RechargeTime string `xorm:"varchar(20)"`
 	Rmb          int    `xorm:"int"`
 	ItemId       int    `xorm:"int"`
@@ -25,7 +26,7 @@ func SyncRechargeTable() bool {
 }
 
 // 查询数据
-func GetRechargeData(openId string) float64{
+func GetRechargeData(openId string) float64 {
 
 	selectData := &Recharge{}
 	total, err := DataBaseEngine.Where("openid =?", openId).Sum(selectData, "rmb")
@@ -42,8 +43,8 @@ func GetRechargeData(openId string) float64{
 }
 
 // 根据充值更新该玩家的道具列表
-func UpdateAllItems(openId string)  {
-	itemList := make([]int,0)
+func UpdateAllItems(openId string) {
+	itemList := make([]int, 0)
 	list := make([]Recharge, 0)
 	err := DataBaseEngine.Where("openid = ? ", openId).Find(&list)
 	if err != nil {
@@ -53,19 +54,19 @@ func UpdateAllItems(openId string)  {
 	for _, item := range list {
 		itemList = append(itemList, item.ItemId)
 	}
-	data,_ := json.Marshal(itemList)
+	data, _ := json.Marshal(itemList)
 	updata := new(Useritem)
 	updata.Openid = openId
 	updata.ShopList = string(data)
 	UpdateUserItemData(updata, &Useritem{Openid: openId})
 }
 
-
 // 插入单行数据
-func InsertRechargeData(insertData *Recharge) {
+func InsertRechargeData(insertData *Recharge) bool{
 	_, err := DataBaseEngine.Insert(insertData)
 	if err != nil {
 		zLog.PrintfLogger("数据库插入充值出错！ %s ", err)
-		return
+		return false
 	}
+	return true
 }

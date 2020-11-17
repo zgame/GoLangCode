@@ -30,5 +30,6 @@ func Routes(r *gin.Engine) {
 
 	// --------------------- ali wx---------------------------
 	r.GET("/portia_shop/alipay", aliPay.AliPayCallBack)
+	r.GET("/portia_shop/alipayget", aliPay.AliPayGetNo)
 	r.GET("/portia_shop/wxpay", wxPay.WxPayCallBack)
 }
