@@ -18,7 +18,7 @@ var (
 
 // 初始化
 func Init() {
-	publicKey := strings.ReplaceAll(GlobalVar.PublicKey,"\n","")
+	publicKey := strings.ReplaceAll(GlobalVar.AliPublicKey,"\n","")
 	privateKey := strings.ReplaceAll(GlobalVar.PrivateKey,"\n","")
 	client = wxpay.New(appID, publicKey, privateKey, false)
 }

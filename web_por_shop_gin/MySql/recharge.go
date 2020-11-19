@@ -9,17 +9,18 @@ import (
 type Recharge struct {
 	Uid          int    `xorm:"int"`
 	Openid       string `xorm:"varchar(100)"`
-	Payno        string `xorm:"varchar(50)"`
+	Payno        string `xorm:"varchar(100)"`
 	RechargeTime string `xorm:"varchar(20)"`
-	Rmb          int    `xorm:"int"`
+	Rmb          string `xorm:"varchar(20)"`
 	ItemId       int    `xorm:"int"`
+	Channel      string `xorm:"varchar(10)"`
 }
 
 // 同步表结构
 func SyncRechargeTable() bool {
 	err := DataBaseEngine.Sync2(new(Recharge)) //同步表跟结构
 	if err != nil {
-		zLog.PrintfLogger("同步表结构出错！", err)
+		zLog.PrintfLogger("充值 同步表结构出错！", err)
 		return false
 	}
 	return true
@@ -33,7 +34,7 @@ func GetRechargeData(openId string) float64 {
 	//result, err := DataBaseEngine.Get(selectData) //获取单条数据
 
 	if err != nil {
-		zLog.PrintfLogger("数据库查询出错！  %s", err)
+		zLog.PrintfLogger("充值 数据库查询出错！  %s", err)
 		return 0
 	}
 	//if result == false {
@@ -48,7 +49,7 @@ func UpdateAllItems(openId string) {
 	list := make([]Recharge, 0)
 	err := DataBaseEngine.Where("openid = ? ", openId).Find(&list)
 	if err != nil {
-		zLog.PrintfLogger("数据库查询出错！  %s", err)
+		zLog.PrintfLogger("充值 数据库查询出错！  %s", err)
 		return
 	}
 	for _, item := range list {
@@ -61,12 +62,15 @@ func UpdateAllItems(openId string) {
 	UpdateUserItemData(updata, &Useritem{Openid: openId})
 }
 
+
+
 // 插入单行数据
 func InsertRechargeData(insertData *Recharge) bool{
 	_, err := DataBaseEngine.Insert(insertData)
 	if err != nil {
-		zLog.PrintfLogger("数据库插入充值出错！ %s ", err)
+		zLog.PrintfLogger("充值数据库插入充值出错！ %s ", err)
 		return false
 	}
+	zLog.PrintLogger("充值数据插入数据库充值ok！  ")
 	return true
 }

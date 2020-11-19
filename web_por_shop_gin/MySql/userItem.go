@@ -28,7 +28,7 @@ func GetUserItemData(openId string ) *Useritem{
 	result,err := DataBaseEngine.Get(selectData) //获取单条数据
 
 	if err != nil {
-		zLog.PrintfLogger("数据库查询出错！  %s", err)
+		zLog.PrintfLogger("玩家道具 数据库查询出错！  %s", err)
 		return nil
 	}
 	if result == false{
@@ -37,22 +37,35 @@ func GetUserItemData(openId string ) *Useritem{
 	return selectData
 }
 
+// 查询数据
+func GetUserShopList(openId string ) string{
+	selectData := GetUserItemData(openId)
+	if selectData == nil {
+		return ""
+	}
+	return selectData.ShopList
+}
+
+
+
 // 插入单行数据
-func InsertUserItemData(insertData *Useritem) {
+func InsertUserItemData(insertData *Useritem) bool{
 	// insert 单条数据
 	_, err := DataBaseEngine.Insert(insertData)
 
 	if err != nil {
-		zLog.PrintfLogger("数据库插入出错！ %s ", err)
-		return
+		zLog.PrintfLogger("玩家道具 数据库插入出错！ %s ", err)
+		return false
 	}
+	return true
 }
 
 // 更新数据   &Userinfo{Uid:1111}
-func UpdateUserItemData(updateData *Useritem, condition *Useritem) {
+func UpdateUserItemData(updateData *Useritem, condition *Useritem)bool {
 	_, err := DataBaseEngine.Update(updateData, condition)
 	if err != nil {
-		zLog.PrintfLogger("数据库更新出错！  %s", err)
-		return
+		zLog.PrintfLogger("玩家道具 数据库更新出错！  %s", err)
+		return false
 	}
+	return true
 }

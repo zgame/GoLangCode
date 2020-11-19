@@ -30,6 +30,7 @@ func GetUserList(c *gin.Context) {
 		return
 	}
 
+
 	c.JSON(200, gin.H{"Uid": user.Uid})
 }
 
@@ -44,6 +45,8 @@ func GetUserRechargeList(c *gin.Context) {
 	result := MySql.GetRechargeData(openId)
 	MySql.UpdateAllItems(openId)
 
+
+
 	c.JSON(200, gin.H{"Uid": result})
 }
 
@@ -54,7 +57,6 @@ func GetUserBuyList(c *gin.Context) {
 		Error(fmt.Sprintf("输入参数openid为空 %s", openId),c)
 		return
 	}
-
 	result := MySql.GetUserItemData(openId)
 	if result == nil {
 		Error(fmt.Sprintf("输入参数openid : %s 找不到", openId),c)

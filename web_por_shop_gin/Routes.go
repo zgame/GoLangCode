@@ -29,7 +29,9 @@ func Routes(r *gin.Engine) {
 	r.GET("/portia_shop/buy_list", Action.GetUserBuyList)
 
 	// --------------------- ali wx---------------------------
-	r.GET("/portia_shop/alipay", aliPay.AliPayCallBack)
-	r.GET("/portia_shop/alipayget", aliPay.AliPayGetNo)
+	r.POST("/portia_shop/alipayget", aliPay.GetPayInfo)      //客户端获取订单信息
+	r.POST("/portia_shop/alipaysign", aliPay.ClientGetSign) //客户端同步回调验证订单信息
+	r.POST("/portia_shop/alipay", aliPay.CallBack)          // 支付宝异步回调
+
 	r.GET("/portia_shop/wxpay", wxPay.WxPayCallBack)
 }
