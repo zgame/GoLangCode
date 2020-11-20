@@ -26,21 +26,21 @@ func SyncRechargeTable() bool {
 	return true
 }
 
-// 查询数据
-func GetRechargeData(openId string) float64 {
+// 查询订单数据
+func GetRechargeData(payno string) *Recharge {
 
-	selectData := &Recharge{}
-	total, err := DataBaseEngine.Where("openid =?", openId).Sum(selectData, "rmb")
-	//result, err := DataBaseEngine.Get(selectData) //获取单条数据
+	selectData := &Recharge{Payno: payno}
+	//total, err := DataBaseEngine.Where("Payno =?", Payno).Sum(selectData, "rmb")		// 获取总数
+	result, err := DataBaseEngine.Get(selectData) //获取单条数据
 
 	if err != nil {
 		zLog.PrintfLogger("充值 数据库查询出错！  %s", err)
-		return 0
+		return nil
 	}
-	//if result == false {
-	//	return nil
-	//}
-	return total
+	if result == false {
+		return nil
+	}
+	return selectData
 }
 
 // 根据充值更新该玩家的道具列表

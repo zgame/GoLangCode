@@ -25,7 +25,7 @@ func Routes(r *gin.Engine) {
 	// ------------------ portia shop -------------------
 	r.GET("/portia_shop/help", Action.GetShopHelp)
 	r.GET("/portia_shop/user", Action.GetUserList)
-	r.GET("/portia_shop/recharge", Action.GetUserRechargeList)
+	//r.GET("/portia_shop/recharge", Action.GetUserRechargeList)
 	r.GET("/portia_shop/buy_list", Action.GetUserBuyList)
 
 	// --------------------- ali wx---------------------------

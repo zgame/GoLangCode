@@ -34,7 +34,7 @@ func GetUserList(c *gin.Context) {
 	c.JSON(200, gin.H{"Uid": user.Uid})
 }
 
-// 获取充值数据
+// test获取充值数据
 func GetUserRechargeList(c *gin.Context) {
 	openId := c.Query("openid") // 获取get的参数
 	if openId == "" {
@@ -43,11 +43,9 @@ func GetUserRechargeList(c *gin.Context) {
 	}
 
 	result := MySql.GetRechargeData(openId)
-	MySql.UpdateAllItems(openId)
+	//MySql.UpdateAllItems(openId)
 
-
-
-	c.JSON(200, gin.H{"Uid": result})
+	c.JSON(200, gin.H{"rmb": result.Rmb})
 }
 
 // 获取购买列表
@@ -57,11 +55,6 @@ func GetUserBuyList(c *gin.Context) {
 		Error(fmt.Sprintf("输入参数openid为空 %s", openId),c)
 		return
 	}
-	result := MySql.GetUserItemData(openId)
-	if result == nil {
-		Error(fmt.Sprintf("输入参数openid : %s 找不到", openId),c)
-		return
-	}
-
-	c.JSON(200, gin.H{"openid":  openId, "ShopList": result.ShopList})
+	ShopList := MySql.GetUserShopList(openId)
+	c.JSON(200, gin.H{"openid":  openId, "ShopList": ShopList})
 }
