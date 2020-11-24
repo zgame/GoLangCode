@@ -54,7 +54,7 @@ func GetPayInfo(c *gin.Context) {
 
 	zLog.PrintfLogger("================GetPayInfo 拉起订单 ================= %s   %s", OpenId, ItemId)
 	var p = alipay.AliPayTradeAppPay{}
-	p.NotifyURL = "https://portia_shop.patheagames.com:8097/portia_shop/alipay"
+	p.NotifyURL = "https://shop.portia.xyz:8097/portia_shop/alipay"
 	p.Subject = "购买道具1分钱"
 	p.OutTradeNo = "" + strconv.FormatInt(time.Now().UnixNano(), 10) // 后面增加渠道编号
 	p.TotalAmount = "0.01"

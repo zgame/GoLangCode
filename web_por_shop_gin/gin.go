@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"os"
@@ -36,14 +35,14 @@ func main() {
 	aliPay.Init()
 
 
-	fmt.Println("------------------首先读取命令行参数---------------------------")
-	https := flag.Int("https", 0, "")
-	flag.Parse()
-	if *https > 0 {
+	//fmt.Println("------------------首先读取命令行参数---------------------------")
+	//https := flag.Int("http", 0, "")
+	//flag.Parse()
+	//if *https > 0 {
 		zLog.PrintLogger("===========启动 https 服务器=============")
-		r.RunTLS("0.0.0.0:8097","Crt/server.crt", "Crt/server.key") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-	}else {
-		zLog.PrintLogger("===========启动 http 服务器=============")
-		r.Run("0.0.0.0:8098") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-	}
+		r.RunTLS(":8097","Crt/1_shop.portia.xyz_bundle.crt", "Crt/2_shop.portia.xyz.key") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	//}else {
+	//	zLog.PrintLogger("===========启动 http 服务器=============")
+	//	r.Run(":8098") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	//}
 }
