@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-ini/ini"
+	"log"
 	"os"
 	"web_gin/MiddleWare"
 	"web_gin/MiddleWare/aliPay"
@@ -40,7 +42,14 @@ func main() {
 	//flag.Parse()
 	//if *https > 0 {
 		zLog.PrintLogger("===========启动 https 服务器=============")
-		r.RunTLS(":8097","Crt/1_shop.portia.xyz_bundle.crt", "Crt/2_shop.portia.xyz.key") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+		// 读取配置文件
+		f, err := ini.Load("Setting.ini")
+		if err != nil {
+			fmt.Println("ini配置文件出错！", err)
+			log.Fatal(err)
+		}
+		ServerPort := f.Section("author").Key("MyPort").Value()
+		r.RunTLS(":"+ServerPort,"Crt/1_shop.portia.xyz_bundle.crt", "Crt/2_shop.portia.xyz.key") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	//}else {
 	//	zLog.PrintLogger("===========启动 http 服务器=============")
 	//	r.Run(":8098") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
