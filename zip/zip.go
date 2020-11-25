@@ -9,6 +9,7 @@ import (
 
 func main() {
 	zlib1()
+	//writer()
 
 }
 

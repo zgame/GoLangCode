@@ -49,4 +49,5 @@ func InitSycTables() {
 	SyncUserInfoTable()		// userinfo 表
 	SyncRechargeTable()		// recharge
 	SyncUserItemTable()		// userItem
+	SyncMallInfoTable()		// shop mall
 }
