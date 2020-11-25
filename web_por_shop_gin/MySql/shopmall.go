@@ -51,13 +51,13 @@ func GetMallInfoData() []Shopmall {
 //	}
 //
 //}
-//// 插入单行数据
-//func InsertUserInfoData(insertData *Userinfo) {
-//	// insert 单条数据
-//	_, err := DataBaseEngine.Insert(insertData)
-//
-//	if err != nil {
-//		zLog.PrintfLogger("数据库插入出错！ %s ", err)
-//		return
-//	}
-//}
+
+// 插入单行数据
+func InsertMallInfoData(insertData *Shopmall) {
+	// insert 单条数据
+	_, err := DataBaseEngine.Insert(insertData)
+	if err != nil {
+		zLog.PrintfLogger("数据库插入出错！ %s ", err)
+		return
+	}
+}
