@@ -83,7 +83,14 @@ func GetUserMallList(c *gin.Context) {
 	if err!=nil {
 		zLog.PrintfLogger("压缩错误 %s \n ", err.Error())
 	}
+	//sss := in.String()
+	//fmt.Println(sss)
 
+
+	//var out bytes.Buffer
+	//r, _ := zlib.NewReader(strings.NewReader(sss))
+	//io.Copy(&out, r)
+	//fmt.Println(out.String())
 
 	c.JSON(200, gin.H{"MallList": result, "bytes": in.String()})
 }
