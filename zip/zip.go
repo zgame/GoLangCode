@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"compress/zlib"
 	"fmt"
+	"github.com/golang/snappy"
 	"io"
 	"log"
 	"os"
@@ -12,7 +13,9 @@ import (
 
 func main() {
 	//gzip1()
-	zlib1()
+	//zlib1()
+
+	Snappy()
 	//writer()
 
 }
@@ -92,6 +95,20 @@ func gzip1()  {
 	if err := zr.Close(); err != nil {
 		log.Fatal(err)
 	}
+
+
+}
+
+// snappy
+func Snappy()  {
+
+		got := snappy.Encode(nil, []byte("hello"))
+		fmt.Printf("%x \n", got)
+
+
+		out,_:= snappy.Decode(nil, got)
+		fmt.Println("2222222222222222222")
+		println(string(out))
 
 
 }
