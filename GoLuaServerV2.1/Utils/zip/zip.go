@@ -1,4 +1,4 @@
-package zZip
+package zip
 
 //----------------------------------------------------------------------------
 // 压缩 和 解压缩
@@ -9,8 +9,24 @@ import (
 	"bytes"
 	"compress/zlib"
 	"fmt"
+	"github.com/golang/snappy"
 	"io"
 )
+
+
+// snappy zip
+func SnappyZip(strZip string) string {
+	in := snappy.Encode(nil, []byte(strZip))
+	//fmt.Printf("%x \n", in)
+	return string(in)
+}
+
+// snappy unzip
+func SnappyUnZip(strZip string) string  {
+	out,_:= snappy.Decode(nil, []byte(strZip))
+	//fmt.Println(string(out))
+	return string(out)
+}
 
 
 // 压缩

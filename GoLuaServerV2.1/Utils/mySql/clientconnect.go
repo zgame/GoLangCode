@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------------------
-// mysql  的数据库连接
+// mySql  的数据库连接
 //------------------------------------------------------------------------------------------
-package mysql
+package mySql
 
 import (
 	"database/sql"
@@ -69,12 +69,12 @@ func clientConnectMethod(L *lua.LState) int {
 		L.Push(lua.LBool(false))
 		L.Push(lua.LString(err.Error()))
 
-		fmt.Println("mysql 数据库连接错误")
+		fmt.Println("mySql 数据库连接错误")
 		return 2		// 返回两个参数
 	}
 
 	GlobalDB = client.DB
-	//fmt.Println("mysql 数据库连接成功")
+	//fmt.Println("mySql 数据库连接成功")
 	L.Push(lua.LBool(true))
 	return 1
 }

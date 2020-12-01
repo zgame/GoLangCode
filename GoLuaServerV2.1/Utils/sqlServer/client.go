@@ -9,7 +9,7 @@ import (
 	"database/sql"
 	"time"
 
-	//_ "github.com/go-sql-driver/mysql"
+	//_ "github.com/go-sql-driver/mySql"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -19,7 +19,7 @@ const (
 
 var GlobalDB *sql.DB
 
-// Client mysql
+// Client mySql
 type Client struct {
 	DB      *sql.DB
 	Timeout time.Duration

@@ -5,15 +5,15 @@
 package main
 
 import (
-	"GoLuaServerV2.1/Utils/log"
-	"GoLuaServerV2.1/Utils/zIP"
-	"fmt"
-	"github.com/go-ini/ini"
-	"strconv"
 	"GoLuaServerV2.1/Lua"
 	"GoLuaServerV2.1/NetWork"
+	"GoLuaServerV2.1/Utils/log"
+	"GoLuaServerV2.1/Utils/ip"
 	"GoLuaServerV2.1/Utils/ztimer"
+	"fmt"
+	"github.com/go-ini/ini"
 	"math"
+	"strconv"
 	//"./Games"
 	//"./Logic/Player"
 	//"./CSV"
@@ -53,8 +53,8 @@ var ServerAddress string    // ServerAddress 服务器地址
 //var RedisPass string		// redis pwd
 var err error
 
-//var MySqlServerIP string		// mysql
-//var MySqlServerPort string		// mysql port
+//var MySqlServerIP string		// mySql
+//var MySqlServerPort string		// mySql port
 //var MySqlDatabase string
 //var MySqlUid string
 //var MySqlPwd string
@@ -112,7 +112,7 @@ func main() {
 	//}
 
 	//fmt.Println("-------------------Redis 数据库连接---------------------------")
-	//if zRedis.InitRedis(RedisAddress,RedisPass) == false{
+	//if redis.InitRedis(RedisAddress,RedisPass) == false{
 	//	return
 	//}
 	//fmt.Println("-------------------MySql 数据库连接---------------------------")
@@ -154,7 +154,7 @@ func main() {
 
 	//fmt.Println("-------------------启动 Lua 访问 MySql ---------------------------")
 	//if GameManagerLua.GoCallLuaConnectMysql(MySqlServerIP, MySqlServerPort , MySqlDatabase,MySqlUid,MySqlPwd) == false{
-	//	fmt.Println("lua mysql 数据库没有连接成功")
+	//	fmt.Println("lua mySql 数据库没有连接成功")
 	//	return
 	//}
 	//fmt.Println("-------------------启动 Lua 访问 Sql Server---------------------------")
@@ -168,7 +168,7 @@ func main() {
 
 	fmt.Println("-------------------启动gameManager---------------------------")
 	//if GameManagerLua.GoCallLuaConnectMysql(MySqlServerIP,Database,MySqlUid,MySqlPwd) == false{
-	//	fmt.Println("lua mysql 数据库没有连接成功")
+	//	fmt.Println("lua mySql 数据库没有连接成功")
 	//	return
 	//}
 	GameManagerLua.GoCallLuaLogic("GoCallLuaStartGamesServers")
@@ -285,7 +285,7 @@ func initSetting()  {
 
 	log.CheckError(err)
 
-	ServerAddress = string(zIP.GetInternal(0))		// 获取本机内网ip
+	ServerAddress = string(ip.GetInternal(0)) // 获取本机内网ip
 	fmt.Println("本机内网ip :",ServerAddress)
 }
 

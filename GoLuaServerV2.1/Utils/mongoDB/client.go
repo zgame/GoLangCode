@@ -3,12 +3,12 @@
 //------------------------------------------------------------------------------------------
 
 
-package zMongoDB
+package mongoDB
 
 import (
 	"gopkg.in/mgo.v2"
 	"time"
-	//_ "github.com/go-sql-driver/mysql"
+	//_ "github.com/go-sql-driver/mySql"
 	"github.com/yuin/gopher-lua"
 )
 

@@ -89,17 +89,17 @@ table.insert(RequireAndReloadConstFiles, "Script/Const/protocol_xhs")
 
 -- Utils
 RequireAndReloadUtilsFiles = {}
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/luaMySql")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/luaSqlServer")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbMySql")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbSqlServer")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zMySql")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zRandom")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zRedis")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbRedis")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zTable")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zTime")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/Util")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zCrypto")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zBit32")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zMongoDB")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbMongoDB")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/sStringFunction")
 
 -- gameManager

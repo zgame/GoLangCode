@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------------------
-// mysql  的数据库
+// mySql  的数据库
 //------------------------------------------------------------------------------------------
-package mysql
+package mySql
 
 import (
 	"database/sql"
@@ -12,12 +12,12 @@ import (
 )
 
 const (
-	CLIENT_TYPENAME = "mysql{client}"
+	CLIENT_TYPENAME = "mySql{client}"
 )
 
 var GlobalDB *sql.DB
 
-// Client mysql
+// Client mySql
 type Client struct {
 	DB      *sql.DB
 	Timeout time.Duration

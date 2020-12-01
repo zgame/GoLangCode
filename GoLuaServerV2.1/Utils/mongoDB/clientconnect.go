@@ -2,7 +2,7 @@
 //MongoDB 的数据库连接
 //------------------------------------------------------------------------------------------
 
-package zMongoDB
+package mongoDB
 
 import (
 	"gopkg.in/mgo.v2"

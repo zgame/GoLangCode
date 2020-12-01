@@ -18,7 +18,7 @@ ConstMongoAddress = "47.92.150.31:27017"
 ConstMongoDatabase = "sandrock"
 ConstMongoUser = "zsw"
 ConstMongoPass = "zsw123"
----------------------- mysql -------------------
+---------------------- mySql -------------------
 ConstMySqlServerIP = "47.92.150.31"
 ConstMySqlServerPort = "3306"
 ConstMySqlDatabase = "sandrock"

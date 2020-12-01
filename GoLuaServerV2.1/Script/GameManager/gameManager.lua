@@ -33,15 +33,15 @@ function GoCallLuaStartGamesServers()
         print("redis 服务器启动错误!")
         return
     end
-    print("-------------------启动 mysql ---------------------------")
+    print("-------------------启动 mySql ---------------------------")
     local result, err = MysqlConnect(ConstMySqlServerIP, ConstMySqlServerPort, ConstMySqlDatabase, ConstMySqlUid, ConstMySqlPwd)
     if result == false then
-        print("mysql 服务器启动错误: " .. err)
+        print("mySql 服务器启动错误: " .. err)
         return
     end
-    print("-------------------启动 mysql 带协程的 ---------------------------")
+    print("-------------------启动 mySql 带协程的 ---------------------------")
     if ZMySQlInit(ConstMySqlServerIP, ConstMySqlServerPort, ConstMySqlDatabase, ConstMySqlUid, ConstMySqlPwd) == false  then
-        print("mysql 服务器启动错误!")
+        print("mySql 服务器启动错误!")
         return
     end
     --print("-------------------启动 sql server  by 数据库---------------------------")

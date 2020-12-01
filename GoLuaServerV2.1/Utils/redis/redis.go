@@ -1,4 +1,4 @@
-package zRedis
+package redis
 
 import (
 	"github.com/gomodule/redigo/redis"

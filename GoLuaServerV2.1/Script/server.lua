@@ -95,12 +95,12 @@ end
 --require("Random")
 --require("dumpTable")
 --require("zTable")
---require("zRedis")
+--require("redis")
 --require("luaMySql")
 --require("luaSqlServer")
 --require("zMySql")
 --MySerpent = require("serpent")
----------------------------------------Redis mysql----------------------------------------
+---------------------------------------Redis mySql----------------------------------------
 --package.path = "Script/DataBase/?.lua;"..package.path
 --require("redisConst")
 --require("redisGame")

@@ -2,16 +2,16 @@ package Lua
 
 import (
 	"GoLuaServerV2.1/Utils/log"
-	"GoLuaServerV2.1/Utils/mysql"
+	"GoLuaServerV2.1/Utils/mySql"
 	"GoLuaServerV2.1/Utils/sqlServer"
 	"GoLuaServerV2.1/Utils/zBit32"
 	"GoLuaServerV2.1/Utils/zCrypto"
 	"GoLuaServerV2.1/Utils/zJson"
 	"GoLuaServerV2.1/Utils/zMySql"
 	"GoLuaServerV2.1/Utils/zProtocol"
-	"GoLuaServerV2.1/Utils/zRedis"
+	"GoLuaServerV2.1/Utils/redis"
 	"GoLuaServerV2.1/Utils/ztimer"
-	"GoLuaServerV2.1/Utils/zMongoDB"
+	"GoLuaServerV2.1/Utils/mongoDB"
 	"github.com/yuin/gopher-lua"
 	"time"
 	"GoLuaServerV2.1/GlobalVar"
@@ -19,7 +19,7 @@ import (
 	"crypto/md5"
 	"encoding/binary"
 	"encoding/hex"
-	//mysql "github.com/tengattack/gluasql/mysql"
+	//mySql "github.com/tengattack/gluasql/mySql"
 	"strconv"
 	"strings"
 )
@@ -58,7 +58,7 @@ func (m *MyLua)InitResister() {
 	m.L.SetGlobal("luaCallGoRedisDelLast", m.L.NewFunction(luaCallGoRedisDelLast))		//注册到lua redis del last
 
 	//m.L.SetGlobal("luaCallGoSqlSaveGameState", m.L.NewFunction(luaCallGoSqlSaveGameState))		//lua要保存房间的信息到mysql
-	m.L.SetGlobal("luaCallGoSqlInit", m.L.NewFunction(luaCallGoSqlInit))		//lua mysql init
+	m.L.SetGlobal("luaCallGoSqlInit", m.L.NewFunction(luaCallGoSqlInit))		//lua mySql init
 	m.L.SetGlobal("luaCallGoSqlExec", m.L.NewFunction(luaCallGoSqlExec))		//lua 执行sql语句， 不带返回， 需要select用lua自己的mysql
 
 	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
@@ -71,9 +71,9 @@ func (m *MyLua)InitResister() {
 	zBit32.LuaBit32Load(m.L)    // 加载bit32
 	zJson.Preload(m.L)    // 加载bit32
 
-	m.L.PreloadModule("mysql", mysql.Loader)         //加载mysql的lua调用 ，性能一般，写起来方便
+	m.L.PreloadModule("mySql", mySql.Loader)         //加载mysql的lua调用 ，性能一般，写起来方便
 	m.L.PreloadModule("sqlServer", sqlServer.Loader) //加载sql server 的lua调用
-	m.L.PreloadModule("mongodb", zMongoDB.Loader) //加载mongodb 的lua调用
+	m.L.PreloadModule("mongodb", mongoDB.Loader)     //加载mongodb 的lua调用
 }
 
 
@@ -226,7 +226,7 @@ func luaCallGoGetOsTimeMillisecond(L *lua.LState) int {
 func  luaCallGoRedisInit(L * lua.LState) int  {
 	RedisAddress := L.ToString(1)
 	RedisPass := L.ToString(2)
-	re:= zRedis.InitRedis(RedisAddress,RedisPass)
+	re:= redis.InitRedis(RedisAddress,RedisPass)
 	L.Push(lua.LBool(re))
 	return 1
 }
@@ -237,7 +237,7 @@ func  luaCallGoRedisSaveString(L * lua.LState) int  {
 	dir := L.ToString(1)
 	key := L.ToString(2)
 	value := L.ToString(3)
-	zRedis.SaveStringToRedis(dir , key ,value )
+	redis.SaveStringToRedis(dir , key ,value )
 	return 0
 }
 // redis get value
@@ -245,7 +245,7 @@ func  luaCallGoRedisGetString(L * lua.LState) int  {
 	dir := L.ToString(1)
 	key := L.ToString(2)
 
-	value := zRedis.GetStringFromRedis(dir , key  )
+	value := redis.GetStringFromRedis(dir , key  )
 	//fmt.Println("value",value)
 	L.Push(lua.LString(value))
 	return 1
@@ -255,14 +255,14 @@ func  luaCallGoRedisGetString(L * lua.LState) int  {
 func  luaCallGoRedisDelKey(L * lua.LState) int  {
 	dir := L.ToString(1)
 	key := L.ToString(2)
-	zRedis.DelKeyToRedis(dir , key)
+	redis.DelKeyToRedis(dir , key)
 	return 0
 }
 // redis  key  exist
 func  luaCallGoRedisExistKey(L * lua.LState) int  {
 	dir := L.ToString(1)
 	key := L.ToString(2)
-	value := zRedis.ExistKeyInRedis(dir , key)
+	value := redis.ExistKeyInRedis(dir , key)
 	L.Push(lua.LNumber(value))
 	return 1
 }
@@ -271,7 +271,7 @@ func  luaCallGoRedisExistKey(L * lua.LState) int  {
 //	dir := L.ToString(1)
 //	key := L.ToString(2)
 //	num := L.ToInt(3)
-//	value := zRedis.AddNumberToRedis(dir , key, num)
+//	value := redis.AddNumberToRedis(dir , key, num)
 //	L.Push(lua.LNumber(value))
 //	return 1
 //}
@@ -280,7 +280,7 @@ func  luaCallGoRedisExistKey(L * lua.LState) int  {
 func  luaCallGoRedisRunLuaScript(L * lua.LState) int  {
 	script := L.ToString(1)
 	name := L.ToString(2)
-	value := zRedis.RedisRunLuaScript(script, name)
+	value := redis.RedisRunLuaScript(script, name)
 	L.Push(lua.LNumber(value))
 	return 1
 }
@@ -289,7 +289,7 @@ func  luaCallGoRedisRunLuaScript(L * lua.LState) int  {
 func  luaCallGoRedisAddList(L * lua.LState) int  {
 	dir := L.ToString(1)
 	add := L.ToString(2)
-	value := zRedis.AddListFromRedis(dir,add)
+	value := redis.AddListFromRedis(dir,add)
 	//fmt.Println("value",value)
 	L.Push(lua.LString(value))
 	return 1
@@ -297,7 +297,7 @@ func  luaCallGoRedisAddList(L * lua.LState) int  {
 // redis get list
 func  luaCallGoRedisGetList(L * lua.LState) int  {
 	dir := L.ToString(1)
-	value := zRedis.GetListFromRedis(dir)
+	value := redis.GetListFromRedis(dir)
 	//fmt.Println("value",value)
 	L.Push(lua.LString(value))
 	return 1
@@ -306,7 +306,7 @@ func  luaCallGoRedisGetList(L * lua.LState) int  {
 func  luaCallGoRedisDelList(L * lua.LState) int  {
 	dir := L.ToString(1)
 	value := L.ToString(2)
-	re := zRedis.DelListFromRedis(dir,value)
+	re := redis.DelListFromRedis(dir,value)
 	//fmt.Println("value",value)
 	L.Push(lua.LNumber(re))
 	return 1
@@ -314,14 +314,14 @@ func  luaCallGoRedisDelList(L * lua.LState) int  {
 // redis del last
 func  luaCallGoRedisDelLast(L * lua.LState) int  {
 	dir := L.ToString(1)
-	re := zRedis.DelLastFromRedis(dir)
+	re := redis.DelLastFromRedis(dir)
 	//fmt.Println("value",value)
 	L.Push(lua.LNumber(re))
 	return 1
 }
 
 
-//----------------------------------mysql-------------------------------------------
+//----------------------------------mySql-------------------------------------------
 // lua要保存服务器的房间信息到mysql， 因为性能问题，所以用go , 后来作废了，改用duplicate
 //func luaCallGoSqlSaveGameState(L * lua.LState) int  {
 //	ServerIP_Port := L.ToString(1)

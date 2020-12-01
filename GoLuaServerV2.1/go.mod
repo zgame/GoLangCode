@@ -7,6 +7,7 @@ require (
 	github.com/go-ini/ini v1.62.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/go-xorm/xorm v0.7.9
+	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db
 	github.com/gomodule/redigo v1.8.2
 	github.com/gorilla/websocket v1.4.2
 	github.com/junhsieh/goexamples v0.0.0-20190721045834-1c67ae74caa6

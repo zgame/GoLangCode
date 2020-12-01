@@ -9,7 +9,7 @@
 ------------------------------------------------------------------------
 
 
-MySqlEngine = require('mysql')
+MySqlEngine = require('mySql')
 MySqlEngineConnect = MySqlEngine.new()
 
 -- mysql数据库连接

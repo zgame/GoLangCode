@@ -6,6 +6,7 @@ import (
 	"crypto/aes"
 	"fmt"
 	"crypto/cipher"
+	lua "github.com/yuin/gopher-lua"
 	"strings"
 	"bytes"
 	"encoding/base64"
@@ -14,6 +15,30 @@ import (
 //-------------------------------------------------------------------------------
 //加密 解密 验证
 //-------------------------------------------------------------------------------
+
+var exports = map[string]lua.LGFunction{
+	"md5":   MD5Str,	//与
+	"base64_encode":   BASE64EncodeStr,	//非
+	"base64_decode":    BASE64DecodeStr,	//或
+	//"bxor":   bxorFn,	//异或
+	//"lshift": lshiftFn,	//左移
+	//"rshift": rshiftFn,	//右移
+}
+
+// ----------------------------------------------------------------------------
+
+func CryptoLoader(l *lua.LState) int {
+	mod := l.SetFuncs(l.NewTable(), exports)
+	l.Push(mod)
+	return 1
+}
+
+// ----------------------------------------------------------------------------
+
+func LuaCryptoLoad(L *lua.LState) {
+	L.PreloadModule("crypto", CryptoLoader)
+}
+
 
 
 // md5验证
