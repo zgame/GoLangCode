@@ -30,11 +30,11 @@ function MyMongoConnect(h,d,u,ps)
         --MongoInsert("people",user)
 
 
-        local user2 = {}
-        user2["name"] = 'ss'
-        local ss = MongoFinds("people",user2,"key")
-        --print(ss["ss"])
-        printTable(ss)
+        --local user2 = {}
+        --user2["name"] = 'ss'
+        --local ss = MongoFinds("people",user2,"-key")
+        ----print(ss["ss"])
+        --printTable(ss)
 
 
 

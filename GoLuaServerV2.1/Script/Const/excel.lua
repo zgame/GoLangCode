@@ -56,13 +56,12 @@ end
 -------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------
 --------------------------------------------mgby_fish_sever.lua----------------------------------------
-local FishServerExcel = mgby_fish_sever.mgby_fish_sever
 --- 获取mgby_fish_server数据对外接口
 --- @param index    主键
 --- @param key      属性名
 --- @return 表mgby_fish_server主键index所对应对象数据中key属性的值
 function GetExcelFishValue(index, key)
-    return GetValue(FishServerExcel,index, key, "mgby_fish_server.lua")
+    return ""
 end
 --- 获取 mgby_fish_server.csv中所有的key
 --- @return 表mgby_fish_server所有key组成的table

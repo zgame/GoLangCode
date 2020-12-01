@@ -34,8 +34,7 @@ table.insert(RequireAndReloadDataBaseFiles, "Script/DataBase/SQLServer/SaveDataB
 table.insert(RequireAndReloadDataBaseFiles, "Script/DataBase/redisChat")
 -- CSV
 RequireAndReloadCSVFiles = {}
-table.insert(RequireAndReloadCSVFiles, "Script/CSV/mgby_fish_sever")
-
+--table.insert(RequireAndReloadCSVFiles, "Script/CSV/mgby_fish_sever")
 table.insert(RequireAndReloadCSVFiles, "Script/CSV/mgby_vip")
 --table.insert(RequireAndReloadCSVFiles, "Script/CSV/Card")
 --table.insert(RequireAndReloadCSVFiles, "Script/CSV/Get_Gold_By_Time")
