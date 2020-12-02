@@ -17,17 +17,14 @@ import (
 //-------------------------------------------------------------------------------
 
 var exports = map[string]lua.LGFunction{
-	"md5":   MD5Str,	//与
-	"base64_encode":   BASE64EncodeStr,	//非
-	"base64_decode":    BASE64DecodeStr,	//或
-	//"bxor":   bxorFn,	//异或
-	//"lshift": lshiftFn,	//左移
-	//"rshift": rshiftFn,	//右移
+	"md5":           md5Str,          //与
+	"base64_encode": base64EncodeStr, //非
+	"base64_decode": base64DecodeStr, //或
 }
 
 // ----------------------------------------------------------------------------
 
-func CryptoLoader(l *lua.LState) int {
+func cryptoLoader(l *lua.LState) int {
 	mod := l.SetFuncs(l.NewTable(), exports)
 	l.Push(mod)
 	return 1
@@ -36,34 +33,46 @@ func CryptoLoader(l *lua.LState) int {
 // ----------------------------------------------------------------------------
 
 func LuaCryptoLoad(L *lua.LState) {
-	L.PreloadModule("crypto", CryptoLoader)
+	L.PreloadModule("crypto", cryptoLoader)
 }
 
 
 
 // md5验证
-func MD5Str(src string) string {
+func md5Str(L *lua.LState) int {
+	src := L.CheckString(1)
 	h := md5.New()
 	h.Write([]byte(src)) // 需要验证的字符串为
 	//fmt.Printf("MD5:               %s\n", hex.EncodeToString(h.Sum(nil))) // 输出加密结果
-	return hex.EncodeToString(h.Sum(nil))
+	result :=hex.EncodeToString(h.Sum(nil))
+	L.Push(lua.LString(result))
+
+	return 1
+
 }
 
 
 //------------------------BASE64--------------------------------------
 
 // base编码
-func BASE64EncodeStr(src string) string {
-	return string(base64.StdEncoding.EncodeToString([]byte(src)))
+func base64EncodeStr(L *lua.LState) int {
+	src := L.CheckString(1)
+	result := string(base64.StdEncoding.EncodeToString([]byte(src)))
+	L.Push(lua.LString(result))
+
+	return 1
 }
 
 // base解码
-func BASE64DecodeStr(src string) string {
+func base64DecodeStr(L *lua.LState) int {
+	src := L.CheckString(1)
 	a, err := base64.StdEncoding.DecodeString(src)
 	if err != nil {
-		return ""
+		L.Push(lua.LString("decode error :"+err.Error()))
+		return 1
 	}
-	return string(a)
+	L.Push(lua.LString(string(a)))
+	return 1
 }
 
 

@@ -10,22 +10,47 @@ import (
 	"compress/zlib"
 	"fmt"
 	"github.com/golang/snappy"
+	lua "github.com/yuin/gopher-lua"
 	"io"
 )
 
+var exports = map[string]lua.LGFunction{
+	"encode": snappyZip,   //非
+	"decode": snappyUnZip, //或
+}
+
+// ----------------------------------------------------------------------------
+
+func zipLoader(l *lua.LState) int {
+	mod := l.SetFuncs(l.NewTable(), exports)
+	l.Push(mod)
+	return 1
+}
+
+// ----------------------------------------------------------------------------
+
+func LuaZipLoad(L *lua.LState) {
+	L.PreloadModule("zip", zipLoader)
+}
+
 
 // snappy zip
-func SnappyZip(strZip string) string {
-	in := snappy.Encode(nil, []byte(strZip))
-	//fmt.Printf("%x \n", in)
-	return string(in)
+func snappyZip(L *lua.LState) int {
+	src := L.CheckString(1)
+	in := snappy.Encode(nil, []byte(src))
+	L.Push(lua.LString(string(in)))
+
+	return 1
 }
 
 // snappy unzip
-func SnappyUnZip(strZip string) string  {
-	out,_:= snappy.Decode(nil, []byte(strZip))
+func snappyUnZip(L *lua.LState) int {
+	src := L.CheckString(1)
+	out,_:= snappy.Decode(nil, []byte(src))
 	//fmt.Println(string(out))
-	return string(out)
+	L.Push(lua.LString(string(out)))
+
+	return 1
 }
 
 
@@ -52,28 +77,3 @@ func ZipRead(strZip string) string{
 	//fmt.Println(out.String())
 	return out.String()
 }
-
-//
-//
-//func zlib1()  {
-//	var in bytes.Buffer
-//	b := []byte("史蒂芬森东方闪电饭是钢十多个问个问asjflajdfja;ldfj;lajfd;lajdf;lajdf;lajsdfja;ldjf;lajdeowiueowiueroiwureoiqwuropiwueropiwueopwiueropiwuerwueopueroiwuerowieruoiewruoiewr题我有34537646857dfhgdjgjddfasdasfsaggnndfd/-/-/-/!@#!@%#^$&*%&^")
-//	w,err := zlib.NewWriterLevel(&in,zlib.DefaultCompression)
-//	if err!=nil {
-//		fmt.Println("err ", err.Error())
-//	}
-//	w.Write(b)
-//	w.Close()
-//
-//	fmt.Println(string(b))
-//	fmt.Println(len(b))
-//	fmt.Println(in.Bytes())
-//	fmt.Println(in.Len())
-//	fmt.Println("---------------------------")
-//
-//
-//	var out bytes.Buffer
-//	r, _ := zlib.NewReader(&in)
-//	io.Copy(&out, r)
-//	fmt.Println(out.String())
-//}

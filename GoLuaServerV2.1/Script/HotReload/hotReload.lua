@@ -99,6 +99,7 @@ table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zTime")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/Util")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zCrypto")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zBit32")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zZip")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbMongoDB")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/sStringFunction")
 

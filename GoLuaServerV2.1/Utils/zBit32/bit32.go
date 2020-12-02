@@ -19,16 +19,16 @@ var exports = map[string]lua.LGFunction{
 
 // ----------------------------------------------------------------------------
 
-func Bit32Loader(l *lua.LState) int {
-	mod := l.SetFuncs(l.NewTable(), exports)
-	l.Push(mod)
+func bit32Loader(L *lua.LState) int {
+	mod := L.SetFuncs(L.NewTable(), exports)
+	L.Push(mod)
 	return 1
 }
 
 // ----------------------------------------------------------------------------
 
 func LuaBit32Load(L *lua.LState) {
-	L.PreloadModule("bit32", Bit32Loader)
+	L.PreloadModule("bit32", bit32Loader)
 }
 
 

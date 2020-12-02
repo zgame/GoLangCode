@@ -1,24 +1,25 @@
 package Lua
 
 import (
+	"GoLuaServerV2.1/GlobalVar"
 	"GoLuaServerV2.1/Utils/log"
+	"GoLuaServerV2.1/Utils/mongoDB"
 	"GoLuaServerV2.1/Utils/mySql"
+	"GoLuaServerV2.1/Utils/redis"
 	"GoLuaServerV2.1/Utils/sqlServer"
 	"GoLuaServerV2.1/Utils/zBit32"
 	"GoLuaServerV2.1/Utils/zCrypto"
 	"GoLuaServerV2.1/Utils/zJson"
 	"GoLuaServerV2.1/Utils/zMySql"
 	"GoLuaServerV2.1/Utils/zProtocol"
-	"GoLuaServerV2.1/Utils/redis"
+	"GoLuaServerV2.1/Utils/zip"
 	"GoLuaServerV2.1/Utils/ztimer"
-	"GoLuaServerV2.1/Utils/mongoDB"
-	"github.com/yuin/gopher-lua"
-	"time"
-	"GoLuaServerV2.1/GlobalVar"
 	"bytes"
 	"crypto/md5"
 	"encoding/binary"
 	"encoding/hex"
+	"github.com/yuin/gopher-lua"
+	"time"
 	//mySql "github.com/tengattack/gluasql/mySql"
 	"strconv"
 	"strings"
@@ -63,13 +64,15 @@ func (m *MyLua)InitResister() {
 
 	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
 	m.L.SetGlobal("luaCallGoGetPWD", m.L.NewFunction(luaCallGoGetPWD))		//注册到lua 生成用户密码
-	m.L.SetGlobal("luaCallGoGetMD5", m.L.NewFunction(luaCallGoGetMD5))		//注册到lua md5验证
-	m.L.SetGlobal("luaCallGoBASE64EncodeStr", m.L.NewFunction(luaCallGoBASE64EncodeStr))		//注册到lua md5验证
-	m.L.SetGlobal("luaCallGoBASE64DecodeStr", m.L.NewFunction(luaCallGoBASE64DecodeStr))		//注册到lua md5验证
+	//m.L.SetGlobal("luaCallGoGetMD5", m.L.NewFunction(luaCallGoGetMD5))		//注册到lua md5验证
+	//m.L.SetGlobal("luaCallGoBASE64EncodeStr", m.L.NewFunction(luaCallGoBASE64EncodeStr))		//注册到lua md5验证
+	//m.L.SetGlobal("luaCallGoBASE64DecodeStr", m.L.NewFunction(luaCallGoBASE64DecodeStr))		//注册到lua md5验证
 
 	zProtocol.LuaProtocolLoad(m.L) //加载protobuf的lua调用
-	zBit32.LuaBit32Load(m.L)    // 加载bit32
-	zJson.Preload(m.L)    // 加载bit32
+	zBit32.LuaBit32Load(m.L)       // 加载bit32
+	zJson.LuaJsonLoad(m.L)         // 加载json
+	zCrypto.LuaCryptoLoad(m.L)
+	zip.LuaZipLoad(m.L)
 
 	m.L.PreloadModule("mySql", mySql.Loader)         //加载mysql的lua调用 ，性能一般，写起来方便
 	m.L.PreloadModule("sqlServer", sqlServer.Loader) //加载sql server 的lua调用
@@ -379,24 +382,24 @@ func luaCallGoGetPWD(L * lua.LState) int {
 	return 1
 }
 
-
-//-----------------------------md5--------------------------------------------
-func luaCallGoGetMD5(L * lua.LState) int {
-	strOrg := L.ToString(1)
-	md5:= zCrypto.MD5Str(strOrg)
-	L.Push(lua.LString(md5))
-	return  1
-}
-//-----------------------------base64--------------------------------------------
-func luaCallGoBASE64EncodeStr(L * lua.LState) int {
-	strOrg := L.ToString(1)
-	base64:= zCrypto.BASE64EncodeStr(strOrg)
-	L.Push(lua.LString(base64))
-	return  1
-}
-func luaCallGoBASE64DecodeStr(L * lua.LState) int {
-	strOrg := L.ToString(1)
-	base64:= zCrypto.BASE64DecodeStr(strOrg)
-	L.Push(lua.LString(base64))
-	return  1
-}
+//
+////-----------------------------md5--------------------------------------------
+//func luaCallGoGetMD5(L * lua.LState) int {
+//	strOrg := L.ToString(1)
+//	md5:= zCrypto.mD5Str(strOrg)
+//	L.Push(lua.LString(md5))
+//	return  1
+//}
+////-----------------------------base64--------------------------------------------
+//func luaCallGoBASE64EncodeStr(L * lua.LState) int {
+//	strOrg := L.ToString(1)
+//	base64:= zCrypto.base64EncodeStr(strOrg)
+//	L.Push(lua.LString(base64))
+//	return  1
+//}
+//func luaCallGoBASE64DecodeStr(L * lua.LState) int {
+//	strOrg := L.ToString(1)
+//	base64:= zCrypto.base64DecodeStr(strOrg)
+//	L.Push(lua.LString(base64))
+//	return  1
+//}
