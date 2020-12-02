@@ -1,7 +1,7 @@
 package ppp
 
 import "fmt"
-import "../www"
+import "singleCall/www"
 
 const Zsw_ppp = 20
 

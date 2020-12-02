@@ -3,12 +3,16 @@ package main
 
 import (
 	"fmt"
-	"./singeCall2"
-	"./ppp"
-	)
+	"singleCall/ppp"
+	"singleCall/singeCall2"
+)
 
 
 func main()  {
+
+	str := fmt.Sprintf("%.2f",0.01 *2)
+	println(str)
+
 	fmt.Println("main.  main")
 	singeCall2.Singe2()
 

@@ -34,5 +34,8 @@ func Routes(r *gin.Engine) {
 	r.POST("/portia_shop/alipaysign", aliPay.ClientGetSign) //客户端同步回调验证订单信息
 	r.POST("/portia_shop/alipay", aliPay.CallBack)          // 支付宝异步回调
 
-	r.GET("/portia_shop/wxpay", wxPay.WxPayCallBack)
+	r.GET("/portia_shop/wxpayget", wxPay.GetPayInfo)
+	r.POST("/portia_shop/wxpayget", wxPay.GetPayInfo)
+	r.POST("/portia_shop/wxpaysign", wxPay.ClientGetSign)
+	r.POST("/portia_shop/wxpay", wxPay.WxPayCallBack)
 }
