@@ -58,12 +58,19 @@ func main()  {
 	dataTimeStr := time.Unix(1524378448, 0).Format(timeLayout) //设置时间戳 使用模板格式化为日期字符串
 	fmt.Println("",dataTimeStr)
 
-	for {
-		tt := time.Now().UnixNano() / int64(time.Millisecond)
-		fmt.Println("", tt)
-		time.Sleep(time.Millisecond * 100)
-	}
+	//for {
+	//	tt := time.Now().UnixNano() / int64(time.Millisecond)
+	//	fmt.Println("", tt)
+	//	time.Sleep(time.Millisecond * 100)
+	//}
 
+	start := "2020-12-01"
+	end := "2020-12-14"
+	startTime,_ := time.ParseInLocation("2006-01-02", start, time.Local)
+
+	fmt.Println(startTime.Before(time.Now()))
+	endTime,_ := time.ParseInLocation("2006-01-02", end, time.Local)
+	fmt.Println(endTime.After(time.Now()))
 
 
 

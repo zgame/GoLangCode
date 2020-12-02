@@ -8,10 +8,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	"web_gin/Action"
 	"web_gin/GlobalVar"
 	"web_gin/Logic"
-	"web_gin/MiddleWare/zLog"
 	"web_gin/MySql"
 )
 
@@ -38,26 +36,11 @@ func Init() {
 
 // 获取订单信息
 func GetPayInfo(c *gin.Context)  {
-	var OpenId string
-	var ItemId string
-	OpenId = c.PostForm("OpenId") // 获取get的参数
-	ItemId = c.PostForm("ItemId") // 获取get的参数
-	if OpenId == "" {
-		OpenId = "sdsd"
-		ItemId = "33"
+
+	ItemPrice, myData, err := Logic.CheckItemId(c)
+	if err {
+		return
 	}
-	itemId, _ := strconv.Atoi(ItemId)
-	// 增加道具是否购买重复的验证
-	if false {
-		if Logic.ItemCanBuy(OpenId, itemId) == false {
-			zLog.PrintLogger("道具重复购买")
-			Action.Error("道具重复购买", c)
-			return
-		}
-	}
-	// 生成我们自己的信息传输
-	pInfo := &GlobalVar.PayInfo{OpenId: OpenId, ItemId: itemId}
-	data, _ := json.Marshal(pInfo)
 
 
 	fmt.Println("========== Get wxPay Info ==========")
@@ -66,15 +49,15 @@ func GetPayInfo(c *gin.Context)  {
 	p.NotifyURL = GlobalVar.MyUrl + "portia_shop/wxpay"
 	p.TradeType = wxpay.K_TRADE_TYPE_APP
 	p.SpbillCreateIP = c.ClientIP()
-	p.TotalFee = 101   		// 单位1分钱
+	p.TotalFee =  int(ItemPrice*100)   		// 单位1分钱
 	p.OutTradeNo = "" + strconv.FormatInt(time.Now().UnixNano(), 10) // 后面增加渠道编号
 
-	p.Attach = string(data) // 扩展
+	p.Attach = myData // 扩展
 
 
-	result, err := client.UnifiedOrder(p)
-	if err != nil {
-		fmt.Println("微信服务器返回错误："+err.Error())
+	result, err2 := client.UnifiedOrder(p)
+	if err2 != nil {
+		fmt.Println("微信服务器返回错误："+err2.Error())
 	}
 
 	//rmb := strconv.FormatFloat(0.01*2,'E',-1,64)

@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"web_gin/Action"
 	"web_gin/GlobalVar"
 	"web_gin/Logic"
 	"web_gin/MiddleWare/zLog"
@@ -33,41 +32,26 @@ func Init() {
 
 // 拉起订单
 func GetPayInfo(c *gin.Context) {
-	var OpenId string
-	var ItemId string
-	OpenId = c.PostForm("OpenId") // 获取get的参数
-	ItemId = c.PostForm("ItemId") // 获取get的参数
-	if OpenId == "" {
-		OpenId = "sdsd"
-		ItemId = "33"
-	}
-	itemId, _ := strconv.Atoi(ItemId)
 
-	// 增加道具是否购买重复的验证
-	if false {
-		if Logic.ItemCanBuy(OpenId, itemId) == false {
-			zLog.PrintLogger("道具重复购买")
-			Action.Error("道具重复购买", c)
-			return
-		}
+	ItemPrice, myData, err := Logic.CheckItemId(c)
+	if err {
+		return
 	}
 
-	zLog.PrintfLogger("================Get ali PayInfo 拉起订单 ================= %s   %s", OpenId, ItemId)
+	zLog.PrintfLogger("================Get ali PayInfo 拉起订单 ================= ")
 	var p = alipay.AliPayTradeAppPay{}
 	p.NotifyURL = GlobalVar.MyUrl + "portia_shop/alipay"
 	p.Subject = "购买道具1分钱"
 	p.OutTradeNo = "" + strconv.FormatInt(time.Now().UnixNano(), 10) // 后面增加渠道编号
-	p.TotalAmount = "0.01"
+	//p.TotalAmount = "0.01"
+	p.TotalAmount = fmt.Sprintf("%.2f",ItemPrice)
 	p.ProductCode = "QUICK_MSECURITY_PAY" // 固定值
 
-	// 生成我们自己的信息传输
-	pInfo := &GlobalVar.PayInfo{OpenId: OpenId, ItemId: itemId}
-	data, _ := json.Marshal(pInfo)
-	//fmt.Println("data: ", string(data))
-	p.PassbackParams = string(data) // 扩展
+	//fmt.Println("myData: ", string(myData))
+	p.PassbackParams = myData // 扩展
 
-	url, err := client.TradeAppPay(p)
-	if err != nil {
+	url, err2 := client.TradeAppPay(p)
+	if err2 != nil {
 		fmt.Println(err)
 	}
 	//zLog.PrintfLogger("生成的订单信息： %s" ,url)
@@ -75,6 +59,7 @@ func GetPayInfo(c *gin.Context) {
 	//c.JSON(200, gin.H{"aliPayUrl":url})
 	c.String(200, fmt.Sprintf("{\"aliPayUrl\":\"%s\"}", url))
 }
+
 
 // 异步回调
 func CallBack(c *gin.Context) {

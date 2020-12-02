@@ -28,17 +28,30 @@ func SyncMallInfoTable() bool {
 
 // 查询数据
 func GetMallInfoData() []Shopmall {
-
 	selectData := make([]Shopmall, 0)
-	err := DataBaseEngine.Find(&selectData) //获取单条数据
+	err := DataBaseEngine.Find(&selectData) //获取多条数据
 
 	if err != nil {
 		zLog.PrintfLogger("数据库查询出错！  %s", err)
 		return nil
 	}
-
 	return selectData
 }
+// 获取道具信息
+func GetMallItemInfo(itemId int) *Shopmall {
+	var selectData Shopmall
+	selectData.Id = itemId
+	err := DataBaseEngine.Find(&selectData) //获取单条数据
+
+	if err != nil {
+		zLog.PrintfLogger("商城列表数据库查询出错！  %s", err)
+		return nil
+	}
+	return &selectData
+
+}
+
+
 
 //
 //// 更新数据   &Userinfo{Uid:1111}

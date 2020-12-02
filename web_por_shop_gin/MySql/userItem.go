@@ -37,7 +37,7 @@ func GetUserItemData(openId string ) *Useritem{
 	return selectData
 }
 
-// 查询数据
+// 查询玩家已经购买的道具列表数据
 func GetUserShopList(openId string ) string{
 	selectData := GetUserItemData(openId)
 	if selectData == nil {
