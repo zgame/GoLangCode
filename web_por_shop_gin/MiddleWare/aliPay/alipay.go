@@ -27,7 +27,7 @@ func Init() {
 	PublicKey := strings.ReplaceAll(GlobalVar.AliPublicKey, "\n", "")
 	PrivateKey := strings.ReplaceAll(GlobalVar.PrivateKey, "\n", "")
 
-	client = alipay.New(appID, PublicKey, PrivateKey, false)
+	client = alipay.New(appID, PublicKey, PrivateKey, true)
 }
 
 // 拉起订单

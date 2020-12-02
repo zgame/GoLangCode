@@ -119,6 +119,7 @@ func GetItemPrice(item *MySql.Shopmall)  float64{
 
 //  对道具的判断
 func CheckItemId(c *gin.Context) (float64, string, bool) {
+	var debug bool
 	var OpenId string
 	var ItemId string
 	OpenId = c.PostForm("OpenId") // 获取get的参数
@@ -149,10 +150,14 @@ func CheckItemId(c *gin.Context) (float64, string, bool) {
 		return 0, "",true
 	} else {
 		ItemPrice = GetItemPrice(ItemInfo)	//获取道具价格
+
+		fmt.Println("测试阶段，价格",ItemPrice)
+		ItemPrice = 0.01
+		debug = true
 	}
 
 	// 增加道具是否购买重复的验证
-	if false {
+	if !debug {
 		if ItemCanBuy(OpenId, itemId) == false {
 			Action.Error("道具重复购买", c)
 			return 0, "",true

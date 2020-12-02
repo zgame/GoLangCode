@@ -44,11 +44,10 @@ func GetMallItemInfo(itemId int) *Shopmall {
 	err := DataBaseEngine.Find(&selectData) //获取单条数据
 
 	if err != nil {
-		zLog.PrintfLogger("商城列表数据库查询出错！  %s", err)
+		//zLog.PrintfLogger("商城列表数据库查询出错！  %s", err)
 		return nil
 	}
 	return &selectData
-
 }
 
 
