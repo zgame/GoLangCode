@@ -8,16 +8,11 @@ import (
 	"github.com/smartwalle/alipay/encoding"
 	"web_gin/Action"
 	"web_gin/MySql"
-
-	//"sort"
-	//"strings"
-	//"web_gin/GlobalVar"
-	"web_gin/MiddleWare/zLog"
 )
 
 // 客户端同步回调
 func ClientGetSign(c *gin.Context) {
-	zLog.PrintLogger("================ClientGetSign  客户端同步回调=================")
+	//zLog.PrintLogger("================ClientGetSign  客户端同步回调=================")
 	//var req *http.Request
 	//req = c.Request
 	//req.ParseForm()

@@ -21,7 +21,7 @@ import (
 
 // 客户端同步回调
 func ClientGetSign(c *gin.Context) {
-	zLog.PrintLogger("================ClientGetSign  客户端同步回调=================")
+	//zLog.PrintLogger("================ClientGetSign  客户端同步回调=================")
 	var req *http.Request
 	req = c.Request
 	req.ParseForm()
@@ -47,10 +47,11 @@ func ClientGetSign(c *gin.Context) {
 	_, err := verifyData([]byte(msg), aliMsg.Sign, encoding.FormatPublicKey(GlobalVar.AliPublicKey)) //验签
 	//fmt.Println(ok, err)
 	if err != nil {
+		zLog.PrintLogger(err.Error())
 		Action.Error(err.Error(),c)
 		return
 	}
-	zLog.PrintLogger("===================同步验签成功=========================")
+	//zLog.PrintLogger("===================同步验签成功=========================")
 	// 查找道具信息
 	tradeNo := mapMsg["trade_no"]
 	//fmt.Println("tradeNo", tradeNo)

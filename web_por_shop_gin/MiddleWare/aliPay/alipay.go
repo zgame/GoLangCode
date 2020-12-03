@@ -16,8 +16,8 @@ import (
 )
 
 var (
-	//appID = "2021002109699800"  // portia
-	appID = "2016110200785785" // sandbox appId
+	appID = "2021002109699800"  // portia
+	//appID = "2016110200785785" // sandbox appId
 )
 var client *alipay.AliPay
 
@@ -38,7 +38,7 @@ func GetPayInfo(c *gin.Context) {
 		return
 	}
 
-	zLog.PrintfLogger("================Get ali PayInfo 拉起订单 ================= ")
+	//zLog.PrintfLogger("================Get ali PayInfo 拉起订单 ================= ")
 	var p = alipay.AliPayTradeAppPay{}
 	p.NotifyURL = GlobalVar.MyUrl + "portia_shop/alipay"
 	p.Subject = "购买道具1分钱"
@@ -63,7 +63,7 @@ func GetPayInfo(c *gin.Context) {
 
 // 异步回调
 func CallBack(c *gin.Context) {
-	zLog.PrintLogger("================CallBack 异步回调=================")
+	//zLog.PrintLogger("================CallBack 异步回调=================")
 	var req *http.Request
 	req = c.Request
 	c.Request.ParseForm()
@@ -72,11 +72,11 @@ func CallBack(c *gin.Context) {
 	if notification != nil {
 		zLog.PrintLogger("交易状态为:" + notification.TradeStatus)
 	} else {
-		fmt.Println("交易状态为: 验证失败")
+		zLog.PrintLogger("交易状态为: 验证失败")
 		c.JSON(200, "VerifySign failed")
 		return
 	}
-
+	//zLog.PrintLogger("===================异步验签成功=========================")
 	// 验签成功， 解析我们自己的传输格式
 	var pInfo GlobalVar.PayInfo
 	err := json.Unmarshal([]byte(notification.PassbackParams), &pInfo)

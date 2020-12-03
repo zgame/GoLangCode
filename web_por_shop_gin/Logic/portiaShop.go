@@ -153,9 +153,9 @@ func CheckItemId(c *gin.Context) (float64, string, bool) {
 	} else {
 		ItemPrice = GetItemPrice(ItemInfo) //获取道具价格
 
-		ItemPrice = 0.01
-		//fmt.Println("测试阶段，价格", ItemPrice)
-		debug = true
+		//ItemPrice = 0.01
+		////fmt.Println("测试阶段，价格", ItemPrice)
+		//debug = true
 	}
 
 	// 增加道具是否购买重复的验证

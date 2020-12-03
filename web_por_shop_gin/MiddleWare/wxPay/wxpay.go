@@ -7,6 +7,7 @@ import (
 	"github.com/smartwalle/wxpay"
 	"net/url"
 	"web_gin/Action"
+	"web_gin/MiddleWare/zLog"
 
 	//wxpay2 "github.com/objcoding/wxpay"
 	"net/http"
@@ -94,14 +95,15 @@ func WxPayCallBack(c *gin.Context) {
 	req = c.Request
 	notification, err := client.GetTradeNotification(req)
 	if notification != nil {
-		fmt.Println("交易状态为:", notification.ResultCode)
+		zLog.PrintLogger("交易状态为:"+ notification.ResultCode)
 	}
 	if err != nil{
+		zLog.PrintLogger("交易状态为: 验证失败"+err.Error())
 		c.XML(200, gin.H{"return_code":"Failed", "return_msg": "Not"})
 		return
 	}
 	//fmt.Println(notification, err)
-
+	//zLog.PrintLogger("===================异步验签成功=========================")
 	//验签成功， 解析我们自己的传输格式
 	var pInfo GlobalVar.PayInfo
 	err = json.Unmarshal([]byte(notification.Attach), &pInfo)
