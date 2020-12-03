@@ -41,10 +41,13 @@ func GetMallInfoData() []Shopmall {
 func GetMallItemInfo(itemId int) *Shopmall {
 	var selectData Shopmall
 	selectData.Id = itemId
-	err := DataBaseEngine.Find(&selectData) //获取单条数据
+	result,err := DataBaseEngine.Get(&selectData) //获取单条数据
 
 	if err != nil {
 		//zLog.PrintfLogger("商城列表数据库查询出错！  %s", err)
+		return nil
+	}
+	if result == false {
 		return nil
 	}
 	return &selectData

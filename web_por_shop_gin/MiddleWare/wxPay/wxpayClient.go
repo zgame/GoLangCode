@@ -31,7 +31,7 @@ func ClientGetSign(c *gin.Context) {
 	var back ClientCallBack
 	var aliMsg ClientResult
 
-	//  客服端用 portia字段发来整个阿里字符串给我
+	//  客服端用 portia字段发来整个返回字符串给我
 	_ = json.Unmarshal([]byte(clientForm), &back)
 	// 解析出来sign
 	_ = json.Unmarshal([]byte(back.Result), &aliMsg)

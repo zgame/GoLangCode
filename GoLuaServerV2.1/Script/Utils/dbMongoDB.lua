@@ -5,13 +5,13 @@
 ---
 
 
-MyMongoEngine = require('mongodb')
-MyMongoEngineConnect = MyMongoEngine.new()
+MongoEngine = require('mongodb')
+MongoEngineConnect = MongoEngine.new()
 
 -- Mongo数据库连接
 function MyMongoConnect(h,d,u,ps)
 
-    local ok, err = MyMongoEngineConnect:connect({ host = h, database = d, user = u, password = ps })
+    local ok, err = MongoEngineConnect:connect({ host = h, database = d, user = u, password = ps })
 
     if ok then
         print(" Mongo  数据库 ok!")
@@ -48,7 +48,7 @@ end
 
 -- 执行find语句
 function MongoFind(collection, table)
-    return   MyMongoEngineConnect:find(collection, table)
+    return   MongoEngineConnect:find(collection, table)
 end
 
 -- 执行finds语句  查询多条记录  sort里面是列名 负的表示从高到低排序
@@ -56,23 +56,23 @@ function MongoFinds(collection, table, sort)
     if sort == nil then
         sort = "-1"
     end
-    return   MyMongoEngineConnect:finds(collection, table, sort)
+    return   MongoEngineConnect:finds(collection, table, sort)
 end
 
 -- 执行insert语句
 function MongoInsert(collection, table)
-    MyMongoEngineConnect:insert(collection, table)
+    MongoEngineConnect:insert(collection, table)
 end
 
 
 -- 执行del语句
 function MongoDel(collection, table)
-    MyMongoEngineConnect:del(collection, table)
+    MongoEngineConnect:del(collection, table)
 end
 
 
 -- 执行update语句  selectTable为条件  updateTable为更新的内容
 function MongoUpdate(collection, selectTable,updateTable)
-    MyMongoEngineConnect:update(collection, selectTable, updateTable)
+    MongoEngineConnect:update(collection, selectTable, updateTable)
 end
 

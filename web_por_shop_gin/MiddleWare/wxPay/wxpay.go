@@ -5,6 +5,10 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/smartwalle/wxpay"
+	"net/url"
+	"web_gin/Action"
+
+	//wxpay2 "github.com/objcoding/wxpay"
 	"net/http"
 	"strconv"
 	"time"
@@ -17,7 +21,7 @@ var client * wxpay.WXPay
 //var client2 * wxpay2.Client
 var (
 	appID = "wx31d6f1e3483da01e"
-	apiKey = "d77a1fa0395f2b40b63639f9ec00c8da"
+	apiKey = "eSf41sG9PMIlW6SheSf41sG9PMIlW6Sh"
 	mchId = "1604563934"
 	// RSA2(SHA256)
 )
@@ -57,18 +61,29 @@ func GetPayInfo(c *gin.Context)  {
 
 	result, err2 := client.UnifiedOrder(p)
 	if err2 != nil {
-		fmt.Println("微信服务器返回错误："+err2.Error())
+		//fmt.Println("微信服务器返回错误："+err2.Error())
+		Action.Error("微信服务器返回错误："+err2.Error(),c)
+		return
 	}
 
-	//rmb := strconv.FormatFloat(0.01*2,'E',-1,64)
-	//rmb := fmt.Sprintf("%.2f", 0.22)
-	//
-	//fmt.Println(rmb)
+
+	// 下面获取一下微信给的信息，然后组成串，签名发给客户端
+	var m = make(url.Values)
+	m.Set("appid", appID)
+	m.Set("partnerid", mchId)
+	m.Set("prepayid", result.PrepayId)
+	m.Set("noncestr", result.NonceStr)
+	m.Set("timestamp", strconv.FormatInt(time.Now().Unix(), 10))
+	m.Set("package", "Sign=WXPay")
+	var sign = wxpay.SignMD5(m, apiKey)
+	m.Set("sign", sign)
+	fmt.Println("sign ",sign)
+
 
 	//url,_ := json.Marshal(result)
-	//fmt.Printf("%s \n",url)
+	fmt.Printf("%s \n",sign)
 	//c.String(200, fmt.Sprintf("{\"wxPayUrl\":\"%s\"}", url))
-	c.JSON(200, result)
+	c.JSON(200, m)
 
 
 	////// 统一下单
@@ -121,4 +136,3 @@ func WxPayCallBack(c *gin.Context) {
 	//返回成功
 	c.XML(200, gin.H{"return_code":"SUCCESS", "return_msg": "OK"})
 }
-
