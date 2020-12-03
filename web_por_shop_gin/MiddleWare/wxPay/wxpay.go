@@ -113,7 +113,9 @@ func WxPayCallBack(c *gin.Context) {
 	}
 	// 然后保存数据库并发放道具
 	rmb := fmt.Sprintf("%.2f", float64(notification.TotalFee) * 0.01)
-	Logic.SaveDataBase(&MySql.Recharge{Openid: pInfo.OpenId, Payno: notification.TransactionId, RechargeTime: notification.TimeEnd, Rmb: rmb, ItemId: pInfo.ItemId, Channel: "wx"})
+	st, _ := time.Parse("20060102150405", notification.TimeEnd) //string转time
+	ts := st.Format("2006-01-02 15:04:05") //time转string
+	Logic.SaveDataBase(&MySql.Recharge{Openid: pInfo.OpenId, Payno: notification.TransactionId, RechargeTime:ts , Rmb: rmb, ItemId: pInfo.ItemId, Channel: "wx"})
 
 
 	//返回成功

@@ -36,5 +36,12 @@ func testFormat()  {
 }
 
 func main() {
-	testFormat()
+	//testFormat()
+	test2()
+}
+
+func test2()  {
+	st, _ := time.Parse("20060102150405", "20201203144002") //string转time
+	ts := st.Format(timeLayoutStr) //time转string
+	fmt.Println(ts)
 }
