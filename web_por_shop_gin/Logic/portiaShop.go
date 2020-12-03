@@ -154,7 +154,7 @@ func CheckItemId(c *gin.Context) (float64, string, bool) {
 		ItemPrice = GetItemPrice(ItemInfo) //获取道具价格
 
 		ItemPrice = 0.01
-		fmt.Println("测试阶段，价格", ItemPrice)
+		//fmt.Println("测试阶段，价格", ItemPrice)
 		debug = true
 	}
 

@@ -77,28 +77,12 @@ func GetPayInfo(c *gin.Context)  {
 	m.Set("package", "Sign=WXPay")
 	var sign = wxpay.SignMD5(m, apiKey)
 	m.Set("sign", sign)
-	fmt.Println("sign ",sign)
 
-
-	//url,_ := json.Marshal(result)
-	fmt.Printf("%s \n",sign)
-	//c.String(200, fmt.Sprintf("{\"wxPayUrl\":\"%s\"}", url))
-	c.JSON(200, m)
-
-
-	////// 统一下单
-	//params := make(wxpay2.Params)
-	//params.SetString("body", "test").
-	//	SetString("out_trade_no", "436577857").
-	//	SetInt64("total_fee", 1).
-	//	SetString("spbill_create_ip", "127.0.0.1").
-	//	SetString("notify_url", "http://notify.objcoding.com/notify").
-	//	SetString("trade_type", "APP")
-	//pp, _ := client2.UnifiedOrder(params)
-	//jj,_ := json.MarshalIndent(pp,""," ")
-	//fmt.Printf("jj %s \n",jj)
-
-
+	var re map[string]string = make(map[string]string,0)
+	for k,v := range m {
+		re[k]=v[0]
+	}
+	c.JSON(200, re)
 }
 
 
@@ -116,9 +100,7 @@ func WxPayCallBack(c *gin.Context) {
 		c.XML(200, gin.H{"return_code":"Failed", "return_msg": "Not"})
 		return
 	}
-	fmt.Println(notification, err)
-
-
+	//fmt.Println(notification, err)
 
 	//验签成功， 解析我们自己的传输格式
 	var pInfo GlobalVar.PayInfo
@@ -130,7 +112,6 @@ func WxPayCallBack(c *gin.Context) {
 	// 然后保存数据库并发放道具
 	rmb := fmt.Sprintf("%.2f", float64(notification.TotalFee) * 0.01)
 	Logic.SaveDataBase(&MySql.Recharge{Openid: pInfo.OpenId, Payno: notification.TransactionId, RechargeTime: notification.TimeEnd, Rmb: rmb, ItemId: pInfo.ItemId, Channel: "wx"})
-
 
 
 	//返回成功
