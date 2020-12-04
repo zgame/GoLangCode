@@ -4,6 +4,7 @@
 package mySql
 
 import (
+	"GoLuaServerV2.1/Utils/zLog"
 	"reflect"
 	"github.com/junhsieh/goexamples/fieldbinding/fieldbinding"
 	util "github.com/tengattack/gluasql/util"
@@ -16,8 +17,7 @@ func clientQueryMethod(L *lua.LState) int {
 	query := L.ToString(2)
 
 	if client.DB == nil {
-		client.DB = GlobalDB
-		//fmt.Println("client.DB == nil  !!!!!!!!!!")
+		zLog.PrintLogger("mysql client.DB == nil  !!!!!!!!!!")
 		//return 0
 	}
 
@@ -66,8 +66,9 @@ func clientExecMethod(L *lua.LState) int {
 	exec := L.ToString(2)
 
 	if client.DB == nil {
-		client.DB = GlobalDB
-		//fmt.Println("client.DB == nil  !!!!!!!!!!")
+		zLog.PrintLogger("mysql client.DB == nil  !!!!!!!!!!")
+		L.Push(lua.LString("mysql  client.DB == nil"))
+		return 1
 		//return 0
 	}
 
@@ -76,11 +77,13 @@ func clientExecMethod(L *lua.LState) int {
 		return 0
 	}
 
-	result, err := client.DB.Exec(exec)
-	if err != nil {
-		fmt.Println("mySql 数据库 exec error",err.Error())
-		fmt.Println("result",result)
-		return 0
-	}
+	go func() {
+		_, err := client.DB.Exec(exec)
+		if err != nil {
+			fmt.Println("mySql 数据库 exec error", err.Error())
+			//fmt.Println("result",result)
+			//return 0
+		}
+	}()
 	return 0
 }

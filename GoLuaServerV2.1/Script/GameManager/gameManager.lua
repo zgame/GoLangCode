@@ -23,39 +23,39 @@
 function GoCallLuaStartGamesServers()
     -- 初始化
     print("-------------------启动 mongo db ---------------------------")
-    local result, err = MyMongoConnect(ConstMongoAddress,  ConstMongoDatabase, ConstMongoUser, ConstMongoPass)
-    if result == false then
+    MongoMainEngineConnect = MongoDBNew()
+    local ok, err = MyMongoConnect(MongoMainEngineConnect,ConstMongoAddress,  ConstMongoDatabase, ConstMongoUser, ConstMongoPass)
+    if ok == false then
         print("mongo 服务器启动错误: " .. err)
         return
     end
     print("-------------------启动 redis ---------------------------")
-    if RedisInit(ConstRedisAddress,ConstRedisPass) == false  then
-        print("redis 服务器启动错误!")
+    RedisEngineConnect = RedisNew()
+    ok, err = RedisInit(RedisEngineConnect,ConstRedisAddress,ConstRedisPass)
+    if ok == false then
+        print("redis 服务器启动错误: " .. err)
         return
     end
     print("-------------------启动 mySql ---------------------------")
-    local result, err = MysqlConnect(ConstMySqlServerIP, ConstMySqlServerPort, ConstMySqlDatabase, ConstMySqlUid, ConstMySqlPwd)
-    if result == false then
+    MySqlMainEngineConnect = MySqlNew()
+    ok, err = MysqlConnect(MySqlMainEngineConnect,ConstMySqlServerIP, ConstMySqlServerPort, ConstMySqlDatabase, ConstMySqlUid, ConstMySqlPwd)
+    if ok == false then
         print("mySql 服务器启动错误: " .. err)
         return
     end
-    print("-------------------启动 mySql 带协程的 ---------------------------")
-    if ZMySQlInit(ConstMySqlServerIP, ConstMySqlServerPort, ConstMySqlDatabase, ConstMySqlUid, ConstMySqlPwd) == false  then
-        print("mySql 服务器启动错误!")
-        return
-    end
-    --print("-------------------启动 sql server  by 数据库---------------------------")
-    --SqlServerDataBaseHandleBY = SqlServerNew()
-    --local result, err = SqlServerConnect(SqlServerDataBaseHandleBY, ConstSqlServerIP, "" , ConstSqlServerDatabase, ConstSqlServerUid, ConstSqlServerPwd)
+
+    --print("-------------------启动 sql server  主 数据库---------------------------")
+    --SqlServerMainEngineConnect = SqlServerNew()
+    --local result, err = SqlServerConnect(SqlServerMainEngineConnect, ConstSqlServerIP, "" , ConstSqlServerDatabase, ConstSqlServerUid, ConstSqlServerPwd)
     --if result == false then
     --    print("sql server by 服务器启动错误!")
     --    return
     --end
-    --print("-------------------启动 sql server  log 数据库---------------------------")
+    --print("-------------------启动 sql server  zLog 数据库---------------------------")
     --SqlServerDataBaseHandleLog = SqlServerNew()
     --local result, err = SqlServerConnect(SqlServerDataBaseHandleLog, ConstSqlServerIP_Log, "" , ConstSqlServerDatabase_Log, ConstSqlServerUid_Log, ConstSqlServerPwd_Log)
     --if result == false then
-    --    print("sql server log 服务器启动错误!")
+    --    print("sql server zLog 服务器启动错误!")
     --    return
     --end
     --print("-------------------启动 sql 好友库  数据库---------------------------")
@@ -82,17 +82,15 @@ function GoCallLuaStartGamesServers()
     SetNewTimer("NewTimerBy2Second",2 * 1000)      -- lua 自己设定计时器
     SetNewClockTimer("NewTimerByAfternoon4", 16)    -- lua 自己设定的固定时间定时器，  16:00
 
-    Logger("--------------------注册协调服----------------------------")
+    --Logger("--------------------注册协调服----------------------------")
     --ServerIDofCorrespondServer = luaCallGoNetWorkConnectOtherServer(ConstServerAddressCorrespondServer)  -- 申请连接协调服务器，并 把serverId保存下来， 以后发送消息用
     --print("协调服 serverId ",ServerIDofCorrespondServer)
-    Logger("--------------------注册日志服----------------------------")
+    --Logger("--------------------注册日志服----------------------------")
 
     --ServerIDofLogServer = luaCallGoNetWorkConnectOtherServer(ConstServerAddressLogServer)                 -- 申请连接服务器，并 把serverId保存下来， 以后发送消息用
     --print("日志服 serverId ",ServerIDofLogServer)
 
     Logger("--------------StartGamesServers  End--------------------------")
-
-
     Logger("ServerIP_Port:"..ServerIP_Port)
 
 end

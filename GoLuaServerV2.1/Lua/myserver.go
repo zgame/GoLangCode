@@ -3,7 +3,7 @@ package Lua
 import (
 	"GoLuaServerV2.1/GlobalVar"
 	"GoLuaServerV2.1/NetWork"
-	"GoLuaServerV2.1/Utils/log"
+	"GoLuaServerV2.1/Utils/zLog"
 	"GoLuaServerV2.1/Utils/ztimer"
 	"bytes"
 	"encoding/binary"
@@ -112,7 +112,7 @@ func (a *MyServer) Run() {
 		//}
 
 		if err != nil {
-			log.PrintfLogger("跟对方的连接中断了")
+			zLog.PrintfLogger("跟对方的连接中断了")
 			// 中断网络连接，关闭网络连接，关闭lua
 			break
 		}
@@ -124,15 +124,15 @@ func (a *MyServer) Run() {
 		//----------------粘包-------------------------
 		if a.ReceiveBuf !=nil {		// 如果上次有没有接收完整的包，那么合并一下
 			//str:= fmt.Sprintf("%d上次buf: %x ", a.UserId,a.ReceiveBuf)
-			//log.PrintLogger(str)
+			//zLog.PrintLogger(str)
 			//str= fmt.Sprintf("%d本次buf: %x ", a.UserId,buf)
-			//log.PrintLogger(str)
+			//zLog.PrintLogger(str)
 
 			buf2 := make([]byte,len(a.ReceiveBuf)+bufLen)		//缓存从新组合包
 			copy(buf2, a.ReceiveBuf)
 			copy(buf2[len(a.ReceiveBuf):],buf[:bufLen])
 			//str= fmt.Sprintf("%d合并后buf2: %x ", a.UserId,buf2)
-			//log.PrintLogger(str)
+			//zLog.PrintLogger(str)
 			//GlobalVar.GlobalMutex.Lock()
 			StaticDataPackagePasteNum++
 			//GlobalVar.GlobalMutex.Unlock()
@@ -154,7 +154,7 @@ func (a *MyServer) Run() {
 			}else if bufHeadTemp > 0 {				// 解析完成
 				if a.ReceiveBuf != nil {			// 如果是拼接包，只要成功解析，就可以清理了
 					//str := fmt.Sprintf("%d 拼接后成功解析%x", a.UserId, buf)
-					//log.PrintLogger(str)
+					//zLog.PrintLogger(str)
 					a.ReceiveBuf = nil
 
 					//GlobalVar.GlobalMutex.Lock()
@@ -163,17 +163,17 @@ func (a *MyServer) Run() {
 				}
 			}else if bufHeadTemp == -1 {
 				a.ReceiveBuf = nil
-				log.PrintfLogger("最后一次成功的buf：%x  bufHeadTemp%d  bufHead %d",a.SuccessBuf , bufHeadTemp, bufHead)
-				log.PrintfLogger("最后一次接收的buf：%x  len:%d",a.LastBuf, len(a.LastBuf))
-				log.PrintfLogger("最后一次保存的不完整buf：%x",a.ReceiveBuf)
-				log.PrintfLogger("当前buf：%x   bufLen %d",buf , bufLen)
+				zLog.PrintfLogger("最后一次成功的buf：%x  bufHeadTemp%d  bufHead %d",a.SuccessBuf , bufHeadTemp, bufHead)
+				zLog.PrintfLogger("最后一次接收的buf：%x  len:%d",a.LastBuf, len(a.LastBuf))
+				zLog.PrintfLogger("最后一次保存的不完整buf：%x",a.ReceiveBuf)
+				zLog.PrintfLogger("当前buf：%x   bufLen %d",buf , bufLen)
 				return  		//数据包不正确，放弃连接
 			}
 
 			if bufHead >= bufLen{
 				a.LastBuf = buf[:bufLen]		//记录上次接收buf
 				if bufHead > bufLen{
-					log.PrintfLogger(" %d bufHead  %d > bufLen %d  bufHeadTemp %d  buf：%x", a.UserId, bufHead ,  bufHeadTemp ,bufLen,buf[:bufLen])
+					zLog.PrintfLogger(" %d bufHead  %d > bufLen %d  bufHeadTemp %d  buf：%x", a.UserId, bufHead ,  bufHeadTemp ,bufLen,buf[:bufLen])
 				}
 				break		// 处理完毕，继续接收
 			}
@@ -197,7 +197,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	//-----------------------------头部数据不完整----------------------------
 	if len(buf)< NetWork.TCPHeaderSize {
 		//str:= fmt.Sprintf("%d数据包头部数据不全 : %x \n",a.UserId,buf)
-		//log.PrintLogger(str)
+		//zLog.PrintLogger(str)
 		//GlobalVar.GlobalMutex.Lock()
 		StaticDataPackageHeadLess ++
 		//GlobalVar.GlobalMutex.Unlock()
@@ -211,7 +211,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 
 	////-----------------------------头部信息错误----------------------------
 	//if headFlag != uint8(254){
-	//	log.PrintfLogger("%d 数据包头部标识不正确 %x",a.UserId, buf)
+	//	zLog.PrintfLogger("%d 数据包头部标识不正确 %x",a.UserId, buf)
 	//
 	//	//GlobalVar.GlobalMutex.Lock()
 	//	StaticDataPackageHeadFlagError ++
@@ -235,7 +235,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	//-----------------------------proto buffer 内容不完整----------------------------
 	if len(buf) < BufAllSize{
 		//str:= fmt.Sprintf("%d数据包格式不正确buflen%d,bufferSize%d,%x  \n", a.UserId,len(buf),int(bufferSize),buf)
-		//log.PrintLogger(str)
+		//zLog.PrintLogger(str)
 		//GlobalVar.GlobalMutex.Lock()
 		StaticDataPackageProtoDataLess ++
 		//GlobalVar.GlobalMutex.Unlock()
@@ -246,13 +246,13 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	//// ------------------------数据包尾部的判断----------------------
 	//endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
 	//if endData!= uint8(NetWork.TCPEnd){		// EE
-	//	log.PrintfLogger("%d数据包尾部判断不正确 %x ",a.UserId, buf)
+	//	zLog.PrintfLogger("%d数据包尾部判断不正确 %x ",a.UserId, buf)
 	//	return -1
 	//}
 
 	//-----------------------------数据包重复----------------------------
 	//if int(ver) == a.TokenId{
-	//	log.PrintLogger( strconv.Itoa(a.UserId)+" 出现重复的数据包,包id："+ strconv.Itoa(int(ver)))
+	//	zLog.PrintLogger( strconv.Itoa(a.UserId)+" 出现重复的数据包,包id："+ strconv.Itoa(int(ver)))
 	//	//return BufAllSize  // 如果重复，那么跳过解析这个数据包
 	//}
 
@@ -294,7 +294,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 
 // 在网络中断的时候会自动调用， 关闭lua脚本
 func (a *MyServer) OnClose() {
-	//log.PrintLogger("玩家中断了网络连接， 我们要关闭网络")
+	//zLog.PrintLogger("玩家中断了网络连接， 我们要关闭网络")
 	//	a.myLua.L.DoString(`	// 关闭channel
 	//	GameManagerReceiveCh:close()
 	//    GameManagerSendCh:close()
@@ -337,7 +337,7 @@ func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int ) bo
 	//	cost := int(now - a.TokenTime)
 	//
 	//	if cost > GlobalVar.WarningTimeCost {
-	//		log.PrintfLogger("UID: %d  处理消息花费时间 %d  mainCmd   %d  subCmd  %d", a.UserId, int(cost), mainCmd, subCmd)
+	//		zLog.PrintfLogger("UID: %d  处理消息花费时间 %d  mainCmd   %d  subCmd  %d", a.UserId, int(cost), mainCmd, subCmd)
 	//	}
 	//	if StaticNetWorkReceiveToSendCostTimeAll> 99999999 {
 	//		StaticNetWorkReceiveToSendCostTimeAll = 0	// 定期清理，防止数字过大
@@ -354,14 +354,14 @@ func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int ) bo
 	//	//	StaticNetWorkReceiveToSendCostTime = (StaticNetWorkReceiveToSendCostTime+cost)/2	//求平均值
 	//	//}
 	//	//GlobalVar.RWMutex.Unlock()
-	//	//log.PrintfLogger("UID: %d  处理消息花费时间 %d", a.UserId, int(cost))
+	//	//zLog.PrintfLogger("UID: %d  处理消息花费时间 %d", a.UserId, int(cost))
 	//}
 	return a.WriteMsg(bufferEnd)
 }
 
 func (a *MyServer) WriteMsg(msg ... []byte) bool{
 	if a == nil ||  a.Conn == nil{
-		log.PrintLogger("当前连接已经关闭, 不发送了")
+		zLog.PrintLogger("当前连接已经关闭, 不发送了")
 		return false
 	}
 
@@ -411,7 +411,7 @@ func (a *MyServer) Init() {
 
 	GlobalVar.RWMutex.Lock()
 	if LuaConnectMyServer[a.ServerId] != nil {
-		log.PrintfLogger("LuaConnectMyServer  已经有了, map重复了", a.ServerId,  a.UserId)
+		zLog.PrintfLogger("LuaConnectMyServer  已经有了, map重复了", a.ServerId,  a.UserId)
 	}
 	LuaConnectMyServer[a.ServerId] = a
 	GlobalVar.RWMutex.Unlock()

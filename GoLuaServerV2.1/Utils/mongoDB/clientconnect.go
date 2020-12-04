@@ -5,6 +5,7 @@
 package mongoDB
 
 import (
+	"GoLuaServerV2.1/Utils/zLog"
 	"gopkg.in/mgo.v2"
 	"time"
 
@@ -46,7 +47,7 @@ func clientConnectMethod(L *lua.LState) int {
 		Source: "admin",
 		Username: user,
 		Password: password,
-		PoolLimit: 100, // Session.SetPoolLimit
+		PoolLimit: 100, // redis.SetPoolLimit
 	}
 	client.MongoSession, err = mgo.DialWithInfo(dialInfo)
 
@@ -54,7 +55,7 @@ func clientConnectMethod(L *lua.LState) int {
 		L.Push(lua.LBool(false))
 		L.Push(lua.LString(err.Error()))
 
-		fmt.Println("Mongo  数据库连接错误", err.Error())
+		zLog.PrintLogger("Mongo  数据库连接错误"+ err.Error())
 		return 2
 	}
 

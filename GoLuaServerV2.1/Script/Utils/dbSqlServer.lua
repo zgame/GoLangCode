@@ -10,7 +10,7 @@
 
 
 SqlServerEngine = require('sqlServer')
---SqlServerEngineConnect = SqlServerEngine.new()
+--SqlServerMainEngineConnect = SqlServerEngine.new()
 
 --- 创建数据库句柄
 function SqlServerNew()
@@ -32,7 +32,7 @@ function SqlServerConnect(handle,h,p,d,u,ps)
         --end
     end
 
-    return ok
+    return ok,err
 
 end
 
@@ -40,9 +40,14 @@ end
 --- @param handel   连接句柄
 --- @param sql      sql语句
 --- @return ret查询结果
-function SqlServerQuery(handle,sql)
-    local re,err
-    re,err = handle:query(sql)
+function SqlServerQuery(sql,handle)
+    if handle == nil then
+        handle = SqlServerMainEngineConnect
+    end
+    local re,err = handle:query(sql)
+    if err ~= nil then
+        Logger(err)
+    end
     return re
 end
 
@@ -50,9 +55,28 @@ end
 --- 执行sql exec语句
 --- @param handel   连接句柄
 --- @param sql      sql语句
-function SqlServerExec(handle,sql)
-    handle:exec(sql)
+function SqlServerExec(sql,handle)
+    if handle == nil then
+        handle = SqlServerMainEngineConnect
+    end
+    local err = handle:exec(sql)
+    if err ~= nil then
+        Logger(err)
+    end
 end
+
+
+
+
+
+
+
+------------------------------------------------------------------------
+--- 各个数据库的操作
+------------------------------------------------------------------------
+
+
+
 
 --- 执行游戏库sql select语句
 --- @param sql sql语句

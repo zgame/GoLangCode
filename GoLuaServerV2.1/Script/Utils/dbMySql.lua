@@ -10,37 +10,48 @@
 
 
 MySqlEngine = require('mySql')
-MySqlEngineConnect = MySqlEngine.new()
+--MySqlMainEngineConnect = MySqlEngine.new()
+--- 创建数据库句柄
+function MySqlNew()
+    return MySqlEngine.new()
+end
+
 
 -- mysql数据库连接
-function MysqlConnect(h,p,d,u,ps)
-
-    local ok, err = MySqlEngineConnect:connect({ host = h, port = tonumber(p), database = d, user = u, password = ps })
+function MysqlConnect(handle,h,p,d,u,ps)
+    local ok, err = handle:connect({ host = h, port = tonumber(p), database = d, user = u, password = ps })
 
     if ok then
         print("Mysql 数据库 ok!")
-        --local res, err = MySqlEngineConnect:query("SELECT * FROM game_state")
-        --if err then
-        --    print(err)
-        --else
-        --    printTable(res)
-        --end
+        --printTable(MysqlQuery("select * from game_state"))
+
     end
 
-    return ok
+    return ok,err
 
 end
 
 -- 执行sql select语句
-function MysqlQuery(sql)
-    local re,err
-    re,err = MySqlEngineConnect:query(sql)
+function MysqlQuery(sql,handle)
+    if handle == nil then
+        handle = MySqlMainEngineConnect
+    end
+    local re,err = handle:query(sql)
+    if err ~= nil then
+        Logger(err)
+    end
     return re
 end
 
 
 -- 执行sql exec语句
-function MysqlExec(sql)
-    MySqlEngineConnect:exec(sql)
+function MysqlExec(sql,handle)
+    if handle == nil then
+        handle = MySqlMainEngineConnect
+    end
+    local err = handle:exec(sql)
+    if err ~= nil then
+        Logger(err)
+    end
 end
 

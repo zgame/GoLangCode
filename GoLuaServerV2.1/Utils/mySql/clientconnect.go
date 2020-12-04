@@ -73,7 +73,7 @@ func clientConnectMethod(L *lua.LState) int {
 		return 2		// 返回两个参数
 	}
 
-	GlobalDB = client.DB
+	//GlobalDB = client.DB
 	//fmt.Println("mySql 数据库连接成功")
 	L.Push(lua.LBool(true))
 	return 1

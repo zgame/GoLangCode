@@ -17,7 +17,7 @@ const (
 	CLIENT_TYPENAME = "sqlServer{client}"
 )
 
-var GlobalDB *sql.DB
+//var GlobalDB *sql.DB
 
 // Client mySql
 type Client struct {

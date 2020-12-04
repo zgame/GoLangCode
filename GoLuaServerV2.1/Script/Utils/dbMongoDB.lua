@@ -6,23 +6,18 @@
 
 
 MongoEngine = require('mongodb')
-MongoEngineConnect = MongoEngine.new()
+--MongoEngineConnect = MongoEngine.new()
+--- 创建数据库句柄
+function MongoDBNew()
+    return MongoEngine.new()
+end
 
 -- Mongo数据库连接
-function MyMongoConnect(h,d,u,ps)
-
-    local ok, err = MongoEngineConnect:connect({ host = h, database = d, user = u, password = ps })
+function MyMongoConnect(handle, h, d, u, ps)
+    local ok, err = handle:connect({ host = h, database = d, user = u, password = ps })
 
     if ok then
         print(" Mongo  数据库 ok!")
-        --local res, err = MySqlEngineConnect:query("SELECT * FROM game_state")
-        --if err then
-        --    print(err)
-        --else
-        --    printTable(res)
-        --end
-
-        --
         --local user = {}
         --user["ss"] = 22
         --user["name"] = 'ss'
@@ -33,46 +28,72 @@ function MyMongoConnect(h,d,u,ps)
         --local user2 = {}
         --user2["name"] = 'ss'
         --local ss = MongoFinds("people",user2,"-key")
-        ----print(ss["ss"])
         --printTable(ss)
-
-
-
     end
 
-    return ok
+    return ok, err
 
 end
 
 
 
 -- 执行find语句
-function MongoFind(collection, table)
-    return   MongoEngineConnect:find(collection, table)
+function MongoFind(collection, table, handle)
+    if handle == nil then
+        handle = MongoMainEngineConnect
+    end
+    local table = handle:find(collection, table)
+    return table
 end
 
 -- 执行finds语句  查询多条记录  sort里面是列名 负的表示从高到低排序
-function MongoFinds(collection, table, sort)
+function MongoFinds(collection, table, sort, handle)
+    if handle == nil then
+        handle = MongoMainEngineConnect
+    end
     if sort == nil then
         sort = "-1"
     end
-    return   MongoEngineConnect:finds(collection, table, sort)
+
+    local table = handle:finds(collection, table, sort)
+    return table
 end
 
 -- 执行insert语句
-function MongoInsert(collection, table)
-    MongoEngineConnect:insert(collection, table)
+function MongoInsert(collection, table, handle)
+    if handle == nil then
+        handle = MongoMainEngineConnect
+    end
+    local err = handle:insert(collection, table)
+    if err ~= nil then
+        Logger(err)
+    end
+    return err
 end
 
 
 -- 执行del语句
-function MongoDel(collection, table)
-    MongoEngineConnect:del(collection, table)
+function MongoDel(collection, table, handle)
+    if handle == nil then
+        handle = MongoMainEngineConnect
+    end
+    local err = handle:del(collection, table)
+    if err ~= nil then
+        Logger(err)
+    end
+    return err
 end
 
 
 -- 执行update语句  selectTable为条件  updateTable为更新的内容
-function MongoUpdate(collection, selectTable,updateTable)
-    MongoEngineConnect:update(collection, selectTable, updateTable)
+function MongoUpdate(collection, selectTable, updateTable, handle)
+    if handle == nil then
+        handle = MongoMainEngineConnect
+    end
+    local err = handle:update(collection, selectTable, updateTable)
+    if err ~= nil then
+        Logger(err)
+    end
+    return err
 end
 

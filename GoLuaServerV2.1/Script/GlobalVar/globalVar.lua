@@ -50,7 +50,17 @@ ServerIDofCorrespondServer = 0
 
 
 
+
+------------------------redis 数据库句柄-----------------------
+RedisEngineConnect = nil
+------------------------各个mongo db 数据库句柄-----------------------
+MongoMainEngineConnect = nil                -- mongo db 主库
+------------------------各个my sql 数据库句柄-----------------------
+MySqlMainEngineConnect = nil                -- 主mysql数据库
+
 ------------------------各个sql server 数据库句柄-----------------------
+SqlServerMainEngineConnect = nil         -- 主数据库
+
 SqlServerDataBaseHandleBY = nil         -- 捕鱼数据库
 SqlServerDataBaseHandleLog = nil        -- 日志数据库
 SqlServerDataBaseHandleFriend = nil     -- 好友数据库

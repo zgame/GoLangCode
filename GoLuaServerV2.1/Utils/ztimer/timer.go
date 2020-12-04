@@ -79,6 +79,6 @@ func CheckRunTimeCost(f func(), msg string)  {
 	startTime := GetOsTimeMillisecond()
 	f()
 	if GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		//log.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]    %s     消耗时间: %d", msg, int(GetOsTimeMillisecond()-startTime))
+		//zLog.PrintfLogger("----------!!!!!!!!!!!!!!!!!!!!!![ 警告 ]    %s     消耗时间: %d", msg, int(GetOsTimeMillisecond()-startTime))
 	}
 }

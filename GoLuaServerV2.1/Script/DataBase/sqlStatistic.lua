@@ -20,8 +20,7 @@ function SqlSaveServerState(state)
         local time= GetOsDateNow()
         local sql = string.format("insert into server_state (server_ip,time,table_num,player_num,rece_num,send_num, write_chan, head_err , heap_inuse, network_delay ) values ('%s','%s', %d,%d,%d,%d,%d,%d,%d,%d)",
                 ServerIP_Port,time,state.TableNum,state.PlayerNum,state.ReceiveNum,state.SendNum,state.WriteChannelNum,state.HeadErrorNum , state.HeapInUse, state.NetWorkDelay)
-        --MysqlExec(sql) -- 性能慢
-        ZMySqlExec(sql) -- 性能快
+        MysqlExec(sql)
     end
 end
 
@@ -61,7 +60,6 @@ function SqlDelGameState(gameType,tableId)         -- 清理掉桌子的运行�
     if SQLStaticSwitch then
         local sql = string.format("delete from game_state where server_ip = '%s' and game_id = %d and table_id = %d ",ServerIP_Port,gameType,tableId)
         --print(sql)
-        --MysqlExec(sql)
-        ZMySqlExec(sql) -- 性能快
+        MysqlExec(sql)
     end
 end

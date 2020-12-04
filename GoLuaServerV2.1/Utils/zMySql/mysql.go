@@ -5,13 +5,10 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
-	"log"
 )
 var MySqlEngine *xorm.Engine
 //------------------------------------------------------------------------------------------
-//--- 这里有2种方式调用mysql
-//--- 第一种是通过go调用，适用于对性能有要求，并且没有返回的情况    zMySql
-//--- 第二种是通过lua调用， 性能会差很多，会有延迟， 但是可以获取到select的返回值，并且是table类型的     gluasql_mysql
+// 废弃
 //------------------------------------------------------------------------------------------
 
 // 这个是go调用mysql
@@ -20,7 +17,7 @@ func ConnectDB(ServerIP string,ServerPort string ,Database string, uid string, p
 	//f, err := ini.Load("Setting.ini")
 	//if err != nil {
 	//	fmt.Println("ini配置文件出错！", err)
-	//	log.Fatal(err)
+	//	zLog.Fatal(err)
 	//	return false
 	//}
 	//ServerIP := f.Section("Server").Key("MySqlServerIP").Value()
@@ -38,7 +35,7 @@ func ConnectDB(ServerIP string,ServerPort string ,Database string, uid string, p
 
 	if err != nil {
 		fmt.Println("数据库引擎出错！", err)
-		log.Fatal(err)
+		//log.Fatal(err)
 		return false
 	}
 	engine.ShowSQL(false)
@@ -162,7 +159,7 @@ func SqlExec(sql string){
 //
 //	//	if err != nil {
 //	//		fmt.Println("数据库查询出错！", err)
-//	//		log.Fatal(err)
+//	//		zLog.Fatal(err)
 //	//		return
 //	//	}
 //	//}else{

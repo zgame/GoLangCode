@@ -4,6 +4,7 @@
 package mongoDB
 
 import (
+	"GoLuaServerV2.1/Utils/zLog"
 	"fmt"
 	"github.com/tengattack/gluasql/util"
 	"github.com/yuin/gopher-lua"
@@ -27,15 +28,20 @@ func clientInsertMethod(L *lua.LState) int {
 	options, ok := tb.(map[string]interface{})
 	if tb == nil || !ok {
 		L.ArgError(3, "options excepted")
+		zLog.PrintLogger("mongo db  insert 参数错误")
+		//L.Push(lua.LString("options excepted"))
 		return 0
+
 	}
 
 	err := Collection.Insert(options)
 	if err != nil {
-		log.Fatal(err)
+		zLog.PrintLogger("mongo db insert error "+err.Error())
+		L.Push(lua.LString(err.Error()))
+		return 1
 	}
 
-	return 1 // 执行成功
+	return 0 // 执行成功
 }
 
 // 删除数据
@@ -52,15 +58,18 @@ func clientDelMethod(L *lua.LState) int {
 	options, ok := tb.(map[string]interface{})
 	if tb == nil || !ok {
 		L.ArgError(3, "options excepted")
+		zLog.PrintLogger("mongo db  del 参数错误")
 		return 0
 	}
 
 	err := Collection.Remove(options)
 	if err != nil {
-		log.Fatal(err)
+		zLog.PrintLogger("mongo db del error "+err.Error())
+		L.Push(lua.LString(err.Error()))
+		return 1
 	}
 
-	return 1 // 执行成功
+	return 0 // 执行成功
 }
 
 // 更新数据， 只更新options里面的部分数据
@@ -77,21 +86,25 @@ func clientUpdateMethod(L *lua.LState) int {
 	options, ok := tb.(map[string]interface{})
 	if tb == nil || !ok {
 		L.ArgError(3, "options excepted")
+		zLog.PrintLogger("mongo db update参数错误")
 		return 0
 	}
 	utb := gluasql_util.GetValue(L, 4)
 	updateO, ok := utb.(map[string]interface{})
 	if utb == nil || !ok {
 		L.ArgError(4, "options excepted")
+		zLog.PrintLogger("mongo db update参数错误")
 		return 0
 	}
 
 	err := Collection.Update(options, bson.M{"$set": updateO})
 	if err != nil {
-		log.Fatal(err)
+		zLog.PrintLogger("mongo db update error "+err.Error())
+		L.Push(lua.LString(err.Error()))
+		return 1
 	}
 
-	return 1 // 执行成功
+	return 0 // 执行成功
 }
 
 // 查询数据

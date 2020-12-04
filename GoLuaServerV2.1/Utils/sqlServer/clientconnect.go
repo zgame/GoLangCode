@@ -80,7 +80,7 @@ func clientConnectMethod(L *lua.LState) int {
 		return 2
 	}
 
-	GlobalDB = client.DB
+	//GlobalDB = client.DB
 	fmt.Println("sql server 数据库连接成功")
 	L.Push(lua.LBool(true))
 	return 1

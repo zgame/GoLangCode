@@ -4,6 +4,7 @@
 package sqlServer
 
 import (
+	"GoLuaServerV2.1/Utils/zLog"
 	"github.com/yuin/gopher-lua"
 	"fmt"
 	"reflect"
@@ -19,8 +20,7 @@ func clientQueryMethod(L *lua.LState) int {
 	//fmt.Println("sql ",query)
 
 	if client.DB == nil {
-		client.DB = GlobalDB
-		fmt.Println("client.DB == nil  !!!!!!!!!!")
+		zLog.PrintLogger("SQL server  client.DB == nil  !!!!!!!!!!")
 		return 0
 	}
 
@@ -99,9 +99,9 @@ func clientExecMethod(L *lua.LState) int {
 	exec := L.ToString(2)
 
 	if client.DB == nil {
-		client.DB = GlobalDB
-		//fmt.Println("client.DB == nil  !!!!!!!!!!")
-		//return 0
+		zLog.PrintLogger("SQL server  client.DB == nil  !!!!!!!!!!")
+		L.Push(lua.LString("SQL server  client.DB == nil"))
+		return 1
 	}
 
 	if exec == "" {
@@ -109,14 +109,14 @@ func clientExecMethod(L *lua.LState) int {
 		//return 0
 	}
 	go func() {
-		result, err := client.DB.Exec(exec)
+		_, err := client.DB.Exec(exec)
 		if err != nil {
-			fmt.Println("sql server 数据库 exec error", err.Error())
-			fmt.Println("result", result)
-			//return 0
+			zLog.PrintLogger("sql server 数据库 exec error" + err.Error())
+			//L.Push(lua.LString("SQL server  error:"+err.Error()))
+			//return 1
 		}
 	}()
-	return 1 // 执行成功
+	return 0 // 执行成功
 }
 
 // 用来调试打印的

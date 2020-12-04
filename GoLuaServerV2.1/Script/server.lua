@@ -25,7 +25,7 @@ package.path = "Script/Protocol/protobuf/?.lua;"..package.path
 -------------------------------------Const----------------------------------------
 -- 这部分不参与热更新
 require("Script/HotReload/hotReload")
-require("Script/Utils/dumpTable")
+require("Script/Utils/dumpTable")           -- printTable(tableName)
 require("Script/Utils/zBit32")
 ZJson = require("json")        -- Json
 MySerpent = require("Script/Utils/serpent")      -- 使用方法 ： MySerpent.block(tableName)        也是打印table
