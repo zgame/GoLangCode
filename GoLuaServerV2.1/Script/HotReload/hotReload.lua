@@ -91,7 +91,6 @@ table.insert(RequireAndReloadConstFiles, "Script/Const/protocol_xhs")
 RequireAndReloadUtilsFiles = {}
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbMySql")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbSqlServer")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zMySql")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zRandom")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbRedis")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zTable")

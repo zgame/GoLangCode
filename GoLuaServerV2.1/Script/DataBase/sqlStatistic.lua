@@ -24,10 +24,19 @@ function SqlSaveServerState(state)
     end
 end
 
+
+-- 保存服务器的房间状态
+local function ZMySqlSaveGameState(ServerIP_Port,gameType,tableId ,FishNum,BulletNum,SeatArray)
+    -- 想想如何处理
+
+    --luaCallGoSqlSaveGameState(ServerIP_Port,gameType,tableId ,FishNum,BulletNum,SeatArray)
+end
+
+
 ----------------------------保存桌子状态信息，当前的运行信息，桌子销毁就删掉-----------------------------
 function SqlSaveGameState(gameType,tableId, state)
     if SQLStaticSwitch then
-        -- 为了节省性能，直接丢给go去处理了
+
         ZMySqlSaveGameState(ServerIP_Port,gameType,tableId ,state.FishNum,state.BulletNum,state.SeatArray)   -- 采用go来做这个事情了， lua太费性能
 
         --RedisSaveString(RedisDirGameState..ServerIP_Port..":GameID_"..gameType..":TableId"..tableId, tableId, ZJson.encode(state))
