@@ -12,48 +12,48 @@ function SevLoginGSGuest(serverId,buf)
     msg:ParseFromString(buf)
     --msg:ParseFromString(sendCmd:SerializeToString())
 
-    --print(msg)
+    print(msg)
 
     --print("gamekind id: ".. msg.kind_id)
     --print("user_id id: ".. msg.user_id)
     --print("machine_id : ".. msg.machine_id)
 
-    --local MyUser
+    local MyUser
     --local openId = msg.machine_id
     local UserId = msg.user_id
 
     -- 这里以后要进行账号，密码的判断
 
 
-    --if UserId == "" then
-    --    --print("没有账号，创建一个")
-    --    UserId = GetLastUserID()
-    --    MyUser = User:New()
-    --    MyUser.FaceId = 0
-    --    MyUser.Gender = 0
-    --    MyUser.UserId = UserId
-    --    MyUser.GameId = 320395999
-    --    MyUser.Exp = 254
-    --    MyUser.Loveliness = 0
-    --    MyUser.Score = 100000009
-    --    MyUser.NickName = "玩家"..MyUser.UserId
-    --    MyUser.Level = 1
-    --    MyUser.VipLevel = 0
-    --    MyUser.AccountLevel = 3
-    --    MyUser.CurLevelExp = 0
-    --    MyUser.NextLevelExp = 457
-    --    MyUser.PayTotal = 0
-    --    MyUser.Diamond = 29
-    --    MyUser.OpenId = openId
-    --    RedisSavePlayerLogin(openId,UserId)
-    --    --print("保存",openId,UserId)
-    --    RedisSavePlayer(MyUser)           -- redis 数据库 save
-    --    --print("保存玩家信息",UserId)
+    if UserId == "" then
+        --print("没有账号，创建一个")
+        UserId = GetLastUserID()
+        MyUser = User:New()
+        MyUser.FaceId = 0
+        MyUser.Gender = 0
+        MyUser.UserId = UserId
+        MyUser.GameId = 320395999
+        MyUser.Exp = 254
+        MyUser.Loveliness = 0
+        MyUser.Score = 100000009
+        MyUser.NickName = "玩家"..MyUser.UserId
+        MyUser.Level = 1
+        MyUser.VipLevel = 0
+        MyUser.AccountLevel = 3
+        MyUser.CurLevelExp = 0
+        MyUser.NextLevelExp = 457
+        MyUser.PayTotal = 0
+        MyUser.Diamond = 29
+        MyUser.OpenId = openId
+        --RedisSavePlayerLogin(openId,UserId)
+        --print("保存",openId,UserId)
+        --RedisSavePlayer(MyUser)           -- redis 数据库 save
+        --print("保存玩家信息",UserId)
     --else
     --    --print("有账号，那么取出账号的信息")
     --    UserId = tonumber(UserId)       -- 这里需要转一下到数字
     --    MyUser = RedisGetPlayer(UserId)   -- redis load
-    --end
+    end
 
 
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息

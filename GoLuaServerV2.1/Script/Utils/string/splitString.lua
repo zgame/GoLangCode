@@ -47,3 +47,93 @@ function SplitString(sBaseString,sSpeString,tContString)
     --printTable(tContString,0,"tContString")
     return tContString;
 end
+
+
+--- 功能: 按照正则表达式规则拆分string字符串
+--- @param str 原始待拆分数字字符串
+--- @param delim 分隔符
+--- @param maxNb 最大拆分数量默认全部拆分
+--- @param 返回string数组
+function StringSplitToStringArrayBYZZ( str,reps )
+    local resultStrList = {}
+    string.gsub(str,'[^'..reps..']+',function ( w )
+        table.insert(resultStrList,w)
+    end)
+    return resultStrList
+end
+
+--- 功能: 拆分string字符串
+--- @param str 原始待拆分数字字符串
+--- @param delim 分隔符
+--- @param maxNb 最大拆分数量默认全部拆分
+--- @param 返回string数组
+function StringSplitToStringArray(str, delim, maxNb)
+    if string.find(str, delim, 1, true) == nil then
+        return { str }
+    end
+
+    if maxNb == nil or maxNb < 1 then
+        maxNb = 0
+    end
+
+    local result = {}
+    local pat = "(.-)" .. delim .. "()"
+    local nb = 0
+    local lastPos
+    for part, pos in string.gmatch(str, pat) do
+        nb = nb + 1
+        result[nb] = part
+        lastPos = pos
+        if nb == maxNb then break end
+    end
+
+    if nb ~= maxNb then
+        for i = nb, maxNb do
+            result[nb + 1] = string.sub(str, lastPos)
+        end
+    end
+
+    return result
+end
+
+--- 功能: 拆分数字字符串
+--- @param str 原始待拆分数字字符串
+--- @param delim 分隔符
+--- @param maxNb 最大拆分数量默认全部拆分
+--- @param 返回Int数组
+function StringSplitToNumberArray(str, delim, maxNb)
+    local result = {}
+    if str == nil or string.len(str) == 0 or string.gmatch(str, delim) == nil then
+        -- 拆分数量存在,则返回maxNb大小默认值为0的数组
+        if maxNb then
+            for i = 1, maxNb do
+                result[i] = 0
+            end
+        end
+        return result
+    end
+
+    if maxNb == nil or maxNb < 1 then
+        maxNb = 0
+    end
+
+    local result = {}
+    local pat = "(.-)" .. delim .. "()"
+    local nb = 0
+    local lastPos
+    for part, pos in string.gmatch(str, pat) do
+        nb = nb + 1
+        result[nb] = tonumber(part)
+        lastPos = pos
+        if nb == maxNb then break end
+    end
+
+
+    if nb ~= maxNb then
+        for i = nb, maxNb do
+            result[i] = 0
+        end
+    end
+
+    return result
+end

@@ -12,12 +12,12 @@
 --print("start lua")
 
 -------------------------------------Logger----------------------------------------
-package.path = "Script/Logger/?.lua;"..package.path
-require("Script/Utils/zLog")
+--package.path = "Script/Logger/?.lua;"..package.path
+require("Script/Utils/print/zLog")
 Logger("========Game Server Start ....========")
 
 
 
 -------------------------------------main----------------------------------------
-package.path = "Script/?.lua;"..package.path
-require("server")
+--package.path = "Script/?.lua;"..package.path
+require("Script/server")

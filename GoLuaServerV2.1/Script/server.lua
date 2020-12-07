@@ -24,18 +24,15 @@ package.path = "Script/Protocol/protobuf/?.lua;"..package.path
 
 -------------------------------------Const----------------------------------------
 -- 这部分不参与热更新
-require("Script/HotReload/hotReload")
-require("Script/Utils/dumpTable")           -- printTable(tableName)
-require("Script/Utils/zBit32")
-ZJson = require("json")        -- Json
-MySerpent = require("Script/Utils/serpent")      -- 使用方法 ： MySerpent.block(tableName)        也是打印table
-
+require("Script/Utils/string/json")                 -- Json
+require("Script/Utils/byte/zCrypto")
+require("Script/Utils/byte/zBit32")
+require("Script/Utils/byte/zZip")
 require("Script/GlobalVar/globalVar")
 
-
-
-
+-------------------------------------Start----------------------------------------
 -- 下面参与热更新，新增加lua文件， 写到reload里面去，不要在这里添加
+require("Script/HotReload/hotReload")
 
 -- CSV
 for _,fileName in ipairs(RequireAndReloadCSVFiles) do

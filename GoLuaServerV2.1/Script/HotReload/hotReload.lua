@@ -11,8 +11,6 @@
 
 
 
-
-
 --------------------------------文件列表-- 为了方便加载和热更的文件名字统一， 那么建立一个表，统一使用这个表里面的文件列表----------------------------------------------
 
 --数据库
@@ -89,18 +87,16 @@ table.insert(RequireAndReloadConstFiles, "Script/Const/protocol_xhs")
 
 -- Utils
 RequireAndReloadUtilsFiles = {}
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbMySql")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbSqlServer")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/database/dbMySql")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/database/dbSqlServer")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/database/dbMongoDB")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/database/dbRedis")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zRandom")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbRedis")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zTable")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zTime")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/Util")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zCrypto")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zBit32")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zZip")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/dbMongoDB")
-table.insert(RequireAndReloadUtilsFiles,"Script/Utils/sStringFunction")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/Enum")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/string/splitString")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zNetwork")
 
 -- gameManager
 RequireAndReloadManagerFiles = {}
@@ -130,7 +126,7 @@ table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/xhsReceiveMsg")
 table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/GameLogic/xhsUserUseSummonGem")
 table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/GameLogic/xhsUserFire")
 table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/GameLogic/xhsUserPuzzle")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/DB/xhsDB")
+table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/database/xhsDB")
 -- 聊天
 table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/chatTable")
 table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/chatReceiveMsgFromLoginServer")
@@ -143,7 +139,7 @@ table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserAp
 table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserDeleteFriend")
 table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserGetUnReadMessage")
 table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserSendMessage")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/DB/chatDB")
+table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/database/chatDB")
 
 
 -- network
@@ -202,10 +198,10 @@ table.insert(RequireAndReloadChatServerFiles, "Script/Games/ChatServer/Models/Ch
 table.insert(RequireAndReloadChatServerFiles, "Script/Games/ChatServer/Managers/ChatUserManager")
 table.insert(RequireAndReloadChatServerFiles, "Script/Games/ChatServer/Managers/ChatFriendManager")
 
---- DB
-table.insert(RequireAndReloadChatServerFiles, "Script/Games/ChatServer/DB/FriendDB")
-table.insert(RequireAndReloadChatServerFiles, "Script/Games/ChatServer/DB/ChatDB")
-table.insert(RequireAndReloadChatServerFiles, "Script/Games/ChatServer/DB/MessageDB")
+--- database
+table.insert(RequireAndReloadChatServerFiles, "Script/Games/ChatServer/database/FriendDB")
+table.insert(RequireAndReloadChatServerFiles, "Script/Games/ChatServer/database/ChatDB")
+table.insert(RequireAndReloadChatServerFiles, "Script/Games/ChatServer/database/MessageDB")
 
 
 --- 聊天服后台好友申请相关

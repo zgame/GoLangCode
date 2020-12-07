@@ -5,8 +5,6 @@ import (
 	"GoLuaServerV2.1/NetWork"
 	"GoLuaServerV2.1/Utils/zLog"
 	"GoLuaServerV2.1/Utils/ztimer"
-	"bytes"
-	"encoding/binary"
 	"fmt"
 	"math"
 	"net"
@@ -206,18 +204,19 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	}
 	//-----------------------------解析头部信息----------------------------
 
-	msgId, subMsgId, bufferSize, ver := NetWork.DealReceiveTcpDeaderData(buf)
-	BufAllSize := NetWork.TCPHeaderSize + int(bufferSize)
+	//msgId, subMsgId, bufferSize, ver := NetWork.DealRecvTcpHeaderData(buf)
+	headFlag,msgId, subMsgId, bufferSize, tokenId , msgSize := NetWork.DealRecvTcpHeaderData(buf)
+	BufAllSize := NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize) + 1    // 整个数据包长度，末尾有标示位
 
 	////-----------------------------头部信息错误----------------------------
-	//if headFlag != uint8(254){
-	//	zLog.PrintfLogger("%d 数据包头部标识不正确 %x",a.UserId, buf)
-	//
-	//	//GlobalVar.GlobalMutex.Lock()
-	//	StaticDataPackageHeadFlagError ++
-	//	//GlobalVar.GlobalMutex.Unlock()
-	//	return -1 			// 数据包格式校验不正确
-	//}
+	if headFlag != uint8(254){
+		zLog.PrintfLogger("%d 数据包头部标识不正确 %x",a.UserId, buf)
+
+		//GlobalVar.GlobalMutex.Lock()
+		StaticDataPackageHeadFlagError ++
+		//GlobalVar.GlobalMutex.Unlock()
+		return -1 			// 数据包格式校验不正确
+	}
 
 
 	//fmt.Println("len(buf)",len(buf))
@@ -244,11 +243,11 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	}
 
 	//// ------------------------数据包尾部的判断----------------------
-	//endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
-	//if endData!= uint8(NetWork.TCPEnd){		// EE
-	//	zLog.PrintfLogger("%d数据包尾部判断不正确 %x ",a.UserId, buf)
-	//	return -1
-	//}
+	endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
+	if endData!= uint8(NetWork.TCPEnd){		// EE
+		zLog.PrintfLogger("%d数据包尾部判断不正确 %x ",a.UserId, buf)
+		return -1
+	}
 
 	//-----------------------------数据包重复----------------------------
 	//if int(ver) == a.TokenId{
@@ -259,31 +258,31 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	//-----------------------------取出proto buffer的内容----------------------------
 	//var finalBuffer []byte
 
-	offset := NetWork.TCPHeaderSize
-	token := 0
-	if ver > 0{
-		offset = 12		// version == 1 的时候， 加了一个token
-
-		buf1 := bytes.NewBuffer( buf[NetWork.TCPHeaderSize:offset])
-		binary.Read(buf1,binary.LittleEndian,&token)
-	}
+	//offset := NetWork.TCPHeaderSize
+	//token := 0
+	//if ver > 0{
+	//	offset = 12		// version == 1 的时候， 加了一个token
+	//
+	//	buf1 := bytes.NewBuffer( buf[NetWork.TCPHeaderSize:offset])
+	//	binary.Read(buf1,binary.LittleEndian,&token)
+	//}
 	//fmt.Println("token: ",token)
-	finalBuffer := buf[offset: NetWork.TCPHeaderSize + int(bufferSize)]
+	finalBuffer := buf[NetWork.TCPHeaderSize: NetWork.TCPHeaderSize + int(bufferSize)]
 	// 解密
-	if ver > 0 {
-		//fmt.Printf("buffer: %x\n", finalBuffer)
-		//fmt.Println("开始解密")
-		finalBuffer = NetWork.Decryp(finalBuffer)
-		//fmt.Printf("解密后buffer: %x\n", finalBuffer)
-	}
+	//if ver > 0 {
+	//	//fmt.Printf("buffer: %x\n", finalBuffer)
+	//	//fmt.Println("开始解密")
+	//	finalBuffer = NetWork.Decryp(finalBuffer)
+	//	//fmt.Printf("解密后buffer: %x\n", finalBuffer)
+	//}
 
 	//fmt.Println(string(buf[:n])) //将接受的内容都读取出来。
 	//fmt.Println("")
 
-	a.TokenId = int(ver) // 记录当前最后接收的数据包编号，防止重复
+	a.TokenId = int(tokenId) // 记录当前最后接收的数据包编号，防止重复
 	a.TokenTime = ztimer.GetOsTimeMillisecond()
 
-	QueueAdd(a, a.ServerId, a.UserId, int(msgId), int(subMsgId), string(finalBuffer), int(ver)) // 把收到的数据传递给队列， 后期进行lua进行处理
+	QueueAdd(a, a.ServerId, a.UserId, int(msgId), int(subMsgId), string(finalBuffer), int(tokenId)) // 把收到的数据传递给队列， 后期进行lua进行处理
 
 	a.ReceiveMsgNum++
 	a.SuccessBuf = buf 	// 记录最后一次成功的buf
