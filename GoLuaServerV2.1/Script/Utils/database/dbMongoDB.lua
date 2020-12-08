@@ -18,17 +18,23 @@ function MyMongoConnect(handle, h, d, u, ps)
 
     if ok then
         print(" Mongo  数据库 ok!")
-        --local user = {}
-        --user["ss"] = 22
-        --user["name"] = 'ss'
-        --user["ss2"] = "223"
-        --MongoInsert("people",user)
+        local user = {}
+        user["ss"] = 22
+        user["name"] = 'ss'
+        user["ss2"] = 5556433
+        --print(MongoInsert("people",user))
 
 
-        --local user2 = {}
-        --user2["name"] = 'ss'
+        local user2 = {}
+        user2["name"] = 889
+        local ss = MongoFind("people",user2)
         --local ss = MongoFinds("people",user2,"-key")
-        --printTable(ss)
+        printTable(ss)
+
+        --print(MongoUpdate("people",user,user2))
+        user2["name"] = 1
+        print(MongoUpdate("people",user,user2,"$inc"))
+
     end
 
     return ok, err
@@ -86,11 +92,14 @@ end
 
 
 -- 执行update语句  selectTable为条件  updateTable为更新的内容
-function MongoUpdate(collection, selectTable, updateTable, handle)
+function MongoUpdate(collection, selectTable, updateTable, handle ,cmd)
     if handle == nil then
         handle = MongoMainEngineConnect
     end
-    local err = handle:update(collection, selectTable, updateTable)
+    if cmd == nil then
+        cmd = "$set"        -- 默认是更新命令
+    end
+    local err = handle:update(collection, selectTable, updateTable, cmd)
     if err ~= nil then
         Logger(err)
     end

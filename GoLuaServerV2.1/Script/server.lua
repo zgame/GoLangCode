@@ -25,6 +25,7 @@ package.path = "Script/Protocol/protobuf/?.lua;"..package.path
 -------------------------------------Const----------------------------------------
 -- 这部分不参与热更新
 require("Script/Utils/string/json")                 -- Json
+require("Script/Utils/string/zStrings")                 -- strings
 require("Script/Utils/byte/zCrypto")
 require("Script/Utils/byte/zBit32")
 require("Script/Utils/byte/zZip")

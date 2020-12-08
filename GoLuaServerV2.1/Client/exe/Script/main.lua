@@ -9,7 +9,7 @@
 -------------------------------------Logger----------------------------------------
 package.path = "Script/Logger/?.lua;"..package.path
 require("logger")
-Logger("========Game Server Start ....========")
+Logger("Game Server Start ....")
 
 ---------------------------------------protocol buffer----------------------------------------
 --package.path = "Script/Protocol/build/?.lua;"..package.path

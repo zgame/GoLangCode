@@ -4,18 +4,18 @@
 package mySql
 
 import (
+	"GoLuaServerV2.1/Utils"
 	"database/sql"
 	"fmt"
 	"net/url"
 
-	util "github.com/tengattack/gluasql/util"
 	"github.com/yuin/gopher-lua"
 )
 
 func clientConnectMethod(L *lua.LState) int {
 
 	client := checkClient(L)
-	tb := util.GetValue(L, 2)
+	tb := Utils.LuaGetValue(L, 2)
 	options, ok := tb.(map[string]interface{})
 
 	if tb == nil || !ok {

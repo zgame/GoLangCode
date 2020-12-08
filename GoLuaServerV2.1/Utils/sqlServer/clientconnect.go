@@ -5,18 +5,17 @@
 package sqlServer
 
 import (
+	"GoLuaServerV2.1/Utils"
 	"database/sql"
 	"fmt"
-	util "github.com/tengattack/gluasql/util"
 	"github.com/yuin/gopher-lua"
-
 	_ "github.com/denisenkom/go-mssqldb"
 )
 
 func clientConnectMethod(L *lua.LState) int {
 
 	client := checkClient(L)
-	tb := util.GetValue(L, 2)
+	tb := Utils.LuaGetValue(L, 2)
 	options, ok := tb.(map[string]interface{})
 
 	if tb == nil || !ok {

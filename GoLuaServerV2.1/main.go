@@ -85,7 +85,7 @@ func main() {
 		oldLog.Println(http.ListenAndServe("localhost:8081", nil))
 	}()
 
-	fmt.Println("------------------首先读取命令行参数---------------------------")
+	fmt.Println("------------------	首先读取命令行参数	---------------------------")
 	wsPort := flag.Int("WebSocketPort", 0, "")
 	sPort := flag.Int("SocketPort", 0, "")
 	iGameServerID := flag.Int("ServerID", 0, "")
@@ -102,14 +102,14 @@ func main() {
 		}
 	}
 	zLog.ServerPort = SocketPort // 传递给log日志，让日志记录的时候区分服务器端口
-	fmt.Println("-------------------读取本地配置文件---------------------------")
+	fmt.Println("-------------------	读取本地配置文件	---------------------------")
 	initSetting()
 
-	fmt.Println("-------------------服务器初始化---------------------------")
+	//fmt.Println("-------------------	服务器初始化		---------------------------")
 	initVar()
 	Lua.QueueInit()
 
-	fmt.Println("-------------------Lua逻辑处理器---------------------------")
+	fmt.Println("-------------------	Lua逻辑处理器		---------------------------")
 	GameManagerInit()
 	fmt.Println("Lua 代码初始化完成")
 
@@ -117,16 +117,16 @@ func main() {
 	//fmt.Println("-------------------多核桌子逻辑处理器---------------------------")
 	//CreateGoroutineForLuaGameTable()
 
-	fmt.Println("-------------------启动gameManager---------------------------")
+	//fmt.Println("-------------------	启动gameManager	---------------------------")
 	GameManagerLua.GoCallLuaLogic("GoCallLuaStartGamesServers")
 	//StartMultiThreadChannelPlayerToGameManager()
 
 	TimerCommonLogicStart()
 
-	fmt.Println("-------------------读取数据库设置---------------------------")
+	//fmt.Println("-------------------	读取数据库设置---------------------------")
 	//UpdateLuaReload()
 
-	fmt.Println("-------------------游戏服务器开始建立连接---------------------------")
+	fmt.Println("---------------- 游戏服务器开始建立连接	  -------------------------")
 	NetWorkServerStart()
 
 

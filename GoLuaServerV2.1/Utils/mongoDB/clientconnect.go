@@ -5,13 +5,13 @@
 package mongoDB
 
 import (
+	"GoLuaServerV2.1/Utils"
 	"GoLuaServerV2.1/Utils/zLog"
 	"gopkg.in/mgo.v2"
 	"time"
 
 	//"gopkg.in/mgo.v2/bson"
 	"fmt"
-	"github.com/tengattack/gluasql/util"
 	"github.com/yuin/gopher-lua"
 
 	//_ "github.com/denisenkom/go-mssqldb"
@@ -20,7 +20,7 @@ import (
 func clientConnectMethod(L *lua.LState) int {
 
 	client := checkClient(L)
-	tb := gluasql_util.GetValue(L, 2)
+	tb := Utils.LuaGetValue(L, 2)
 	options, ok := tb.(map[string]interface{})
 
 	if tb == nil || !ok {

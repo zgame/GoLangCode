@@ -4,13 +4,10 @@
 package redis
 
 import (
+	"GoLuaServerV2.1/Utils"
 	"GoLuaServerV2.1/Utils/zLog"
-	"fmt"
 	"github.com/gomodule/redigo/redis"
-	gluasql_util "github.com/tengattack/gluasql/util"
 	"github.com/yuin/gopher-lua"
-	"reflect"
-	"time"
 )
 
 
@@ -20,7 +17,7 @@ import (
 func CmdForRedis(L *lua.LState ) int {
 	client := checkClient(L)
 	cmd := L.ToString(2)
-	args,ok := gluasql_util.GetValue(L, 3).([]interface{})		//强转为数组
+	args,ok := Utils.LuaGetValue(L, 3).([]interface{})		//强转为数组
 	if !ok {
 		zLog.PrintfLogger("redis cmd :%s 参数转换成数组出错 ",cmd )
 		return 0
@@ -54,7 +51,7 @@ func CmdForRedis(L *lua.LState ) int {
 func GetStringListFromRedis(L *lua.LState ) int {
 	client := checkClient(L)
 	cmd := L.ToString(2)
-	args,ok := gluasql_util.GetValue(L, 3).([]interface{})		//强转为数组
+	args,ok := Utils.LuaGetValue(L, 3).([]interface{})		//强转为数组
 	if !ok {
 		zLog.PrintfLogger("redis string list :%s 参数转换成数组出错 ",cmd )
 		return 0
@@ -108,109 +105,3 @@ func RunLuaScript(L *lua.LState) int {
 
 }
 
-
-//------------------------------------------------------------------------------------
-// utils
-//------------------------------------------------------------------------------------
-
-// map to  lua table
-func ToTableFromMap(l *lua.LState, v reflect.Value) lua.LValue {
-	tb := &lua.LTable{}
-	for _, k := range v.MapKeys(){
-		key := ToArbitraryValue(l, k.Interface())
-		if key!= lua.LString("_id") {
-			tb.RawSet(key, ToArbitraryValue(l, v.MapIndex(k).Interface()))
-		}
-	}
-	return tb
-}
-// slice to lua table
-func ToTableFromSlice(l *lua.LState, v reflect.Value) lua.LValue {
-	tb := &lua.LTable{}
-	for j := 0; j < v.Len(); j++ {
-		tb.RawSet(ToArbitraryValue(l, j+1), // because lua is 1-indexed
-			ToArbitraryValue(l, v.Index(j).Interface()))
-	}
-	return tb
-}
-
-func ToArbitraryValue(l *lua.LState, i interface{}) lua.LValue {
-	if i == nil {
-		return lua.LNil
-	}
-
-	switch ii := i.(type) {
-	case bool:
-		return lua.LBool(ii)
-	case int:
-		return lua.LNumber(ii)
-	case int8:
-		return lua.LNumber(ii)
-	case int16:
-		return lua.LNumber(ii)
-	case int32:
-		return lua.LNumber(ii)
-	case int64:
-		return lua.LNumber(ii)
-	case uint:
-		return lua.LNumber(ii)
-	case uint8:
-		return lua.LNumber(ii)
-	case uint16:
-		return lua.LNumber(ii)
-	case uint32:
-		return lua.LNumber(ii)
-	case uint64:
-		return lua.LNumber(ii)
-	case float64:
-		return lua.LNumber(ii)
-	case float32:
-		return lua.LNumber(ii)
-	case string:
-		return lua.LString(ii)
-	case []byte:
-		return lua.LString(ii)
-	default:
-		v := reflect.ValueOf(i)
-		switch v.Kind() {
-		case reflect.Ptr:
-			return ToArbitraryValue(l, v.Elem().Interface())
-
-		//case reflect.Struct:
-		//	return ToTableFromStruct(l, v)
-
-		case reflect.Map:
-			return ToTableFromMap(l, v)
-
-		case reflect.Slice:
-			return ToTableFromSlice(l, v)
-
-		//case mgo.Index{}
-
-		default:
-			return lua.LString("")
-		}
-	}
-}
-
-// 用来调试打印的
-func printValue(pval *interface{}) {
-	switch v := (*pval).(type) {
-	case nil:
-		fmt.Print("NULL")
-	case bool:
-		if v {
-			fmt.Print("true")
-		} else {
-			fmt.Print("false")
-		}
-	case []byte:
-		fmt.Print(string(v))
-	case time.Time:
-		fmt.Print(v.Format("2006-01-02 15:04:05.999"))
-	default:
-		fmt.Print(v)
-	}
-	fmt.Print("\t", reflect.TypeOf(*pval))
-
-}

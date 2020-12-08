@@ -4,12 +4,12 @@
 package sqlServer
 
 import (
+	"GoLuaServerV2.1/Utils"
 	"GoLuaServerV2.1/Utils/zLog"
-	"github.com/yuin/gopher-lua"
 	"fmt"
+	"github.com/yuin/gopher-lua"
 	"reflect"
 	"time"
-	util "github.com/tengattack/gluasql/util"
 )
 
 // 查询
@@ -59,7 +59,7 @@ func clientQueryMethod(L *lua.LState) int {
 	//	fmt.Println("------------------------------------")
 	//	//printValue(fb.GetFieldArr())
 	//	fmt.Println("",fb.GetFieldArr())
-	//	tbRow := util.ToTableFromMap(L, reflect.ValueOf(fb.GetFieldArr()))
+	//	tbRow := util.toTableFromMap(L, reflect.ValueOf(fb.GetFieldArr()))
 	//	fmt.Println("---------------end---------------------")
 	//	tb.Append(tbRow)
 	//}
@@ -82,7 +82,7 @@ func clientQueryMethod(L *lua.LState) int {
 				fmt.Print("\t")
 			}
 			//printValue(vals[i].(*interface{}))
-			tbRow.RawSet(util.ToArbitraryValue(L, cols[i]), util.ToArbitraryValue(L, vals[i]))
+			tbRow.RawSet(Utils.LuaSetValue(L, cols[i]), Utils.LuaSetValue(L, vals[i]))
 		}
 		//fmt.Println("")
 		tb.Append(tbRow)

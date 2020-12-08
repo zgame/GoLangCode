@@ -22,21 +22,21 @@
 -- 服务器开始创建各个游戏，这里的游戏都是多人的游戏， 如果是单人游戏，玩家自己创建即可
 function GoCallLuaStartGamesServers()
     -- 初始化
-    print("-------------------启动 mongo db ---------------------------")
+    print("-------------------  启动 mongo db   ---------------------------")
     MongoMainEngineConnect = MongoDBNew()
     local ok, err = MyMongoConnect(MongoMainEngineConnect,ConstMongoAddress,  ConstMongoDatabase, ConstMongoUser, ConstMongoPass)
     if ok == false then
         print("mongo 服务器启动错误: " .. err)
         return
     end
-    print("-------------------启动 redis ---------------------------")
+    print("-------------------  启动 redis      ---------------------------")
     RedisEngineConnect = RedisNew()
     ok, err = RedisInit(RedisEngineConnect,ConstRedisAddress,ConstRedisPass)
     if ok == false then
         print("redis 服务器启动错误: " .. err)
         return
     end
-    print("-------------------启动 mySql ---------------------------")
+    print("-------------------  启动 mySql      ---------------------------")
     MySqlMainEngineConnect = MySqlNew()
     ok, err = MysqlConnect(MySqlMainEngineConnect,ConstMySqlServerIP, ConstMySqlServerPort, ConstMySqlDatabase, ConstMySqlUid, ConstMySqlPwd)
     if ok == false then
@@ -65,14 +65,14 @@ function GoCallLuaStartGamesServers()
     --    print("sql server 好友库连接失败!")
     --    return
     --end
-    print("------------------ 服务器启动初始化---------------------------")
+    print("------------------   服务器启动初始化  ---------------------------")
 
     --CreateAllGoRoutineGameTable()     --创建桌子使用的goroutine函数列表
     --GetALLUserUUID()                  -- 是一个UUID是不是需要初始化的判断
 
-    print("------------------- 添加聊天服务------------------------------")
+    --print("-------------------  添加聊天服务  ------------------------------")
     AddGame("满贯捕鱼聊天服务", GameTypeChat, 0)
-    print("------------------- 添加游戏房间------------------------------")
+    print("-------------------  添加游戏房间  ------------------------------")
     --AddGame("满贯捕鱼", GameTypeBY , 1)           -- 普通房间
     --AddGame("满贯捕鱼30倍", GameTypeBY30 , 30)    -- 30倍房间
     --AddGame("满贯捕鱼2", GameTypeBY2)
@@ -90,8 +90,8 @@ function GoCallLuaStartGamesServers()
     --ServerIDofLogServer = luaCallGoNetWorkConnectOtherServer(ConstServerAddressLogServer)                 -- 申请连接服务器，并 把serverId保存下来， 以后发送消息用
     --print("日志服 serverId ",ServerIDofLogServer)
 
-    Logger("--------------StartGamesServers  End--------------------------")
-    Logger("ServerIP_Port:"..ServerIP_Port)
+    --Logger("--------------StartGamesServers  End--------------------------")
+    --Logger("ServerIP_Port:"..ServerIP_Port)
 
 end
 
