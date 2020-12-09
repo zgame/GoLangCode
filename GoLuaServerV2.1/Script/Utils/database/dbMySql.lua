@@ -11,10 +11,6 @@
 
 MySqlEngine = require('mySql')
 --MySqlMainEngineConnect = MySqlEngine.new()
---- 创建数据库句柄
-function MySqlNew()
-    return MySqlEngine.new()
-end
 
 
 -- mysql数据库连接

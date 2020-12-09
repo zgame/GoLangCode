@@ -13,20 +13,27 @@ local SUB_KN_DETECT_SOCKET = 1 -- 检测命令
 ---网络连接成功时候的初始化
 function GoCallLuaNetWorkInit(serverId)
 
-    if serverId == ServerIDofLogServer then
-        -- 登录日志服成功，开始申请注册客户端
-        --LuaNetWorkSend(ServerIDofLogServer, MAIN_CMD_ID, SUB_C_MONITOR_REG, nil, nil)
-    elseif serverId == ServerIDofCorrespondServer then
-        -- 登录协调服成功，开始申请注册客户端
-        --ChatServerRegisterCorrespondServer()
-    else
-        ---其他socket 连接了本服务器
-        --Logger("聊天服有链接了"..serverId)
-        --Logger("GoCallLuaNetWorkInit 其他socket 连接了 " ..  serverId)
-        --if ChatServerLogicInstance ~= nil then
-        --    ChatServerLogicInstance:OnSocketLink(serverId)
-        --end
-    end
+    local switch={}
+    switch["Game"] = GameNetworkInit                     -- 启动游戏服
+    switch["MainCenter"] = MainCenterServer.Init                 -- 启动主中心服
+    -- 运行对应server type的函数
+    switch[ServerTypeName](serverId)
+
+
+    --if serverId == ServerIDofLogServer then
+    --    -- 登录日志服成功，开始申请注册客户端
+    --    --LuaNetWorkSend(ServerIDofLogServer, MAIN_CMD_ID, SUB_C_MONITOR_REG, nil, nil)
+    --elseif serverId == ServerIDofCorrespondServer then
+    --    -- 登录协调服成功，开始申请注册客户端
+    --    --ChatServerRegisterCorrespondServer()
+    --else
+    --    ---其他socket 连接了本服务器
+    --    --Logger("聊天服有链接了"..serverId)
+    --    --Logger("GoCallLuaNetWorkInit 其他socket 连接了 " ..  serverId)
+    --    --if ChatServerLogicInstance ~= nil then
+    --    --    ChatServerLogicInstance:OnSocketLink(serverId)
+    --    --end
+    --end
 end
 
 
@@ -41,18 +48,27 @@ function GoCallLuaNetWorkReceive(serverId, userId, msgId, subMsgId, data, token)
     --Logger("lua收到了消息subMsgId："..subMsgId)
     --Logger("lua收到了消息："..data)
     -- 如果是内核命令直接发送相关命令到对应的server
-    if msgId == MDM_KN_COMMAND and subMsgId == SUB_KN_DETECT_SOCKET then
-        LuaNetWorkSend(serverId, MDM_KN_COMMAND, SUB_KN_DETECT_SOCKET, nil, nil)
-        return
-    end
+    --if msgId == MDM_KN_COMMAND and subMsgId == SUB_KN_DETECT_SOCKET then
+    --    LuaNetWorkSend(serverId, MDM_KN_COMMAND, SUB_KN_DETECT_SOCKET, nil, nil)
+    --    return
+    --end
     ---- 处理消息分发各服务器处理
     --local mianCMDDispater =  NetWorkMainCMDDispater[msgId]
     --if mianCMDDispater ~= nil then
     --    mianCMDDispater(serverId,userId,msgId,subMsgId,data, token)
     --    return
     --end
+    --if ServerTypeName == "MainServer" then
+    --    MainCenterServer.Receive(serverId, userId, msgId, subMsgId, data, token)
+    --end
+    local switch={}
+    switch["Game"] = GameReceiveMsg                     -- 游戏服
+    switch["MainCenter"] = MainCenterServer.Receive                 -- 主中心服
+    -- 运行对应server type的函数
+    switch[ServerTypeName](serverId, userId, msgId, subMsgId, data, token)
 
-    ReceiveMsg(serverId, userId, msgId, subMsgId, data, token)
+
+    --GameReceiveMsg(serverId, userId, msgId, subMsgId, data, token)
     -- 统计消息数量
     --local now = GetOsTimeMillisecond()
     --if now - ZswLogShowReceiveLastTime > 1000 then
@@ -72,107 +88,13 @@ function GoCallLuaNetWorkReceive(serverId, userId, msgId, subMsgId, data, token)
 end
 
 
--- 根据命令进行分支处理
-function ReceiveMsg(serverId, userId, msgId, subMsgId, data, token)
-
-    --print("msgId",msgId, "subMsgId",subMsgId)
-    UserToken = token           -- 保存到全局里面，发送的时候取出来GameMessage
-    if msgId == MDM_MB_LOGON then
-        --if subMsgId == SUB_MB_GUESTLOGIN  then
-        --    --print("**************游客登录服申请******************* ")
-        --end
-    elseif msgId == MDM_GR_LOGON then
-        if subMsgId == SUB_GR_LOGON_USERID then
-            print("**************游客登录游戏服申请******************* ")
-            ----这里是原来的登录， 主要是返回客户端玩家的一些数据
-            SevLoginGSGuest(serverId, data)      -- 返回给客户端，玩家的数据，用来显示的
-        end
-    elseif msgId == MDM_GF_FRAME then
-        if subMsgId == SUB_GF_GAME_OPTION then
-            print("**************游游客进入游戏房间申请***************** ", userId)
-            ---- 这里是玩家申请登录游戏的类型，进入游戏房间， 分配桌子坐下开始玩 , 客户端需要申请房间的类型
-            SevEnterScene(userId, data)
-        end
-    elseif msgId == MDM_GR_USER then
-        if subMsgId == SUB_GR_USER_STANDUP then
-            -- 数据验证
-            local player, game, gameTable = GetPlayer_Game_Table(userId)
-            if player == nil or game == nil or gameTable == nil then
-                Logger("玩家数据：" .. player .. ";game:" .. game .. ";table:" .. gameTable)
-                return
-            end
-            gameTable:PlayerStandUp(player.ChairID, player)
-            local sendResult = CMD_GameServer_pb.CMD_GR_S_UserStandUp()
-            sendResult.result_code = 0
-            LuaNetWorkSendToUser(userId, MDM_GR_USER, SUB_GR_S_USER_STANDUP, sendResult)
-        end
-    elseif msgId == MDM_GF_GAME then
-        if subMsgId == SUB_C_USER_FIRE then
-            print("**************客户端开火***************** ", userId)
-            HandleUserFire(userId, data)
-        elseif subMsgId == SUB_C_CATCH_FISH then
-            print("*************客户端抓鱼***************** ", userId)
-            HandleCatchFish(userId, data)
-
-        elseif subMsgId == SUB_S_BOSS_COME then
-            --print("*************暂时用来统计消息的返回时间***************** ",userId)
-            --HandleStaticsNetWorkTime(userId)
-        elseif subMsgId >= SUB_C_USE_SUMMON_GEM and subMsgId <= SUB_S_USER_DHS_INFO then
-            --print("*************小海兽消息***************** ",userId)
-            XhsReceiveMsg(serverId, userId, msgId, subMsgId, data, token)
-        end
-    elseif msgId == MAIN_CMD_ID then
-        --print("*************日志服***************** ",serverId)
-        if subMsgId == SUB_S_MONITOR_ITEMS then
-            print("*************下发服务器列表***************** ", serverId)
-        elseif subMsgId == SUB_S_MONITOR_STATE then
-            --print("*************刷新服务器状态***************** ",serverId)
-        end
-    elseif msgId == MDM_GR_HEARTBEAT then
-        if subMsgId == SUB_GR_C_HEARTBEAT then
-            --print("*************处理玩家心跳***************** ",serverId)
-            local receiveMsg = CMD_GameServer_pb.CMD_C_GAME_HEART_C2G()
-            receiveMsg:ParseFromString(data)
-            local sendMsg = CMD_GameServer_pb.CMD_C_GAME_HEART_C2G()
-            sendMsg.target_user_id = userId
-            LuaNetWorkSendToUser(userId, MDM_GR_HEARTBEAT, SUB_GR_S_HEARTBEAT, sendMsg)
-        end
-    elseif msgId == MAIN_CHAT_SERVICE_INNER then
-        -- 登录服 到 聊天服消息
-        ChatReceiveMsgFromLoginServer(serverId,subMsgId,data, token)
-        -- ChatLoginServerToChatServerReceive(serverId, userId, subMsgId, data, token)
-    elseif msgId == MAIN_CHAT_SERVICE_CLIENT then
-        -- 客户端 到 聊天服消息
-        ChatReceiveMsgFromClient(serverId, userId, subMsgId, data, token)
-        --ChatClientToChatServerReceive(serverId, userId, subMsgId, data, token)
-    else
-
-    end
-end
-
 --- go通知lua 所有掉线的连接都要走这里
 function GoCallLuaPlayerNetworkBroken(uid, serverId)
-    Logger("go 通知：" .. uid .. "  掉线了")
+    local switch={}
+    switch["Game"] = GameNetworkBroken                     -- 游戏服
+    switch["MainCenter"] = MainCenterServer.Broken                 -- 主中心服
+    -- 运行对应server type的函数
+    switch[ServerTypeName](uid, serverId)
 
-    if ChatServerLogicInstance then
-        --- 每个连接断开清空连接信息
-        ChatServerLogicInstance:OnSocketClose(serverId)
-    end
-    local player = GetPlayerByUID(uid)
-    if player ~= nil then
-        --printTable(player,0,"LeavePlayer")
-        --print("LeavePlayer.UID="..player.User.UserId)
-        local game = GetGameByID(player.GameType)
-        --printTable(game)
-        if game ~= nil then
-            game:PlayerLogOutGame(player)
-            --player.NetWorkState = false
-            --player.NetWorkCloseTimer = GetOsTimeMillisecond()
-        end
-        ---如果有聊天服的主逻辑
-        if ChatServerLogicInstance then
-            ChatServerLogicInstance:OnEventTCPNetworkShut(player.User.UserId)
-        end
 
-    end
 end

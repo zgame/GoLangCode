@@ -71,7 +71,10 @@ table.insert(RequireAndReloadProtocolFiles, "Script/Protocol/build/CMD_GameServe
 
 -- Const
 RequireAndReloadConstFiles = {}
-table.insert(RequireAndReloadConstFiles, "Script/Const/Const")
+table.insert(RequireAndReloadConstFiles, "Script/Const/const")
+table.insert(RequireAndReloadConstFiles, "Script/Const/constCmd")
+table.insert(RequireAndReloadConstFiles, "Script/Const/constCmdGame")
+table.insert(RequireAndReloadConstFiles, "Script/Const/constCmdServer")
 table.insert(RequireAndReloadConstFiles, "Script/setting")
 table.insert(RequireAndReloadConstFiles, "Script/Const/excel")
 table.insert(RequireAndReloadConstFiles, "Script/Const/proto")
@@ -101,12 +104,14 @@ table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zNetwork")
 -- gameManager
 RequireAndReloadManagerFiles = {}
 table.insert(RequireAndReloadManagerFiles, "Script/GameCommonLogic/commonLogic")
+table.insert(RequireAndReloadManagerFiles, "Script/GameCommonLogic/mainCenter")
 table.insert(RequireAndReloadManagerFiles, "Script/GameManager/player")
 table.insert(RequireAndReloadManagerFiles, "Script/GameManager/playerLogic")
 table.insert(RequireAndReloadManagerFiles, "Script/GameManager/user")
 table.insert(RequireAndReloadManagerFiles, "Script/GameManager/chatUser")
 table.insert(RequireAndReloadManagerFiles, "Script/GameManager/games")
 table.insert(RequireAndReloadManagerFiles, "Script/GameManager/gameManager")
+table.insert(RequireAndReloadManagerFiles, "Script/GameManager/ServerManager")
 
 
 -- game
@@ -148,7 +153,7 @@ table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/gameEnter")
 table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/gameFire")
 table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/loginServer")
 table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/registerCorrespondServer")
---table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/mail")
+table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/gameReceive")
 --table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/mainHall")
 --table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/monthCard")
 table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/network")

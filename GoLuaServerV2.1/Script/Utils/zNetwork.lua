@@ -65,3 +65,9 @@ function LuaNetWorkSendToUser(userId, msgId, subMsgId, sendCmd, err, token)
 
     return luaCallGoNetWorkSend(userId, 0, msgId, subMsgId, buffer, err, token)       -- 返回结果 true 发送成功  false 发送失败
 end
+
+
+--连接到其他内部服务器， 返回值是serverId要保存好
+function LuaNetWorkConnectOtherServer(address)
+    return luaCallGoNetWorkConnectOtherServer(address)
+end

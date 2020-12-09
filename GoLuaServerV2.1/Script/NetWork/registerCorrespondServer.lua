@@ -11,7 +11,7 @@ function ChatServerRegisterCorrespondServer()
     local sendMsg = CMD_GlobalServer_Inner_pb.CMD_CS_C_RegisterChat();
     sendMsg.szServerName = "goLua聊天服";
     sendMsg.szServerAddr = ConstServerAddressChatServer;
-    local bSend =  LuaNetWorkSend( ServerIDofCorrespondServer, MDM_CS_REGISTER, SUB_CS_C_REGISTER_CHAT , sendMsg,nil);
+    local bSend =  LuaNetWorkSend( ServerIDofCorrespondServer, MDM_CS_REGISTER, ConstMainCenterServer , sendMsg,nil);
     Logger(string.format("ChatServerRegisterCorrespondServer:发送注册聊天服的消息：bSend=%s",tostring(bSend)));
 
 end

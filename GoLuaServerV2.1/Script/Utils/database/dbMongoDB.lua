@@ -6,11 +6,6 @@
 
 
 MongoEngine = require('mongodb')
---MongoEngineConnect = MongoEngine.new()
---- 创建数据库句柄
-function MongoDBNew()
-    return MongoEngine.new()
-end
 
 -- Mongo数据库连接
 function MyMongoConnect(handle, h, d, u, ps)
@@ -18,22 +13,22 @@ function MyMongoConnect(handle, h, d, u, ps)
 
     if ok then
         print(" Mongo  数据库 ok!")
-        local user = {}
-        user["ss"] = 22
-        user["name"] = 'ss'
-        user["ss2"] = 5556433
-        --print(MongoInsert("people",user))
-
-
-        local user2 = {}
-        user2["name"] = 889
-        local ss = MongoFind("people",user2)
-        --local ss = MongoFinds("people",user2,"-key")
-        printTable(ss)
-
-        --print(MongoUpdate("people",user,user2))
-        user2["name"] = 1
-        print(MongoUpdate("people",user,user2,"$inc"))
+        --local user = {}
+        --user["ss"] = 22
+        --user["name"] = 889
+        --user["ss2"] = '223'
+        ----print(MongoInsert("people",user))
+        --
+        --
+        --local user2 = {}
+        --user2["name"] = 889
+        --local ss = MongoFind("people",user)
+        ----local ss = MongoFinds("people",user2,"-key")
+        --printTable(ss)
+        --
+        ----print(MongoUpdate("people",user,user2))
+        --user2["name"] = 1
+        --print(MongoUpdate("people",user,user2,"$inc"))
 
     end
 
@@ -92,7 +87,7 @@ end
 
 
 -- 执行update语句  selectTable为条件  updateTable为更新的内容
-function MongoUpdate(collection, selectTable, updateTable, handle ,cmd)
+function MongoUpdate(collection, selectTable, updateTable,cmd, handle )
     if handle == nil then
         handle = MongoMainEngineConnect
     end

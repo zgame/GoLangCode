@@ -11,6 +11,7 @@
 
 ------------------------统计信息用-----------------------
 ServerIP_Port = ""      -- 当前服务器的地址和端口号
+ServerTypeName =""          -- 定义了当前服务器的类型名字
 GameRoomServerID    = 0 -- 游戏房间的ServerID(用于夹在游戏房间相关信息)
 ServerStateSendNum = 0      -- 平均网络发送包数量
 ServerStateReceiveNum = 0   -- 平均网络接收包数量
@@ -47,6 +48,7 @@ UserToken = 0
 ------------------------各个服务器的serverId-----------------------
 ServerIDofLogServer = 0
 ServerIDofCorrespondServer = 0
+ServerMainServer = 0
 
 
 
@@ -58,9 +60,8 @@ MongoMainEngineConnect = nil                -- mongo db 主库
 ------------------------各个my sql 数据库句柄-----------------------
 MySqlMainEngineConnect = nil                -- 主mysql数据库
 
-------------------------各个sql server 数据库句柄-----------------------
-SqlServerMainEngineConnect = nil         -- 主数据库
-
-SqlServerDataBaseHandleBY = nil         -- 捕鱼数据库
-SqlServerDataBaseHandleLog = nil        -- 日志数据库
-SqlServerDataBaseHandleFriend = nil     -- 好友数据库
+--------------------------各个sql server 数据库句柄-----------------------
+--SqlServerMainEngineConnect = nil         -- 主数据库
+--SqlServerDataBaseHandleBY = nil         -- 捕鱼数据库
+--SqlServerDataBaseHandleLog = nil        -- 日志数据库
+--SqlServerDataBaseHandleFriend = nil     -- 好友数据库

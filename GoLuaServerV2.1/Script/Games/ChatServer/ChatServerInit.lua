@@ -18,6 +18,6 @@ function ChatServerInit()
     ChatServerInitTimer()
     --SetNewTimer('Test',200)
     --Logger("--------------------注册日志服----------------------------")
-    --ServerIDofLogServer = luaCallGoNetWorkConnectOtherServer(ConstServerAddressLogServer)                 -- 申请连接服务器，并 把serverId保存下来， 以后发送消息用
+    --ServerIDofLogServer = LuaNetWorkConnectOtherServer(ConstServerAddressLogServer)                 -- 申请连接服务器，并 把serverId保存下来， 以后发送消息用
     --print("日志服 serverId ",ServerIDofLogServer)
 end

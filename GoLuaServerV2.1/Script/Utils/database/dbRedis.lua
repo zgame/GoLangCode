@@ -12,10 +12,6 @@
 RedisEngine = require('redis')
 --RedisEngineConnect = RedisEngine.new()
 
---- 创建数据库句柄
-function RedisNew()
-    return RedisEngine.new()
-end
 
 ----------------------------通用函数-----------------------------
 -- 有些命令会返回string 或者int

@@ -18,7 +18,13 @@ function GoCallLuaCommonLogicRun()
 
 end
 
--- 每60秒记录一下，服务器的状态到数据库中
+
+
+
+
+---------------------------  下面为示例代码   ---------------------------------------------------
+
+-- 每60秒记录一下，服务器的状态到数据库中，服务器自己创建定时器去做这个事情
 function GoCallLuaSaveServerState()
     local allGamesTablesNum = 0
     for _, game in pairs(AllGamesList) do
@@ -41,7 +47,7 @@ function GoCallLuaSaveServerState()
 end
 
 
---夜里12点触发公共逻辑变动，因为新的一天开始了
+--夜里12点触发公共逻辑变动，因为新的一天开始了，服务器自己创建定时器去做这个事情
 function GoCallLuaCommonLogic12clock()
     Logger("夜里12点触发公共逻辑变动，因为新的一天开始了")
     -- 记录活动期间的排行榜结果
@@ -50,16 +56,5 @@ function GoCallLuaCommonLogic12clock()
     -- 联盟工会的新一天的初始化
     --
 
-end
-
-
--- 自己设定的新的计时器
-function NewTimerBy2Second()
-    --print("这是lua自己设定的定时器")
-end
-
--- 自己设定的固定时间计时器
-function NewTimerByAfternoon4()
-    print("这是lua自己设定的下午4点的定时器")
 end
 

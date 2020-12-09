@@ -12,10 +12,7 @@
 SqlServerEngine = require('sqlServer')
 --SqlServerMainEngineConnect = SqlServerEngine.new()
 
---- 创建数据库句柄
-function SqlServerNew()
-    return SqlServerEngine.new()
-end
+
 
 
 --- mysql数据库连接

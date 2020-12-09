@@ -452,7 +452,7 @@ func ConnectOtherServer(ServerAddressAndPort string) int{
 	client.MaxMsgLen = math.MaxUint32
 	client.AutoReconnect = true		// 支持断线重联
 
-	fmt.Println("0")
+	//fmt.Println("0")
 	//serverId :=  MyServerUUID 		// serverId
 	serverId :=  GetServerUid() 		// serverId
 

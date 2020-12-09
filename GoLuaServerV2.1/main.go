@@ -46,6 +46,7 @@ var WebSocketPort int
 var SocketPort int
 var GameRoomServerID int	// 游戏原有的ServerID(来源于GameRoomInfo中对应的)
 var ServerAddress string    // ServerAddress 服务器地址
+var ServerTypeName string    // ServerAddress 服务器地址
 //var WebSocketAddress string // WebSocketAddress 服务器地址
 
 
@@ -87,17 +88,19 @@ func main() {
 
 	fmt.Println("------------------	首先读取命令行参数	---------------------------")
 	wsPort := flag.Int("WebSocketPort", 0, "")
-	sPort := flag.Int("SocketPort", 0, "")
+	iPort := flag.Int("SocketPort", 0, "")
 	iGameServerID := flag.Int("ServerID", 0, "")
+	sServerTypeName := flag.String("ServerTypeName", "", "定义游戏服务器的类型")
 	flag.Parse()
 	WebSocketPort = *wsPort
-	SocketPort = *sPort
+	SocketPort = *iPort
 	GameRoomServerID = *iGameServerID
+	ServerTypeName = *sServerTypeName
 
 	fmt.Println("WebSocketPort=",WebSocketPort,"SocketPort=",SocketPort,"GameServerID=",GameRoomServerID)
 	if WebSocketPort==0 || SocketPort==0{
 		for{
-			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123")
+			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123 -ServerTypeName=Game")
 			time.Sleep(time.Second)
 		}
 	}
@@ -118,7 +121,7 @@ func main() {
 	//CreateGoroutineForLuaGameTable()
 
 	//fmt.Println("-------------------	启动gameManager	---------------------------")
-	GameManagerLua.GoCallLuaLogic("GoCallLuaStartGamesServers")
+	GameManagerLua.GoCallLuaLogic("GoCallLuaStartAllServers")
 	//StartMultiThreadChannelPlayerToGameManager()
 
 	TimerCommonLogicStart()
@@ -144,16 +147,16 @@ func main() {
 		//GameManagerLua.GoCallLuaLogic("MultiThreadChannelPlayerToGameManager") //公共逻辑处理循环
 
 		//UpdateDBSetting()
-		ztimer.CheckRunTimeCost(func() {
-				GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
-			}, "桌子循环GoCallLuaGoRoutineForLuaGameTable"		)
+		//ztimer.CheckRunTimeCost(func() {
+		//		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
+		//	}, "桌子循环GoCallLuaGoRoutineForLuaGameTable"		)
 		//startTime := ztimer.GetOsTimeMillisecond()
 		//GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
 		//if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
 		//	zLog.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 桌子循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		//}
 		runtime.GC()
-		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出1秒的时间， 这个可以后期调整
+		time.Sleep(time.Millisecond * 1000 * 10)                                //给其他协程让出10秒的时间， 这个可以后期调整
 		//end:= ztimer.GetOsTimeMillisecond()
 		//if end - start > 120 {
 			//fmt.Println("一个循环用时", end-start)
@@ -282,6 +285,7 @@ func GameManagerInit() {
 	GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
 	GameManagerLua.GoCallLuaSetStringVar("ServerIP_Port", ServerAddress+ ":" + strconv.Itoa(SocketPort)) 	//把服务器地址传递给lua
 	GameManagerLua.GoCallLuaSetIntVar("GameRoomServerID", GameRoomServerID) 								//把服务器地址传递给lua
+	GameManagerLua.GoCallLuaSetStringVar("ServerTypeName", ServerTypeName) 								//把参数传递给lua
 }
 
 // 检查通用逻辑部分的lua是否需要更新
@@ -299,54 +303,53 @@ func GameManagerLuaReloadCheck() {
 
 func TimerCommonLogicStart() {
 	// -------------------创建计时器，定期去run公共逻辑---------------------
-	ztimer.TimerCheckUpdate(func() {
-		connectShow, successSendMsg, successRecMsg, WriteChan := GetAllConnectMsg()
-		memoryShow, heapInUse := zLog.GetSysMemInfo()
-
-		zLog.PrintfLogger("[%s] 拼接成功%d    标识错误%d   %s   %s  处理消息平均时间：%d  ", ServerAddress+":"+strconv.Itoa(SocketPort),
-			Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, connectShow, memoryShow, Lua.StaticNetWorkReceiveToSendCostTime)
-
-		// 把服务器的状态信息，传递给lua
-		GameManagerLua.GoCallLuaSetIntVar("ServerStateSendNum", successSendMsg)
-		GameManagerLua.GoCallLuaSetIntVar("ServerStateReceiveNum", successRecMsg)
-		GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)
-		GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError)
-		GameManagerLua.GoCallLuaSetIntVar("ServerHeapInUse", heapInUse)
-		GameManagerLua.GoCallLuaSetIntVar("ServerNetWorkDelay", Lua.StaticNetWorkReceiveToSendCostTime)
-
-		ztimer.CheckRunTimeCost(func() {
-			GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
-		}, "GoCallLuaCommonLogicRun")
-
-	}, 10)
+	//ztimer.TimerCheckUpdate(func() {
+	//	connectShow, successSendMsg, successRecMsg, WriteChan := GetAllConnectMsg()
+	//	memoryShow, heapInUse := zLog.GetSysMemInfo()
+	//
+	//	zLog.PrintfLogger("[%s] 拼接成功%d    标识错误%d   %s   %s  处理消息平均时间：%d  ", ServerAddress+":"+strconv.Itoa(SocketPort),
+	//		Lua.StaticDataPackagePasteSuccess, Lua.StaticDataPackageHeadFlagError, connectShow, memoryShow, Lua.StaticNetWorkReceiveToSendCostTime)
+	//
+	//	// 把服务器的状态信息，传递给lua
+	//	GameManagerLua.GoCallLuaSetIntVar("ServerStateSendNum", successSendMsg)
+	//	GameManagerLua.GoCallLuaSetIntVar("ServerStateReceiveNum", successRecMsg)
+	//	GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)
+	//	GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError)
+	//	GameManagerLua.GoCallLuaSetIntVar("ServerHeapInUse", heapInUse)
+	//	GameManagerLua.GoCallLuaSetIntVar("ServerNetWorkDelay", Lua.StaticNetWorkReceiveToSendCostTime)
+	//
+	//	ztimer.CheckRunTimeCost(func() {
+	//		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogicRun") //公共逻辑处理循环
+	//	}, "GoCallLuaCommonLogicRun")
+	//
+	//}, 10)
 
 	// ---------------------创建计时器，定期去保存服务器状态---------------------
-	ztimer.TimerCheckUpdate(func() {
-		ztimer.CheckRunTimeCost(func() {
-			GameManagerLua.GoCallLuaLogic("GoCallLuaSaveServerState") // 保存服务器的状态
-		}, "GoCallLuaSaveServerState")
-
-
-		runtime.GC()
-	}, 60)	// 1 分钟
+	//ztimer.TimerCheckUpdate(func() {
+	//	ztimer.CheckRunTimeCost(func() {
+	//		GameManagerLua.GoCallLuaLogic("GoCallLuaSaveServerState") // 保存服务器的状态
+	//	}, "GoCallLuaSaveServerState")
+	//
+	//
+	//	runtime.GC()
+	//}, 60)	// 1 分钟
 
 	// ---------------------创建计时器，定期去更新lua脚本reload---------------------
-	ztimer.TimerCheckUpdate(func() {
-		// 定期更新后台的配置数据
-		ztimer.CheckRunTimeCost(func() {
-			UpdateLuaReload()
-		}, "UpdateLuaReload")
-
-
-	},  20 * 1)  // 1 分钟
+	//ztimer.TimerCheckUpdate(func() {
+	//	// 定期更新后台的配置数据
+	//	ztimer.CheckRunTimeCost(func() {
+	//		UpdateLuaReload()
+	//	}, "UpdateLuaReload")
+	//
+	//
+	//},  20 * 1)  // 1 分钟
 
 	//---------------------创建计时器，夜里12点触发---------------------
-	ztimer.TimerClock0(func() {
-		ztimer.CheckRunTimeCost(func() {
-			GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
-		}, "GoCallLuaCommonLogic12clock")
-
-	})
+	//ztimer.TimerClock0(func() {
+	//	ztimer.CheckRunTimeCost(func() {
+	//		GameManagerLua.GoCallLuaLogic("GoCallLuaCommonLogic12clock") //公共逻辑处理循环
+	//	}, "GoCallLuaCommonLogic12clock")
+	//})
 
 
 	//---------------------创建计时器，定期执行所有的接受消息队列---------------------
