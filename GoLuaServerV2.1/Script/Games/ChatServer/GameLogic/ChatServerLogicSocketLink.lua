@@ -14,7 +14,7 @@ function ChatServerLogic:CheckSocketLink()
         --- 60秒内没有设置连接类型，可以判定为其他 连接
         if linkInfo.LinkKind == Enum_ChatServerLinkKind.None and (linkInfo.ActiveTime + 60 <= currentTime) then
             Logger("ChatServerFace:CheckSocketLink ========Serverid = ", serverid)
-            LuaNetWorkClose(0, tonumber(serverid))
+            NetWork.Close(0, tonumber(serverid))
             self:OnSocketClose(serverid)
         end
     end

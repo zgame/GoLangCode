@@ -2,12 +2,8 @@
 package CMD;
 
 
-
-
-
-
 //用户信息------------------------------------------------------------------------------------------------------------
-message tagUserInfo
+message UserInfo
 {
 	optional bytes nick_name = 1;					//昵称
 	optional uint32 user_id = 2;					//用户ID
@@ -37,30 +33,7 @@ message tagUserInfo
 	optional uint32 secsitelv = 26;					//妖怪房炮等级
 	optional uint32 monster_upper = 27;				// 妖怪房炮提升倍数			
 }
-//已使用的技能
-message tagUsedSkill
-{
-	optional uint32 skill_id = 1;					//技能ID
-	optional uint32 time = 2;						//剩余时间(毫秒)
-	optional uint32 cd = 3;
-	optional uint32	used = 4;						//已使用技能数
-	optional uint32	total = 5;						//总共技能数
-	optional uint32 addSec = 6;                     //附加的技能时间
-}
-//奖池配置信息
-message tagRewardPoolOption
-{
-	optional int32  detail_cost_type = 1;         //1 gold， 2 lottery， 3.diamond
-	optional int64  detail_cost_value = 2;
-	optional uint32 player_min_stay_time = 3;      //参加奖池所需最小停留时长 （ms）
-}
 
-message tagBuff
-{
-	optional uint32 buff_id = 1;					//buffid
-	optional int32  duration = 2;					//持续时间
-	optional int32  add_ratio = 3;					//增加比例
- }
 
 // 进入场景------------------------------------------------------------------------------------------------------------
 message CMD_S_ENTER_SCENE
@@ -75,7 +48,7 @@ message CMD_S_ENTER_SCENE
 	optional uint32 max_bullet_multiple = 8;		//最大炮台倍率
 	optional uint32 scene_id = 9;					//当前场景ID
 	optional int32	pause_time = 10;				//暂停时间
-	repeated tagUserInfo table_users = 11;			//用户信息
+	repeated UserInfo table_users = 11;			//用户信息
 	optional int32	bonus_fish = 12;				//奖金鱼
 	optional int32  buttle_num = 13;				//子弹数量
 	optional int32  alms_get_count = 14;			//救济金领取次数
@@ -88,7 +61,7 @@ message CMD_S_ENTER_SCENE
 //其他玩家进入场景
 message CMD_S_OTHER_ENTER_SCENE
 {
-	optional tagUserInfo user_info = 1;				//用户信息
+	optional UserInfo user_info = 1;				//用户信息
 }
 
 

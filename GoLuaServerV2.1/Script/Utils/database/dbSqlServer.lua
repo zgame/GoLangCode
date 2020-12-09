@@ -9,14 +9,13 @@
 ------------------------------------------------------------------------
 
 
-SqlServerEngine = require('sqlServer')
+SqlServer = require('sqlServer')
 --SqlServerMainEngineConnect = SqlServerEngine.new()
 
 
 
-
 --- mysql数据库连接
-function SqlServerConnect(handle,h,p,d,u,ps)
+function SqlServer.Init(handle,h,p,d,u,ps)
     local ok, err = handle:connect({ host = h, port = p, database = d, user = u, password = ps })
 
     if ok then
@@ -37,9 +36,9 @@ end
 --- @param handel   连接句柄
 --- @param sql      sql语句
 --- @return ret查询结果
-function SqlServerQuery(sql,handle)
+function SqlServer.Query(sql,handle)
     if handle == nil then
-        handle = SqlServerMainEngineConnect
+        handle = GlobalVar.SqlServerMainEngineConnect
     end
     local re,err = handle:query(sql)
     if err ~= nil then
@@ -52,9 +51,9 @@ end
 --- 执行sql exec语句
 --- @param handel   连接句柄
 --- @param sql      sql语句
-function SqlServerExec(sql,handle)
+function SqlServer.Exec(sql,handle)
     if handle == nil then
-        handle = SqlServerMainEngineConnect
+        handle = GlobalVar.SqlServerMainEngineConnect
     end
     local err = handle:exec(sql)
     if err ~= nil then
@@ -65,55 +64,4 @@ end
 
 
 
-
-
-
-------------------------------------------------------------------------
---- 各个数据库的操作
-------------------------------------------------------------------------
-
-
-
-
---- 执行游戏库sql select语句
---- @param sql sql语句
---- @return ret查询结果集
-function SqlServerDataBaseBYQuery(sql)
-    return SqlServerQuery(SqlServerDataBaseHandleBY, sql)
-end
-
---- 执行游戏库sql exec语句
---- @param handel   连接句柄
---- @param sql      sql语句
-function SqlServerDataBaseBYExec(sql)
-    SqlServerExec(SqlServerDataBaseHandleBY, sql)
-end
-
---- 执行日志库sql select语句
---- @param sql sql语句
---- @return ret查询结果集
-function SqlServerDataBaseLogQuery(sql)
-    return SqlServerQuery(SqlServerDataBaseHandleLog, sql)
-end
-
---- 执行日志库sql exec语句
---- @param handel   连接句柄
---- @param sql      sql语句
-function SqlServerDataBaseLogExec(sql)
-    SqlServerExec(SqlServerDataBaseHandleLog, sql)
-end
-
---- 执行好友库sql select语句
---- @param sql sql语句
---- @return ret查询结果集
-function SqlServerDataBaseFriendQuery(sql)
-    return SqlServerQuery(SqlServerDataBaseHandleFriend, sql)
-end
-
---- 执行好友库sql exec语句
---- @param handel   连接句柄
---- @param sql      sql语句
-function SqlServerDataBaseFriendExec(sql)
-    SqlServerExec(SqlServerDataBaseHandleFriend, sql)
-end
 

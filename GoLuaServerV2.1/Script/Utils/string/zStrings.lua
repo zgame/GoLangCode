@@ -4,21 +4,22 @@
 --- DateTime: 2020/12/7 16:50
 ---
 
+ZString ={}
 local zStrings = require("zStrings")                -- 位运算
 
 
 -- 字符串分割
-function ZStringSplit(str,sep)
+function ZString.Split(str,sep)
     return zStrings.split(str,sep)
 end
 
 -- 字符串合并
-function ZStringJoin(list,sep)
+function ZString.Join(list,sep)
     return zStrings.join(list,sep)
 end
 
 -- 字符串包含
-function ZStringContains(org, find)
+function ZString.Contains(org, find)
     if string.find(org,find) == nil then
         return false
     end

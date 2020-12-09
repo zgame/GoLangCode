@@ -4,15 +4,16 @@
 --- DateTime: 2018/11/6 11:32
 ---
 
+ZRandom={}
 
 --- 获取随机数
-function GetRandom(min,max)
+function ZRandom.GetRandom(min,max)
     math.randomseed(GetOsTimeMillisecond())
     return math.random(min,max)  -- [min,max]
 end
 
 ---获取百分比方法， 比如10几率， 那么小于等于10，返回true
-function ZRandomPercentRate(rate)
+function ZRandom.PercentRate(rate)
     local rr = GetRandom(1, 100)
     if rr <= rate then
         return true

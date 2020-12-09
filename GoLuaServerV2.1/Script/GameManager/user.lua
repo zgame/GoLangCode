@@ -21,7 +21,7 @@ function User:New()
         Gender          = 0,                --  # 性别
         Experience      = 0,                --  # 经验
         Loveliness      = 0,                --  # 魅力
-        Lev             = 0,                --  # 炮等级
+        Lev             = 0,                --  # 等级
         VipLev          = 0,                --  # vip等级
         VipExp          = 0,                --  # Vip经验
         AccountLev      = 0,                --  # 账号等级

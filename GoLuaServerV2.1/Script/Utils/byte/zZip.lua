@@ -2,14 +2,14 @@
 --- 压缩，解压缩
 -------------------------------------------------------
 
-local zip = require("zip")                -- 位运算
+Zip = require("zip")                -- 位运算
 
 -- 压缩
-function ZipCompression(str)
-    return zip.encode(str)
+function Zip.Compression(str)
+    return Zip.encode(str)
 end
 
 -- 解压缩
-function ZipUnCompression(str)
-    return zip.decode(str)
+function Zip.UnCompression(str)
+    return Zip.decode(str)
 end

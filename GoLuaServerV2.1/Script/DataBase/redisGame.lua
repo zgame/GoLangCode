@@ -24,32 +24,3 @@
 
 
 
-
-----------------------------获取UUID，只能用于服务器初始化-----------------------------
-function RedisGetAllPlayersUUID()         -- 清理掉桌子的运行状态
-    return RedisGetString(RedisDirAllPlayersUUID.."BY_UUID" ,"BY_UUID")
-end
-----------------------------设置UUID，只能用于服务器初始化-----------------------------
-function RedisSaveAllPlayersUUID(num)         -- 清理掉桌子的运行状态
-    RedisSaveString(RedisDirAllPlayersUUID.."BY_UUID" ,"BY_UUID",num)
-end
-----------------------------多进程申请UUID信息， 会执行脚本先增加，然后把最新的数字返回-----------------------------
-function RedisMultiProcessGetAllPlayersUUID(num)
-    --return RedisAddNumber(RedisDirAllPlayersUUID.."BY_UUID" ,"BY_UUID",num)
-    local dir = RedisDirAllPlayersUUID.."BY_UUID"
-    local key = "BY_UUID"
-    local redis_lua_str = [[
-    local r = redis.call('hget',"%s","%s")
-       if r ~= false then
-            r = r + %d
-       else
-            r = 1000000001
-       end
-    redis.call('hset',"%s","%s", r)
-    return r
-    ]]
-    redis_lua_str = string.format(redis_lua_str,dir,key, num, dir,key)
-    return RedisRunLuaScript(redis_lua_str, "RedisMultiProcessGetAllPlayersUUID")
-end
-
-

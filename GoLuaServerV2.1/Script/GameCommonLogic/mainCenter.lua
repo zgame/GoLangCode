@@ -6,7 +6,7 @@ local AllServerList = {}   --- key 是ip+port  value是游戏类型名字
 local AllPlayersList = {}   --- 全部所有玩家列表   key  userId(type string)    value   ip+port
 local AllPlayersListNumber = 0   -- 所有玩家的人数，记住不要遍历上面的map，性能太慢
 
-MainCenterServer={}
+MainCenterServer = {}
 -- 启动主中心服务器
 function MainCenterServer.Start()
     print("-------------------  启动主中心服  ------------------------------")
@@ -15,19 +15,19 @@ function MainCenterServer.Start()
     -- 维护游戏服务器列表
 
     -- 创建定时器处理公共数据
-    SetNewTimer("TimerMainCenter",2 * 1000)      -- lua 自己设定计时器
-    SetNewClockTimer("ClockMainCenter12", 0)    -- lua 自己设定的固定时间定时器，  24:00
+    ZTimer.SetNewTimer("MainCenterServer", "TimerMainCenter", 2 * 1000, MainCenterServer.TimerMainCenter)      -- lua 自己设定计时器
+    ZTimer.SetNewClockTimer("MainCenterServer", "ClockMainCenter12", 0, MainCenterServer.ClockMainCenter12)    -- lua 自己设定的固定时间定时器，  24:00
 end
 
 
 -- 自己设定的新的计时器
-function TimerMainCenter()
+function MainCenterServer.TimerMainCenter()
     print("这是lua自己设定的定时器")
 end
 
 
 -- 自己设定的固定时间计时器
-function ClockMainCenter12()
+function MainCenterServer.ClockMainCenter12()
     print("这是lua自己设定的夜里12点的定时器")
 end
 

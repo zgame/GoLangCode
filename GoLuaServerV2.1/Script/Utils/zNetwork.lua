@@ -4,11 +4,12 @@
 --- DateTime: 2020/12/7 14:40
 ---
 
+NetWork ={}
 
 ----------------------------------------------------------------------
 --- 关闭用户网络连接
 ----------------------------------------------------------------------
-function LuaNetWorkClose(userId, serverId)
+function NetWork.Close(userId, serverId)
     luaCallGoNetWorkClose(userId, serverId)
 end
 
@@ -16,7 +17,7 @@ end
 ---发送消息
 ----------------------------------------------------------------------
 ---- 玩家自己的网络发送函数
-function LuaNetWorkSend(myServerId, msgId, subMsgId, sendCmd, err)
+function NetWork.Send(myServerId, msgId, subMsgId, sendCmd, err)
     --return LuaNetWorkSendToUser(0,serverId,msgId,subMsgId,sendCmd,err)      -- userId 如果是0的话， 就是给玩家自己回消息 ，这是在go那边定义的
     local buffer = ""
     if sendCmd ~= nil then
@@ -33,7 +34,7 @@ end
 
 
 -- 发送消息给其他玩家
-function LuaNetWorkSendToUser(userId, msgId, subMsgId, sendCmd, err, token)
+function NetWork.SendToUser(userId, msgId, subMsgId, sendCmd, err, token)
     local buffer = ""
     if sendCmd ~= nil then
         buffer = sendCmd:SerializeToString()
@@ -68,6 +69,6 @@ end
 
 
 --连接到其他内部服务器， 返回值是serverId要保存好
-function LuaNetWorkConnectOtherServer(address)
+function NetWork.ConnectOtherServer(address)
     return luaCallGoNetWorkConnectOtherServer(address)
 end

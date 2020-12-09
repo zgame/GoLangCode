@@ -114,14 +114,14 @@ func main() {
 
 	fmt.Println("-------------------	Lua逻辑处理器		---------------------------")
 	GameManagerInit()
-	fmt.Println("Lua 代码初始化完成")
+	//fmt.Println("Lua 代码初始化完成")
 
 
 	//fmt.Println("-------------------多核桌子逻辑处理器---------------------------")
 	//CreateGoroutineForLuaGameTable()
 
 	//fmt.Println("-------------------	启动gameManager	---------------------------")
-	GameManagerLua.GoCallLuaLogic("GoCallLuaStartAllServers")
+	GameManagerLua.GoCallLuaLogic("Main","GoCallLuaStartAllServers")
 	//StartMultiThreadChannelPlayerToGameManager()
 
 	TimerCommonLogicStart()
@@ -283,9 +283,9 @@ func GameManagerInit() {
 
 	Lua.GameManagerLuaHandle = GameManagerLua  // 把句柄传递给lua保存一份
 	GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
-	GameManagerLua.GoCallLuaSetStringVar("ServerIP_Port", ServerAddress+ ":" + strconv.Itoa(SocketPort)) 	//把服务器地址传递给lua
-	GameManagerLua.GoCallLuaSetIntVar("GameRoomServerID", GameRoomServerID) 								//把服务器地址传递给lua
-	GameManagerLua.GoCallLuaSetStringVar("ServerTypeName", ServerTypeName) 								//把参数传递给lua
+	GameManagerLua.GoCallLuaSetStringVar("GlobalVar","ServerIP_Port", ServerAddress+ ":" + strconv.Itoa(SocketPort)) 	//把服务器地址传递给lua
+	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","GameRoomServerID", GameRoomServerID) 								//把服务器地址传递给lua
+	GameManagerLua.GoCallLuaSetStringVar("GlobalVar","ServerTypeName", ServerTypeName) 								//把参数传递给lua
 }
 
 // 检查通用逻辑部分的lua是否需要更新
@@ -413,8 +413,8 @@ func GetAllConnectMsg() (string,int,int,int)  {
 	//	WriteChan = WriteChan/AllConnect
 	//}
 	GlobalVar.RWMutex.RUnlock()
-	GameManagerLua.GoCallLuaSetIntVar("ServerSendWriteChannelNum", WriteChan)		// 发送缓冲区大小
-	GameManagerLua.GoCallLuaSetIntVar("ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError)  // 把数据头尾错误发送给lua
+	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerSendWriteChannelNum", WriteChan)		// 发送缓冲区大小
+	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError)  // 把数据头尾错误发送给lua
 	str:=fmt.Sprintf(" 发送连接数量 %d  接收连接数量  %d 每秒发送 %d  每秒接收 %d    发送缓存WriteChan %d  消息队列长度 %d ",   successSendClients, successRecClients, successSendMsg , successRecMsg, WriteChan, Lua.QueueGetLen())
 	return "所有连接数量："+ strconv.Itoa(AllConnect) + str , successSendMsg , successRecMsg, WriteChan
 }

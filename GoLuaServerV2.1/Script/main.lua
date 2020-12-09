@@ -14,7 +14,7 @@
 -------------------------------------Logger----------------------------------------
 --package.path = "Script/Logger/?.lua;"..package.path
 require("Script/Utils/print/zLog")
-Logger("Game Server Start ....")
+ZLog.Logger("Game Server Start ....")
 
 
 

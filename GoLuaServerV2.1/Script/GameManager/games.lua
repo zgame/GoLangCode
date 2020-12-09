@@ -10,29 +10,28 @@
 
 
 Game = {}
-function Game:New(name,gameTypeId, switch)
+function Game.New(name,gameTypeId)
     c = {
         Name                = name,
         GameTypeID          = gameTypeId,
-        Switch              = switch,               -- 游戏是否开启
+        Switch              = true,               -- 游戏是否开启
 
         AllTableList        = {},                   -- 所有桌子列表       key tableUid  ,value table          --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
         AllTableListNumber  = 0 ,                   -- 所有该游戏的桌子数量
         TableUUID           = 1 ,                   -- tableUid 从1开始
 
         --GoRunTableAllList = {},                   -- 桌子的run函数在里面                --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
-        GameScore           = 0 ,                   --  游戏倍率
-
-        GameRoomInfo        = {},                   -- 游戏房间信息(GameRommInfo数据库表相关信息)
+        --GameScore           = 0 ,                   --  游戏倍率
+        --GameRoomInfo        = {},                   -- 游戏房间信息(GameRommInfo数据库表相关信息)
     }
-    setmetatable(c,self)
-    self.__index = self
+    --setmetatable(c,self)
+    --self.__index = self
     return c
 end
 
-function Game:Reload(c)
-    setmetatable(c, self)
-    self.__index = self
+function Game.Reload(self)
+    --setmetatable(c, self)
+    --self.__index = self
     -- 如果热更新有改动成员变量的定义的话， 下面需要进行成员变量的处理
     -- 比如 1 增加了字段， 那么你需要将老数据进行， 新字段的初始化
     -- 比如 2 删除了字段， 那么你需要将老数据进行， 老字段=nil
@@ -43,26 +42,18 @@ end
 ----------------------------------------------------------------
 
 --- 创建桌子，并启动它， 参数带底分的， 不同底分的房间可以在一起管理，因为逻辑一样的，进入的时候判断一下，引导玩家进入不同底分的桌子
-function Game:CreateTable(gameType,gameScore)
+function Game.CreateTable(self,gameType)
     local table_t
-    if gameType == GameTypeBY or gameType == GameTypeBY30 then
-        table_t =  ByTable:New(self.TableUUID, gameType)
-        --printTable(table_t)
-    elseif gameType == GameTypeBY2 then
-
-    elseif gameType == GameTypeBY3 then
-
-    elseif gameType == GameTypeXHS then
-        table_t = XhsTable:New(self.TableUUID, gameType)
-    elseif gameType == GameTypeChat then
-        table_t = ChatTable:New(self.TableUUID, gameType)
+    if gameType == Const.GameTypeCCC then
+        table_t =  CCCTable:New(self.TableUUID, gameType)
+    --elseif
     end
     if table_t == nil then
-        Logger("CreateTable error , gameType"..gameType)
+        ZLog.Logger("CreateTable error , gameType"..gameType)
         return nil
     end
-    table_t.RoomScore = gameScore
---    Logger("创建了一个新的桌子,type:"..gameType)
+
+    ZLog.Logger("创建了一个新的桌子,type:"..gameType)
 
     --增加该桌子到总列表中
     self.AllTableList[tostring(self.TableUUID)] = table_t
@@ -77,7 +68,7 @@ function Game:CreateTable(gameType,gameScore)
 end
 
 --- 根据桌子uid 返回桌子的句柄
-function Game:GetTableByUID(tableId)
+function Game.GetTableByUID(self,tableId)
     return self.AllTableList[tostring(tableId)]
 end
 
@@ -87,15 +78,15 @@ function Game:ReleaseTableByUID(tableId)
         self.AllTableList[tostring(tableId)] = nil
         self.AllTableListNumber = self.AllTableListNumber - 1
         --self.GoRunTableAllList[tostring(tableId)] = nil
-        SqlDelGameState(self.GameTypeID, tableId)   -- 把记录桌子状态的redis删掉
-        Logger("清理掉桌子"..tableId)
+        --SqlDelGameState(self.GameTypeID, tableId)   -- 把记录桌子状态的redis删掉
+        ZLog.Logger("清理掉桌子"..tableId)
     else
         -- 第一个桌子是保留着的，只是清理一下
-        local state ={}
-        state["FishNum"] = 0
-        state["BulletNum"] = 0
-        state["SeatArray"] = 0
-        SqlSaveGameState(self.GameTypeID, tableId, state)       -- mysql桌子状态修改一下
+        --local state ={}
+        --state["FishNum"] = 0
+        --state["BulletNum"] = 0
+        --state["SeatArray"] = 0
+        --SqlSaveGameState(self.GameTypeID, tableId, state)       -- mysql桌子状态修改一下
     end
     collectgarbage()        -- 强制gc
 end
@@ -191,7 +182,7 @@ end
 ----玩家登出
 function Game:PlayerLogOutGame(player)
     --Logger("玩家登出 "..player.User.UserID.. "    桌子 "..player.TableID)
-    local table = self:GetTableByUID(player.TableID)
+    local table = Game.GetTableByUID(self,player.TableID)
     if table ~= nil then
         table:PlayerStandUp(player.ChairID, player)        -- 玩家离开桌子
         --Logger("玩家"..player.User.UserID.."离开桌子 "..player.TableID.."椅子"..player.ChairID)

@@ -4,14 +4,15 @@
 --- DateTime: 2020/12/7 15:27
 ---
 
-ZJson = require("json")        -- Json
+Json = {}
+local ZJson = require("json")        -- Json
 
-function JsonEncode(table)
+function Json.Encode(table)
     return ZJson.encode(table)
 end
 
 
-function JsonDecode(str)
+function Json.Decode(str)
     return ZJson.decode(str)
 end
 

@@ -97,6 +97,7 @@ table.insert(RequireAndReloadUtilsFiles,"Script/Utils/database/dbRedis")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zRandom")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zTable")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zTime")
+table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zTimer")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/Enum")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/string/splitString")
 table.insert(RequireAndReloadUtilsFiles,"Script/Utils/zNetwork")
@@ -112,39 +113,44 @@ table.insert(RequireAndReloadManagerFiles, "Script/GameManager/chatUser")
 table.insert(RequireAndReloadManagerFiles, "Script/GameManager/games")
 table.insert(RequireAndReloadManagerFiles, "Script/GameManager/gameManager")
 table.insert(RequireAndReloadManagerFiles, "Script/GameManager/ServerManager")
-
+table.insert(RequireAndReloadManagerFiles, "Script/GameManager/baseTable")
 
 -- game
 RequireAndReloadGamesFiles = {}
-table.insert(RequireAndReloadGamesFiles, "Script/Games/baseTable")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byBullet")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byFish")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byFishDistribute")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byTable")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byTableBulletFunc")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byTableFishFunc")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byTablePlayerFunc")
+
+--ccc
+table.insert(RequireAndReloadGamesFiles, "Script/Games/CCC/cccTable")
+
+
+
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byBullet")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byFish")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byFishDistribute")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byTable")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byTableBulletFunc")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byTableFishFunc")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/BY/byTablePlayerFunc")
 -- 小海兽
-table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/xhsTable")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/xhsGameTable")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/xhsReceiveMsg")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/GameLogic/xhsUserUseSummonGem")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/GameLogic/xhsUserFire")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/GameLogic/xhsUserPuzzle")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/database/xhsDB")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/xhsTable")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/xhsGameTable")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/xhsReceiveMsg")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/GameLogic/xhsUserUseSummonGem")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/GameLogic/xhsUserFire")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/GameLogic/xhsUserPuzzle")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/XHS/database/xhsDB")
 -- 聊天
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/chatTable")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/chatReceiveMsgFromLoginServer")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/chatReceiveMsgFromClient")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatLoginServerLogic")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserLogin")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserGetFriendList")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserSearchPlayer")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserApplyFriend")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserDeleteFriend")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserGetUnReadMessage")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserSendMessage")
-table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/database/chatDB")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/chatTable")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/chatReceiveMsgFromLoginServer")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/chatReceiveMsgFromClient")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatLoginServerLogic")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserLogin")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserGetFriendList")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserSearchPlayer")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserApplyFriend")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserDeleteFriend")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserGetUnReadMessage")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/GameLogic/chatUserSendMessage")
+--table.insert(RequireAndReloadGamesFiles, "Script/Games/Chat/database/chatDB")
 
 
 -- network
@@ -152,7 +158,7 @@ RequireAndReloadNetWorkFiles = {}
 table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/gameEnter")
 table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/gameFire")
 table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/loginServer")
-table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/registerCorrespondServer")
+--table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/registerCorrespondServer")
 table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/gameReceive")
 --table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/mainHall")
 --table.insert(RequireAndReloadNetWorkFiles, "Script/NetWork/monthCard")
@@ -321,7 +327,7 @@ function ReloadAll()
 
     --- 聊天服重新加載腳本
     -- ChatServerReload()
-    Logger("当前服务器人数:"..AllPlayerListNumber)
+    --Logger("当前服务器人数:"..GlobalVar.AllPlayerListNumber)
 end
 
 

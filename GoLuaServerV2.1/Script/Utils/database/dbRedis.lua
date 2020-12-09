@@ -9,7 +9,7 @@
 ---redis  原则上禁止多个数据库， 如果有特殊情况，仿造mongo db写法即可实现多数据库连接
 ---------------------------------------------------------
 
-RedisEngine = require('redis')
+Redis = require('redis')
 --RedisEngineConnect = RedisEngine.new()
 
 
@@ -92,7 +92,7 @@ local function test()
     --print(RedisSortedSetRemEnd("test:sset200"))
     --printTable(RedisSortedSetGetAll("test:sset200"))
 end
-function RedisInit(handle, RedisAddress, RedisPass)
+function Redis.Init(handle, RedisAddress, RedisPass)
     local ok, err = handle:connect({ host = RedisAddress, password = RedisPass })
     if ok then
         print(" redis  数据库 ok!")
@@ -102,7 +102,7 @@ function RedisInit(handle, RedisAddress, RedisPass)
 end
 
 ----------------------------key是否存在判定-----------------------------
-function RedisExistKey(dir, hashKey)
+function Redis.ExistKey(dir, hashKey)
     local number
     if hashKey == nil then
         _, number = cmdForRedis("exists", nil, dir)        -- 判断key
@@ -115,7 +115,7 @@ end
 
 ----------------------------string  and  hash---------------------------------------
 --保存
-function RedisSaveString(dir, hashKey, value)
+function Redis.SaveString(dir, hashKey, value)
     local string, number
     if hashKey == nil then
         string = cmdForRedis("set", nil, dir, value)   -- 成功返回OK
@@ -128,7 +128,7 @@ function RedisSaveString(dir, hashKey, value)
     return string       -- 成功返回OK
 end
 --获取
-function RedisGetString(dir, hashKey)
+function Redis.GetString(dir, hashKey)
     local string
     if hashKey == nil then
         string = cmdForRedis("get", nil, dir)
@@ -138,7 +138,7 @@ function RedisGetString(dir, hashKey)
     return string
 end
 --删除
-function RedisDelKey(dir, hashKey)
+function Redis.DelKey(dir, hashKey)
     if hashKey == nil then
         cmdForRedis("del", nil, dir)
     else
@@ -148,7 +148,7 @@ end
 
 ----------------------------script-----------------------------
 --分布式的数字协调，避免加分布式锁， 可广泛用于多个进程高并发同时处理同一个数据， 保证数据的原子性----------------------------
-function RedisRunLuaScript(redis_lua_str, name, handle)
+function Redis.RunLuaScript(redis_lua_str, name, handle)
     -- name 是用来报错用的，定位问题用
     if handle == nil then
         handle = RedisEngineConnect
@@ -163,23 +163,23 @@ end
 
 ----------------------------list-----------------------------
 -- 添加内容
-function RedisListPush(dir, value)
+function Redis.ListPush(dir, value)
     local _, num = cmdForRedis("rpush", nil, dir, value)
     return num      -- 返回list长度
 end
 -- 获取长度
-function RedisListLen(dir)
+function Redis.ListLen(dir)
     local _, num = cmdForRedis("llen", nil, dir)
     return num      -- 返回list长度
 end
 -- 获取固定位置的元素
-function RedisListIndex(dir, index)
+function Redis.ListIndex(dir, index)
     -- 第一个从0开始
     local str = cmdForRedis("lindex", nil, dir, index)
     return str      -- 返回 内容 都是字符串，如果是数字自己转换
 end
 -- 获取所有元素
-function RedisListGetAll(dir, listStart, listEnd)
+function Redis.ListGetAll(dir, listStart, listEnd)
     if listStart == nil then
         listStart = 0
     end
@@ -190,7 +190,7 @@ function RedisListGetAll(dir, listStart, listEnd)
     return list
 end
 -- 移除跟内容一样的元素， count > 0 从头计数 ， < 0 从尾部计数 , 0 是所有等于 ,  输入的value是数字还是字符串都会匹配删除
-function RedisListRem(dir, value, count)
+function Redis.ListRem(dir, value, count)
     if count == nil then
         count = 0
     end
@@ -201,28 +201,28 @@ end
 
 ----------------------------set-----------------------------
 -- 添加内容
-function RedisSetPush(dir, value)
+function Redis.SetPush(dir, value)
     local _, num = cmdForRedis("sadd", nil, dir, value)
     return num      -- 返回set长度
 end
 -- 获取长度
-function RedisSetLen(dir)
+function Redis.SetLen(dir)
     local _, num = cmdForRedis("scard", nil, dir)
     return num      -- 返回set长度
 end
 
 -- 获取所有元素
-function RedisSetGetAll(dir)
+function Redis.SetGetAll(dir)
     local set = getStringListFromRedis("smembers", nil, dir)
     return set
 end
 -- 移除元素
-function RedisSetRem(dir, value)
+function Redis.SetRem(dir, value)
     local _, num = cmdForRedis("srem", nil, dir, value)
     return num
 end
 -- 是否是成员
-function RedisSetMember(dir, value)
+function Redis.SetMember(dir, value)
     local _, num = cmdForRedis("sismember", nil, dir, value)
     return num
 end
@@ -230,33 +230,33 @@ end
 
 ----------------------------sorted set-----------------------------
 -- 添加内容
-function RedisSortedSetPush(dir, value, score)
+function Redis.SortedSetPush(dir, value, score)
     local _, num = cmdForRedis("zadd", nil, dir, score, value)
     return num      -- 返回set长度
 end
 -- 获取长度
-function RedisSortedSetLen(dir)
+function Redis.SortedSetLen(dir)
     local _, num = cmdForRedis("zcard", nil, dir)
     return num      -- 返回set长度
 end
 
 -- 获取所有元素
-function RedisSortedSetGetAll(dir)
+function Redis.SortedSetGetAll(dir)
     local set = getStringListFromRedis("zrevrange", nil, dir, 0, -1, "withscores")   -- 按照从高到低排序，带分数
     return set
 end
 -- 获取排名最后的人和分数
-function RedisSortedSetGetEnd(dir)
+function Redis.SortedSetGetEnd(dir)
     local set = getStringListFromRedis("zrevrange", nil, dir, -1, -1, "withscores")   -- 分数最低的人
     return set
 end
 -- 移除排名最低的元素
-function RedisSortedSetRemEnd(dir)
+function Redis.SortedSetRemEnd(dir)
     local _, num = cmdForRedis("zremRangeByRank", nil, dir, 0, 0)
     return num
 end
 -- 获取成员排名
-function RedisSortedSetRank(dir, value)
+function Redis.SortedSetRank(dir, value)
     local _, num = cmdForRedis("zrevrank", nil, dir, value)       -- 从高到低， 排行位次
     return num   -- 排名第一是0
 end

@@ -33,10 +33,12 @@ func GoCallLuaTest(L *lua.LState, num int)  {
 }
 
 // -------------------go触发lua函数，不带参数和返回值-------------------
-func (m *MyLua) GoCallLuaLogic(funcName string) {
+func (m *MyLua) GoCallLuaLogic(module string,funcName string) {
 	GlobalVar.GlobalMutex.Lock()
+	table:= m.L.GetGlobal(module)
+	value := m.L.GetField(table,funcName)
 	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
+		Fn: value,		// lua的函数名字
 		NRet: 0,
 		Protect: true,
 	}); err != nil {		// 参数
@@ -117,13 +119,16 @@ func (m *MyLua)GoCallLuaReload() error {
 
 
 // ----------------------将go的变量传递给lua， 用来改变lua的全局变量值，一般用于统计和监控----------------------
-func (m *MyLua) GoCallLuaSetStringVar(name string, value string) {
+func (m *MyLua) GoCallLuaSetStringVar(module string,key string, value string) {
 	GlobalVar.GlobalMutex.Lock()
-	m.L.SetGlobal(name, lua.LString(value))
+	table := m.L.GetGlobal(module)
+	m.L.SetField(table,key, lua.LString(value))
 	GlobalVar.GlobalMutex.Unlock()
 }
-func (m *MyLua) GoCallLuaSetIntVar(name string, value int) {
+func (m *MyLua) GoCallLuaSetIntVar(module string, key string, value int) {
 	GlobalVar.GlobalMutex.Lock()
-	m.L.SetGlobal(name, lua.LNumber(value))
+	//m.L.SetGlobal(name, lua.LNumber(value))
+	table := m.L.GetGlobal(module)
+	m.L.SetField(table,key, lua.LNumber(value))
 	GlobalVar.GlobalMutex.Unlock()
 }

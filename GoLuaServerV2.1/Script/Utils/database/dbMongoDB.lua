@@ -5,10 +5,10 @@
 ---
 
 
-MongoEngine = require('mongodb')
+MongoDB = require('mongodb')
 
 -- Mongo数据库连接
-function MyMongoConnect(handle, h, d, u, ps)
+function MongoDB.Init(handle, h, d, u, ps)
     local ok, err = handle:connect({ host = h, database = d, user = u, password = ps })
 
     if ok then
@@ -39,31 +39,31 @@ end
 
 
 -- 执行find语句
-function MongoFind(collection, table, handle)
+function MongoDB.Find(collection, table, handle)
     if handle == nil then
-        handle = MongoMainEngineConnect
+        handle = GlobalVar.MongoMainConnect
     end
-    local table = handle:find(collection, table)
-    return table
+    local result = handle:find(collection, table)
+    return result
 end
 
 -- 执行finds语句  查询多条记录  sort里面是列名 负的表示从高到低排序
-function MongoFinds(collection, table, sort, handle)
+function MongoDB.Finds(collection, table, sort, handle)
     if handle == nil then
-        handle = MongoMainEngineConnect
+        handle = GlobalVar.MongoMainConnect
     end
     if sort == nil then
         sort = "-1"
     end
 
-    local table = handle:finds(collection, table, sort)
-    return table
+    local result = handle:finds(collection, table, sort)
+    return result
 end
 
 -- 执行insert语句
-function MongoInsert(collection, table, handle)
+function MongoDB.Insert(collection, table, handle)
     if handle == nil then
-        handle = MongoMainEngineConnect
+        handle = GlobalVar.MongoMainConnect
     end
     local err = handle:insert(collection, table)
     if err ~= nil then
@@ -74,9 +74,9 @@ end
 
 
 -- 执行del语句
-function MongoDel(collection, table, handle)
+function MongoDB.Del(collection, table, handle)
     if handle == nil then
-        handle = MongoMainEngineConnect
+        handle = GlobalVar.MongoMainConnect
     end
     local err = handle:del(collection, table)
     if err ~= nil then
@@ -87,9 +87,9 @@ end
 
 
 -- 执行update语句  selectTable为条件  updateTable为更新的内容
-function MongoUpdate(collection, selectTable, updateTable,cmd, handle )
+function MongoDB.Update(collection, selectTable, updateTable, cmd, handle )
     if handle == nil then
-        handle = MongoMainEngineConnect
+        handle = GlobalVar.MongoMainConnect
     end
     if cmd == nil then
         cmd = "$set"        -- 默认是更新命令

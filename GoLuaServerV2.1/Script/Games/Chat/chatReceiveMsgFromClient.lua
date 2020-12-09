@@ -23,7 +23,7 @@ function ChatReceiveMsgFromClient(serverId, userId, subMsgId, data, token)
         return
     end
     -- 找桌子（聊天只会创建一个桌子）
-    local chatTable = game:GetTableByUID(game.TableUUID-1)
+    local chatTable = Game.GetTableByUID(game,game.TableUUID-1)
     if chatTable == nil then
         Logger("登录服消息聊天服服务chatTable未找到")
         return

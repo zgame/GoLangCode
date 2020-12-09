@@ -3,9 +3,9 @@
 --- Created by Administrator.
 --- DateTime: 2018/10/12 14:52
 ---
+ZLog = {}
 
-
-function Logger(str)
+function ZLog.Logger(str)
     luaCallGoPrintLogger(str)
 end
 
@@ -16,10 +16,10 @@ require("Script/Utils/print/dumpTable")           -- printTable(tableName)
 MySerpent = require("Script/Utils/print/serpent")      -- 使用方法 ： MySerpent.block(tableName)        也是打印table
 
 
-function printTable1(table)
+function ZLog.printTable1(table)
     printTable(table)
 end
 
-function printTable2(table)
+function ZLog.printTable2(table)
     MySerpent.block(table)
 end

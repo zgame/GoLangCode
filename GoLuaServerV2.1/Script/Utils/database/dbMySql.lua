@@ -9,12 +9,12 @@
 ------------------------------------------------------------------------
 
 
-MySqlEngine = require('mySql')
+MySql = require('mySql')
 --MySqlMainEngineConnect = MySqlEngine.new()
 
 
 -- mysql数据库连接
-function MysqlConnect(handle,h,p,d,u,ps)
+function MySql.Init(handle,h,p,d,u,ps)
     local ok, err = handle:connect({ host = h, port = tonumber(p), database = d, user = u, password = ps })
 
     if ok then
@@ -28,9 +28,9 @@ function MysqlConnect(handle,h,p,d,u,ps)
 end
 
 -- 执行sql select语句
-function MysqlQuery(sql,handle)
+function MySql.Query(sql,handle)
     if handle == nil then
-        handle = MySqlMainEngineConnect
+        handle = GlobalVar.MySqlMainConnect
     end
     local re,err = handle:query(sql)
     if err ~= nil then
@@ -41,9 +41,9 @@ end
 
 
 -- 执行sql exec语句
-function MysqlExec(sql,handle)
+function MySql.Exec(sql,handle)
     if handle == nil then
-        handle = MySqlMainEngineConnect
+        handle = GlobalVar.MySqlMainConnect
     end
     local err = handle:exec(sql)
     if err ~= nil then

@@ -14,33 +14,36 @@
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 
+GameManager = {}
+
+
 --增加一个游戏， 指定这个游戏的类型， 并且创建一个桌子，并启动桌子逻辑
-local function addGame(name, gameType, gameScore)
-    if GetGameByID(gameType) ~= nil then
-        Logger("游戏类型["..gameType.."已经添加过了，不用重复添加")
+local function addGame(name, gameType)
+    if GameManager.GetGameByID(gameType) ~= nil then
+        ZLog.Logger("游戏类型["..gameType.."已经添加过了，不用重复添加")
         return
     end
 
-    local game = Game:New(name, gameType,true)
-    ---- 加载游戏信息
-    --game.GameRoomInfo = LoadGameServerInfoFromSQLServer()
-    Logger("game.GameRoomInfo信息:",game.GameRoomInfo)
+    local game = Game.New(name, gameType)
     -- 加入到游戏总列表中
-    SetAllGamesList(gameType, game)
+    GameManager.SetAllGamesList(gameType, game)
 
     --Logger("--------------AddGame--------------------------")
-    game:CreateTable(gameType,gameScore)
-    game.GameScore = gameScore
+    Game.CreateTable(game,gameType)
+    --game.GameScore = gameScore
 end
 
-
-function StartGamesServers()
+-- 游戏服务器入口点
+function GameManager.Start()
     --Logger("--------------------注册中心服----------------------------")
-    ServerMainServer = LuaNetWorkConnectOtherServer(ConstMainCenterServer)  -- 申请连接协调服务器，并 把serverId保存下来， 以后发送消息用
-    print("协调服 serverId ",ServerIDofCorrespondServer)
+    --ServerMainServer = LuaNetWorkConnectOtherServer(ConstMainCenterServer)  -- 申请连接协调服务器，并 把serverId保存下来， 以后发送消息用
+    --print("协调服 serverId ",ServerMainServer)
+
+    print("-------------------  添加主循环  ------------------------------")
+    ZTimer.SetNewTimer("GameManager", "RunGamesTables", 200,GameManager.RunGamesTables)
 
     print("-------------------  添加游戏  ------------------------------")
-    addGame("沙石镇", GameTypeCCC, 0)
+    addGame("沙石镇", Const.GameTypeCCC)
 
     --addGame("满贯捕鱼", GameTypeBY , 1)           -- 普通房间
     --addGame("满贯捕鱼30倍", GameTypeBY30 , 30)    -- 30倍房间
@@ -65,40 +68,48 @@ function StartGamesServers()
 end
 
 -----------------------------------玩家注册，玩家掉线-------------------------------------
--- 服务器启动的时候， 从数据库中读取玩家最后的uid
---function GetALLUserUUID()
---    --这个要从数据库读取
---    local uuid = RedisGetAllPlayersUUID()
---    --print("ALLUserUUID",ALLUserUUID)
---    --如果读取数据是空，那么就重置
---    if uuid == "" then
---        uuid = 1000000000
---        RedisSaveAllPlayersUUID(uuid)
---        print("初始化一下 ALLUserUUID",uuid)
---    end
---    --print("ALLUserUUID",ALLUserUUID)
---end
+
+
+local RedisDirAllPlayersUUID          = "CCC:AllPlayers_UUID:"                         -- 所有玩家UUID
+----------------------------多进程申请UUID信息， 会执行脚本先增加，然后把最新的数字返回-----------------------------
+local function GetAllPlayersUUID(num)
+    --return RedisAddNumber(RedisDirAllPlayersUUID.."BY_UUID" ,"BY_UUID",num)
+    local dir = RedisDirAllPlayersUUID.."CCC_UUID"
+    local key = "CCC_UUID"
+    local redis_lua_str = [[
+    local r = redis.call('hget',"%s","%s")
+       if r ~= false then
+            r = r + %d
+       else
+            r = 1000000001
+       end
+    redis.call('hset',"%s","%s", r)
+    return r
+    ]]
+    redis_lua_str = string.format(redis_lua_str,dir,key, num, dir,key)
+    return Redis.RunLuaScript(redis_lua_str, "RedisMultiProcessGetAllPlayersUUID")
+end
 
 --有一个新的玩家注册了，那么给他分配一个UID
-function GetLastUserID()
+function GameManager.GetLastUserID()
     local r = 1     -- math.random(1, 4)        --返回[1,4]的随机整数
-
-    local uuid = RedisMultiProcessGetAllPlayersUUID(r)     -- 分布式申请UUID
+    local uuid = GetAllPlayersUUID(r)     -- 分布式申请UUID
     --Logger("给玩家分配新uid  ALLUserUUID "..uuid)
     return uuid
 end
 
 
 -- 根据user uid 返回user的句柄
-function GetPlayerByUID(uid)
-    return AllPlayerList[tostring(uid)]
+function GameManager.GetPlayerByUID(uid)
+    return GlobalVar.AllPlayerList[tostring(uid)]
 end
-function SetAllPlayerList(userId,value)
-    AllPlayerList[tostring(userId)] = value
+
+function GameManager.SetAllPlayerList(userId,value)
+    GlobalVar.AllPlayerList[tostring(userId)] = value
     if value == nil then
-        AllPlayerListNumber = AllPlayerListNumber - 1   -- 玩家人数减少
+        GlobalVar.AllPlayerListNumber = GlobalVar.AllPlayerListNumber - 1   -- 玩家人数减少
     else
-        AllPlayerListNumber = AllPlayerListNumber + 1   -- 玩家人数增加
+        GlobalVar.AllPlayerListNumber = GlobalVar.AllPlayerListNumber + 1   -- 玩家人数增加
     end
 end
 
@@ -106,30 +117,28 @@ end
 -----------------------------------游戏-------------------------------------
 
 
-
-
 --通过gameID获取是哪个游戏
-function GetGameByID(gameType)
-    return AllGamesList[tostring(gameType)]
+function GameManager.GetGameByID(gameType)
+    return GlobalVar.AllGamesList[tostring(gameType)]
 end
 
-function SetAllGamesList(gameType,value)
-    AllGamesList[tostring(gameType)] = value
+function GameManager.SetAllGamesList(gameType,value)
+    GlobalVar.AllGamesList[tostring(gameType)] = value
 end
 
 -----------------------------------桌子-------------------------------------
--- 显示当前的状态
-function ShowAllGameStates()
-    for gameType, game in pairs(AllGamesList) do
-        --local game = GetGameByID(k)
-        --print("游戏"..gameType.."有桌子数量"..game.AllTableListNumber..",有玩家数量".. AllPlayerListNumber)
-    end
-end
+---- 显示当前的状态
+--function ShowAllGameStates()
+--    for gameType, game in pairs(GlobalVar.AllGamesList) do
+--        --local game = GetGameByID(k)
+--        --print("游戏"..gameType.."有桌子数量"..game.AllTableListNumber..",有玩家数量".. AllPlayerListNumber)
+--    end
+--end
 
 
 
 -- 遍历所有的列表，然后依次run,  改为服务器自己创建定时器处理
-function GoCallLuaGoRoutineForLuaGameTable()
+function GameManager.RunGamesTables()
     --print("----------------当前有"..#GoRoutineAllList.."个桌子")
     --for _, game in pairs(AllGamesList) do
     --    for _, run in pairs(game.GoRunTableAllList) do
@@ -143,7 +152,7 @@ function GoCallLuaGoRoutineForLuaGameTable()
     --    end
     --end
 
-    for _, game in pairs(AllGamesList) do
+    for _, game in pairs(GlobalVar.AllGamesList) do
         for _, table in pairs(game.AllTableList) do
             --local key = gameType .. "_".. tableId
             --if AllGamesListRunCurrentTableIndex[key] == nil then
