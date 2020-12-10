@@ -50,8 +50,8 @@ end
 
 -- 接受网络消息
 function CenterServer.Receive(serverId, userId, msgId, subMsgId, data, token)
-    if msgId == MDM_SERVER then
-        if subMsgId == SUB_LOGON then
+    if msgId == CMD_MAIN.MDM_SERVER then
+        if subMsgId == CMD_SERVER.SUB_LOGON then
             Login(serverId, data)      -- 返回给客户端，玩家的数据，用来显示的
         end
     end

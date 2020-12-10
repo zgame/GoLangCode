@@ -38,6 +38,9 @@ require("Proto")
 require("protocol_cs")
 require("protocol_gs")
 require("protocol_ls")
+require("constCmd")
+require("constCmdGame")
+require("constCmdServer")
 
 
 -------------------------------------Const----------------------------------------

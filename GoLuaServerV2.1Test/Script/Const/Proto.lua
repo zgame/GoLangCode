@@ -5,5 +5,5 @@
 ---
 
 
-CMD_Game_pb = require("CMD_Game_pb")
-CMD_GameServer_pb = require("CMD_GameServer_pb")
+Proto_Game_CCC = require("Proto_Game_CCC_pb")
+Proto_Server = require("Proto_Server_pb")

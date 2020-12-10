@@ -115,10 +115,10 @@ end
 
 -- 发送登录服务器请求
 function SendLoginGSGuest(serverId)
-    local sendCmd = CMD_GameServer_pb.CMD_GR_LogonUserID()
+    local sendCmd = Proto_Server.LogonUserID()
 
     sendCmd.machine_id = build_mac_addr(serverId)
-    LuaNetWorkSend(serverId, MDM_GR_LOGON, SUB_GR_LOGON_USERID,sendCmd,nil)
+    LuaNetWorkSend(serverId, CMD_MAIN.MDM_SERVER, CMD_SERVER.SUB_LOGON,sendCmd,nil)
     --print("-----申请登录serverId:----------",serverId)
 end
 

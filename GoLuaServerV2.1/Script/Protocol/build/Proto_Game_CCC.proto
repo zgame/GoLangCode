@@ -1,0 +1,30 @@
+﻿syntax = "proto2";
+package Proto;
+
+
+//用户信息------------------------------------------------------------------------------------------------------------
+message UserInfo
+{
+	optional bytes nick_name = 1;					//昵称
+	optional uint32 user_id = 2;					//用户ID
+	optional uint32 game_id = 3;					//游戏ID
+	optional uint32 vip_level = 4;					//VIP等级
+	optional uint32 level = 5;						//用户等级
+	optional int32  chair_id = 6;					//椅子ID
+	optional int32  table_id = 7;					//房间ID
+}
+
+
+// 进入场景------------------------------------------------------------------------------------------------------------
+message ENTER_SCENE
+{
+	optional int32  table_id = 17;					//房间ID
+}
+//其他玩家进入场景------------------------------------------------------------------------------------------------------------
+message OTHER_ENTER_SCENE
+{
+	optional UserInfo user_info = 1;				//用户信息
+}
+
+
+

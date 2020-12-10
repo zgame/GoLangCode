@@ -6,8 +6,8 @@
 
 
 --CMD_Common_pb = require("CMD_Common_pb")
-CMD_Game_pb = require("CMD_Game_pb")
-CMD_GameServer_pb = require("CMD_GameServer_pb")
+Proto_Game_CCC = require("Proto_Game_CCC_pb")
+Proto_Server = require("Proto_Server_pb")
 --CMD_LoginServer_pb = require("CMD_LoginServer_pb")
 --CMD_Monitor_pb = require("CMD_Monitor_pb")
 --

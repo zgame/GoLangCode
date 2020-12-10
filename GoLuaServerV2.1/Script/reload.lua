@@ -16,16 +16,16 @@ local f
 --数据库
 LuaFiles.DataBase = {}
 f = LuaFiles.DataBase
-table.insert(f, "Script/DataBase/redisConst")
-table.insert(f, "Script/DataBase/redisGame")
-table.insert(f, "Script/DataBase/redisPlayer")
-table.insert(f, "Script/DataBase/sqlStatistic")
-table.insert(f, "Script/DataBase/SQLServer/LoadGameServerInfo")
-table.insert(f, "Script/DataBase/SQLServer/LoadUserInfo")
-table.insert(f, "Script/DataBase/SQLServer/LoadUserChatInfo")
-table.insert(f, "Script/DataBase/SQLServer/SaveUserDataInfo")
-table.insert(f, "Script/DataBase/SQLServer/SaveDataBaseLogInfo")
-table.insert(f, "Script/DataBase/redisChat")
+table.insert(f, "Script/Games/CCC/DataBase/redisConst")
+table.insert(f, "Script/Games/CCC/DataBase/redisGame")
+table.insert(f, "Script/Games/CCC/DataBase/redisPlayer")
+table.insert(f, "Script/Games/CCC/DataBase/sqlStatistic")
+table.insert(f, "Script/Games/CCC/DataBase/SQLServer/LoadGameServerInfo")
+table.insert(f, "Script/Games/CCC/DataBase/SQLServer/LoadUserInfo")
+table.insert(f, "Script/Games/CCC/DataBase/SQLServer/LoadUserChatInfo")
+table.insert(f, "Script/Games/CCC/DataBase/SQLServer/SaveUserDataInfo")
+table.insert(f, "Script/Games/CCC/DataBase/SQLServer/SaveDataBaseLogInfo")
+table.insert(f, "Script/Games/CCC/DataBase/redisChat")
 
 
 -- CSV
@@ -40,9 +40,9 @@ table.insert(f, "Script/CSV/mgby_monster")
 -- Protocol
 LuaFiles.Protocol = {}
 f = LuaFiles.Protocol
-table.insert(f, "Script/Protocol/build/CMD_Game_pb")
-table.insert(f, "Script/Protocol/build/CMD_GameServer_pb")
-
+--table.insert(f, "Script/Protocol/build/Proto_Game_CCC_pb")
+--table.insert(f, "Script/Protocol/build/Proto_Server_pb")
+table.insert(f, "Script/Games/proto")
 
 -- Const
 LuaFiles.Const = {}
@@ -53,7 +53,6 @@ table.insert(f, "Script/Const/constCmdGame")
 table.insert(f, "Script/Const/constCmdServer")
 table.insert(f, "Script/setting")
 table.insert(f, "Script/Const/excel")
-table.insert(f, "Script/Const/proto")
 table.insert(f, "Script/Const/protocol_cs")
 table.insert(f, "Script/Const/protocol_gs")
 table.insert(f, "Script/Const/protocol_ls")
@@ -85,6 +84,7 @@ table.insert(f, "Script/Games/gameServer") --  游戏服务器入口点
 table.insert(f, "Script/Games/games")
 table.insert(f, "Script/Games/baseRoom")
 table.insert(f, "Script/Games/gameNetwork")     -- 游戏网络分发入口
+
 -- game
 LuaFiles.Games = {}
 f = LuaFiles.Games
@@ -97,9 +97,10 @@ table.insert(f, "Script/Games/CCC/cccRoom")
 LuaFiles.NetWork = {}
 f = LuaFiles.NetWork
 table.insert(f, "Script/network")       -- 网络分发入口点
-table.insert(f, "Script/NetWork/gameEnter")
-table.insert(f, "Script/NetWork/gameFire")
-table.insert(f, "Script/NetWork/loginServer")
+table.insert(f, "Script/Games/CCC/NetWork/gameEnter")
+table.insert(f, "Script/Games/CCC/NetWork/gameFire")
+table.insert(f, "Script/Games/CCC/NetWork/loginServer")
+table.insert(f, "Script/Games/CCC/NetWork/cccNetwork")
 
 
 
