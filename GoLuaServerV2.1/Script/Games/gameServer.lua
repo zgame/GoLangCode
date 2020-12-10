@@ -6,41 +6,41 @@
 
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
---- go 来创建和调用的游戏管理器， 管理器管理很多游戏， 每个游戏管理桌子和玩家
---- 新添加游戏步骤：1, 定义类型 2 AddGame  3 在games.lua里面定义根据不同的游戏定义不同的桌子 4 创建一个新游戏的桌子.lua文件
+--- go 来创建和调用的游戏管理器， 管理器管理很多游戏， 每个游戏管理房间和玩家
+--- 新添加游戏步骤：1, 定义类型 2 AddGame  3 在games.lua里面定义根据不同的游戏定义不同的房间 4 创建一个新游戏的房间.lua文件
 ---
 --- 注意：
 --- 这里是主逻辑线程才能访问的地方，  普通玩家的线程是访问不到的， 玩家要通过channel去通知主线程要做什么事情，主线程会处理所有玩家的申请
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 
-GameManager = {}
+GameServer = {}
 
 
---增加一个游戏， 指定这个游戏的类型， 并且创建一个桌子，并启动桌子逻辑
+--增加一个游戏， 指定这个游戏的类型， 并且创建一个房间，并启动房间逻辑
 local function addGame(name, gameType)
-    if GameManager.GetGameByID(gameType) ~= nil then
+    if GameServer.GetGameByID(gameType) ~= nil then
         ZLog.Logger("游戏类型["..gameType.."已经添加过了，不用重复添加")
         return
     end
 
-    local game = Game.New(name, gameType)
+    local game = Game:New(name, gameType)
     -- 加入到游戏总列表中
-    GameManager.SetAllGamesList(gameType, game)
+    GameServer.SetAllGamesList(gameType, game)
 
     --Logger("--------------AddGame--------------------------")
-    Game.CreateTable(game,gameType)
+    Game.CreateRoom(game,gameType)
     --game.GameScore = gameScore
 end
 
 -- 游戏服务器入口点
-function GameManager.Start()
+function GameServer.Start()
     --Logger("--------------------注册中心服----------------------------")
     --ServerMainServer = LuaNetWorkConnectOtherServer(Setting.ConstMainCenterServer)  -- 申请连接协调服务器，并 把serverId保存下来， 以后发送消息用
     --print("协调服 serverId ",ServerMainServer)
 
     print("-------------------  添加主循环  ------------------------------")
-    ZTimer.SetNewTimer("GameManager", "RunGamesTables", 200,GameManager.RunGamesTables)
+    ZTimer.SetNewTimer("GameServer", "RunGamesTables", 200, GameServer.RunGamesTables)
 
     print("-------------------  添加游戏  ------------------------------")
     addGame("沙石镇", Const.GameTypeCCC)
@@ -91,7 +91,7 @@ local function GetAllPlayersUUID(num)
 end
 
 --有一个新的玩家注册了，那么给他分配一个UID
-function GameManager.GetLastUserID()
+function GameServer.GetLastUserID()
     local r = 1     -- math.random(1, 4)        --返回[1,4]的随机整数
     local uuid = GetAllPlayersUUID(r)     -- 分布式申请UUID
     --Logger("给玩家分配新uid  ALLUserUUID "..uuid)
@@ -100,11 +100,11 @@ end
 
 
 -- 根据user uid 返回user的句柄
-function GameManager.GetPlayerByUID(uid)
+function GameServer.GetPlayerByUID(uid)
     return GlobalVar.AllPlayerList[tostring(uid)]
 end
 
-function GameManager.SetAllPlayerList(userId,value)
+function GameServer.SetAllPlayerList(userId, value)
     GlobalVar.AllPlayerList[tostring(userId)] = value
     if value == nil then
         GlobalVar.AllPlayerListNumber = GlobalVar.AllPlayerListNumber - 1   -- 玩家人数减少
@@ -118,53 +118,30 @@ end
 
 
 --通过gameID获取是哪个游戏
-function GameManager.GetGameByID(gameType)
+function GameServer.GetGameByID(gameType)
     return GlobalVar.AllGamesList[tostring(gameType)]
 end
 
-function GameManager.SetAllGamesList(gameType,value)
+function GameServer.SetAllGamesList(gameType, value)
     GlobalVar.AllGamesList[tostring(gameType)] = value
 end
 
------------------------------------桌子-------------------------------------
+-----------------------------------房间-------------------------------------
 ---- 显示当前的状态
 --function ShowAllGameStates()
 --    for gameType, game in pairs(GlobalVar.AllGamesList) do
 --        --local game = GetGameByID(k)
---        --print("游戏"..gameType.."有桌子数量"..game.AllTableListNumber..",有玩家数量".. AllPlayerListNumber)
+--        --print("游戏"..gameType.."有房间数量"..game.AllTableListNumber..",有玩家数量".. AllPlayerListNumber)
 --    end
 --end
 
 
 
 -- 遍历所有的列表，然后依次run,  改为服务器自己创建定时器处理
-function GameManager.RunGamesTables()
-    --print("----------------当前有"..#GoRoutineAllList.."个桌子")
-    --for _, game in pairs(AllGamesList) do
-    --    for _, run in pairs(game.GoRunTableAllList) do
-    --        --local key = gameType .. "_".. tableId
-    --        --if AllGamesListRunCurrentTableIndex[key] == nil then
-    --            -- 没有run过
-    --            run() -- 执行注册的函数，table run
-    --            --AllGamesListRunCurrentTableIndex[key] = true   -- 记录一下已经run过了
-    --            --return          -- run一次就退出
-    --        --end
-    --    end
-    --end
-
+function GameServer.RunGamesTables()
     for _, game in pairs(GlobalVar.AllGamesList) do
-        for _, table in pairs(game.AllTableList) do
-            --local key = gameType .. "_".. tableId
-            --if AllGamesListRunCurrentTableIndex[key] == nil then
-            -- 没有run过
-            table:RunTable() -- 执行注册的函数，table run
-            --AllGamesListRunCurrentTableIndex[key] = true   -- 记录一下已经run过了
-            --return          -- run一次就退出
-            --end
+        for _, room in pairs(game.AllRoomList) do
+            room:RunTable() -- 执行注册的函数，table run
         end
     end
-
-    -- 全部都run过了，重置一下
-    --AllGamesListRunCurrentTableIndex = {}
-    --print("全部都run过了，重置一下")
 end

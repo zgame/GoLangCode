@@ -35,7 +35,7 @@ function Main.GoCallLuaStartAllServers()
     print("------------------   服务器启动初始化  ---------------------------")
     print("ServerTypeName:".. GlobalVar.ServerTypeName)
 
-    --CreateAllGoRoutineGameTable()     --创建桌子使用的goroutine函数列表
+    --CreateAllGoRoutineGameTable()     --创建房间使用的goroutine函数列表
     --GetALLUserUUID()                  -- 是一个UUID是不是需要初始化的判断
     --if ServerTypeName1 == "Game1" then
     --    startGamesServers()                     -- 启动游戏服
@@ -44,7 +44,7 @@ function Main.GoCallLuaStartAllServers()
     --    MainCenterServer.Start()                 -- 启动主中心服
     --end
     local switch={}
-    switch["Game"] = GameManager.Start               -- 启动游戏服
+    switch["Game"] = GameServer.Start               -- 启动游戏服
     switch["MainCenter"] = CenterServer.Start                 -- 启动主中心服
     -- 运行对应server type的函数
     switch[GlobalVar.ServerTypeName]()

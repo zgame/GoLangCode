@@ -7,7 +7,7 @@
 
 -----------------------DIR-------------------------
 --RedisDirAllPlayersUUID          = "AllPlayers_UUID:"                         -- 所有玩家UUID
---RedisDirServerState           = "BY_ServerState:"                          -- 各个服务器状态 多少个桌子，多少玩家在线， 网络情况，1分钟记录一次，永久记忆
+--RedisDirServerState           = "BY_ServerState:"                          -- 各个服务器状态 多少个房间，多少玩家在线， 网络情况，1分钟记录一次，永久记忆
 --RedisDirGameState             = "BY_GameState:"                            -- 当前各个服务器，各个游戏的状态，多少鱼，多少子弹，多少椅子有人
 
 RedisDirAllPlayers              = "BY_AllPlayers:"                          -- 所有玩家列表

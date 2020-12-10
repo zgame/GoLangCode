@@ -5,19 +5,19 @@
 ---
 
 --------------------------------------------------------------------------------------
----  聊天服务主要依托于该table做游戏的添加(仅一份后期愿景该桌子及相关全部删掉
+---  聊天服务主要依托于该table做游戏的添加(仅一份后期愿景该房间及相关全部删掉
 --------------------------------------------------------------------------------------
 
---- 桌子对象
+--- 房间对象
 ChatTable = {}
---- 创建桌子对象
---- @param tableId      桌子ID
+--- 创建房间对象
+--- @param roomId      房间ID
 --- @param gameTypeId   游戏类型ID
---- @return o           桌子对象
-function ChatTable:New(tableId, gameTypeId)
+--- @return o           房间对象
+function ChatTable:New(roomId, gameTypeId)
     local o = {
-        GameID              = gameTypeId,               -- 桌子游戏类型(聊天)
-        TableID             = tableId,                  -- 桌子ID(对于聊天服务永远都为1)
+        GameID              = gameTypeId,               -- 房间游戏类型(聊天)
+        roomId             = roomId,                  -- 房间ID(对于聊天服务永远都为1)
         LoginServerArray    = {},                       -- LoginServer连接列表信息hash[key:serverID,value: loginServerInfo]
         LoginServerNumber   = 0,                        -- 聊天服连接数量
         PlayerTokenArray    = {},                       -- 登录服上传的玩家Token信息，作为玩家连接聊天验证的凭证hash[key:userID,value: token(string)]
@@ -34,13 +34,13 @@ function ChatTable:New(tableId, gameTypeId)
     return o
 end
 
---- 启动桌子
+--- 启动房间
 function ChatTable:StartTable()
     self:InitTable()
     return
 end
 
---- 初始化桌子
+--- 初始化房间
 function ChatTable:InitTable()
     -- 加载屏蔽字库
     --LoadConfineContent(self.ConfineContentDict, self.ConfineContentArray)
@@ -48,13 +48,13 @@ function ChatTable:InitTable()
     return
 end
 
---- 重载桌子
---- @param o 桌子对象
+--- 重载房间
+--- @param o 房间对象
 function ChatTable:Reload(o)
     return
 end
 
---- 桌子的主循环
+--- 房间的主循环
 function ChatTable:RunTable()
     return
 end
@@ -75,7 +75,7 @@ function ChatTable:PlayerStandUp(seatID,player)
     return
 end
 
------清理桌子
+-----清理房间
 function ChatTable:ClearTable()
     return
 end

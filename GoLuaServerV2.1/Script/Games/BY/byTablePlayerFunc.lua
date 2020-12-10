@@ -6,10 +6,10 @@
 
 
 --------------------------------------------------------------------------------
-----------------------桌子逻辑关于 玩家 的处理----------------------------------
+----------------------房间逻辑关于 玩家 的处理----------------------------------
 --------------------------------------------------------------------------------
 
---获取桌子的所有玩家-
+--获取房间的所有玩家-
 --function ByTable:GetUsersSeatInTable()
 --    local userList = {}
 --    for i=1,BY_TABLE_MAX_PLAYER do
@@ -22,19 +22,19 @@
 --end
 ----玩家离开椅子
 function ByTable:PlayerStandUp(seatID,player)
-    Logger(player.User.UserID.."离开桌子"..player.TableID.."椅子"..player.ChairID)
+    Logger(player.User.UserID.."离开房间"..player.roomId.."椅子"..player.ChairID)
     -- 调用基类的起立
     self.super.PlayerStandUp(self, seatID, player)
     -- 清理掉玩家所有子弹
     self:DelBullets(player.User.UserID)
-    --如果是空桌子的话，清理一下桌子
+    --如果是空房间的话，清理一下房间
     if self:CheckTableEmpty() then
         self:ClearTable()
-        game:ReleaseTableByUID(self.TableID)    --回收桌子
+        game:ReleaseTableByUID(self.roomId)    --回收房间
     end
 end
 
------清理桌子
+-----清理房间
 function ByTable:ClearTable()
     -- 清理一下生成鱼的结构
     self.DistributeArray = {}

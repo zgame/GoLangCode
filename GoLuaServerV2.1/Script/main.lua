@@ -75,7 +75,7 @@ for _,fileName in ipairs(LuaFiles.Games) do
     require(fileName)
 end
 
--- GameManager
+-- Model
 for _,fileName in ipairs(LuaFiles.Manager) do
     require(fileName)
 end

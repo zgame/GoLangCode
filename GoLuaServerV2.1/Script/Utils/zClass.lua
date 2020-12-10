@@ -4,12 +4,16 @@
 --
 --Rect = Point:extend()
 --function Rect:new(x, y, width, height)
---Rect.super.new(self, x, y)
+--  Rect.super.new(self, x, y)
 
---
+-- 用法说明： 可以使用：做为成员函数，优点：标准的类的用法， 缺点：idea的很多功能不能使用，不能重构，不能定位，只能搜文本，容易出错
+-- 用法说明： 可以使用. 做为模块函数，优点：idea的很多功能能使用，能重构，能定位，不容易出错  缺点： 写起来代码量多一些，继承关系中调用模块函数要指定才行
+
+-- 推荐用法： 类定义使用：定义成员函数， 调用的时候采用 Class.Function(object,...) 这种方式来写
 
 
-local Class = {}
+--local Class = {}
+Class = {}
 Class.__index = Class
 
 function Class:new()
@@ -59,4 +63,4 @@ function Class:__call(...)
     return obj
 end
 
-return Class
+--return Class

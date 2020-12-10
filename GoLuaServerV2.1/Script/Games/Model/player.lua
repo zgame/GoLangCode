@@ -17,7 +17,7 @@ function Player:New(user)
         User = user,                    -- user数据
         --ChatUser = {},                  -- chatUser数据
 
-        TableID = TABLE_CHAIR_NOBODY ,  -- 桌子id
+        roomId = TABLE_CHAIR_NOBODY ,  -- 房间id
         ChairID = TABLE_CHAIR_NOBODY,   -- 椅子id
 
         --IsRobot = false,                -- 是不是机器人

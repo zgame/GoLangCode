@@ -6,7 +6,7 @@
 
 --------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
---- 这是每个玩家的连接接收到网络消息之后的处理， 当涉及到多人游戏的时候， 需要通过MultiThreadChannelGameManagerToPlayer 来和游戏桌子逻辑进行数据交互，因为多线程需要保证线程安全
+--- 这是每个玩家的连接接收到网络消息之后的处理， 当涉及到多人游戏的时候， 需要通过MultiThreadChannelGameManagerToPlayer 来和游戏房间逻辑进行数据交互，因为多线程需要保证线程安全
 ---
 --- 如果自己单人游戏就不用了， 直接把处理游戏的逻辑写在这里就好了。
 --------------------------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ function HandleUserFire(userId, buf)
         --Logger("玩家数据："..player.."game:"..game.."table:"..table)
         return
     end
-    gameTable:HandleUserFire(player , msg.lock_fish_id )       -- 桌子会发送消息给玩家
+    gameTable:HandleUserFire(player , msg.lock_fish_id )       -- 房间会发送消息给玩家
 
 
 
@@ -37,7 +37,7 @@ function HandleUserFire(userId, buf)
     --data.LockFishId =  msg.lock_fish_id     -- 要打击的鱼id
     --local result = MultiThreadChannelGameManagerToPlayer("HandleUserFire",data)
     --if result.error ~= nil then
-    --    LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+    --    LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的房间")
     --    return
     --end
 
@@ -73,7 +73,7 @@ function HandleCatchFish(userId, buf)
     --data.BulletId =  msg.bullet_id
     --local result = MultiThreadChannelGameManagerToPlayer("HandleCatchFish",data)
     --if result.error ~= nil then
-    --    LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子")
+    --    LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的房间")
     --    return
     --end
 --    print("抓鱼完成")
@@ -95,11 +95,11 @@ function GetPlayer_Game_Table(userId)
     end
 
     --local player = game:PlayerLoginGame(oldPlayer)
-    --result.TableID = player.TableID
-    --result.ChairID = player.ChairID                 -- 把player桌子id，椅子id的数据 返回去
-    local gameTable = game:GetTableByUID(player.TableID)
+    --result.roomId = player.roomId
+    --result.ChairID = player.ChairID                 -- 把player房间id，椅子id的数据 返回去
+    local gameTable = game:GetTableByUID(player.roomId)
     if gameTable == nil then
-        LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子", nil)
+        LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的房间", nil)
         return nil,nil,nil
     end
 

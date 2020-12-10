@@ -52,7 +52,7 @@ GlobalVar = {
 
 
 
---AllGamesListRunCurrentTableIndex = {}                     -- 所有游戏中的桌子已经run过的map ，  run过之后，就会加入到这里，每次循环的时候判断是否run过了
+--AllGamesListRunCurrentTableIndex = {}                     -- 所有游戏中的房间已经run过的map ，  run过之后，就会加入到这里，每次循环的时候判断是否run过了
 
 
 

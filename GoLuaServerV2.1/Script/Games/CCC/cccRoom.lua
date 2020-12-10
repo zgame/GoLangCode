@@ -1,11 +1,11 @@
 
 
 CCCRoom = {}
-function CCCRoom:New(tableId, gameTypeId)
+function CCCRoom:New(roomId, gameTypeId)
     -- 重新赋值某些属性值
     o = BaseRoom:New()
     o.GameID              = gameTypeId
-    o.TableID             = tableId
+    o.roomId             = roomId
     o.TableMax            = CCC_TABLE_MAX_PLAYER
     local father = getmetatable(o)
     setmetatable(self, father)
@@ -13,7 +13,7 @@ function CCCRoom:New(tableId, gameTypeId)
 
     -- 椅子
     o.UserSeatArray         = {}        -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
-    o.UserSeatArrayNumber   = 0         -- 桌子上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
+    o.UserSeatArrayNumber   = 0         -- 房间上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
 
     setmetatable(o,self)
     self.__index = self
@@ -35,10 +35,10 @@ function CCCRoom:StartTable()
     self:InitTable()        -- 可以进行初始化
 end
 
--- 桌子的主循环
+-- 房间的主循环
 function CCCRoom:RunTable()
     if self:CheckTableEmpty() then
-        print("这是一个空桌子"..self.GameID)
+        print("这是一个空房间"..self.GameID)
 
         -- 这部分是做一个内存的测试
         ---- create Global Map hash
@@ -87,17 +87,17 @@ function CCCRoom:RunTable()
         --    --fish:FishRun(now,self)              --遍历所有鱼，并且run
         --end
 
-        -- 记录桌子的运行状态
+        -- 记录房间的运行状态
         --if now - self.LastRunTime > 1000 * 60  then     -- 60秒记录一次
         --    local state = {}
         --    state["FishNum"] = self:GetFishNum()        --当前有多少条鱼
         --    state["BulletNum"] = self:GetBulletNum()    --当前有多少子弹
         --    state["SeatArray"] = self.UserSeatArrayNumber    --当前有多少玩家
-        --    SqlSaveGameState(self.GameID, self.TableID, state)
+        --    SqlSaveGameState(self.GameID, self.roomId, state)
         --    self.LastRunTime = now
-        --    --print("记录桌子的运行状态")
+        --    --print("记录房间的运行状态")
         --end
-        -- 检查玩家的情况，如果玩家长期离线，那么t掉，没人就清空桌子
+        -- 检查玩家的情况，如果玩家长期离线，那么t掉，没人就清空房间
         --for k, player in pairs(self.UserSeatArray) do
         --    if player.NetWorkState == false then
         --        if now - player.NetWorkCloseTimer > ConstPlayerNetworkWaitTime then
@@ -114,7 +114,7 @@ end
 
 function CCCRoom:InitTable()
     if self:CheckTableEmpty() then
-        -- 如果桌子是空的， 那么需要初始化一下
+        -- 如果房间是空的， 那么需要初始化一下
         --self:InitDistributeInfo()
     end
 end
@@ -139,8 +139,8 @@ end
 function CCCRoom:SendEnterSceneInfo(UserId)
     local sendCmd = CMD_Game_pb.CMD_S_ENTER_SCENE()
     sendCmd.scene_id = self.GameID
-    sendCmd.table_id = self.TableID
-    for index, player in pairs(self.UserSeatArray) do       -- 从桌子传递过来的其他玩家信息，原来坐着的玩家信息
+    sendCmd.table_id = self.roomId
+    for index, player in pairs(self.UserSeatArray) do       -- 从房间传递过来的其他玩家信息，原来坐着的玩家信息
         if player ~= nil then
             local uu = sendCmd.table_users:add()
             uu.user_id = player.User.UserID

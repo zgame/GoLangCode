@@ -26,24 +26,24 @@ end
 
 
 -- 保存服务器的房间状态
-local function ZMySqlSaveGameState(ServerIP_Port,gameType,tableId ,FishNum,BulletNum,SeatArray)
+local function ZMySqlSaveGameState(ServerIP_Port,gameType,roomId ,FishNum,BulletNum,SeatArray)
     -- 想想如何处理
 
-    --luaCallGoSqlSaveGameState(ServerIP_Port,gameType,tableId ,FishNum,BulletNum,SeatArray)
+    --luaCallGoSqlSaveGameState(ServerIP_Port,gameType,roomId ,FishNum,BulletNum,SeatArray)
 end
 
 
-----------------------------保存桌子状态信息，当前的运行信息，桌子销毁就删掉-----------------------------
-function SqlSaveGameState(gameType,tableId, state)
+----------------------------保存房间状态信息，当前的运行信息，房间销毁就删掉-----------------------------
+function SqlSaveGameState(gameType,roomId, state)
     if SQLStaticSwitch then
 
-        ZMySqlSaveGameState(ServerIP_Port,gameType,tableId ,state.FishNum,state.BulletNum,state.SeatArray)   -- 采用go来做这个事情了， lua太费性能
+        ZMySqlSaveGameState(ServerIP_Port,gameType,roomId ,state.FishNum,state.BulletNum,state.SeatArray)   -- 采用go来做这个事情了， lua太费性能
 
-        --RedisSaveString(RedisDirGameState..ServerIP_Port..":GameID_"..gameType..":TableId"..tableId, tableId, ZJson.encode(state))
+        --RedisSaveString(RedisDirGameState..ServerIP_Port..":GameID_"..gameType..":roomId"..roomId, roomId, ZJson.encode(state))
 
-        --local select = string.format("select * from game_state where server_ip = '%s' and game_id = %d and table_id = %d",ServerIP_Port,gameType,tableId )
-        --local insert = string.format("insert into game_state (server_ip,game_id,table_id,fish_num,bullet_num,seat_array) values ('%s',%s, %d,%d,%d,%d)",ServerIP_Port,gameType,tableId ,state.FishNum,state.BulletNum,state.SeatArray)
-        --local update = string.format("update  game_state   set  fish_num =%d ,bullet_num =%d,seat_array=%d where server_ip = '%s' and game_id = %d and table_id = %d",state.FishNum,state.BulletNum,state.SeatArray,ServerIP_Port,gameType,tableId )
+        --local select = string.format("select * from game_state where server_ip = '%s' and game_id = %d and table_id = %d",ServerIP_Port,gameType,roomId )
+        --local insert = string.format("insert into game_state (server_ip,game_id,table_id,fish_num,bullet_num,seat_array) values ('%s',%s, %d,%d,%d,%d)",ServerIP_Port,gameType,roomId ,state.FishNum,state.BulletNum,state.SeatArray)
+        --local update = string.format("update  game_state   set  fish_num =%d ,bullet_num =%d,seat_array=%d where server_ip = '%s' and game_id = %d and table_id = %d",state.FishNum,state.BulletNum,state.SeatArray,ServerIP_Port,gameType,roomId )
         ----print(select)
         ----print(insert)
         ----print(update)
@@ -64,10 +64,10 @@ function SqlSaveGameState(gameType,tableId, state)
     end
 
 end
-----------------------------删掉桌子状态信息-----------------------------
-function SqlDelGameState(gameType,tableId)         -- 清理掉桌子的运行状态
+----------------------------删掉房间状态信息-----------------------------
+function SqlDelGameState(gameType,roomId)         -- 清理掉房间的运行状态
     if SQLStaticSwitch then
-        local sql = string.format("delete from game_state where server_ip = '%s' and game_id = %d and table_id = %d ",ServerIP_Port,gameType,tableId)
+        local sql = string.format("delete from game_state where server_ip = '%s' and game_id = %d and table_id = %d ",ServerIP_Port,gameType,roomId)
         --print(sql)
         MysqlExec(sql)
     end

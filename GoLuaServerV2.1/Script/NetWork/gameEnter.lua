@@ -6,7 +6,7 @@
 
 --------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
---- 这是每个玩家的连接接收到网络消息之后的处理， 当涉及到多人游戏的时候， 需要通过MultiThreadChannelGameManagerToPlayer 来和游戏桌子逻辑进行数据交互，因为多线程需要保证线程安全
+--- 这是每个玩家的连接接收到网络消息之后的处理， 当涉及到多人游戏的时候， 需要通过MultiThreadChannelGameManagerToPlayer 来和游戏房间逻辑进行数据交互，因为多线程需要保证线程安全
 ---
 --- 如果自己单人游戏就不用了， 直接把处理游戏的逻辑写在这里就好了。
 --------------------------------------------------------------------------------------------------------------
@@ -20,13 +20,13 @@
 --MyPlayer = nil -- 这是全局的玩家句柄，因为每一个LState是一个单独的lua空间，所以每个玩家都拥有自己单独的MyPlayer句柄
 
 
-----客户端申请进入大厅 , 玩家申请登录游戏房间， 分配桌子，坐下
+----客户端申请进入大厅 , 玩家申请登录游戏房间， 分配房间，坐下
 function SevEnterScene(userId, buf)
     --print("------------客户端申请进入大厅-------------")
     local msg = CMD_GameServer_pb.CMD_GF_GameOption()
     msg:ParseFromString(buf)
 
-    --玩家登陆游戏，分配桌子
+    --玩家登陆游戏，分配房间
     local gameType = GameTypeXHS     -- 申请登录的游戏类型
     -- 创建一个User对象
     local MyUser = User:New()
@@ -60,11 +60,11 @@ function SevEnterScene(userId, buf)
         LuaNetWorkSendToUser(userId,MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "请求登录游戏类型不正确", nil)
         return
     end
-    -- 进入对应游戏桌子
-    local player = game:PlayerLoginGame(oldPlayer)
-    local table = game:GetTableByUID(player.TableID)
+    -- 进入对应游戏房间
+    local player = Game.PlayerLoginGame(game,oldPlayer)
+    local table = game:GetTableByUID(player.roomId)
     if table == nil then
-        LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的桌子", nil)
+        LuaNetWorkSendToUser(userId, MDM_GR_LOGON, SUB_GR_LOGON_FAILURE, nil, "没找到正确的房间", nil)
         return
     end
 

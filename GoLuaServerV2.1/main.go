@@ -73,8 +73,8 @@ var GameManagerLuaReloadTime int // 公共逻辑处理的lua更新时间
 
 
 
-//var GoroutineMax int 			// 给lua的游戏桌子使用的协程数量		暂时没用
-//var GoroutineTableLua *Lua.MyLua		// 桌子lua脚本
+//var GoroutineMax int 			// 给lua的游戏房间使用的协程数量		暂时没用
+//var GoroutineTableLua *Lua.MyLua		// 房间lua脚本
 //var GoroutineTableLuaLuaReloadTime int  // 公共逻辑处理的lua更新时间
 
 func main() {
@@ -117,7 +117,7 @@ func main() {
 	//fmt.Println("Lua 代码初始化完成")
 
 
-	//fmt.Println("-------------------多核桌子逻辑处理器---------------------------")
+	//fmt.Println("-------------------多核房间逻辑处理器---------------------------")
 	//CreateGoroutineForLuaGameTable()
 
 	//fmt.Println("-------------------	启动gameManager	---------------------------")
@@ -148,12 +148,12 @@ func main() {
 
 		//UpdateDBSetting()
 		//ztimer.CheckRunTimeCost(func() {
-		//		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
-		//	}, "桌子循环GoCallLuaGoRoutineForLuaGameTable"		)
+		//		GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 房间的run
+		//	}, "房间循环GoCallLuaGoRoutineForLuaGameTable"		)
 		//startTime := ztimer.GetOsTimeMillisecond()
-		//GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 桌子的run
+		//GameManagerLua.GoCallLuaLogic("GoCallLuaGoRoutineForLuaGameTable") // 房间的run
 		//if ztimer.GetOsTimeMillisecond()-startTime > GlobalVar.WarningTimeCost {
-		//	zLog.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 桌子循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
+		//	zLog.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 房间循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		//}
 		runtime.GC()
 		time.Sleep(time.Millisecond * 1000 * 10)                                //给其他协程让出10秒的时间， 这个可以后期调整
@@ -362,7 +362,7 @@ func TimerCommonLogicStart() {
 }
 
 
-////----------------------------------------------------桌子逻辑部分-------------------------------------------------------------------
+////----------------------------------------------------房间逻辑部分-------------------------------------------------------------------
 //
 //// 检查通用逻辑部分的lua是否需要更新
 //func GoroutineTableLuaReloadCheck() {

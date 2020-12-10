@@ -72,20 +72,19 @@ table.insert(f, "Script/Utils/Enum")
 table.insert(f, "Script/Utils/string/splitString")
 
 
--- gameManager
+-- Model
 LuaFiles.Manager = {}
 f = LuaFiles.Manager
 table.insert(f, "Script/serverStart")           --  服务器入口点
 table.insert(f, "Script/Server/commonLogic")
 table.insert(f, "Script/Server/centerServer")
-table.insert(f, "Script/GameManager/player")
-table.insert(f, "Script/GameManager/playerLogic")
-table.insert(f, "Script/GameManager/user")
-table.insert(f, "Script/GameManager/chatUser")
-table.insert(f, "Script/GameManager/games")
-table.insert(f, "Script/GameManager/gameManager")
-
-table.insert(f, "Script/GameManager/baseRoom")
+table.insert(f, "Script/Games/Model/player")
+table.insert(f, "Script/Games/Model/playerLogic")
+table.insert(f, "Script/Games/Model/user")
+table.insert(f, "Script/Games/Model/chatUser")
+table.insert(f, "Script/Games/gameServer") --  游戏服务器入口点
+table.insert(f, "Script/Games/games")
+table.insert(f, "Script/Games/baseRoom")
 
 -- game
 LuaFiles.Games = {}
@@ -208,7 +207,7 @@ function ReloadAll()
         ReloadFile(fileName)
     end
 
-    -- GameManager
+    -- Model
     for _,fileName in ipairs(RequireAndReloadManagerFiles) do
         ReloadFile(fileName)
     end
@@ -228,7 +227,7 @@ function ReloadAll()
         -- 捕鱼游戏
         if game.GameTypeID == GameTypeBY or game.GameTypeID == GameTypeBY30 then
             for _, table in pairs(game.AllTableList) do
-                -- 遍历所有游戏，所有桌子， 所有鱼，所有子弹，所有生成鱼池， 因为这些都是类， 已经生成的对象需要刷新函数
+                -- 遍历所有游戏，所有房间， 所有鱼，所有子弹，所有生成鱼池， 因为这些都是类， 已经生成的对象需要刷新函数
                 ByTable:Reload(table)
                 for _, fish in pairs(table.FishArray) do
                     Fish:Reload(fish)

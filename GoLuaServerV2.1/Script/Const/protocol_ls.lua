@@ -61,8 +61,8 @@
 	SUB_MB_S_SERVER_ONLINE_COUNT     = 5 --# 服务器返回服务器人数
 	SUB_MB_C_ALL_SERVER_ONLINE_TOTAL = 6 --# 客户端请求所有服务器房间的总在线人数
 	SUB_MB_S_ALL_SERVER_ONLINE_TOTAL = 7 --# 返回所有服务器房间的总在线人数
-	SUB_MB_C_SERVER_TABLE_INFO       = 8 --# 服务器桌子信息
-	SUB_MB_S_SERVER_TABLE_INFO       = 9 --# 服务器桌子信息
+	SUB_MB_C_SERVER_TABLE_INFO       = 8 --# 服务器房间信息
+	SUB_MB_S_SERVER_TABLE_INFO       = 9 --# 服务器房间信息
 
 	--# 用户数据
 	SUB_MB_ADD_USER_INFO                   = 1  --# 增加资料 （ 姓名，身份证，手机 ）

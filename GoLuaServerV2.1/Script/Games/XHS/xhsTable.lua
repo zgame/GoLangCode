@@ -4,17 +4,17 @@
 --- DateTime: 2019/10/22 16:04
 ---
 
---- 桌子对象
+--- 房间对象
 XhsTable = BaseRoom:New()
---- 创建桌子对象
---- @param tableId      桌子ID
+--- 创建房间对象
+--- @param roomId      房间ID
 --- @param gameTypeId   游戏类型ID
---- @return o           桌子对象
-function XhsTable:New(tableId, gameTypeId)
+--- @return o           房间对象
+function XhsTable:New(roomId, gameTypeId)
     -- 重新赋值某些属性值
     o = BaseRoom:New()
     o.GameID              = gameTypeId
-    o.TableID             = tableId
+    o.roomId             = roomId
     o.TableMax            = XHS_TABLE_MAX_PLAYER
     local father = getmetatable(o)
     setmetatable(self, father)
@@ -27,8 +27,8 @@ function XhsTable:New(tableId, gameTypeId)
     return o
 end
 
---- 重载桌子
---- @param o 桌子对象
+--- 重载房间
+--- @param o 房间对象
 function XhsTable:Reload(o)
     -- 父类重载
     o.super.Reload(self)
@@ -41,20 +41,20 @@ function XhsTable:Reload(o)
     -- 比如 3 修改了字段， 那么你需要将老数据进行， 老字段=nil， 新字段初始化或者进行赋值处理
 end
 
---- 启动桌子
+--- 启动房间
 function XhsTable:StartTable()
-    -- 初始化桌子
+    -- 初始化房间
     self:InitTable()
 end
 
---- 初始化桌子
+--- 初始化房间
 function XhsTable:InitTable()
     return
 end
 
---- 桌子的主循环
+--- 房间的主循环
 function XhsTable:RunTable()
-    -- print("小海兽桌子主循环")
+    -- print("小海兽房间主循环")
     -- 每1秒循环一次
     local tCurTime = os.time()
     if self.LastRunTime == 0 then
@@ -64,7 +64,7 @@ function XhsTable:RunTable()
         return
     end
 
-    -- 循环桌子
+    -- 循环房间
     if self:CheckTableEmpty() == false then
         -- 循环玩家
         local sendBuff

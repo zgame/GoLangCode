@@ -29,7 +29,7 @@ function GameNetwork.Receive(serverId, userId, msgId, subMsgId, data, token)
     elseif msgId == MDM_GF_FRAME then
         if subMsgId == SUB_GF_GAME_OPTION then
             print("**************游游客进入游戏房间申请***************** ", userId)
-            ---- 这里是玩家申请登录游戏的类型，进入游戏房间， 分配桌子坐下开始玩 , 客户端需要申请房间的类型
+            ---- 这里是玩家申请登录游戏的类型，进入游戏房间， 分配房间坐下开始玩 , 客户端需要申请房间的类型
             SevEnterScene(userId, data)
         end
     elseif msgId == MDM_GR_USER then
@@ -93,16 +93,16 @@ end
 
 --- go通知lua 所有掉线的连接都要走这里
 function GameNetwork.Broken(uid, serverId)
-    Logger("go 通知：" .. uid .. "  掉线了")
+    ZLog.Logger("通知：" .. uid .. "  掉线了")
 
-    local player = GetPlayerByUID(uid)
+    local player = GameServer.GetPlayerByUID(uid)
     if player ~= nil then
         --printTable(player,0,"LeavePlayer")
         --print("LeavePlayer.UID="..player.User.UserId)
-        local game = GetGameByID(player.GameType)
+        local game = GameServer.GetGameByID(player.GameType)
         --printTable(game)
         if game ~= nil then
-            game:PlayerLogOutGame(player)
+            Game.PlayerLogOutGame(game,player)
             --player.NetWorkState = false
             --player.NetWorkCloseTimer = GetOsTimeMillisecond()
         end

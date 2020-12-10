@@ -53,16 +53,16 @@ func ConnectDB(ServerIP string,ServerPort string ,Database string, uid string, p
 }
 
 //// 保存服务器的游戏房间的当前状态， 这个作废了， 效率低， 后面采用组合的唯一主键， 然后采用replace into 或者 duplicate来进行更新
-//func SqlSaveGameState(ServerIP_Port string,gameType int,tableId  int,FishNum int,BulletNum int,SeatArray int)  {
+//func SqlSaveGameState(ServerIP_Port string,gameType int,roomId  int,FishNum int,BulletNum int,SeatArray int)  {
 //
 //	// 这个太麻烦，效率也不高， 作废了
 //	return
 //
 //	ztimer.CheckRunTimeCost(func() {
 //		// 这里没有用duplicate是因为没有主键
-//		select_sql := fmt.Sprintf("select table_id from game_state where server_ip = '%s' and game_id = %d and table_id = %d limit 1",ServerIP_Port,gameType,tableId )
-//		insert_sql := fmt.Sprintf("insert into game_state (server_ip,game_id,table_id,fish_num,bullet_num,seat_array) values ('%s',%d, %d,%d,%d,%d)",ServerIP_Port,gameType,tableId ,FishNum,BulletNum,SeatArray)
-//		update_sql := fmt.Sprintf("update  game_state   set  fish_num =%d ,bullet_num =%d,seat_array=%d where server_ip = '%s' and game_id = %d and table_id = %d",FishNum,BulletNum,SeatArray,ServerIP_Port,gameType,tableId )
+//		select_sql := fmt.Sprintf("select table_id from game_state where server_ip = '%s' and game_id = %d and table_id = %d limit 1",ServerIP_Port,gameType,roomId )
+//		insert_sql := fmt.Sprintf("insert into game_state (server_ip,game_id,table_id,fish_num,bullet_num,seat_array) values ('%s',%d, %d,%d,%d,%d)",ServerIP_Port,gameType,roomId ,FishNum,BulletNum,SeatArray)
+//		update_sql := fmt.Sprintf("update  game_state   set  fish_num =%d ,bullet_num =%d,seat_array=%d where server_ip = '%s' and game_id = %d and table_id = %d",FishNum,BulletNum,SeatArray,ServerIP_Port,gameType,roomId )
 //
 //		// 后面改成下面的语句，然后用lua去调用了， go这个废了
 //		replace_into := "insert into game_state (zkey,server_ip,game_id,table_id,fish_num,bullet_num,seat_array) values ('1_1_1','1',1, 1,1,1,1) on DUPLICATE key update fish_num =99 ,bullet_num =99,seat_array=99"

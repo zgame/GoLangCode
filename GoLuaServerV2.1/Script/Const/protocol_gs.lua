@@ -100,8 +100,8 @@
 	SUB_GR_S_SITDOWN_SUCCESS       = 41 --# 坐下成功
 	SUB_GR_C_TOMORROW_PACKAGE      = 42 --# 领取明日礼包
 	SUB_GR_S_TOMORROW_PACKAGE_BACK = 43 --# 领取明日礼包返回
-	SUB_GR_C_CREATE_TABLE          = 44 --# 创建桌子
-	SUB_GR_S_CREATE_TABLE          = 45 --# 创建桌子
+	SUB_GR_C_CREATE_TABLE          = 44 --# 创建房间
+	SUB_GR_S_CREATE_TABLE          = 45 --# 创建房间
 	SUB_GR_ROOM_USER_CHAT          = 46 --# 用户聊天
 	SUB_GR_ROOM_USER_EXPRESSION    = 47 --# 用户表情
 	SUB_GR_SPEAKER_SEND_MSG        = 48 --# 小喇叭请求
@@ -110,9 +110,9 @@
 	SUB_GR_S_SPEAKER_RECORD        = 51 --# 留言板信息
 	SUB_GR_C_SPEAKER_RECORD        = 52 --# 请求留言板信息
 
-	--# 桌子信息
-	SUB_GR_TABLE_INFO   = 1 --# 桌子信息
-	SUB_GR_TABLE_STATUS = 2 --# 桌子状态
+	--# 房间信息
+	SUB_GR_TABLE_INFO   = 1 --# 房间信息
+	SUB_GR_TABLE_STATUS = 2 --# 房间状态
 
 	--# 管理
 	SUB_GR_SEND_WARNING     = 1    --# 发送警告
@@ -311,7 +311,7 @@
 	REQUEST_FAILURE_NOSCORE          = 3 --# 积分不足
 	REQUEST_FAILURE_PASSWORD         = 4 --# 密码错误
 	REQUEST_FAILURE_NOTFIND_CHAIR    = 5 --# 没有找到座位
-	REQUEST_FAILURE_NOTFIND_TABLE    = 6 --# 没有找到桌子
+	REQUEST_FAILURE_NOTFIND_TABLE    = 6 --# 没有找到房间
 	REQUEST_FAILURE_NO_PLAY_COUNT    = 7 --# 参赛次数已用完
 	REQUEST_FAILURE_NO_MASTER_USERID = 8 --# 没有创建者
 

@@ -11,7 +11,7 @@ message UserInfo
 	optional uint32 vip_level = 4;					//VIP等级
 	optional uint32 level = 5;						//用户等级
 	optional int32  chair_id = 6;					//椅子ID
-	optional int32  table_id = 7;					//桌子ID
+	optional int32  table_id = 7;					//房间ID
 	optional int64	score = 8;						//分数
 	optional int64  lottery = 9;					//奖券
 	optional int32  bullet_mulriple = 10;			//炮台倍率
@@ -54,7 +54,7 @@ message CMD_S_ENTER_SCENE
 	optional int32  alms_get_count = 14;			//救济金领取次数
 	optional int32  scene_type = 15;                //场景类型
 	optional tagRewardPoolOption rewardpool_opt = 16;  //奖池信息
-	optional int32  table_id = 17;					//桌子ID
+	optional int32  table_id = 17;					//房间ID
 	optional bool  is_master = 18;					//是否是房主
 	optional int32  game_time = 19;					//游戏时间
 }

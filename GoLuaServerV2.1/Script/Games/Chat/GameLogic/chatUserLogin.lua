@@ -93,7 +93,7 @@ function ChatTable:HandleUserLogin(ServerID, UserID, data)
     local player = Player:New(MyUser)
     player.ChatUser = chatUser
     player.GameType = GameTypeChat
-    player.TableID  = 1
+    player.roomId  = 1
     -- 加入到玩家列表
     SetAllPlayerList(UserID, player)
     -- 加入缓存信息中
