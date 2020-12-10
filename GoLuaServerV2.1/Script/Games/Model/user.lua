@@ -9,50 +9,27 @@
 --- 一定确保字段名与数据库表中字段名相同
 --------------------------------------------------------------------------------------
 
-User = {}
+User = Class:extend()
 function User:New()
 
-    local c = {
-        --- 玩家基础信息(AccountsInfo)
-        UserID          = 0,                --  # 用户id
-        GameID          = 0,                --  # 游戏id
-        NickName        = "",               --  # 昵称
-        FaceID          = 0,                --  # 头像id
-        Gender          = 0,                --  # 性别
-        Experience      = 0,                --  # 经验
-        Loveliness      = 0,                --  # 魅力
-        Lev             = 0,                --  # 等级
-        VipLev          = 0,                --  # vip等级
-        VipExp          = 0,                --  # Vip经验
-        AccountLev      = 0,                --  # 账号等级
-        PayTotal        = 0,                --  # 充值总金额
-        OffLineTime     = 0,                --  # 离线时间
+    --- 玩家基础信息
+    self.UserID = 0                --  # 用户id
+    self.GameID = 0                --  # 游戏id
+    self.NickName = ""               --  # 昵称
+    self.FaceID = 0                --  # 头像id
+    self.Gender = 0                --  # 性别
+    self.Experience = 0                --  # 经验
+    self.Loveliness = 0                --  # 魅力
+    self.Lev = 0                --  # 等级
+    self.VipLev = 0                --  # vip等级
+    self.VipExp = 0                --  # Vip经验
+    self.AccountLev = 0                --  # 账号等级
+    self.PayTotal = 0                --  # 充值总金额
+    self.OffLineTime = 0                --  # 离线时间
 
-        --- 玩家基本信息(GameScoreInfo)
-        Score           = 0,                --  # 分数
-        Diamond         = 0,                --  # 钻石数量
-
-        --- 玩家道具信息(UserSkillInfo)
-        SkillInfoArray  = {},               --  # 道具信息
-
-        --- 小海兽属性(数据库表UserSeaMonster)
-        MonsterID       = 0,                --  # 海兽ID
-        MonsterHP       = 0,                --  # 海兽血量
-        MonsterBulletNum= 0,                --  # 子弹数量
-        TotalCritNum    = 0,                --  # 暴击数量
-        SummonTimes     = 0,                --  # 召唤时间
-        PuzzleIDArray   = {},               --  # 拼图ID
-
-    }
-    setmetatable(c, self)
-    self.__index = self
-    return c
 end
 
 function User:Reload(c)
-    setmetatable(c, self)
-    self.__index = self
-
     -- 如果热更新有改动成员变量的定义的话， 下面需要进行成员变量的处理
     -- 比如 1 增加了字段， 那么你需要将老数据进行， 新字段的初始化
     -- 比如 2 删除了字段， 那么你需要将老数据进行， 老字段=nil

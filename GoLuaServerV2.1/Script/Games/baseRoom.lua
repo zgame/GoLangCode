@@ -10,7 +10,7 @@ function BaseRoom:New()
     self.GameID = 0                    -- 游戏类型ID
     self.roomId = 0                    -- 房间ID
     self.TableMax = 0                    -- 房间最大容纳玩家数量
-    self.RoomScore = 0                    -- 房间低分
+
     self.UserSeatArray = {}                -- 椅子[座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player]
     self.UserSeatArrayNumber = 0           -- 房间上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
     self.LastRunTime = 0                   -- 循环周期时间
@@ -27,7 +27,7 @@ function BaseRoom:Reload(o)
 end
 
 --- 房间的主循环
-function BaseRoom:RunTable()
+function BaseRoom:RunRoom()
     --print("房间基类主循环")
 end
 
@@ -72,13 +72,14 @@ function BaseRoom:PlayerStandUp(seatID, player)
     GameServer.SetAllPlayerList(player.User.UserID, nil)         -- 清理掉游戏管理的玩家总列表
     self.UserSeatArray[seatID] = nil                -- 清理掉房间的玩家列表
     self.UserSeatArrayNumber = self.UserSeatArrayNumber - 1  -- 房间上玩家数量减少
-    player.roomId = Const.TABLE_CHAIR_NOBODY
-    player.ChairID = Const.TABLE_CHAIR_NOBODY
+    player.roomId = Const.ROOM_CHAIR_NOBODY
+    player.ChairID = Const.ROOM_CHAIR_NOBODY
 
     --如果是空房间的话，清理一下房间
     if self:CheckTableEmpty() then
         self:ClearTable()
-        game:ReleaseTableByUID(self.roomId)    --回收房间
+        local game = GameServer.GetGameByID(self.GameID)
+        Game.ReleaseRoom(game,self.roomId)    --回收房间
     end
 end
 

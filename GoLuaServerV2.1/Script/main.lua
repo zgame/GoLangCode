@@ -70,16 +70,16 @@ for _,fileName in ipairs(LuaFiles.DataBase) do
 end
 
 
--- Games
-for _,fileName in ipairs(LuaFiles.Games) do
-    require(fileName)
-end
 
 -- Model
 for _,fileName in ipairs(LuaFiles.Manager) do
     require(fileName)
 end
 
+-- Games
+for _,fileName in ipairs(LuaFiles.Games) do
+    require(fileName)
+end
 
 -- NetWork
 for _,fileName in ipairs(LuaFiles.NetWork) do

@@ -10,8 +10,8 @@ Const= {
     GameTypeCCC = 1 ,  -- 普通捕鱼
 
     -- 关于房间的常量定义
-    TABLE_CHAIR_NOBODY = -1 ,        -- 房间和椅子没人玩
-    CCC_TABLE_MAX_PLAYER = 1000   ,      -- 游戏房间的最大人数
+    ROOM_CHAIR_NOBODY = -1 ,        -- 房间和椅子没人玩
+    CCC_ROOM_MAX_PLAYER = 1000   ,      -- 游戏房间的最大人数
 }
 
 

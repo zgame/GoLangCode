@@ -36,44 +36,48 @@ end
 -----------------------------管理房间---------------------------
 
 --- 创建房间，并启动它， 参数带底分的， 不同底分的房间可以在一起管理，因为逻辑一样的，进入的时候判断一下，引导玩家进入不同底分的房间
-function Game:CreateRoom(gameType)
+function Game:CreateRoom(self,gameType)
+    print("create room",self)
+    print("self Name",self.name)
+    print("self GameTypeID",self.GameTypeID)
+    print("self TableUUID",self.TableUUID)
     local room
     if gameType == Const.GameTypeCCC then
-        room =  CCCRoom:New(self.TableUUID, gameType)
-    --elseif
+        room = CCCRoom:New(self.TableUUID, gameType)
+        --elseif
     end
     if room == nil then
-        ZLog.Logger("CreateTable error , gameType"..gameType)
+        ZLog.Logger("Create room error , gameType" .. gameType)
         return nil
     end
 
-    ZLog.Logger("创建了一个新的房间,type:"..gameType)
+    ZLog.Logger("创建了一个新的房间,type:" .. gameType)
 
     --增加该房间到总列表中
     self.AllRoomList[tostring(self.TableUUID)] = room
     self.AllRoomNumber = self.AllRoomNumber + 1
     self.TableUUID = self.TableUUID + 1     -- table uuid 自增
 
-    -- 房间开始自行启动计算
-    room:StartTable()
+    -- 房间开始
+    room:Init()
 
     return room
 
 end
 
 --- 根据房间uid 返回房间的句柄
-function Game:GetTableByUID(roomId)
+function Game:GetRoomByUID(roomId)
     return self.AllRoomList[tostring(roomId)]
 end
 
 --- 房间回收
-function Game:ReleaseTableByUID(roomId)
+function Game:ReleaseRoom(roomId)
     if roomId ~= 1 then
         self.AllRoomList[tostring(roomId)] = nil
         self.AllRoomNumber = self.AllRoomNumber - 1
         --self.GoRunTableAllList[tostring(roomId)] = nil
         --SqlDelGameState(self.GameTypeID, roomId)   -- 把记录房间状态的redis删掉
-        ZLog.Logger("清理掉房间"..roomId)
+        ZLog.Logger("清理掉房间" .. roomId)
     else
         -- 第一个房间是保留着的，只是清理一下
         --local state ={}
@@ -96,16 +100,24 @@ end
 -----------------------------管理玩家---------------------------
 ----------------------------------------------------------------
 
+local function seat(room, player, seatId)
+    room:PlayerSeat(seatId, player)              --让玩家坐下.
+    player.roomId = room.roomId
+    player.ChairID = seatId
+    --self:SendYouLoginToOthers(player, room)-- 发消息给同房间的其他玩家，告诉他们你登录了
+    return player
+end
 
 --- 有玩家登陆游戏，想进入对应分数的房间
 function Game:PlayerLoginGame(oldPlayer)
     local player = GameServer.GetPlayerByUID(oldPlayer.User.UserID) -- 把之前的玩家数据取出来
     -- 如果玩家是断线重连的
-    if player ~= nil then      --找到之前有玩家在线
-        if oldPlayer.GameType == player.GameType and oldPlayer.NetWorkState == false then
+    if player ~= nil then
+        --找到之前有玩家在线
+        if oldPlayer.GameType == player.GameType then
             -- 同一个游戏， 并且玩家状态是等待断线重连
-            player.NetWorkState = true                      -- 网络恢复正常
-            player.NetWorkCloseTimer = 0
+            --player.NetWorkState = true                      -- 网络恢复正常
+            --player.NetWorkCloseTimer = 0
             print("把断线重连的player返回去， 玩家本来就坐在这里，不用同步信息给其他玩家， 就是反应他傻了一会后继续游戏了")
             return player
         else
@@ -117,66 +129,37 @@ function Game:PlayerLoginGame(oldPlayer)
     end
 
     -- 不是断线重连的就重新建一个玩家数据
-    player = Player:New(oldPlayer.User)
-    player.GameType = oldPlayer.GameType            -- 设定游戏类型
-    SetAllPlayerList(oldPlayer.User.UserID, player)  --创建好之后加入玩家总列表
-
-
+    --player = Player:New(oldPlayer.User)
+    --player.GameType = oldPlayer.GameType            -- 设定游戏类型
+    player = oldPlayer
+    GameServer.SetAllPlayerList(oldPlayer.User.UserID, player)  --创建好之后加入玩家总列表
 
     --然后找一个有空位的房间让玩家加入游戏
-    for k, table in pairs(self.AllRoomList) do
-        if table.RoomScore == self.GameScore then    -- 进入底分一致的房间
-            local seatId = table:GetEmptySeatInTable()
-            if seatId > 0 then
-                --print("有空座位")
-                table:InitTable()    -- 看看是不是空房间，如果是，需要初始化
-                table:PlayerSeat(seatId,player)
-                player.roomId = table.roomId
-                player.ChairID = seatId
-
-                self:SendYouLoginToOthers(player,table)-- 发消息给同房间的其他玩家，告诉他们你登录了
-                return player
-            end
-        else
-            Logger("有底分不一致的情况？"..k)
+    for k, room in pairs(self.AllRoomList) do
+        local seatId = BaseRoom.GetEmptySeatInTable(room)
+        if seatId > 0 then
+            --print("有空座位")
+            room:InitRoom()    -- 看看是不是空房间，如果是，需要初始化
+            return seat(room,player,seatId)
         end
     end
 
     --没有空座位的房间了，创建一个
---    print("没有空座位的房间了，创建一个吧,  score".. self.GameTypeID)
+    --    print("没有空座位的房间了，创建一个吧,  score".. self.GameTypeID)
     local gameType = self.AllRoomList["1"].GameID
-    local table = self:CreateRoom(gameType, self.GameScore)
-    local seatId = table:GetEmptySeatInTable()  --获取空椅位
-    table:InitTable()
-    table:PlayerSeat(seatId,player)     --让玩家坐下.
-    player.roomId = table.roomId
-    player.ChairID = seatId
-    self:SendYouLoginToOthers(player,table)-- 发消息给同房间的其他玩家，告诉他们你登录了
-    return player
+    local room = self:CreateRoom(gameType)
+    local seatId = BaseRoom.GetEmptySeatInTable(room)  --获取空椅位
+    return seat(room,player,seatId)
 
 end
-
-
---- 发消息给同房间的其他玩家，告诉他们你登录了
-function Game:SendYouLoginToOthers(player,table)
---    print("玩家",player.User.UserID, "房间",table.roomId,"椅子",player.ChairID)
-
-    --local CMD_Game_pb = require("CMD_Game_pb")
-    --local sendCmd = CMD_Game_pb.CMD_S_OTHER_ENTER_SCENE()
-    --sendCmd.user_info.user_id = player.User.UserID
-    --sendCmd.user_info.chair_id = player.ChairID
-    --sendCmd.user_info.table_id = player.roomId
-    --table:SendMsgToOtherUsers(player.User.UserID, sendCmd, MDM_GF_GAME, SUB_S_OTHER_ENTER_SCENE)
-end
-
 
 
 ----玩家登出
 function Game:PlayerLogOutGame(player)
     --Logger("玩家登出 "..player.User.UserID.. "    房间 "..player.roomId)
-    local room = Game.GetTableByUID(self,player.roomId)
+    local room = self:GetRoomByUID(player.roomId)
     if room ~= nil then
-        BaseRoom.PlayerStandUp(room,player.ChairID, player)        -- 玩家离开房间
+        room:PlayerStandUp(player.ChairID, player)        -- 玩家离开房间
         --Logger("玩家"..player.User.UserID.."离开房间 "..player.roomId.."椅子"..player.ChairID)
     end
 end

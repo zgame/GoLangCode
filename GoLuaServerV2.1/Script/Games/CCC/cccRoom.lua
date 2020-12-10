@@ -1,23 +1,17 @@
 
-
-CCCRoom = {}
+CCCRoom = BaseRoom:extend()
 function CCCRoom:New(roomId, gameTypeId)
     -- 重新赋值某些属性值
-    o = BaseRoom:New()
-    o.GameID              = gameTypeId
-    o.roomId             = roomId
-    o.TableMax            = CCC_TABLE_MAX_PLAYER
-    local father = getmetatable(o)
-    setmetatable(self, father)
-    o.super = setmetatable({},father)
+    CCCRoom.super.New()
+    self.GameID = gameTypeId
+    self.roomId = roomId
+    self.TableMax = Const.CCC_ROOM_MAX_PLAYER
 
     -- 椅子
-    o.UserSeatArray         = {}        -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
-    o.UserSeatArrayNumber   = 0         -- 房间上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
+    self.UserSeatArray = {}        -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
+    self.UserSeatArrayNumber = 0         -- 房间上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
 
-    setmetatable(o,self)
-    self.__index = self
-    return o
+
 end
 
 function CCCRoom:Reload(c)
@@ -31,14 +25,18 @@ function CCCRoom:Reload(c)
 end
 
 ------------主循环-------------------
-function CCCRoom:StartTable()
-    self:InitTable()        -- 可以进行初始化
+
+function CCCRoom:InitRoom()
+    if BaseRoom.CheckTableEmpty(self) then
+        -- 如果房间是空的， 那么需要初始化一下
+        --self:InitDistributeInfo()
+    end
 end
 
 -- 房间的主循环
-function CCCRoom:RunTable()
+function CCCRoom:RunRoom()
     if self:CheckTableEmpty() then
-        print("这是一个空房间"..self.GameID)
+        print("这是一个空房间" .. self.GameID)
 
         -- 这部分是做一个内存的测试
         ---- create Global Map hash
@@ -112,13 +110,6 @@ end
 
 
 
-function CCCRoom:InitTable()
-    if self:CheckTableEmpty() then
-        -- 如果房间是空的， 那么需要初始化一下
-        --self:InitDistributeInfo()
-    end
-end
-
 ----------------------------------------------------------------------------
 -----------------------------消息同步-----------------------------------------
 ----------------------------------------------------------------------------
@@ -140,7 +131,8 @@ function CCCRoom:SendEnterSceneInfo(UserId)
     local sendCmd = CMD_Game_pb.CMD_S_ENTER_SCENE()
     sendCmd.scene_id = self.GameID
     sendCmd.table_id = self.roomId
-    for index, player in pairs(self.UserSeatArray) do       -- 从房间传递过来的其他玩家信息，原来坐着的玩家信息
+    for index, player in pairs(self.UserSeatArray) do
+        -- 从房间传递过来的其他玩家信息，原来坐着的玩家信息
         if player ~= nil then
             local uu = sendCmd.table_users:add()
             uu.user_id = player.User.UserID
@@ -163,3 +155,19 @@ end
 --    LuaNetWorkSendToUser(UserId, MDM_GF_GAME, SUB_S_SCENE_FISH, sendCmd, nil, nil)
 --
 --end
+
+----玩家坐到椅子上
+function CCCRoom:PlayerSeat(seatID, player)
+    BaseRoom.PlayerSeat(self,seatID,player)
+end
+--- 发消息给同房间的其他玩家，告诉他们你登录了
+function CCCRoom:SendYouLoginToOthers(player, table)
+    --    print("玩家",player.User.UserID, "房间",table.roomId,"椅子",player.ChairID)
+
+    --local CMD_Game_pb = require("CMD_Game_pb")
+    --local sendCmd = CMD_Game_pb.CMD_S_OTHER_ENTER_SCENE()
+    --sendCmd.user_info.user_id = player.User.UserID
+    --sendCmd.user_info.chair_id = player.ChairID
+    --sendCmd.user_info.table_id = player.roomId
+    --table:SendMsgToOtherUsers(player.User.UserID, sendCmd, MDM_GF_GAME, SUB_S_OTHER_ENTER_SCENE)
+end

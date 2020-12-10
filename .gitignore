@@ -9,3 +9,4 @@ TestGoLangByServerLua2/Setting.ini
 modules/.idea/$CACHE_FILE$
 web_gin/.idea/workspace.xml~
 web_por_shop_gin/GlobalVar/glovalVar.go
+*.zLog

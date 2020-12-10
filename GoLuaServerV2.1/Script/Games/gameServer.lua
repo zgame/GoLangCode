@@ -6,11 +6,8 @@
 
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
---- go 来创建和调用的游戏管理器， 管理器管理很多游戏， 每个游戏管理房间和玩家
---- 新添加游戏步骤：1, 定义类型 2 AddGame  3 在games.lua里面定义根据不同的游戏定义不同的房间 4 创建一个新游戏的房间.lua文件
----
---- 注意：
---- 这里是主逻辑线程才能访问的地方，  普通玩家的线程是访问不到的， 玩家要通过channel去通知主线程要做什么事情，主线程会处理所有玩家的申请
+--- 游戏管理器， 管理很多游戏， 每个游戏再去管理自己的房间和玩家
+--- 新添加游戏步骤：1, 定义类型  2 AddGame  3 在games.lua里面定义根据不同的游戏定义不同的房间 4 创建一个新游戏的房间.lua文件
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -29,7 +26,7 @@ local function addGame(name, gameType)
     GameServer.SetAllGamesList(gameType, game)
 
     --Logger("--------------AddGame--------------------------")
-    Game.CreateRoom(game,gameType)
+    Game.CreateRoom(game, gameType)
     --game.GameScore = gameScore
 end
 
@@ -40,7 +37,7 @@ function GameServer.Start()
     --print("协调服 serverId ",ServerMainServer)
 
     print("-------------------  添加主循环  ------------------------------")
-    ZTimer.SetNewTimer("GameServer", "RunGamesTables", 200, GameServer.RunGamesTables)
+    ZTimer.SetNewTimer("GameServer", "RunGamesRooms", 200, GameServer.RunGamesRooms)
 
     print("-------------------  添加游戏  ------------------------------")
     addGame("沙石镇", Const.GameTypeCCC)
@@ -138,10 +135,10 @@ end
 
 
 -- 遍历所有的列表，然后依次run,  改为服务器自己创建定时器处理
-function GameServer.RunGamesTables()
+function GameServer.RunGamesRooms()
     for _, game in pairs(GlobalVar.AllGamesList) do
         for _, room in pairs(game.AllRoomList) do
-            room:RunTable() -- 执行注册的函数，table run
+            room:RunRoom() -- 执行注册的函数，table run
         end
     end
 end

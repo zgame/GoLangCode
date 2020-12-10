@@ -11,38 +11,21 @@
 --- 这里要注意一点：  当热更新的时候， 所有的已经创建好的player对象是存在的， 结构也是老的结构， 如果你增加了字段，修改了字段，需要进行reload的单独数据处理
 --------------------------------------------------------------------------------------
 
-Player = {}
+Player = Class:extend()
 function Player:New(user)
-    c = {
-        User = user,                    -- user数据
-        --ChatUser = {},                  -- chatUser数据
 
-        roomId = TABLE_CHAIR_NOBODY ,  -- 房间id
-        ChairID = TABLE_CHAIR_NOBODY,   -- 椅子id
+    self.User = user                    -- user数据
+    self.GameType = 0                   -- 游戏类型
 
-        --IsRobot = false,                -- 是不是机器人
-        ActivityBulletNum = 0,          -- 当前已经发射的子弹数量
+    self.roomId = Const.ROOM_CHAIR_NOBODY   -- 房间id
+    self.ChairID = Const.ROOM_CHAIR_NOBODY   -- 椅子id
 
-        GameType = 0 ,                  -- 游戏类型
+    self.NetWorkState = true            -- 网络状态正常
+    self.NetWorkCloseTimer = 0         -- 等待玩家断线重连的时间倒计时
 
-        NetWorkState = true,            -- 网络状态正常
-        NetWorkCloseTimer = 0 ,         -- 等待玩家断线重连的时间倒计时
-
-        --- 小海兽相关
-        XhsStartBuffTimes = 0,          -- 触发暴击状态开始时间
-        XhsIntervalBuffTimes = 0,       -- 暴击状态持续时间
-        XhsLastSaveGameInfoTime = 0,    -- 上次存储游戏信息时间
-
-        ChatWithFriendInterval = 0,     -- 与好友之间的聊天间隔
-    }
-    setmetatable(c, self)
-    self.__index = self
-    return c
 end
 
 function Player:Reload(c)
-    setmetatable(c, self)
-    self.__index = self
 
     -- 如果热更新有改动成员变量的定义的话， 下面需要进行成员变量的处理
     -- 比如 1 增加了字段， 那么你需要将老数据进行， 新字段的初始化
