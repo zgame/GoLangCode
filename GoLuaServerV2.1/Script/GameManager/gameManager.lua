@@ -36,7 +36,7 @@ end
 -- 游戏服务器入口点
 function GameManager.Start()
     --Logger("--------------------注册中心服----------------------------")
-    --ServerMainServer = LuaNetWorkConnectOtherServer(ConstMainCenterServer)  -- 申请连接协调服务器，并 把serverId保存下来， 以后发送消息用
+    --ServerMainServer = LuaNetWorkConnectOtherServer(Setting.ConstMainCenterServer)  -- 申请连接协调服务器，并 把serverId保存下来， 以后发送消息用
     --print("协调服 serverId ",ServerMainServer)
 
     print("-------------------  添加主循环  ------------------------------")

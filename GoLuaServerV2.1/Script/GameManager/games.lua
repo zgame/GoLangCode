@@ -45,7 +45,7 @@ end
 function Game.CreateTable(self,gameType)
     local table_t
     if gameType == Const.GameTypeCCC then
-        table_t =  CCCTable:New(self.TableUUID, gameType)
+        table_t =  CCCRoom:New(self.TableUUID, gameType)
     --elseif
     end
     if table_t == nil then

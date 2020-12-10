@@ -5,14 +5,14 @@
 ---
 
 --- 桌子对象
-XhsTable = BaseTable:New()
+XhsTable = BaseRoom:New()
 --- 创建桌子对象
 --- @param tableId      桌子ID
 --- @param gameTypeId   游戏类型ID
 --- @return o           桌子对象
 function XhsTable:New(tableId, gameTypeId)
     -- 重新赋值某些属性值
-    o = BaseTable:New()
+    o = BaseRoom:New()
     o.GameID              = gameTypeId
     o.TableID             = tableId
     o.TableMax            = XHS_TABLE_MAX_PLAYER

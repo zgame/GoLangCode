@@ -60,7 +60,7 @@ function ChatTable:RunTable()
 end
 
 ----玩家坐到椅子上
-function BaseTable:PlayerSeat(seatID,player)
+function BaseRoom:PlayerSeat(seatID, player)
 
 end
 

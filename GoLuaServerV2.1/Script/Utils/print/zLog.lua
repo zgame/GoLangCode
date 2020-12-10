@@ -13,7 +13,7 @@ end
 
 -- 打印输出table
 require("Script/Utils/print/dumpTable")           -- printTable(tableName)
-MySerpent = require("Script/Utils/print/serpent")      -- 使用方法 ： MySerpent.block(tableName)        也是打印table
+local MySerpent = require("Script/Utils/print/serpent")      -- 使用方法 ： MySerpent.block(tableName)        也是打印table
 
 
 function ZLog.printTable1(table)

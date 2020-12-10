@@ -8,10 +8,10 @@
 
 --local CMD_Game_pb = require("CMD_Game_pb")
 
-ByTable = BaseTable:New()
+ByTable = BaseRoom:New()
 function ByTable:New(tableId,gameTypeId)
     -- 重新赋值某些属性值
-    o = BaseTable:New()
+    o = BaseRoom:New()
     o.GameID              = gameTypeId
     o.TableID             = tableId
     o.TableMax            = BY_TABLE_MAX_PLAYER

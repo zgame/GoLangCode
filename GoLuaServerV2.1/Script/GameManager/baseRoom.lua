@@ -4,13 +4,13 @@
 --------------------------------------------------------------------------------------
 
 --- 桌子对象
-BaseTable = {}
+BaseRoom = {}
 --- 创建桌子对象
 --- @param tableId      桌子ID
 --- @param gameTypeId   游戏类型ID
 --- @param tableMax     桌子最大人数
 --- @return o桌子对象
-function BaseTable:New()
+function BaseRoom:New()
     o = {
         GameID              = 0,                    -- 游戏类型ID
         TableID             = 0,                    -- 桌子ID
@@ -27,7 +27,7 @@ end
 
 --- 重载桌子
 --- @param o 桌子对象
-function BaseTable:Reload(o)
+function BaseRoom:Reload(o)
     --Logger("调用了BaseTable:Reload()")
     -- 如果热更新有改动成员变量的定义的话， 下面需要进行成员变量的处理
     -- 比如 1 增加了字段， 那么你需要将老数据进行， 新字段的初始化
@@ -36,12 +36,12 @@ function BaseTable:Reload(o)
 end
 
 --- 桌子的主循环
-function BaseTable:RunTable()
+function BaseRoom:RunTable()
     print("桌子基类主循环")
 end
 
 -----判断桌子是有人，还是空桌子
-function BaseTable:CheckTableEmpty()
+function BaseRoom:CheckTableEmpty()
     if self.UserSeatArrayNumber > 0 then
         return false
     end
@@ -49,7 +49,7 @@ function BaseTable:CheckTableEmpty()
 end
 
 -----获取桌子的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
-function BaseTable:GetEmptySeatInTable()
+function BaseRoom:GetEmptySeatInTable()
     for i=1,self.TableMax do
         if self.UserSeatArray[i] == nil then
             return i
@@ -59,13 +59,13 @@ function BaseTable:GetEmptySeatInTable()
 end
 
 ----玩家坐到椅子上
-function BaseTable:PlayerSeat(seatID,player)
+function BaseRoom:PlayerSeat(seatID, player)
     self.UserSeatArray[seatID] = player
     self.UserSeatArrayNumber = self.UserSeatArrayNumber + 1   -- 桌子上玩家数量增加
 end
 
 ----玩家离开椅子
-function BaseTable:PlayerStandUp(seatID,player)
+function BaseRoom:PlayerStandUp(seatID, player)
     ZLog.Logger(player.User.UserID.."离开桌子"..player.TableID.."椅子"..player.ChairID.."self.TableID"..self.GameID)
     -- 保存玩家基础数据
     --SaveUserBaseData(player.User)
@@ -84,13 +84,13 @@ function BaseTable:PlayerStandUp(seatID,player)
 end
 
 -----清理桌子
-function BaseTable:ClearTable()
+function BaseRoom:ClearTable()
     self.UserSeatArray = {}     --  seatID    player
 end
 
 
 -----给桌上的所有玩家同步消息
-function BaseTable:SendMsgToAllUsers(mainCmd,subCmd,sendCmd)
+function BaseRoom:SendMsgToAllUsers(mainCmd, subCmd, sendCmd)
     for _,player in pairs(self.UserSeatArray) do
         if player ~= nil  and player.NetWorkState then
             --LuaNetWorkSendToUser(player.User.UserID,mainCmd,subCmd,sendCmd,nil)
@@ -106,7 +106,7 @@ function BaseTable:SendMsgToAllUsers(mainCmd,subCmd,sendCmd)
 end
 
 ----给桌上的其他玩家同步消息
-function BaseTable:SendMsgToOtherUsers(userId,sendCmd,mainCmd,subCmd)
+function BaseRoom:SendMsgToOtherUsers(userId, sendCmd, mainCmd, subCmd)
     for _,player in pairs(self.UserSeatArray) do
         if player ~= nil  and userId ~= player.User.UserID and player.NetWorkState then
             LuaNetWorkSendToUser(player.User.UserID,mainCmd,subCmd,sendCmd,nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要

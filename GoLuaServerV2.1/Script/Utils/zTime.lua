@@ -50,8 +50,8 @@ function ZTime.GetTwoTimesDays(time1,time2)
     -- 这里做了一个操作， 把时间给去掉了， 这样单纯的计算天数的差值
     local day1 = os.date("%Y-%m-%d 00:00:00", time1)
     local day2 = os.date("%Y-%m-%d 00:00:00", time2)
-    local time11 = GetTimeFromString(day1)
-    local time22 = GetTimeFromString(day2)
+    local time11 = ZTime.GetTimeFromString(day1)
+    local time22 = ZTime.GetTimeFromString(day2)
 
     local time = math.abs(time11 - time22)
     return  math.floor(time / (60*60*24))
@@ -64,7 +64,7 @@ function ZTime.GetTimesDaysByString(timeString)
     if timeString == "" then        -- 如果没有上次时间
         today_last = 1      -- 如果没有记录， 那么就认为不连续
     else
-        today_last = GetTwoTimesDays(GetTimeFromString(timeString) , os.time())     -- 有签到记录，那么就用计算的值
+        today_last = ZTime.GetTwoTimesDays(ZTime.GetTimeFromString(timeString) , os.time())     -- 有签到记录，那么就用计算的值
     end
     return today_last       -- 如果是今天，返回0
 end
@@ -98,19 +98,19 @@ end
 
 -- 从日期字符串中获取天的数据
 function ZTime.GetDayFromString(dateTimeString)
-    local Y,M,D,H,MM,SS,time,toMonth,toDay = GetAllTimeFormString(dateTimeString)
+    local Y,M,D,H,MM,SS,time,toMonth,toDay = ZTime.GetAllTimeFormString(dateTimeString)
     return toDay
 end
 
 -- 从日期字符串中获取时间
 function ZTime.GetTimeFromString(dateTimeString)
-    local Y,M,D,H,MM,SS,time,toMonth,toDay = GetAllTimeFormString(dateTimeString)
+    local Y,M,D,H,MM,SS,time,toMonth,toDay = ZTime.GetAllTimeFormString(dateTimeString)
     return time
 end
 
 -- 从日期字符串中获取小时
 function ZTime.GetHourFromString(dateTimeString)
-    local Y,M,D,H,MM,SS,time,toMonth,toDay = GetAllTimeFormString(dateTimeString)
+    local Y,M,D,H,MM,SS,time,toMonth,toDay = ZTime.GetAllTimeFormString(dateTimeString)
     return tonumber(H)
 end
 
@@ -118,18 +118,18 @@ end
 --- @return 今天凌晨的时间戳 单位:秒
 function ZTime.GetTodayStartTime()
     local todayTimeStr = os.date("%Y-%m-%d 00:00:00", os.time())
-    return GetTimeFromString(todayTimeStr)
+    return ZTime.GetTimeFromString(todayTimeStr)
 end
 
 --- 获取今天过多少秒的时间
 --- @param tSec 秒数
 --- @return 时间戳
 function ZTime.GetNextTimeFromTodayStartTime(tSec)
-    return GetTodayStartTime() + tSec
+    return ZTime.GetTodayStartTime() + tSec
 end
 
 --- 获取当前时间距离明天凌晨的时间间隔(单位:秒)
 --- @return 到明天凌晨的时间间隔单位秒
 function ZTime.GetIntervalBetweenNowAndTomorrow()
-    return GetNextTimeFromTodayStartTime(24*60*60) - os.time()
+    return ZTime.GetNextTimeFromTodayStartTime(24*60*60) - os.time()
 end

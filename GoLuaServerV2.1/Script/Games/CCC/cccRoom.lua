@@ -1,9 +1,9 @@
 
 
-CCCTable = {}
-function CCCTable:New(tableId,gameTypeId)
+CCCRoom = {}
+function CCCRoom:New(tableId, gameTypeId)
     -- 重新赋值某些属性值
-    o = BaseTable:New()
+    o = BaseRoom:New()
     o.GameID              = gameTypeId
     o.TableID             = tableId
     o.TableMax            = CCC_TABLE_MAX_PLAYER
@@ -20,7 +20,7 @@ function CCCTable:New(tableId,gameTypeId)
     return o
 end
 
-function CCCTable:Reload(c)
+function CCCRoom:Reload(c)
     setmetatable(c, self)
     self.__index = self
 
@@ -31,12 +31,12 @@ function CCCTable:Reload(c)
 end
 
 ------------主循环-------------------
-function CCCTable:StartTable()
+function CCCRoom:StartTable()
     self:InitTable()        -- 可以进行初始化
 end
 
 -- 桌子的主循环
-function CCCTable:RunTable()
+function CCCRoom:RunTable()
     if self:CheckTableEmpty() then
         print("这是一个空桌子"..self.GameID)
 
@@ -112,7 +112,7 @@ end
 
 
 
-function CCCTable:InitTable()
+function CCCRoom:InitTable()
     if self:CheckTableEmpty() then
         -- 如果桌子是空的， 那么需要初始化一下
         --self:InitDistributeInfo()
@@ -124,7 +124,7 @@ end
 ----------------------------------------------------------------------------
 ----玩家登陆的时候,发送场景其他消息
 --- @param player 玩家对象
-function CCCTable:SendTableSceneInfo(player)
+function CCCRoom:SendTableSceneInfo(player)
     if player == nil then
         Logger("ByTable:SendTableSceneInfo player 对象nil")
         return
@@ -136,7 +136,7 @@ function CCCTable:SendTableSceneInfo(player)
 end
 
 --- 同步场景信息
-function CCCTable:SendEnterSceneInfo(UserId)
+function CCCRoom:SendEnterSceneInfo(UserId)
     local sendCmd = CMD_Game_pb.CMD_S_ENTER_SCENE()
     sendCmd.scene_id = self.GameID
     sendCmd.table_id = self.TableID

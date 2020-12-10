@@ -4,13 +4,15 @@
 --- DateTime: 2020/12/8 17:13
 ---
 
-function GameNetworkInit(serverId)
+GameNetwork ={}
+
+function GameNetwork.Init(serverId)
 
 end
 
 
 -- 根据命令进行分支处理
-function GameReceiveMsg(serverId, userId, msgId, subMsgId, data, token)
+function GameNetwork.Receive(serverId, userId, msgId, subMsgId, data, token)
 
     --print("msgId",msgId, "subMsgId",subMsgId)
     UserToken = token           -- 保存到全局里面，发送的时候取出来GameMessage
@@ -90,13 +92,9 @@ end
 
 
 --- go通知lua 所有掉线的连接都要走这里
-function GameNetworkBroken(uid, serverId)
+function GameNetwork.Broken(uid, serverId)
     Logger("go 通知：" .. uid .. "  掉线了")
 
-    if ChatServerLogicInstance then
-        --- 每个连接断开清空连接信息
-        ChatServerLogicInstance:OnSocketClose(serverId)
-    end
     local player = GetPlayerByUID(uid)
     if player ~= nil then
         --printTable(player,0,"LeavePlayer")
@@ -108,10 +106,5 @@ function GameNetworkBroken(uid, serverId)
             --player.NetWorkState = false
             --player.NetWorkCloseTimer = GetOsTimeMillisecond()
         end
-        ---如果有聊天服的主逻辑
-        if ChatServerLogicInstance then
-            ChatServerLogicInstance:OnEventTCPNetworkShut(player.User.UserId)
-        end
-
     end
 end

@@ -12,21 +12,21 @@ function Main.GoCallLuaStartAllServers()
     -- 初始化
     print("-------------------  启动 mongo db   ---------------------------")
     GlobalVar.MongoMainConnect = MongoDB.new()
-    local ok, err = MongoDB.Init(GlobalVar.MongoMainConnect,ConstMongoAddress,  ConstMongoDatabase, ConstMongoUser, ConstMongoPass)
+    local ok, err = MongoDB.Init(GlobalVar.MongoMainConnect, Setting.MongoAddress,  Setting.MongoDatabase, Setting.MongoUser, Setting.MongoPass)
     if ok == false then
         print("mongo 服务器启动错误: " .. err)
         return
     end
     print("-------------------  启动 redis      ---------------------------")
     GlobalVar.RedisConnect = Redis.new()
-    ok, err = Redis.Init(GlobalVar.RedisConnect,ConstRedisAddress,ConstRedisPass)
+    ok, err = Redis.Init(GlobalVar.RedisConnect,Setting.RedisAddress,Setting.RedisPass)
     if ok == false then
         print("redis 服务器启动错误: " .. err)
         return
     end
     print("-------------------  启动 mySql      ---------------------------")
     GlobalVar.MySqlMainConnect = MySql.new()
-    ok, err = MySql.Init(GlobalVar.MySqlMainConnect,ConstMySqlServerIP, ConstMySqlServerPort, ConstMySqlDatabase, ConstMySqlUid, ConstMySqlPwd)
+    ok, err = MySql.Init(GlobalVar.MySqlMainConnect,Setting.MySqlServerIP, Setting.MySqlServerPort, Setting.MySqlDatabase, Setting.MySqlUid, Setting.MySqlPwd)
     if ok == false then
         print("mySql 服务器启动错误: " .. err)
         return
@@ -45,7 +45,7 @@ function Main.GoCallLuaStartAllServers()
     --end
     local switch={}
     switch["Game"] = GameManager.Start               -- 启动游戏服
-    switch["MainCenter"] = MainCenterServer.Start                 -- 启动主中心服
+    switch["MainCenter"] = CenterServer.Start                 -- 启动主中心服
     -- 运行对应server type的函数
     switch[GlobalVar.ServerTypeName]()
 end
