@@ -6,6 +6,8 @@
 --function Rect:new(x, y, width, height)
 --  Rect.super.new(self, x, y)
 
+
+
 -- 用法说明： 可以使用：做为成员函数，优点：标准的类的用法， 缺点：idea的很多功能不能使用，不能重构，不能定位，只能搜文本，容易出错
 -- 用法说明： 可以使用. 做为模块函数，优点：idea的很多功能能使用，能重构，能定位，不容易出错  缺点： 写起来代码量多一些，继承关系中调用模块函数要指定才行
 
@@ -16,7 +18,7 @@
 Class = {}
 Class.__index = Class
 
-function Class:new()
+function Class:New()
 end
 
 function Class:extend()
@@ -59,7 +61,7 @@ end
 
 function Class:__call(...)
     local obj = setmetatable({}, self)
-    obj:new(...)
+    obj:New(...)
     return obj
 end
 

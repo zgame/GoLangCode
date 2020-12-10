@@ -14,6 +14,7 @@
 GameServer = {}
 
 
+-----------------------------------游戏服务器入口点-------------------------------------
 --增加一个游戏， 指定这个游戏的类型， 并且创建一个房间，并启动房间逻辑
 local function addGame(name, gameType)
     if GameServer.GetGameByID(gameType) ~= nil then
@@ -21,12 +22,12 @@ local function addGame(name, gameType)
         return
     end
 
-    local game = Game:New(name, gameType)
+    local game = Game(name, gameType)
     -- 加入到游戏总列表中
     GameServer.SetAllGamesList(gameType, game)
 
     --Logger("--------------AddGame--------------------------")
-    Game.CreateRoom(game, gameType)
+    Game.CreateRoom(game,gameType)
     --game.GameScore = gameScore
 end
 
@@ -64,11 +65,8 @@ function GameServer.Start()
 
 end
 
------------------------------------玩家注册，玩家掉线-------------------------------------
-
-
+-----------------------------------玩家列表管理-------------------------------------
 local RedisDirAllPlayersUUID          = "CCC:AllPlayers_UUID:"                         -- 所有玩家UUID
-----------------------------多进程申请UUID信息， 会执行脚本先增加，然后把最新的数字返回-----------------------------
 local function GetAllPlayersUUID(num)
     --return RedisAddNumber(RedisDirAllPlayersUUID.."BY_UUID" ,"BY_UUID",num)
     local dir = RedisDirAllPlayersUUID.."CCC_UUID"
@@ -86,7 +84,6 @@ local function GetAllPlayersUUID(num)
     redis_lua_str = string.format(redis_lua_str,dir,key, num, dir,key)
     return Redis.RunLuaScript(redis_lua_str, "RedisMultiProcessGetAllPlayersUUID")
 end
-
 --有一个新的玩家注册了，那么给他分配一个UID
 function GameServer.GetLastUserID()
     local r = 1     -- math.random(1, 4)        --返回[1,4]的随机整数
@@ -111,9 +108,7 @@ function GameServer.SetAllPlayerList(userId, value)
 end
 
 
------------------------------------游戏-------------------------------------
-
-
+-----------------------------------游戏列表管理-------------------------------------
 --通过gameID获取是哪个游戏
 function GameServer.GetGameByID(gameType)
     return GlobalVar.AllGamesList[tostring(gameType)]
@@ -133,7 +128,7 @@ end
 --end
 
 
-
+-----------------------------------定时器run-------------------------------------
 -- 遍历所有的列表，然后依次run,  改为服务器自己创建定时器处理
 function GameServer.RunGamesRooms()
     for _, game in pairs(GlobalVar.AllGamesList) do

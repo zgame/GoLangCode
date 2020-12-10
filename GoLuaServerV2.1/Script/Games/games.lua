@@ -35,15 +35,11 @@ end
 
 -----------------------------管理房间---------------------------
 
---- 创建房间，并启动它， 参数带底分的， 不同底分的房间可以在一起管理，因为逻辑一样的，进入的时候判断一下，引导玩家进入不同底分的房间
-function Game:CreateRoom(self,gameType)
-    print("create room",self)
-    print("self Name",self.name)
-    print("self GameTypeID",self.GameTypeID)
-    print("self TableUUID",self.TableUUID)
+-- 创建房间，并启动它
+function Game:CreateRoom(gameType)
     local room
     if gameType == Const.GameTypeCCC then
-        room = CCCRoom:New(self.TableUUID, gameType)
+        room = CCCRoom(self.TableUUID, gameType)
         --elseif
     end
     if room == nil then
@@ -59,22 +55,22 @@ function Game:CreateRoom(self,gameType)
     self.TableUUID = self.TableUUID + 1     -- table uuid 自增
 
     -- 房间开始
-    room:Init()
+    room:InitRoom()
 
     return room
 
 end
 
---- 根据房间uid 返回房间的句柄
-function Game:GetRoomByUID(roomId)
-    return self.AllRoomList[tostring(roomId)]
+-- 根据房间uid 返回房间的句柄
+function Game.GetRoomByUID(game, roomId)
+    return game.AllRoomList[tostring(roomId)]
 end
 
---- 房间回收
-function Game:ReleaseRoom(roomId)
+-- 房间回收
+function Game.ReleaseRoom(game, roomId)
     if roomId ~= 1 then
-        self.AllRoomList[tostring(roomId)] = nil
-        self.AllRoomNumber = self.AllRoomNumber - 1
+        game.AllRoomList[tostring(roomId)] = nil
+        game.AllRoomNumber = game.AllRoomNumber - 1
         --self.GoRunTableAllList[tostring(roomId)] = nil
         --SqlDelGameState(self.GameTypeID, roomId)   -- 把记录房间状态的redis删掉
         ZLog.Logger("清理掉房间" .. roomId)
@@ -96,9 +92,7 @@ end
 --end
 
 
-----------------------------------------------------------------
------------------------------管理玩家---------------------------
-----------------------------------------------------------------
+-------------------------管理玩家-------------------------------------
 
 local function seat(room, player, seatId)
     room:PlayerSeat(seatId, player)              --让玩家坐下.
@@ -107,9 +101,8 @@ local function seat(room, player, seatId)
     --self:SendYouLoginToOthers(player, room)-- 发消息给同房间的其他玩家，告诉他们你登录了
     return player
 end
-
---- 有玩家登陆游戏，想进入对应分数的房间
-function Game:PlayerLoginGame(oldPlayer)
+--- 有玩家登陆游戏
+function Game.PlayerLoginGame(self,oldPlayer)
     local player = GameServer.GetPlayerByUID(oldPlayer.User.UserID) -- 把之前的玩家数据取出来
     -- 如果玩家是断线重连的
     if player ~= nil then
@@ -147,7 +140,7 @@ function Game:PlayerLoginGame(oldPlayer)
     --没有空座位的房间了，创建一个
     --    print("没有空座位的房间了，创建一个吧,  score".. self.GameTypeID)
     local gameType = self.AllRoomList["1"].GameID
-    local room = self:CreateRoom(gameType)
+    local room = Game.CreateRoom(self,gameType)
     local seatId = BaseRoom.GetEmptySeatInTable(room)  --获取空椅位
     return seat(room,player,seatId)
 
@@ -155,9 +148,9 @@ end
 
 
 ----玩家登出
-function Game:PlayerLogOutGame(player)
+function Game.PlayerLogOutGame(self,player)
     --Logger("玩家登出 "..player.User.UserID.. "    房间 "..player.roomId)
-    local room = self:GetRoomByUID(player.roomId)
+    local room = Game.GetRoomByUID(self,player.roomId)
     if room ~= nil then
         room:PlayerStandUp(player.ChairID, player)        -- 玩家离开房间
         --Logger("玩家"..player.User.UserID.."离开房间 "..player.roomId.."椅子"..player.ChairID)

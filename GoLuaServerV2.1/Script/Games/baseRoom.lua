@@ -2,7 +2,7 @@
 --- 游戏房间的基类
 --------------------------------------------------------------------------------------
 
---- 房间对象
+-- 房间
 BaseRoom = Class:extend()
 
 function BaseRoom:New()
@@ -17,7 +17,7 @@ function BaseRoom:New()
 
 end
 
---- 重载房间
+-- 重载房间
 function BaseRoom:Reload(o)
     --Logger("调用了BaseTable:Reload()")
     -- 如果热更新有改动成员变量的定义的话， 下面需要进行成员变量的处理
@@ -26,25 +26,26 @@ function BaseRoom:Reload(o)
     -- 比如 3 修改了字段， 那么你需要将老数据进行， 老字段=nil， 新字段初始化或者进行赋值处理
 end
 
---- 房间的主循环
+-- 房间的主循环
 function BaseRoom:RunRoom()
     --print("房间基类主循环")
 end
 
------清理房间
+----------------------- 房间操作 ---------------------------------
+--清理房间
 function BaseRoom:ClearTable()
     self.UserSeatArray = {}     --  seatID    player
     self.UserSeatArrayNumber = 0
 end
------判断房间是有人，还是空房间
-function BaseRoom:CheckTableEmpty()
+--判断房间是有人，还是空房间
+function BaseRoom.CheckTableEmpty(self)
     if self.UserSeatArrayNumber > 0 then
         return false
     end
     return true -- 空房间
 end
 
------获取房间的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
+--获取房间的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
 function BaseRoom:GetEmptySeatInTable()
     for i = 1, self.TableMax do
         if self.UserSeatArray[i] == nil then
@@ -56,14 +57,13 @@ end
 
 
 ----------------------- 玩家 ---------------------------------
-
-----玩家坐到椅子上
+--玩家坐到椅子上
 function BaseRoom:PlayerSeat(seatID, player)
     self.UserSeatArray[seatID] = player
     self.UserSeatArrayNumber = self.UserSeatArrayNumber + 1   -- 房间上玩家数量增加
 end
 
-----玩家离开椅子
+--玩家离开椅子
 function BaseRoom:PlayerStandUp(seatID, player)
     ZLog.Logger(player.User.UserID .. "离开房间" .. player.roomId .. "椅子" .. player.ChairID .. "self.roomId" .. self.GameID)
     -- 保存玩家基础数据
@@ -84,8 +84,7 @@ function BaseRoom:PlayerStandUp(seatID, player)
 end
 
 ----------------------- 同步消息 ---------------------------------
-
------给桌上的所有玩家同步消息
+--给桌上的所有玩家同步消息
 function BaseRoom:SendMsgToAllUsers(mainCmd, subCmd, sendCmd)
     for _, player in pairs(self.UserSeatArray) do
         if player ~= nil and player.NetWorkState then
@@ -100,7 +99,7 @@ function BaseRoom:SendMsgToAllUsers(mainCmd, subCmd, sendCmd)
     end
 end
 
-----给桌上的其他玩家同步消息
+--给桌上的其他玩家同步消息
 function BaseRoom:SendMsgToOtherUsers(userId, sendCmd, mainCmd, subCmd)
     for _, player in pairs(self.UserSeatArray) do
         if player ~= nil and userId ~= player.User.UserID and player.NetWorkState then
