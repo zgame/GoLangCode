@@ -4,6 +4,7 @@ local Proto_User_pb = require("Proto_User_pb")
 module('Proto_Game_CCC_pb')
 
 USER = protobuf.Descriptor();
+USER_GAME_FIELD = protobuf.FieldDescriptor();
 USER_BASE_USER_FIELD = protobuf.FieldDescriptor();
 GAMELOGIN = protobuf.Descriptor();
 GAMELOGIN_OPEN_ID_FIELD = protobuf.FieldDescriptor();
@@ -21,10 +22,20 @@ GAMELOGINRESULT_ERR_FIELD = protobuf.FieldDescriptor();
 OTHER_ENTER_ROOM = protobuf.Descriptor();
 OTHER_ENTER_ROOM_USER_FIELD = protobuf.FieldDescriptor();
 
+USER_GAME_FIELD.name = "game"
+USER_GAME_FIELD.full_name = ".Proto.User.game"
+USER_GAME_FIELD.number = 1
+USER_GAME_FIELD.index = 0
+USER_GAME_FIELD.label = 1
+USER_GAME_FIELD.has_default_value = false
+USER_GAME_FIELD.default_value = 0
+USER_GAME_FIELD.type = 13
+USER_GAME_FIELD.cpp_type = 3
+
 USER_BASE_USER_FIELD.name = "base_user"
 USER_BASE_USER_FIELD.full_name = ".Proto.User.base_user"
-USER_BASE_USER_FIELD.number = 1
-USER_BASE_USER_FIELD.index = 0
+USER_BASE_USER_FIELD.number = 2
+USER_BASE_USER_FIELD.index = 1
 USER_BASE_USER_FIELD.label = 1
 USER_BASE_USER_FIELD.has_default_value = false
 USER_BASE_USER_FIELD.default_value = nil
@@ -36,7 +47,7 @@ USER.name = "User"
 USER.full_name = ".Proto.User"
 USER.nested_types = {}
 USER.enum_types = {}
-USER.fields = {USER_BASE_USER_FIELD}
+USER.fields = {USER_GAME_FIELD, USER_BASE_USER_FIELD}
 USER.is_extendable = false
 USER.extensions = {}
 GAMELOGIN_OPEN_ID_FIELD.name = "open_id"

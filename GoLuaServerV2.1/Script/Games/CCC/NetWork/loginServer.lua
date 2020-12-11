@@ -20,11 +20,12 @@ function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
     sendCmd.success = true
     sendCmd.err = "未收到发到付……\\sdfsdf&*……&*I"
 
+    sendCmd.user.game = 0
     --print(sendCmd)
     --sendCmd.user = {}
     --sendCmd.user.base_user = {}
     --sendCmd.user.base_user = Proto_User.BaseUser()
-    --sendCmd.user.base_user.nick_name = "234@dfgdfg电饭锅电饭锅"
+    sendCmd.user.base_user.nick_name = "234@dfgdfg电饭锅电饭锅"
     --print(sendCmd.user.base_user.nick_name)
 
     sendCmd.room_id = 99099
