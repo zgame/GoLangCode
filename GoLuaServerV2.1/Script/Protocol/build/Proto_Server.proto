@@ -1,30 +1,28 @@
-
-syntax = "proto2";
+syntax = "proto3";
 package Proto;
 
-//I D 登录
-message LogonUserID
-{
-	optional int32					client_type = 1;						//客户端类型 1为网页 2为PC 3为IOS 4为Android
-	optional uint32					user_id = 2;							//用户 I D
-	optional bytes					password = 3;							//登录密码(32md5)
-	optional bytes					machine_id = 4;							//机器序列
-	optional int32					kind_id = 5;							//类型索引
-	optional bytes					ip_addr = 6;							//IP地址
-	optional int32 					ditch_number = 7;						//渠道号 1为官网
-	optional bytes					device_type = 8;						//设备的型号
- 
-};
-//登录成功
-message LogonSuccess
-{
-	optional int32							server_id = 1;						//服务器房间ID
-};
-
-//登录失败
-message LogonFailure
-{
-	optional int32							server_id = 1;					//服务器房间ID
-	optional bytes							describe = 2;					//描述消息
-};
-
+////登录申请
+//message Login
+//{
+//	optional int32					client_type = 1;						//客户端类型 1为网页 2为PC 3为IOS 4为Android
+//	optional uint32					user_id = 2;							//用户 I D
+//	optional bytes					password = 3;							//登录密码(32md5)
+//	optional bytes					machine_id = 4;							//机器序列
+//	optional int32					kind_id = 5;							//类型索引
+//	optional bytes					ip_addr = 6;							//IP地址
+//	optional int32 					ditch_number = 7;						//渠道号 1为官网
+//	optional bytes					device_type = 8;						//设备的型号
+//
+//};
+////登录成功
+//message LoginSuccess
+//{
+//	optional int32							server_id = 1;						//服务器房间ID
+//};
+//
+////登录失败
+//message LoginFailure
+//{
+//	optional bytes							err = 2;					//描述消息
+//};
+//

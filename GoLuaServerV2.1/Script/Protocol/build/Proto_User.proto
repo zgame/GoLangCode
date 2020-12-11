@@ -1,0 +1,19 @@
+﻿syntax = "proto3";
+package Proto;
+
+
+//基础用户信息------------------------------------------------------------------------------------------------------------
+message BaseUser
+{
+	optional uint32 user_id = 1;          //用户ID
+	optional uint32 open_id = 2;          //渠道sdkID
+	optional bytes nick_name = 3;          //昵称
+	optional uint32 level = 4;            //用户等级
+	optional uint32 exp = 5;              //
+	optional uint32 room_id = 6;          //房间ID
+	optional uint32 chair_id = 7;          //椅子ID
+
+}
+
+
+
