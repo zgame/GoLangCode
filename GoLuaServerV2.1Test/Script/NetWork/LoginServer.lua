@@ -119,7 +119,7 @@ function LoginServer.SendLogin(serverId)
 
     sendCmd.machine_id = build_mac_addr(serverId)
     LuaNetWorkSend(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON,sendCmd,nil)
-    --print("-----申请登录serverId:----------",serverId)
+    print("-----申请登录serverId:----------",serverId)
 end
 
 -- 服务器返回登录服务器成功，下发uid
@@ -127,6 +127,8 @@ function LoginServer.LoginGameServer(serverId, buf)
     local msg = Proto_Game_CCC.GameLoginResult()
     msg:ParseFromString(buf)
     local uid = msg.user_right
+
+    print( msg)
 
     luaCallGoResisterUID(uid,serverId)
     print("--------登录成功---UID:",uid)

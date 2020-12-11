@@ -7,6 +7,7 @@
 
 --CMD_Common_pb = require("CMD_Common_pb")
 Proto_Game_CCC = require("Proto_Game_CCC_pb")
+Proto_User = require("Proto_User_pb")
 Proto_Server = require("Proto_Server_pb")
 --CMD_LoginServer_pb = require("CMD_LoginServer_pb")
 --CMD_Monitor_pb = require("CMD_Monitor_pb")

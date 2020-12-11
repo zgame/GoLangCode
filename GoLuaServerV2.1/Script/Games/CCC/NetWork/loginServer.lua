@@ -17,16 +17,15 @@ function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
     local UserId = 2121
     local sendCmd = Proto_Game_CCC.GameLoginResult()
 
-    print(sendCmd)
-
     sendCmd.success = true
     sendCmd.err = "未收到发到付……\\sdfsdf&*……&*I"
 
-    print(sendCmd)
+    --print(sendCmd)
     --sendCmd.user = {}
     --sendCmd.user.base_user = {}
-    sendCmd.user.base_user.user_id = 234
-    sendCmd.user.base_user.nick_name = "234@dfgdfg电饭锅电饭锅"
+    --sendCmd.user.base_user = Proto_User.BaseUser()
+    --sendCmd.user.base_user.nick_name = "234@dfgdfg电饭锅电饭锅"
+    --print(sendCmd.user.base_user.nick_name)
 
     sendCmd.room_id = 99099
 
@@ -34,7 +33,8 @@ function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
 
 
     --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
-    NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, "message~!$")
+    NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
+
     --NetWork.SendToUser(UserId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, "message~!$", nil)
 
     end

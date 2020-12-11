@@ -3,7 +3,6 @@ package NetWork
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 )
 
 // 这个函数在lua中没有使用
@@ -79,7 +78,7 @@ func DealSendData(data string, msg string, mainCmd int, subCmd int,token int) []
 	copy(bufferEnd[protoDataSize+headSize+msgSize:], endData)  // copy  数据包尾部信息
 
 
-	fmt.Printf("send msg: %x \n", bufferEnd)
+	//fmt.Printf("send msg: %x \n", bufferEnd)
 	return bufferEnd
 }
 
