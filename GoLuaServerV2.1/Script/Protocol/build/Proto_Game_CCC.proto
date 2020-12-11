@@ -5,35 +5,34 @@ import "Proto_User.proto";
 //用户信息------------------------------------------------------------------------------------------------------------
 message User
 {
-	optional BaseUser base_user = 1;				//用户信息
+	BaseUser base_user = 1;        //用户信息
 }
-
 
 //游戏服务器登录申请
 message GameLogin
 {
-	optional int32					client_type = 1;						//客户端类型 1为网页 2为PC 3为IOS 4为Android
-	optional uint32					user_id = 2;							//用户 I D
-	optional bytes					password = 3;							//登录密码(32md5)
-	optional bytes					machine_id = 4;							//机器序列
-	optional int32					kind_id = 5;							//类型索引
-	optional bytes					ip_addr = 6;							//IP地址
-	optional int32 					ditch_number = 7;						//渠道号 1为官网
-	optional bytes					device_type = 8;						//设备的型号
+	string          open_id = 1;              //
+	uint32          user_id = 2;              //用户 I D
+	string          machine_id = 3;              //机器序列
+	string          password = 4;              //登录密码(32md5)
+	string          ip_addr = 5;              //IP地址
+	uint32          channel = 6;            //渠道号 1为官网
+	string          device_type = 7;            //设备的型号
 
 };
 
 // 登录成功
 message GameLoginResult
 {
-	required
-	optional int32  room_id = 17;					//房间ID
-	optional bytes err =
+	bool success = 1;     // 1成功，0失败
+	User user = 2;        //用户信息
+	uint32  room_id = 3;          //房间ID
+	string err = 4;
 }
 //其他玩家进入游戏场景
 message OTHER_ENTER_ROOM
 {
-	optional User user = 1;				//用户信息
+	User user = 1;        //用户信息
 }
 
 

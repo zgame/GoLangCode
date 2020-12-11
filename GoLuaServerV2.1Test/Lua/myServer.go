@@ -4,6 +4,7 @@ import (
 	"TestGoLangByServerLua2/GlobalVar"
 	"TestGoLangByServerLua2/NetWork"
 	"TestGoLangByServerLua2/Utils/log"
+	"fmt"
 	"math"
 	"net"
 	"sync"
@@ -166,7 +167,7 @@ func (a *MyServer) Run() {
 
 
 func (a * MyServer)HandlerRead(buf []byte) int {
-	//fmt.Printf("buf......%x",buf)
+	fmt.Printf("buf......%x",buf)
 	//-----------------------------头部数据不完整----------------------------
 	if len(buf)< NetWork.TCPHeaderSize {
 		//str:= fmt.Sprintf("%d数据包头部数据不全 : %x \n",a.UserId,buf)
@@ -224,7 +225,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 	//}
 	//-----------------------------错误提示----------------------------
 	if msgSize >0 {
-		//fmt.Println("有错误提示了")
+		fmt.Println("有错误提示了")
 		msgBuffer := buf[NetWork.TCPHeaderSize + int(bufferSize):NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize)]
 		log.WritefLogger(string(msgBuffer))
 		return BufAllSize

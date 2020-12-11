@@ -89,7 +89,7 @@
 
 
 --------------------------------------------客户端----------------------------------------
-function build_mac_addr(index)
+local function build_mac_addr(index)
     local str = "74-D4-36-AD-"
     local i1 = math.floor(index / 256)
     local i2 = math.floor(index % 256)
@@ -111,20 +111,20 @@ function build_mac_addr(index)
     --return "74-D4-36-AD-1E-EE"
 end
 
-
+LoginServer={}
 
 -- 发送登录服务器请求
-function SendLoginGSGuest(serverId)
-    local sendCmd = Proto_Server.LogonUserID()
+function LoginServer.SendLogin(serverId)
+    local sendCmd = Proto_Game_CCC.GameLogin()
 
     sendCmd.machine_id = build_mac_addr(serverId)
-    LuaNetWorkSend(serverId, CMD_MAIN.MDM_SERVER, CMD_SERVER.SUB_LOGON,sendCmd,nil)
+    LuaNetWorkSend(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON,sendCmd,nil)
     --print("-----申请登录serverId:----------",serverId)
 end
 
 -- 服务器返回登录服务器成功，下发uid
-function SendLoginGSGuestSuccess(serverId,buf)
-    local msg = CMD_GameServer_pb.CMD_GR_LogonSuccess()
+function LoginServer.LoginGameServer(serverId, buf)
+    local msg = Proto_Game_CCC.GameLoginResult()
     msg:ParseFromString(buf)
     local uid = msg.user_right
 

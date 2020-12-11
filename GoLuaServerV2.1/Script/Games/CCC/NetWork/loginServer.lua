@@ -4,16 +4,41 @@
 --- DateTime: 2018/12/5 14:05
 ---
 
+CCCNetWorkLogin={}
 
 --游客登录申请,获取玩家的数据， 判断是否已经登录，
-function SevLoginGSGuest(serverId,buf)
+function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
 
-    local msg = CMD_GameServer_pb.CMD_GR_LogonUserID()
+    local msg = Proto_Game_CCC.GameLogin()
     msg:ParseFromString(buf)
     --msg:ParseFromString(sendCmd:SerializeToString())
 
     print(msg)
+    local UserId = 2121
+    local sendCmd = Proto_Game_CCC.GameLoginResult()
 
+    print(sendCmd)
+
+    sendCmd.success = true
+    sendCmd.err = "未收到发到付……\\sdfsdf&*……&*I"
+
+    print(sendCmd)
+    --sendCmd.user = {}
+    --sendCmd.user.base_user = {}
+    sendCmd.user.base_user.user_id = 234
+    sendCmd.user.base_user.nick_name = "234@dfgdfg电饭锅电饭锅"
+
+    sendCmd.room_id = 99099
+
+    print(sendCmd)
+
+
+    --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
+    NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, "message~!$")
+    --NetWork.SendToUser(UserId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, "message~!$", nil)
+
+    end
+    local function ss()
     --print("gamekind id: ".. msg.kind_id)
     --print("user_id id: ".. msg.user_id)
     --print("machine_id : ".. msg.machine_id)

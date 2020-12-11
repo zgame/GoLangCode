@@ -90,54 +90,11 @@ end
 
 -- 根据命令进行分支处理
 function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
-    --print("msgId",msgId, "subMsgId",subMsgId)
+    print("msgId",msgId, "subMsgId",subMsgId)
 
-    if msgId == MDM_MB_LOGON  then
-        --if subMsgId == SUB_MB_GUESTLOGIN  then
-        --    print("**************游客登录服申请******************* ")
-        --end
-    elseif msgId == MDM_GR_LOGON  then
-        if subMsgId == SUB_GR_LOGON_USERID  then
---            print("**************游客登录游戏服申请******************* ")     ----这里是原来的登录， 主要是返回客户端玩家的一些数据
---            SevLoginGSGuest(serverId,data)      -- 返回给客户端，玩家的数据，用来显示的
-        elseif subMsgId == SUB_GR_LOGON_FAILURE  then
-            print("登录失败")
-        elseif subMsgId == SUB_GR_LOGON_SUCCESS  then
-            --print("------------登录成功-------------")
-            SendLoginGSGuestSuccess(serverId,data)
-        elseif subMsgId == SUB_GR_LOGON_FINISH  then
-            --print("----------------登录完成，申请进入场景-----------",userId)
-            SendEnterScene(userId,data)
-        end
-    elseif msgId == MDM_GF_FRAME  then
-        if subMsgId == SUB_GF_GAME_OPTION  then
-            --print("**************游游客进入游戏房间申请***************** ",userId)      ---- 这里是玩家申请登录游戏的类型，进入游戏房间， 分配桌子坐下开始玩 , 客户端需要申请房间的类型
-            SevEnterScene(userId,data)
-        end
-    elseif msgId == MDM_GF_GAME  then
-        if subMsgId == SUB_S_ENTER_SCENE  then
-            --print("进入场景成功")
-            SendEnterSceneSuccess(userId,data)
-        --elseif subMsgId == SUB_C_USER_FIRE  then
-        --    --print("**************客户端开火***************** ",userId)
-        --    HandleUserFire(userId,data)
-        --elseif subMsgId == SUB_C_CATCH_FISH  then
-        --    --print("*************客户端抓鱼***************** ",userId)
-        --    HandleCatchFish(userId,data)
-        --
-        --elseif subMsgId == SUB_S_BOSS_COME  then
-        --    --print("*************暂时用来统计消息的返回时间***************** ",userId)
-        --    HandleStaticsNetWorkTime(userId)
-
-        elseif subMsgId == SUB_S_DISTRIBUTE_FISH  then
-            --print("**************接收鱼信息***************** ",userId)
-            handleNewFish(userId,data)
-        elseif subMsgId == SUB_S_USER_FIRE  then
-            --print("**************接收子弹成功***************** ",userId)
-            handleUserFireSuccess(userId,data)
-        elseif subMsgId == SUB_S_CATCH_FISH  then
-            --print("**************抓鱼成功***************** ",userId)
-            handleCatchFishSuccess(userId,data)
+    if msgId == CMD_MAIN.MDM_GAME_CCC  then
+        if subMsgId == CMD_CCC.SUB_LOGON  then
+            LoginServer.LoginGameServer(serverId,data)
         end
     end
 end

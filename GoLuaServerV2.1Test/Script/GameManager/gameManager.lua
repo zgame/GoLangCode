@@ -34,7 +34,7 @@ function GoCallLuaStartGamesServers(serverId)
 
 
     -- 开始连接服务器
-    SendLoginGSGuest(serverId)
+    LoginServer.SendLogin(serverId)
 
 
     --Logger("--------------StartGamesServers  End--------------------------")
