@@ -5,8 +5,8 @@
 package redis
 
 import (
-	"GoLuaServerV2.1/Utils"
 	"GoLuaServerV2.1/Utils/zLog"
+	"GoLuaServerV2.1/Utils/zLua"
 	"github.com/gomodule/redigo/redis"
 
 	//"gopkg.in/mgo.v2/bson"
@@ -19,7 +19,7 @@ import (
 func clientConnectMethod(L *lua.LState) int {
 
 	client := checkClient(L)
-	tb := Utils.LuaGetValue(L, 2)
+	tb := zLua.LuaGetValue(L, 2)
 	options, ok := tb.(map[string]interface{})
 
 	if tb == nil || !ok {

@@ -116,7 +116,7 @@ reconnect:
 	//client.conns[conn] = struct{}{}
 	client.Unlock()
 
-	udpConn := newUDPConn(conn, client.PendingWriteNum, client.UdpAddr)
+	udpConn := newUDPConn(conn, client.UdpAddr)
 	agent := client.NewAgent(udpConn,index)
 	agent.Run()
 

@@ -4,8 +4,8 @@
 package mongoDB
 
 import (
-	"GoLuaServerV2.1/Utils"
 	"GoLuaServerV2.1/Utils/zLog"
+	"GoLuaServerV2.1/Utils/zLua"
 	"github.com/yuin/gopher-lua"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -20,7 +20,7 @@ func clientInsertMethod(L *lua.LState) int {
 	Collection := s.DB("").C(collection)
 	//fmt.Println("----------------insert--------------")
 
-	tb := Utils.LuaGetValue(L, 3)
+	tb := zLua.LuaGetValue(L, 3)
 	options, ok := tb.(map[string]interface{})
 	if tb == nil || !ok {
 		L.ArgError(3, "options excepted")
@@ -50,7 +50,7 @@ func clientDelMethod(L *lua.LState) int {
 	Collection := s.DB("").C(collection)
 	//fmt.Println("----------------Del--------------")
 
-	tb := Utils.LuaGetValue(L, 3)
+	tb := zLua.LuaGetValue(L, 3)
 	options, ok := tb.(map[string]interface{})
 	if tb == nil || !ok {
 		L.ArgError(3, "options excepted")
@@ -78,14 +78,14 @@ func clientUpdateMethod(L *lua.LState) int {
 	Collection := s.DB("").C(collection)
 	//fmt.Println("----------------update--------------")
 
-	tb := Utils.LuaGetValue(L, 3)
+	tb := zLua.LuaGetValue(L, 3)
 	options, ok := tb.(map[string]interface{})
 	if tb == nil || !ok {
 		L.ArgError(3, "options excepted")
 		zLog.PrintLogger("mongo db update参数错误")
 		return 0
 	}
-	utb := Utils.LuaGetValue(L, 4)
+	utb := zLua.LuaGetValue(L, 4)
 	updateO, ok := utb.(map[string]interface{})
 	if utb == nil || !ok {
 		L.ArgError(4, "options excepted")
@@ -115,7 +115,7 @@ func clientFindMethod(L *lua.LState) int {
 	Collection := s.DB("").C(collection)
 	//fmt.Println("----------------find--------------")
 
-	tb := Utils.LuaGetValue(L, 3)
+	tb := zLua.LuaGetValue(L, 3)
 	findTb, ok := tb.(map[string]interface{})
 	if tb == nil || !ok {
 		L.ArgError(3, "options excepted")
@@ -132,7 +132,7 @@ func clientFindMethod(L *lua.LState) int {
 	//fmt.Println(result)
 
 	//returnTb := gluasql_util.toTableFromMap(L, reflect.ValueOf(result))
-	returnTb := Utils.LuaSetValue(L, result)
+	returnTb := zLua.LuaSetValue(L, result)
 	L.Push(returnTb)
 
 	return 1 // 执行成功
@@ -149,7 +149,7 @@ func clientFindsMethod(L *lua.LState) int {
 	Collection := s.DB("").C(collection)
 	//fmt.Println("----------------finds--------------")
 
-	tb := Utils.LuaGetValue(L, 3)
+	tb := zLua.LuaGetValue(L, 3)
 	findTb, ok := tb.(map[string]interface{})
 	if tb == nil || !ok {
 		L.ArgError(3, "options excepted")
@@ -163,7 +163,7 @@ func clientFindsMethod(L *lua.LState) int {
 	}
 
 	//returnTb := toTableFromSlice(L, reflect.ValueOf(result))
-	returnTb := Utils.LuaSetValue(L, result)
+	returnTb := zLua.LuaSetValue(L, result)
 	L.Push(returnTb)
 
 	return 1 // 执行成功

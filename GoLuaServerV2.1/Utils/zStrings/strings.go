@@ -5,7 +5,7 @@ package zStrings
 //----------------------------------------------------------------------------
 
 import (
-	"GoLuaServerV2.1/Utils"
+	"GoLuaServerV2.1/Utils/zLua"
 	"github.com/yuin/gopher-lua"
 	"strings"
 )
@@ -43,7 +43,7 @@ func split(L *lua.LState) int {
 }
 // 字符串衔接
 func join(L *lua.LState) int {
-	list:= Utils.LuaGetValue(L,1)
+	list:= zLua.LuaGetValue(L,1)
 	sep := L.CheckString(2)
 
 

@@ -4,8 +4,8 @@
 package mySql
 
 import (
-	"GoLuaServerV2.1/Utils"
 	"GoLuaServerV2.1/Utils/zLog"
+	"GoLuaServerV2.1/Utils/zLua"
 	"fmt"
 	"github.com/junhsieh/goexamples/fieldbinding/fieldbinding"
 	"github.com/yuin/gopher-lua"
@@ -52,7 +52,7 @@ func clientQueryMethod(L *lua.LState) int {
 		}
 
 		//tbRow := util.toTableFromMap(L, reflect.ValueOf(fb.GetFieldArr()))
-		tbRow := Utils.LuaSetValue(L, fb.GetFieldArr())
+		tbRow := zLua.LuaSetValue(L, fb.GetFieldArr())
 		tb.Append(tbRow)
 	}
 

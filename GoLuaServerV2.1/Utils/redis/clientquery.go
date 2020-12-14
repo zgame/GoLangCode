@@ -4,8 +4,8 @@
 package redis
 
 import (
-	"GoLuaServerV2.1/Utils"
 	"GoLuaServerV2.1/Utils/zLog"
+	"GoLuaServerV2.1/Utils/zLua"
 	"github.com/gomodule/redigo/redis"
 	"github.com/yuin/gopher-lua"
 )
@@ -17,7 +17,7 @@ import (
 func CmdForRedis(L *lua.LState ) int {
 	client := checkClient(L)
 	cmd := L.ToString(2)
-	args,ok := Utils.LuaGetValue(L, 3).([]interface{})		//强转为数组
+	args,ok := zLua.LuaGetValue(L, 3).([]interface{}) //强转为数组
 	if !ok {
 		zLog.PrintfLogger("redis cmd :%s 参数转换成数组出错 ",cmd )
 		return 0
@@ -51,7 +51,7 @@ func CmdForRedis(L *lua.LState ) int {
 func GetStringListFromRedis(L *lua.LState ) int {
 	client := checkClient(L)
 	cmd := L.ToString(2)
-	args,ok := Utils.LuaGetValue(L, 3).([]interface{})		//强转为数组
+	args,ok := zLua.LuaGetValue(L, 3).([]interface{}) //强转为数组
 	if !ok {
 		zLog.PrintfLogger("redis string list :%s 参数转换成数组出错 ",cmd )
 		return 0

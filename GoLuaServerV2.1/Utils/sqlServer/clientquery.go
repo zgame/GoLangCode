@@ -4,8 +4,8 @@
 package sqlServer
 
 import (
-	"GoLuaServerV2.1/Utils"
 	"GoLuaServerV2.1/Utils/zLog"
+	"GoLuaServerV2.1/Utils/zLua"
 	"fmt"
 	"github.com/yuin/gopher-lua"
 	"reflect"
@@ -82,7 +82,7 @@ func clientQueryMethod(L *lua.LState) int {
 				fmt.Print("\t")
 			}
 			//printValue(vals[i].(*interface{}))
-			tbRow.RawSet(Utils.LuaSetValue(L, cols[i]), Utils.LuaSetValue(L, vals[i]))
+			tbRow.RawSet(zLua.LuaSetValue(L, cols[i]), zLua.LuaSetValue(L, vals[i]))
 		}
 		//fmt.Println("")
 		tb.Append(tbRow)

@@ -100,7 +100,7 @@ func (server *UDPServer) run() {
 
 		server.wgConns.Add(1)
 
-		udpConn := newUDPConn(server.ln , server.PendingWriteNum, remoteAddr)  			// 传递数据给lua
+		udpConn := newUDPConn(server.ln ,remoteAddr)  			// 传递数据给lua
 		agent := server.NewAgent(udpConn)
 		go func() {
 			agent.Run()

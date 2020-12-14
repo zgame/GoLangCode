@@ -24,7 +24,7 @@ type UdpConn struct {
 	//msgParser *MsgParser
 }
 
-func newUDPConn(conn *net.UDPConn, pendingWriteNum int, pUDPAddr *net.UDPAddr) *UdpConn {
+func newUDPConn(conn *net.UDPConn, pUDPAddr *net.UDPAddr) *UdpConn {
 	udpConn := new(UdpConn)
 	udpConn.conn = conn
 	udpConn.UDPAddr = pUDPAddr
