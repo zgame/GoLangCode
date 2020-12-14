@@ -20,6 +20,7 @@ import (
 	"encoding/hex"
 	"github.com/yuin/gopher-lua"
 	"time"
+	//"github.com/cjoudrey/gluahttp"
 	//mySql "github.com/tengattack/gluasql/mySql"
 	"strconv"
 	"strings"
@@ -60,6 +61,8 @@ func (m *MyLua) InitResister() {
 	m.L.PreloadModule("sqlServer", sqlServer.Loader) //加载sql server 的lua调用
 	m.L.PreloadModule("mongodb", mongoDB.Loader)     //加载mongodb 的lua调用
 	m.L.PreloadModule("redis", redis.Loader)         //加载redis 的lua调用
+
+	//m.L.PreloadModule("http", gluahttp.NewHttpModule(&http.Client{}).Loader)		//访问其他http地址
 }
 
 //------------------------------------------------------------------------------------------------------------------------

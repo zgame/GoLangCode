@@ -50,8 +50,6 @@ func Routes(app *fiber.App) {
 	app.Post("/user/login", Action.Login)
 	app.Get("/user/info", Action.Info)
 	app.Post("/user/logout", Action.Logout)
-
 	app.Get("/recharge/list", Action.Recharge)
-
 
 }
