@@ -1,4 +1,4 @@
-module TestGoLangByServerLua2
+module GoLuaServerV2.1Test
 
 go 1.15
 

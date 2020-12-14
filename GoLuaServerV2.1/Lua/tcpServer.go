@@ -14,26 +14,25 @@ import (
 )
 
 // ----------------------------服务器处理的统一接口----------------------------------
-// myServer其实是一个个连接单独处理的模块
+// TcpServer其实是一个个连接单独处理的模块
 //-----------------------------------------------------------------------------------
 
-var MyServerUUID int32 = 1		// 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
-var StaticDataPackageHeadLess = 0  // 统计信息，数据包 头部数据不全
-var StaticDataPackageProtoDataLess = 0  // 统计信息，数据包 pb数据不全
-var StaticDataPackagePasteNum = 0   // 统计信息，拼接次数
-var StaticDataPackagePasteSuccess = 0   // 统计信息，成功拼接后，解析成功
-var StaticDataPackageHeadFlagError = 0   // 统计信息，数据包头部标识不正确
+var TcpServerUUID int32 = 1            // 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
+var StaticDataPackageHeadLess = 0      // 统计信息，数据包 头部数据不全
+var StaticDataPackageProtoDataLess = 0 // 统计信息，数据包 pb数据不全
+var StaticDataPackagePasteNum = 0      // 统计信息，拼接次数
+var StaticDataPackagePasteSuccess = 0  // 统计信息，成功拼接后，解析成功
+var StaticDataPackageHeadFlagError = 0 // 统计信息，数据包头部标识不正确
 
 var StaticNetWorkReceiveToSendCostTime = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
 var StaticNetWorkReceiveToSendCostTimeAll = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
 var StaticNetWorkReceiveToSendCostTimeNum = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
 
-var LuaConnectMyServer map[int]*MyServer    // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
-var luaUIDConnectMyServer map[int]*MyServer // 将uid跟连接句柄进行哈希
+
 
 
 // MyServer是每个客户端的连接
-type MyServer struct {
+type MyTcpServer struct {
 	Conn  NetWork.Conn // 对应的每个玩家的连接
 	myLua *MyLua       // 处理该玩家的lua脚本
 	//luaReloadTime	int			// 记录上次lua脚本更新的时间戳，后面统一到一个Lstate之后，这个作废了
@@ -60,16 +59,16 @@ func GetServerUid() int {
 
 
 retry:
-	MyServerUUID = atomic.AddInt32(&MyServerUUID, 1)
+	TcpServerUUID = atomic.AddInt32(&TcpServerUUID, 1)
 
-	if MyServerUUID > math.MaxInt32 {
-		MyServerUUID = 0		// 如果越界了， 那么重头来过
+	if TcpServerUUID > math.MaxInt32 {
+		TcpServerUUID = 0 // 如果越界了， 那么重头来过
 	}
-	ServerId := int(MyServerUUID)
-	if  GetMyServerByServerId(int(MyServerUUID)) != nil {
+	ServerId := int(TcpServerUUID)
+	if  GetMyServerByServerId(int(TcpServerUUID)) != nil {
 		// 如果被占用了， 那么尝试下一个
 		goto retry
-		fmt.Printf("serverId  %d 被占用", MyServerUUID)
+		fmt.Printf("serverId  %d 被占用", TcpServerUUID)
 	}
 
 
@@ -81,14 +80,14 @@ retry:
 
 
 // 分配一个玩家处理逻辑模块的内存
-func NewMyServer(conn NetWork.Conn,ServerId int)  *MyServer{
+func NewMyServer(conn NetWork.Conn,ServerId int)  *MyTcpServer {
 	//myLua := NewMyLua()
 	//myLua:= GameManagerLua		// 改为统一一个LState
-	return &MyServer{Conn:conn,myLua:GameManagerLuaHandle,ServerId:ServerId,ReceiveBuf:nil}
+	return &MyTcpServer{Conn: conn,myLua:GameManagerLuaHandle,ServerId:ServerId,ReceiveBuf:nil}
 }
 
 //--------------------------各个玩家连接逻辑主循环------------------------------
-func (a *MyServer) Run() {
+func (a *MyTcpServer) Run() {
 
 
 
@@ -190,7 +189,7 @@ func (a *MyServer) Run() {
 
 
 
-func (a * MyServer)HandlerRead(buf []byte) int {
+func (a *MyTcpServer)HandlerRead(buf []byte) int {
 	//fmt.Printf("buf......%x",buf)
 	//-----------------------------头部数据不完整----------------------------
 	if len(buf)< NetWork.TCPHeaderSize {
@@ -292,36 +291,20 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 }
 
 // 在网络中断的时候会自动调用， 关闭lua脚本
-func (a *MyServer) OnClose() {
-	//zLog.PrintLogger("玩家中断了网络连接， 我们要关闭网络")
-	//	a.myLua.L.DoString(`	// 关闭channel
-	//	GameManagerReceiveCh:close()
-	//    GameManagerSendCh:close()
-	//`)
-	//	a.myLua.L.Close() // 关闭lua调用
-
-
-
-	//if a.UserId > 0 {
-		// 连接关闭了， 通知lua， 这个玩家网络中断了
+func (a *MyTcpServer) OnClose() {
+	// 连接关闭了， 通知lua， 这个玩家网络中断了
 	a.myLua.GoCallLuaLogicInt2("GoCallLuaPlayerNetworkBroken", a.UserId, a.ServerId)
-	//}
 
 	// 清理掉一些调用关系
 	GlobalVar.RWMutex.Lock()
-	delete(LuaConnectMyServer, a.ServerId)
-	delete(luaUIDConnectMyServer, a.UserId)
-	//LuaConnectMyServer[a.ServerId] = nil
-	//luaUIDConnectMyServer[a.UserId] = nil
+	delete(ConnectMyTcpServer, a.ServerId)
+	delete(ConnectMyTcpServerByUid, a.UserId)
 	GlobalVar.RWMutex.Unlock()
-
-	//runtime.GC()
-
 }
 
 // ---------------------发送数据到网络-------------------------
 
-func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int ) bool{
+func (a *MyTcpServer) SendMsg(data string, msg string, mainCmd int, subCmd int ) bool{
 	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
 
 	//if token!=0 {
@@ -358,7 +341,7 @@ func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int ) bo
 	return a.WriteMsg(bufferEnd)
 }
 
-func (a *MyServer) WriteMsg(msg ... []byte) bool{
+func (a *MyTcpServer) WriteMsg(msg ... []byte) bool{
 	if a == nil ||  a.Conn == nil{
 		zLog.PrintLogger("当前连接已经关闭, 不发送了")
 		return false
@@ -377,42 +360,42 @@ func (a *MyServer) WriteMsg(msg ... []byte) bool{
 	return true    // 发送成功
 }
 
-func (a *MyServer) LocalAddr() net.Addr {
+func (a *MyTcpServer) LocalAddr() net.Addr {
 	return a.Conn.LocalAddr()
 }
 
-func (a *MyServer) RemoteAddr() net.Addr {
+func (a *MyTcpServer) RemoteAddr() net.Addr {
 	return a.Conn.RemoteAddr()
 }
 
-//func (a *MyServer) Close() {
+//func (a *MyTcpServer) Close() {
 //	a.Conn.Close()
 //}
 //
-//func (a *MyServer) Destroy() {
+//func (a *MyTcpServer) Destroy() {
 //	a.Conn.Destroy()
 //}
 //
-//func (a *MyServer) UserData() interface{} {
+//func (a *MyTcpServer) UserData() interface{} {
 //	return a.userData
 //}
 //
-//func (a *MyServer) SetUserData(data interface{}) {
+//func (a *MyTcpServer) SetUserData(data interface{}) {
 //	a.userData = data
 //}
 
 //--------------------------lua 启动-------------------------------
-func (a *MyServer) Init() {
+func (a *MyTcpServer) Init() {
 
 
 	//a.myLua.Init() // 绑定lua脚本
 	//a.luaReloadTime = GlobalVar.LuaReloadTime
 
 	GlobalVar.RWMutex.Lock()
-	if LuaConnectMyServer[a.ServerId] != nil {
-		zLog.PrintfLogger("LuaConnectMyServer  已经有了, map重复了", a.ServerId,  a.UserId)
+	if ConnectMyTcpServer[a.ServerId] != nil {
+		zLog.PrintfLogger("ConnectMyTcpServer  已经有了, map重复了", a.ServerId,  a.UserId)
 	}
-	LuaConnectMyServer[a.ServerId] = a
+	ConnectMyTcpServer[a.ServerId] = a
 	GlobalVar.RWMutex.Unlock()
 
 	a.myLua.GoCallLuaNetWorkInit(a.ServerId)
@@ -426,7 +409,7 @@ func (a *MyServer) Init() {
 }
 
 ////---------------------------热更新检查-----------------------------
-//func (a *MyServer) CheckLuaReload() {
+//func (a *MyTcpServer) CheckLuaReload() {
 //	// 检查一下lua更新的时间戳
 //	if a.luaReloadTime == GlobalVar.LuaReloadTime{
 //		return
@@ -453,7 +436,7 @@ func ConnectOtherServer(ServerAddressAndPort string) int{
 	client.AutoReconnect = true		// 支持断线重联
 
 	//fmt.Println("0")
-	//serverId :=  MyServerUUID 		// serverId
+	//serverId :=  TcpServerUUID 		// serverId
 	serverId :=  GetServerUid() 		// serverId
 
 	client.NewAgent = func(conn *NetWork.TCPConn,index int) NetWork.Agent {

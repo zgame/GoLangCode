@@ -118,7 +118,7 @@ function LoginServer.SendLogin(serverId)
     local sendCmd = Proto_Game_CCC.GameLogin()
 
     sendCmd.machine_id = build_mac_addr(serverId)
-    LuaNetWorkSend(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON,sendCmd,nil)
+    LuaNetWorkSendUdp(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON,sendCmd,nil)
     print("-----申请登录serverId:----------",serverId)
 end
 

@@ -35,6 +35,7 @@ import (
 // 统一的go给lua调用的函数注册点
 func (m *MyLua) InitResister() {
 	// Lua调用go函数声明
+	m.L.SetGlobal("luaCallGoNetWorkSendUdp", m.L.NewFunction(luaCallGoNetWorkSendUdp))                             //注册到lua 网络发送函数
 	m.L.SetGlobal("luaCallGoNetWorkSend", m.L.NewFunction(luaCallGoNetWorkSend))                             //注册到lua 网络发送函数
 	m.L.SetGlobal("luaCallGoNetWorkConnectOtherServer", m.L.NewFunction(luaCallGoNetWorkConnectOtherServer)) //注册到lua 网络 申请连接其他服务器
 	m.L.SetGlobal("luaCallGoNetWorkClose", m.L.NewFunction(luaCallGoNetWorkClose))                           //注册到lua 网络关闭
@@ -110,7 +111,7 @@ func luaCallGoResisterUID(L *lua.LState) int {
 	server := GetMyServerByServerId(int(serverId)) // my server
 
 	GlobalVar.RWMutex.Lock()
-	luaUIDConnectMyServer[int(uid)] = server // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
+	ConnectMyTcpServerByUid[int(uid)] = server // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
 	GlobalVar.RWMutex.Unlock()
 
 	server.UserId = int(uid) // 保存uid
@@ -219,3 +220,19 @@ func luaCallGoGetPWD(L *lua.LState) int {
 	return 1
 }
 
+//--------------------------------udp-----------------------------------------
+
+// lua发送网络数据udp
+func luaCallGoNetWorkSendUdp(L *lua.LState) int {
+	//userId := L.ToInt(1)
+	serverId := L.ToInt(2)		// udp address
+	mainCmd := L.ToInt(3)
+	subCmd := L.ToInt(4)
+	data := L.ToString(5)
+	msg := L.ToString(6)
+
+
+	GetMyUdpServerByLSate(serverId).SendMsg(data, msg, mainCmd, subCmd) // 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
+
+	return 0 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
+}

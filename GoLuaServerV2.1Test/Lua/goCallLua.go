@@ -1,8 +1,8 @@
 package Lua
 
 import (
-	"TestGoLangByServerLua2/GlobalVar"
-	"TestGoLangByServerLua2/Utils/log"
+	"GoLuaServerV2.1Test/GlobalVar"
+	"GoLuaServerV2.1Test/Utils/log"
 	"fmt"
 	"github.com/yuin/gopher-lua"
 )

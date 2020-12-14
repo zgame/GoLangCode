@@ -1,9 +1,9 @@
 package Lua
 
 import (
-	"TestGoLangByServerLua2/GlobalVar"
-	"TestGoLangByServerLua2/NetWork"
-	"TestGoLangByServerLua2/Utils/log"
+	"GoLuaServerV2.1Test/GlobalVar"
+	"GoLuaServerV2.1Test/NetWork"
+	"GoLuaServerV2.1Test/Utils/log"
 	"fmt"
 	"math"
 	"net"
@@ -14,20 +14,21 @@ import (
 // myServer其实是一个个连接单独处理的模块
 //-----------------------------------------------------------------------------------
 
-var MyServerUUID = 0		// 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
-var StaticDataPackageHeadLess = 0  // 统计信息，数据包 头部数据不全
-var StaticDataPackageProtoDataLess = 0  // 统计信息，数据包 pb数据不全
-var StaticDataPackagePasteNum = 0   // 统计信息，拼接次数
-var StaticDataPackagePasteSuccess = 0   // 统计信息，成功拼接后，解析成功
-var StaticDataPackageHeadFlagError = 0   // 统计信息，数据包头部标识不正确
+var MyTcpServerUUID = 0                // 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
+var StaticDataPackageHeadLess = 0      // 统计信息，数据包 头部数据不全
+var StaticDataPackageProtoDataLess = 0 // 统计信息，数据包 pb数据不全
+var StaticDataPackagePasteNum = 0      // 统计信息，拼接次数
+var StaticDataPackagePasteSuccess = 0  // 统计信息，成功拼接后，解析成功
+var StaticDataPackageHeadFlagError = 0 // 统计信息，数据包头部标识不正确
 
-var LuaConnectMyServer map[int]*MyServer    // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
-var luaUIDConnectMyServer map[int]*MyServer // 将uid跟连接句柄进行哈希
+var ConnectMyTcpServer map[int]*MyTcpServer      // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
+var ConnectMyUdpServer map[int]*MyUdpServer      // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
+var ConnectMyTcpServerByUID map[int]*MyTcpServer // 将uid跟连接句柄进行哈希
 var ClientStart int
 
 
 // MyServer是每个客户端的连接
-type MyServer struct {
+type MyTcpServer struct {
 	Conn  NetWork.Conn // 对应的每个玩家的连接
 	myLua *MyLua       // 处理该玩家的lua脚本
 	//luaReloadTime	int			// 记录上次lua脚本更新的时间戳，后面统一到一个Lstate之后，这个作废了
@@ -51,27 +52,27 @@ type MyServer struct {
 
 
 // 分配一个玩家处理逻辑模块的内存
-func NewMyServer(conn NetWork.Conn,GameManagerLua *MyLua)  *MyServer{
+func NewMyTcpServer(conn NetWork.Conn,GameManagerLua *MyLua)  *MyTcpServer {
 	//myLua := NewMyLua()
 	myLua:= GameManagerLua		// 改为统一一个LState
 
 	GlobalVar.GlobalMutex.Lock()
 
-	if MyServerUUID == 0 {
-		MyServerUUID = ClientStart
+	if MyTcpServerUUID == 0 {
+		MyTcpServerUUID = ClientStart
 	}
 
-	ServerId := MyServerUUID
-	MyServerUUID ++
-	if MyServerUUID > int(math.MaxInt32) {
-		MyServerUUID = 0
+	ServerId := MyTcpServerUUID
+	MyTcpServerUUID++
+	if MyTcpServerUUID > int(math.MaxInt32) {
+		MyTcpServerUUID = 0
 	}
 	GlobalVar.GlobalMutex.Unlock()
-	return &MyServer{Conn:conn,myLua:myLua,ServerId:ServerId,ReceiveBuf:nil}
+	return &MyTcpServer{Conn: conn,myLua:myLua,ServerId:ServerId,ReceiveBuf:nil}
 }
 
 //--------------------------各个玩家连接逻辑主循环------------------------------
-func (a *MyServer) Run() {
+func (a *MyTcpServer) Run() {
 	//fmt.Println("-------------各个玩家连接逻辑主循环---------")
 
 
@@ -166,7 +167,7 @@ func (a *MyServer) Run() {
 
 
 
-func (a * MyServer)HandlerRead(buf []byte) int {
+func (a *MyTcpServer)HandlerRead(buf []byte) int {
 	//fmt.Printf("buf......%x",buf)
 	//-----------------------------头部数据不完整----------------------------
 	if len(buf)< NetWork.TCPHeaderSize {
@@ -245,7 +246,7 @@ func (a * MyServer)HandlerRead(buf []byte) int {
 }
 
 // 在网络中断的时候会自动调用， 关闭lua脚本
-func (a *MyServer) OnClose() {
+func (a *MyTcpServer) OnClose() {
 	//log.PrintLogger("玩家中断了网络连接， 我们要关闭网络")
 	//	a.myLua.L.DoString(`	// 关闭channel
 	//	GameManagerReceiveCh:close()
@@ -262,10 +263,10 @@ func (a *MyServer) OnClose() {
 
 	// 清理掉一些调用关系
 	GlobalVar.RWMutex.Lock()
-	delete(LuaConnectMyServer, a.ServerId)
-	delete(luaUIDConnectMyServer, a.UserId)
-	//LuaConnectMyServer[a.ServerId] = nil
-	//luaUIDConnectMyServer[a.UserId] = nil
+	delete(ConnectMyTcpServer, a.ServerId)
+	delete(ConnectMyTcpServerByUID, a.UserId)
+	//ConnectMyTcpServer[a.ServerId] = nil
+	//ConnectMyTcpServerByUID[a.UserId] = nil
 	GlobalVar.RWMutex.Unlock()
 
 	//runtime.GC()
@@ -274,13 +275,13 @@ func (a *MyServer) OnClose() {
 
 // ---------------------发送数据到网络-------------------------
 
-func (a *MyServer) SendMsg(data string, msg string, mainCmd int, subCmd int) bool{
+func (a *MyTcpServer) SendMsg(data string, msg string, mainCmd int, subCmd int) bool{
 	a.TokenId++
 	bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, a.TokenId)
 	return a.WriteMsg(bufferEnd)
 }
 
-func (a *MyServer) WriteMsg(msg ... []byte) bool{
+func (a *MyTcpServer) WriteMsg(msg ... []byte) bool{
 	if a == nil ||  a.Conn == nil{
 		log.PrintLogger("当前连接已经关闭, 不发送了")
 		return false
@@ -299,42 +300,27 @@ func (a *MyServer) WriteMsg(msg ... []byte) bool{
 	return true    // 发送成功
 }
 
-func (a *MyServer) LocalAddr() net.Addr {
+func (a *MyTcpServer) LocalAddr() net.Addr {
 	return a.Conn.LocalAddr()
 }
 
-func (a *MyServer) RemoteAddr() net.Addr {
+func (a *MyTcpServer) RemoteAddr() net.Addr {
 	return a.Conn.RemoteAddr()
 }
 
-//func (a *MyServer) Close() {
-//	a.Conn.Close()
-//}
-//
-//func (a *MyServer) Destroy() {
-//	a.Conn.Destroy()
-//}
-//
-//func (a *MyServer) UserData() interface{} {
-//	return a.userData
-//}
-//
-//func (a *MyServer) SetUserData(data interface{}) {
-//	a.userData = data
-//}
 
 //--------------------------lua 启动-------------------------------
-func (a *MyServer) Init() {
+func (a *MyTcpServer) Init() {
 
 
 	//a.myLua.Init() // 绑定lua脚本
 	//a.luaReloadTime = GlobalVar.LuaReloadTime
 
 	GlobalVar.RWMutex.Lock()
-	if LuaConnectMyServer[a.ServerId] != nil {
-		log.PrintfLogger("LuaConnectMyServer  已经有了, map重复了", a.ServerId,  a.UserId)
+	if ConnectMyTcpServer[a.ServerId] != nil {
+		log.PrintfLogger("ConnectMyTcpServer  已经有了, map重复了", a.ServerId,  a.UserId)
 	}
-	LuaConnectMyServer[a.ServerId] = a
+	ConnectMyTcpServer[a.ServerId] = a
 	GlobalVar.RWMutex.Unlock()
 
 	// 以后这里可以初始化玩家自己solo的游戏服务器
@@ -346,19 +332,3 @@ func (a *MyServer) Init() {
 	//	// 调用lua的逻辑run
 	//}()
 }
-
-////---------------------------热更新检查-----------------------------
-//func (a *MyServer) CheckLuaReload() {
-//	// 检查一下lua更新的时间戳
-//	if a.luaReloadTime == GlobalVar.LuaReloadTime{
-//		return
-//	}
-//
-//	// 如果跟本地的lua时间戳不一致，就更新
-//	err := a.myLua.GoCallLuaReload()
-//	if err == nil{
-//		// 热更新成功
-//		a.luaReloadTime = GlobalVar.LuaReloadTime
-//	}
-//}
-

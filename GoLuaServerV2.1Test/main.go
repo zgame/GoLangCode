@@ -2,10 +2,10 @@
 package main
 
 import (
-	"TestGoLangByServerLua2/GlobalVar"
-	"TestGoLangByServerLua2/Lua"
-	"TestGoLangByServerLua2/NetWork"
-	"TestGoLangByServerLua2/Utils/log"
+	"GoLuaServerV2.1Test/GlobalVar"
+	"GoLuaServerV2.1Test/Lua"
+	"GoLuaServerV2.1Test/NetWork"
+	"GoLuaServerV2.1Test/Utils/log"
 	"flag"
 	//"util/logs"
 	//"github.com/astaxie/beego/logs"
@@ -38,16 +38,22 @@ var GameManagerLua *Lua.MyLua    // 公共部分lua脚本
 
 var GameServerAddress string
 //var GameServerWebSocketAddress string
+
 var WebSocketPort int
 var SocketPort int
+var UdpPort int
 var ClientStart int
 var ClientEnd int
+
 var ShowLog int
-var IsWebSocket bool
+var UDPSocket = true
+var WebSocketServer = true	// websocket 开启
+var SocketServer = true		// socket 开启
 
 
-var clients []*NetWork.TCPClient
-var wsclients []*NetWork.WSClient
+var udpClients []*NetWork.UDPClient
+var tcpClients []*NetWork.TCPClient
+var wsClients []*NetWork.WSClient
 
 var GlobalMutex sync.Mutex // 全局互斥锁
 //var GlobalClients map[*Client] interface{}  // 全局client
@@ -73,24 +79,28 @@ func main() {
 	//ClientStart,err   := f.Section("Server").Key("ClientStart").Int()
 	//ClientEnd ,err   := f.Section("Server").Key("ClientEnd").Int()
 	ShowLog ,err   = f.Section("Server").Key("ShowLog").Int()
-	IsWebSocket ,err   = f.Section("Server").Key("IsWebSocket").Bool()
+	UDPSocket,err   = f.Section("Server").Key("UDPSocket").Bool()
+	WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
+	SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
 
 	// -------------------------读取命令行参数--------------------------
 	wsPort := flag.Int("WebSocketPort", 0, "")
 	sPort := flag.Int("SocketPort", 0, "")
+	uPort := flag.Int("UdpPort", 0, "")
 	start := flag.Int("ClientStart", 0, "")
 	end := flag.Int("ClientEnd", 0, "")
 	flag.Parse()
 	WebSocketPort = *wsPort
 	SocketPort = *sPort
+	UdpPort = * uPort
 	ClientStart = * start
 	ClientEnd = *end
 	log.ServerPort = SocketPort
 
-	if WebSocketPort == 0 || SocketPort == 0 || ClientStart == 0 || ClientEnd == 0{
+	if WebSocketPort == 0 || SocketPort == 0 ||  UdpPort ==0 || ClientStart == 0 || ClientEnd == 0 {
 
 		for{
-			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123 -ClientStart=1 -ClientEnd=100")
+			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123 -UdpPort=8124 -ClientStart=1 -ClientEnd=100")
 			time.Sleep(time.Second)
 
 		}
@@ -120,17 +130,17 @@ func main() {
 	//		//defer conn.Close()
 	//
 	//
-	//		clients := &Client{nil, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0,0,false,nil}
-	//		clients.Gameinfo = clients.Gameinfo.New()
+	//		tcpClients := &Client{nil, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0,0,false,nil}
+	//		tcpClients.Gameinfo = tcpClients.Gameinfo.New()
 	//		if i==ClientStart{
-	//			clients.ShowMsgSendTime = true	// 第一个才显示
+	//			tcpClients.ShowMsgSendTime = true	// 第一个才显示
 	//		}
 	//
 	//		//fmt.Println("发送登录请求",i)
-	//		//clients.LoginSend()		//开始登录请求
-	//		clients.ConnectGameServer("")  // 直接登录游戏服务器
+	//		//tcpClients.LoginSend()		//开始登录请求
+	//		tcpClients.ConnectGameServer("")  // 直接登录游戏服务器
 	//		//fmt.Println("发送登录完成")
-	//		startClient(clients)
+	//		startClient(tcpClients)
 	//
 	//	}(i)
 	//	//GlobalMutex.Unlock()
@@ -180,8 +190,8 @@ func GameManagerInit() {
 func StartClient() {
 	//GlobalClients = make(map[*Client]interface{},0)
 	Lua.ClientStart = ClientStart
-	//IsWebSocket := false
-	if !IsWebSocket {
+	//UDPSocket := false
+	if SocketServer {
 		// socket client----------------------------------------------------------
 		client := new(NetWork.TCPClient)
 		client.Addr = GameServerAddress+":"+ strconv.Itoa(SocketPort)
@@ -191,15 +201,15 @@ func StartClient() {
 		client.LenMsgLen = 4
 		client.MaxMsgLen = math.MaxUint32
 		client.NewAgent = func(conn *NetWork.TCPConn,index int) NetWork.Agent {
-			a := Lua.NewMyServer(conn,GameManagerLua)				// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+			a := Lua.NewMyTcpServer(conn,GameManagerLua) // 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
 			return a
 		}
 
 		fmt.Println("开始连接", client.Addr)
 		client.Start(ClientStart, ClientEnd)
-		clients = append(clients, client)
+		tcpClients = append(tcpClients, client)
 	}
-	if IsWebSocket{
+	if WebSocketServer {
 		// websocket client------------------------------------------------------------------
 
 
@@ -211,13 +221,30 @@ func StartClient() {
 		wsclient.HandshakeTimeout = 10 * time.Second
 		wsclient.MaxMsgLen = math.MaxUint32
 		wsclient.NewAgent = func(conn *NetWork.WSConn,index int) NetWork.Agent {
-			a := Lua.NewMyServer(conn,GameManagerLua)
+			a := Lua.NewMyTcpServer(conn,GameManagerLua)
 			return a
 		}
 
 		fmt.Println("开始连接",wsclient.Addr)
 		wsclient.Start(ClientStart, ClientEnd)
-		wsclients = append(wsclients, wsclient)
+		wsClients = append(wsClients, wsclient)
+	}
+	if UDPSocket {
+		// socket client----------------------------------------------------------
+		client := new(NetWork.UDPClient)
+		client.Addr = GameServerAddress+":"+ strconv.Itoa(UdpPort)
+		client.ConnectInterval = 3 * time.Second	// 客户端自动重连
+		client.PendingWriteNum = 1000	// 发送缓冲区
+		client.LenMsgLen = 4
+		client.MaxMsgLen = math.MaxUint32
+		client.NewAgent = func(conn *NetWork.UdpConn,index int) NetWork.Agent {
+			a := Lua.NewMyUdpServer(conn,GameManagerLua) // 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+			return a
+		}
+
+		fmt.Println("开始连接", client.Addr)
+		client.Start(ClientStart, ClientEnd)
+		udpClients = append(udpClients, client)
 	}
 
 }
@@ -237,7 +264,7 @@ func GetStaticPrint()  {
 	//connNum := 0
 
 	GlobalVar.RWMutex.Lock()
-	for _,v := range Lua.LuaConnectMyServer{
+	for _,v := range Lua.ConnectMyTcpServer {
 		if v!=nil {
 			AllConnect ++
 			//connNum += len(v.ReceiveBuf)
@@ -328,8 +355,8 @@ func GetSysMemInfo()  string{
 //	defer conn.Close()
 //	//c.Conn = conn
 //	c.SendTokenID = 1
-//	//clients := &Client{conn, i, nil,nil , nil}
-//	//clients.Gameinfo = clients.Gameinfo.New()
+//	//tcpClients := &Client{conn, i, nil,nil , nil}
+//	//tcpClients.Gameinfo = tcpClients.Gameinfo.New()
 //
 //	//fmt.Println("发送登录游戏服务器请求",c.Index)
 //	c.loginGS()

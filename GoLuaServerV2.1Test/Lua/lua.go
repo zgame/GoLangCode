@@ -1,7 +1,7 @@
 package Lua
 
 import (
-	"TestGoLangByServerLua2/GlobalVar"
+	"GoLuaServerV2.1Test/GlobalVar"
 	"fmt"
 	"github.com/yuin/gopher-lua"
 )
@@ -26,28 +26,37 @@ func NewMyLua() *MyLua {
 
 // --------------------全局变量初始化--------------------------
 func InitGlobalVar() {
-	LuaConnectMyServer = make(map[int]*MyServer)
-	luaUIDConnectMyServer = make(map[int]*MyServer)
+	ConnectMyUdpServer = make(map[int]*MyUdpServer)
+	ConnectMyTcpServer = make(map[int]*MyTcpServer)
+	ConnectMyTcpServerByUID = make(map[int]*MyTcpServer)
 	//GameManagerReceiveCh = make(chan lua.LValue)// 这是每个玩家线程跟主线程之间的通信用channel
 	//GameManagerSendCh = make(chan lua.LValue)
 
 }
 
 // 通过lua堆栈找到对应的是哪个myServer
-func GetMyServerByLSate(id int) *MyServer {
+func GetMyTcpServerByLSate(id int) *MyTcpServer {
 	GlobalVar.RWMutex.RLock()
-	re := LuaConnectMyServer[id] // 这是全局变量，所以要加锁， 读写都要加
+	re := ConnectMyTcpServer[id] // 这是全局变量，所以要加锁， 读写都要加
 	GlobalVar.RWMutex.RUnlock()
 	return re
 }
 // 通过 user id 找到对应的是哪个myServer
-func GetMyServerByUID(uid int) *MyServer {
+func GetMyTcpServerByUID(uid int) *MyTcpServer {
 	GlobalVar.RWMutex.RLock()
-	re:= luaUIDConnectMyServer[uid]			// 这是全局变量，所以要加锁， 读写都要加
+	re:= ConnectMyTcpServerByUID[uid] // 这是全局变量，所以要加锁， 读写都要加
 	GlobalVar.RWMutex.RUnlock()
 	return re
 }
 
+
+// 通过lua堆栈找到对应的是哪个myServer
+func GetMyUdpServerByLSate(id int) *MyUdpServer {
+	GlobalVar.RWMutex.RLock()
+	re := ConnectMyUdpServer[id] // 这是全局变量，所以要加锁， 读写都要加
+	GlobalVar.RWMutex.RUnlock()
+	return re
+}
 
 //----------------------对象个体初始化-----------------------
 func (m *MyLua)Init()   {

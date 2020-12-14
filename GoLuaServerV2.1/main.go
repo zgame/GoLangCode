@@ -37,13 +37,16 @@ import (
 
 // ---------------------------程序入口-----------------------------------
 var wsServer *NetWork.WSServer
-var server *NetWork.TCPServer
+var tcpServer *NetWork.TCPServer
+var udpServer *NetWork.UDPServer
 
 var WebSocketServer = true	// websocket 开启
 var SocketServer = true		// socket 开启
+var UDPServer = true		// udp socket 开启
 
 var WebSocketPort int
 var SocketPort int
+var UdpPort int
 var GameRoomServerID int	// 游戏原有的ServerID(来源于GameRoomInfo中对应的)
 var ServerAddress string    // ServerAddress 服务器地址
 var ServerTypeName string    // ServerAddress 服务器地址
@@ -60,8 +63,8 @@ var err error
 //var MySqlUid string
 //var MySqlPwd string
 
-//var SqlServerIP string		// sql server
-//var SqlServerPort string		// sql  server port
+//var SqlServerIP string		// sql tcpServer
+//var SqlServerPort string		// sql  tcpServer port
 //var SqlServerDatabase string
 //var SqlServerUid string
 //var SqlServerPwd string
@@ -89,18 +92,20 @@ func main() {
 	fmt.Println("------------------	首先读取命令行参数	---------------------------")
 	wsPort := flag.Int("WebSocketPort", 0, "")
 	iPort := flag.Int("SocketPort", 0, "")
+	uPort := flag.Int("UdpPort", 0, "")
 	iGameServerID := flag.Int("ServerID", 0, "")
 	sServerTypeName := flag.String("ServerTypeName", "", "定义游戏服务器的类型")
 	flag.Parse()
 	WebSocketPort = *wsPort
 	SocketPort = *iPort
+	UdpPort = * uPort
 	GameRoomServerID = *iGameServerID
 	ServerTypeName = *sServerTypeName
 
 	fmt.Println("WebSocketPort=",WebSocketPort,"SocketPort=",SocketPort,"GameServerID=",GameRoomServerID)
-	if WebSocketPort==0 || SocketPort==0{
+	if WebSocketPort==0 || UdpPort ==0 ||SocketPort==0{
 		for{
-			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123 -ServerTypeName=Game")
+			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123  -UdpPort=8124 -ServerTypeName=Game")
 			time.Sleep(time.Second)
 		}
 	}
@@ -197,8 +202,9 @@ func initSetting()  {
 	//}
 
 	zLog.ShowLog,err  = f.Section("Server").Key("ShowLog").Bool()
-	//WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
-	//SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
+	WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
+	SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
+	UDPServer,err   = f.Section("Server").Key("UDPSocket").Bool()
 	ServerAddress = f.Section("Server").Key("ServerAddress").String()
 	//WebSocketAddress = f.Section("Server").Key("WebSocketAddress").String()
 	//GoroutineMax ,err  = f.Section("Server").Key("GoroutineMax").Int()
@@ -257,19 +263,35 @@ func NetWorkServerStart()  {
 	}
 	if SocketServer{
 		// socket 服务器开启----------------------------------
-		server = new(NetWork.TCPServer)
-		server.Addr = ServerAddress +":"+strconv.Itoa(SocketPort)
-		fmt.Println("socket 绑定："+ server.Addr)
-		server.MaxConnNum = int(math.MaxInt32)
-		server.PendingWriteNum = 1000		// 发送区缓存
-		server.LenMsgLen = 4
-		server.MaxMsgLen = math.MaxUint32
-		server.NewAgent = func(conn *NetWork.TCPConn) NetWork.Agent {
+		tcpServer = new(NetWork.TCPServer)
+		tcpServer.Addr = ServerAddress +":"+strconv.Itoa(SocketPort)
+		fmt.Println("socket 绑定："+ tcpServer.Addr)
+		tcpServer.MaxConnNum = int(math.MaxInt32)
+		tcpServer.PendingWriteNum = 1000 // 发送区缓存
+		tcpServer.LenMsgLen = 4
+		tcpServer.MaxMsgLen = math.MaxUint32
+		tcpServer.NewAgent = func(conn *NetWork.TCPConn) NetWork.Agent {
 			ServerId := Lua.GetServerUid()
 			a := Lua.NewMyServer(conn,ServerId)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
 			return a
 		}
-		server.Start()
+		tcpServer.Start()
+	}
+	if UDPServer{
+		// socket udp 服务器开启----------------------------------
+		udpServer = new(NetWork.UDPServer)
+		udpServer.Addr = ServerAddress +":"+strconv.Itoa(UdpPort)
+		fmt.Println("socket udp 绑定：", UdpPort)
+		udpServer.MaxConnNum = int(math.MaxInt32)
+		udpServer.PendingWriteNum = 1000 // 发送区缓存
+		udpServer.LenMsgLen = 4
+		udpServer.MaxMsgLen = math.MaxUint32
+		udpServer.NewAgent = func(conn *NetWork.UdpConn) NetWork.Agent {
+			ServerId := Lua.GetServerUid()
+			a := Lua.NewMyUdpServer(conn,ServerId)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+			return a
+		}
+		udpServer.Start()
 	}
 }
 
@@ -392,7 +414,7 @@ func GetAllConnectMsg() (string,int,int,int)  {
 	AllConnect :=0
 
 	GlobalVar.RWMutex.RLock()
-	for _,v := range Lua.LuaConnectMyServer{
+	for _,v := range Lua.ConnectMyTcpServer {
 		if v!=nil {
 			AllConnect ++
 			connNum += len(v.ReceiveBuf)

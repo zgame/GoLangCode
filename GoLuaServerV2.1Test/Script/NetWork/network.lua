@@ -25,6 +25,18 @@ function LuaNetWorkSend(myServerId, msgId, subMsgId, sendCmd, err)
     return luaCallGoNetWorkSend(0, myServerId,msgId,subMsgId,buffer,err)       -- 返回结果 true 发送成功  false 发送失败
 end
 
+function LuaNetWorkSendUdp(myServerId, msgId, subMsgId, sendCmd, err)
+    --return LuaNetWorkSendToUser(0,serverId,msgId,subMsgId,sendCmd,err)      -- userId 如果是0的话， 就是给玩家自己回消息 ，这是在go那边定义的
+    local buffer = ""
+    if sendCmd ~= nil then
+        buffer = sendCmd:SerializeToString()
+    end
+
+    if err == nil then
+        err = ""
+    end
+    return luaCallGoNetWorkSendUdp(0, myServerId,msgId,subMsgId,buffer,err)       -- 返回结果 true 发送成功  false 发送失败
+end
 
 
 

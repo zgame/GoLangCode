@@ -33,6 +33,9 @@ function GoCallLuaStartGamesServers(serverId)
     --SetNewClockTimer("NewTimerByAfternoon4", 16)    -- lua 自己设定的固定时间定时器，  16:00
 
 
+    print("客户端开启")
+
+
     -- 开始连接服务器
     LoginServer.SendLogin(serverId)
 

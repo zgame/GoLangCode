@@ -8,18 +8,19 @@ import (
 	"fmt"
 )
 //---------------------------------------------------------------------------------------------------
-// Socket 的客户端代码， 用来做测试用的，服务器用不上
+// udp Socket 的客户端代码， 用来做测试用的，服务器用不上
 //---------------------------------------------------------------------------------------------------
 
-type TCPClient struct {
+type UDPClient struct {
 	sync.Mutex				// 互斥锁 ，作用就是用来防止多线程的map冲突,  conns 读写操作的时候用
 	Addr            string
+	UdpAddr            *net.UDPAddr
 	ConnNum         int
 	ConnectInterval time.Duration
 	PendingWriteNum int
 	AutoReconnect   bool
-	NewAgent        func(*TCPConn,int) Agent
-	conns           map[int]net.Conn
+	NewAgent        func(*UdpConn,int) Agent
+	conns           UdpConnSet
 	wg              sync.WaitGroup
 	closeFlag       bool
 
@@ -31,11 +32,11 @@ type TCPClient struct {
 	//msgParser    *MsgParser
 }
 
-func (client *TCPClient) Number() int{
+func (client *UDPClient) Number() int{
 	return len(client.conns)
 }
 
-func (client *TCPClient) Start(start int ,end int) {
+func (client *UDPClient) Start(start int ,end int) {
 	//fmt.Println("start")
 	client.init()
 
@@ -47,7 +48,7 @@ func (client *TCPClient) Start(start int ,end int) {
 	}
 }
 
-func (client *TCPClient) init() {
+func (client *UDPClient) init() {
 	//fmt.Println("init")
 	client.Lock()
 	defer client.Unlock()
@@ -71,7 +72,7 @@ func (client *TCPClient) init() {
 		fmt.Println("client is running")
 	}
 
-	client.conns = make(map[int]net.Conn)
+	client.conns = make(UdpConnSet)
 	client.closeFlag = false
 
 	// msg parser
@@ -81,9 +82,10 @@ func (client *TCPClient) init() {
 	//client.msgParser = msgParser
 }
 
-func (client *TCPClient) dial() net.Conn {
+func (client *UDPClient) dial() *net.UDPConn {
 	for {
-		conn, err := net.Dial("tcp", client.Addr)
+		client.UdpAddr,_ = net.ResolveUDPAddr("udp", client.Addr)
+		conn, err := net.DialUDP("udp", nil, client.UdpAddr)
 		if err == nil || client.closeFlag {
 			return conn
 		}
@@ -94,7 +96,7 @@ func (client *TCPClient) dial() net.Conn {
 	}
 }
 
-func (client *TCPClient) connect(index int) {
+func (client *UDPClient) connect(index int) {
 
 	fmt.Println("开始连接serverId...",index)
 	defer client.wg.Done()
@@ -111,17 +113,17 @@ reconnect:
 		conn.Close()
 		return
 	}
-	client.conns[index] = conn
+	//client.conns[conn] = struct{}{}
 	client.Unlock()
 
-	tcpConn := newTCPConn(conn, client.PendingWriteNum)
-	agent := client.NewAgent(tcpConn,index)
+	udpConn := newUDPConn(conn, client.PendingWriteNum, client.UdpAddr)
+	agent := client.NewAgent(udpConn,index)
 	agent.Run()
 
 	// cleanup
-	tcpConn.Close()
+	udpConn.Close()
 	client.Lock()
-	delete(client.conns, index)
+	//delete(client.conns, index)
 	client.Unlock()
 	agent.OnClose()
 
@@ -144,10 +146,10 @@ reconnect:
 //}
 
 
-func (client *TCPClient) Close() {
+func (client *UDPClient) Close() {
 	client.Lock()
 	client.closeFlag = true
-	for _,conn := range client.conns {
+	for conn := range client.conns {
 		conn.Close()
 	}
 	client.conns = nil

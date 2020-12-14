@@ -1,10 +1,9 @@
 package Lua
 
 import (
-	"TestGoLangByServerLua2/Utils/log"
-	mysql "TestGoLangByServerLua2/Utils/mysql"
-	"TestGoLangByServerLua2/Utils/zRedis"
-	"TestGoLangByServerLua2/Utils/ztimer"
+	"GoLuaServerV2.1Test/Utils/log"
+	mysql "GoLuaServerV2.1Test/Utils/mysql"
+	"GoLuaServerV2.1Test/Utils/ztimer"
 	"github.com/yuin/gopher-lua"
 	"time"
 	//mysql "github.com/tengattack/gluasql/mysql"
@@ -20,16 +19,17 @@ import (
 func (m *MyLua)InitResister() {
 	// Lua调用go函数声明
 	//m.L.SetGlobal("double", m.L.NewFunction(Double))
+	m.L.SetGlobal("luaCallGoNetWorkSendUdp", m.L.NewFunction(luaCallGoNetWorkSendUdp))                             //注册到lua 网络发送函数
 	m.L.SetGlobal("luaCallGoNetWorkSend", m.L.NewFunction(luaCallGoNetWorkSend))		//注册到lua 网络发送函数
 	m.L.SetGlobal("luaCallGoPrintLogger", m.L.NewFunction(luaCallGoPrintLogger))		//注册到lua 日志打印
 	m.L.SetGlobal("luaCallGoGetOsTimeMillisecond", m.L.NewFunction(luaCallGoGetOsTimeMillisecond))		//注册到lua 获取毫秒时间
 	m.L.SetGlobal("luaCallGoCreateNewTimer", m.L.NewFunction(luaCallGoCreateNewTimer))		//注册到lua 设置定时器
 	m.L.SetGlobal("luaCallGoCreateNewClockTimer", m.L.NewFunction(luaCallGoCreateNewClockTimer))		//注册到lua 设置定时器，固定时间
 	m.L.SetGlobal("luaCallGoResisterUID", m.L.NewFunction(luaCallGoResisterUID))		//注册到lua 将uid注册到列表中
-	m.L.SetGlobal("luaCallGoRedisSaveString", m.L.NewFunction(luaCallGoRedisSaveString))		//注册到lua redis save
-	m.L.SetGlobal("luaCallGoRedisGetString", m.L.NewFunction(luaCallGoRedisGetString))		//注册到lua redis load
-	m.L.SetGlobal("luaCallGoRedisDelKey", m.L.NewFunction(luaCallGoRedisDelKey))		//注册到lua redis del key
-	m.L.SetGlobal("luaCallGoAddNumberToRedis", m.L.NewFunction(luaCallGoAddNumberToRedis))		//注册到lua redis add number
+	//m.L.SetGlobal("luaCallGoRedisSaveString", m.L.NewFunction(luaCallGoRedisSaveString))		//注册到lua redis save
+	//m.L.SetGlobal("luaCallGoRedisGetString", m.L.NewFunction(luaCallGoRedisGetString))		//注册到lua redis load
+	//m.L.SetGlobal("luaCallGoRedisDelKey", m.L.NewFunction(luaCallGoRedisDelKey))		//注册到lua redis del key
+	//m.L.SetGlobal("luaCallGoAddNumberToRedis", m.L.NewFunction(luaCallGoAddNumberToRedis))		//注册到lua redis add number
 
 	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
 
@@ -75,12 +75,12 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	// 发送出去
 	if userId == 0 {
 		// 给玩家自己回复消息
-		result = GetMyServerByLSate(serverId).SendMsg(data, msg, mainCmd, subCmd)
-		//result = GetMyServerByLSate(serverId).WriteMsg(bufferEnd)
+		result = GetMyTcpServerByLSate(serverId).SendMsg(data, msg, mainCmd, subCmd)
+		//result = GetMyTcpServerByLSate(serverId).WriteMsg(bufferEnd)
 	} else {
 		// 给其他玩家发送消息
-		result = GetMyServerByUID(userId).SendMsg(data, msg, mainCmd, subCmd)
-		//result = GetMyServerByUID(userId).WriteMsg(bufferEnd)
+		result = GetMyTcpServerByUID(userId).SendMsg(data, msg, mainCmd, subCmd)
+		//result = GetMyTcpServerByUID(userId).WriteMsg(bufferEnd)
 	}
 	//}()
 
@@ -92,11 +92,11 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 
 // user id 要注册，方便以后查询
 func luaCallGoResisterUID(L * lua.LState) int  {
-	uid := L.ToNumber(1)                        // 玩家uid
-	serverId := L.ToNumber(2)                   //
-	server := GetMyServerByLSate(int(serverId)) // my server
-	luaUIDConnectMyServer[int(uid)] = server    // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
-	server.UserId = int(uid)                    // 保存uid
+	uid := L.ToNumber(1)                           // 玩家uid
+	serverId := L.ToNumber(2)                      //
+	server := GetMyTcpServerByLSate(int(serverId)) // my server
+	ConnectMyTcpServerByUID[int(uid)] = server     // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
+	server.UserId = int(uid)                       // 保存uid
 	return 0
 }
 
@@ -144,39 +144,19 @@ func luaCallGoGetOsTimeMillisecond(L *lua.LState) int {
 
 
 
-//--------------------------------Redis-------------------------------------
-// redis set value
-func  luaCallGoRedisSaveString(L * lua.LState) int  {
-	dir := L.ToString(1)
-	key := L.ToString(2)
-	value := L.ToString(3)
-	zRedis.SaveStringToRedis(dir , key ,value )
-	return 0
-}
-// redis get value
-func  luaCallGoRedisGetString(L * lua.LState) int  {
-	dir := L.ToString(1)
-	key := L.ToString(2)
+//--------------------------------udp-----------------------------------------
 
-	value := zRedis.GetStringFromRedis(dir , key  )
-	//fmt.Println("value",value)
-	L.Push(lua.LString(value))
-	return 1
-}
+// lua发送网络数据udp
+func luaCallGoNetWorkSendUdp(L *lua.LState) int {
+	//userId := L.ToInt(1)
+	serverId := L.ToInt(2)		// udp address
+	mainCmd := L.ToInt(3)
+	subCmd := L.ToInt(4)
+	data := L.ToString(5)
+	msg := L.ToString(6)
 
-// redis del key
-func  luaCallGoRedisDelKey(L * lua.LState) int  {
-	dir := L.ToString(1)
-	key := L.ToString(2)
-	zRedis.DelKeyToRedis(dir , key)
-	return 0
-}
-// redis add number
-func  luaCallGoAddNumberToRedis(L * lua.LState) int  {
-	dir := L.ToString(1)
-	key := L.ToString(2)
-	num := L.ToInt(3)
-	value := zRedis.AddNumberToRedis(dir , key, num)
-	L.Push(lua.LNumber(value))
-	return 1
+
+	GetMyUdpServerByLSate(serverId).SendMsg(data, msg, mainCmd, subCmd) // 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
+
+	return 0 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
 }

@@ -11,8 +11,10 @@ import (
 
 //var GameManagerReceiveCh chan lua.LValue		// 这是每个玩家线程跟主线程之间的通信用channel
 //var GameManagerSendCh chan lua.LValue			// 这是主线程给每个玩家线程跟之间的通信用channel
-var GameManagerLuaHandle *MyLua		// 主线程的lua句柄
-
+var GameManagerLuaHandle *MyLua                  // 主线程的lua句柄
+var ConnectMyTcpServer map[int]*MyTcpServer      // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
+var ConnectMyTcpServerByUid map[int]*MyTcpServer // 将uid跟连接句柄进行哈希
+var ConnectMyUdpServer map[int]*MyUdpServer      // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
 
 type MyLua struct {
 	L *lua.LState
@@ -26,28 +28,36 @@ func NewMyLua() *MyLua {
 
 // --------------------全局变量初始化--------------------------
 func InitGlobalVar() {
-	LuaConnectMyServer = make(map[int]*MyServer)
-	luaUIDConnectMyServer = make(map[int]*MyServer)
+	ConnectMyTcpServer = make(map[int]*MyTcpServer)
+	ConnectMyTcpServerByUid = make(map[int]*MyTcpServer)
+	ConnectMyUdpServer = make(map[int]*MyUdpServer)
 	//GameManagerReceiveCh = make(chan lua.LValue)// 这是每个玩家线程跟主线程之间的通信用channel
 	//GameManagerSendCh = make(chan lua.LValue)
 
 }
 
 // 通过lua堆栈找到对应的是哪个myServer
-func GetMyServerByServerId(serverId int) *MyServer {
+func GetMyServerByServerId(serverId int) *MyTcpServer {
 	GlobalVar.RWMutex.RLock()
-	re := LuaConnectMyServer[serverId] // 这是全局变量，所以要加锁， 读写都要加
+	re := ConnectMyTcpServer[serverId] // 这是全局变量，所以要加锁， 读写都要加
 	GlobalVar.RWMutex.RUnlock()
 	return re
 }
 // 通过 user id 找到对应的是哪个myServer
-func GetMyServerByUID(uid int) *MyServer {
+func GetMyServerByUID(uid int) *MyTcpServer {
 	GlobalVar.RWMutex.RLock()
-	re:= luaUIDConnectMyServer[uid]			// 这是全局变量，所以要加锁， 读写都要加
+	re:= ConnectMyTcpServerByUid[uid] // 这是全局变量，所以要加锁， 读写都要加
 	GlobalVar.RWMutex.RUnlock()
 	return re
 }
 
+// 通过lua堆栈找到对应的是哪个myServer
+func GetMyUdpServerByLSate(id int) *MyUdpServer {
+	GlobalVar.RWMutex.RLock()
+	re := ConnectMyUdpServer[id] // 这是全局变量，所以要加锁， 读写都要加
+	GlobalVar.RWMutex.RUnlock()
+	return re
+}
 
 //----------------------对象个体初始化-----------------------
 func (m *MyLua)Init()   {

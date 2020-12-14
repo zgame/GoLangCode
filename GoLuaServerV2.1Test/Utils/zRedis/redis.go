@@ -1,7 +1,7 @@
 package zRedis
 
 import (
-	"TestGoLangByServerLua2/Utils/log"
+	"GoLuaServerV2.1Test/Utils/log"
 	//"github.com/gomodule/redigo/redis"
 	"github.com/garyburd/redigo/redis"
 )
