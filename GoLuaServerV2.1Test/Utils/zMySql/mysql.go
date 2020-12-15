@@ -105,7 +105,7 @@ func test()  {
 
 	//	if err != nil {
 	//		fmt.Println("数据库查询出错！", err)
-	//		log.Fatal(err)
+	//		zLog.Fatal(err)
 	//		return
 	//	}
 	//}else{

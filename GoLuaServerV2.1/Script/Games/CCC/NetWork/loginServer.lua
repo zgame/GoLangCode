@@ -34,7 +34,11 @@ function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
 
 
     --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
-    NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
+    if type(serverId)=='number' then
+        NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
+    else
+        NetWork.SendUdp(serverId,CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
+    end
 
     --NetWork.SendToUser(UserId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, "message~!$", nil)
 

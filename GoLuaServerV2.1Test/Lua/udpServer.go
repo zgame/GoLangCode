@@ -3,7 +3,7 @@ package Lua
 import (
 	"GoLuaServerV2.1Test/GlobalVar"
 	"GoLuaServerV2.1Test/NetWork"
-	"GoLuaServerV2.1Test/Utils/log"
+	"GoLuaServerV2.1Test/Utils/zLog"
 	"fmt"
 	"math"
 	"time"
@@ -37,7 +37,7 @@ func NewMyUdpServer(conn NetWork.Conn, GameManagerLua *MyLua) *MyUdpServer {
 func (a *MyUdpServer) init()  {
 	GlobalVar.RWMutex.Lock()
 	if ConnectMyUdpServer[a.ServerId] != nil {
-		log.PrintfLogger("ConnectMyTcpServer  已经有了, map重复了", a.ServerId)
+		zLog.PrintfLogger("ConnectMyTcpServer  已经有了, map重复了", a.ServerId)
 	}
 	ConnectMyUdpServer[a.ServerId] = a
 	GlobalVar.RWMutex.Unlock()
@@ -48,12 +48,19 @@ func (a *MyUdpServer) Run() {
 	a.init()
 
 	for{
-		msgData,Len, err := a.Conn.ReadMsg()
+		msgData,_, err := a.Conn.ReadMsg()
 		if err!=nil {
 			fmt.Println(err.Error())
 			continue
 		}
-		fmt.Printf("接收消息： %s \n",string(msgData[:Len]))
+		//fmt.Printf("接收消息： %s \n",string(msgData[:Len]))
+		bufHeadTemp,msgId,subMsgId,finalBuffer := HandlerRead(msgData,-1) //处理结束之后返回，接下来要开始的范围
+		if bufHeadTemp>0 {
+			GameManagerLuaHandle.GoCallLuaNetWorkReceiveUdp( "",  msgId,subMsgId,finalBuffer)		// 把收到的数据传递给lua进行处理
+		}else {
+			zLog.PrintLogger("数据包格式不合法")
+		}
+
 		time.Sleep(time.Microsecond * 20)
 	}
 }

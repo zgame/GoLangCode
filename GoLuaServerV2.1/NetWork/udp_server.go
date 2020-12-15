@@ -68,8 +68,8 @@ func (server *UDPServer) run() {
 	data := make([]byte, 1024*1)
 	for {
 		// udp 是无连接状态的
-		n, remoteAddr, err := server.Listen.ReadFromUDP(data)
-		println("消息：",string(data[:n]))
+		_, remoteAddr, err := server.Listen.ReadFromUDP(data)
+		//println("消息：",string(data[:n]))
 		if err != nil {
 			if ne, ok := err.(net.Error); ok && ne.Temporary() {
 				if tempDelay == 0 {

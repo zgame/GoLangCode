@@ -130,6 +130,6 @@ function LoginServer.LoginGameServer(serverId, buf)
 
     print( msg)
 
-    luaCallGoResisterUID(uid,serverId)
+    --luaCallGoResisterUID(uid,serverId)
     print("--------登录成功---UID:",uid)
 end

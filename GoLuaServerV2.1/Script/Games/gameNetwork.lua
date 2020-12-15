@@ -28,7 +28,7 @@ function GameNetwork.ReceiveUdp(serverAddr,  mainSgId, subMsgId, data)
 
     if mainSgId == CMD_MAIN.MDM_GAME_CCC then
         -- 跳转到ccc处理
-        CCCNetWork.Receive(serverId, userId, mainSgId, subMsgId, data, token)
+        CCCNetWork.ReceiveUdp(serverAddr, mainSgId, subMsgId, data)
     end
 
 end

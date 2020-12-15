@@ -1,9 +1,9 @@
 package NetWork
 
 import (
-	"GoLuaServerV2.1Test/Utils/log"
-	//"GoLuaServerV2.1Test/Utils/log"
-	//"github.com/name5566/leaf/log"
+	"GoLuaServerV2.1Test/Utils/zLog"
+	//"GoLuaServerV2.1Test/Utils/zLog"
+	//"github.com/name5566/leaf/zLog"
 	"net"
 	"sync"
 )
@@ -37,7 +37,7 @@ func newTCPConn(conn net.Conn, pendingWriteNum int) *TCPConn {
 
 			_, err := conn.Write(b)
 			if err != nil {
-				log.PrintfLogger("tcpConn.writeChan   Error %s", err.Error())
+				zLog.PrintfLogger("tcpConn.writeChan   Error %s", err.Error())
 				break
 			}
 		}
@@ -82,15 +82,15 @@ func (tcpConn *TCPConn) Close() {
 
 func (tcpConn *TCPConn) doWrite(b []byte) {
 	//if len(tcpConn.writeChan) > cap(tcpConn.writeChan)/2 {
-	//	log.PrintfLogger("发送数据包的缓冲区大于1/2!!!")
+	//	zLog.PrintfLogger("发送数据包的缓冲区大于1/2!!!")
 	//	time.Sleep(time.Millisecond * 500)
 	//}
 	//if len(tcpConn.writeChan) > cap(tcpConn.writeChan)*2/3 {
-	//	log.PrintfLogger("发送数据包的缓冲区大于2/3!!!")
+	//	zLog.PrintfLogger("发送数据包的缓冲区大于2/3!!!")
 	//	time.Sleep(time.Millisecond * 2000)
 	//}
 	if len(tcpConn.writeChan) == cap(tcpConn.writeChan) {
-		log.PrintfLogger("发送数据包的缓冲区已经满了，关闭该连接!!!")
+		zLog.PrintfLogger("发送数据包的缓冲区已经满了，关闭该连接!!!")
 		tcpConn.doDestroy()
 		return
 	}
@@ -142,7 +142,7 @@ func (tcpConn *TCPConn) WriteMsg(args ...[]byte) error {
 	//return tcpConn.msgParser.Write(tcpConn, args...)
 	//_, err :=tcpConn.conn.Write(args[0])
 	//if err != nil {
-	//	//log.PrintfLogger("TCPConn .写入错误 %s", err.Error())
+	//	//zLog.PrintfLogger("TCPConn .写入错误 %s", err.Error())
 	//	return err
 	//}
 

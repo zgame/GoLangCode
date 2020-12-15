@@ -44,7 +44,7 @@ import (
 //	copy(bufferEnd[headSize:protoDataSize + headSize], protoData)	// copy protobuffer 数据
 //	copy(bufferEnd[protoDataSize + headSize:], msgData)		// copy msg 数据
 //	_, err := Conn.Write(bufferEnd)
-//	log.CheckError(err)
+//	zLog.CheckError(err)
 //
 //
 //	//fmt.Printf("send msg: %x", bufferEnd)

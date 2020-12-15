@@ -82,27 +82,30 @@ function GoCallLuaNetWorkReceive(serverId,userId, msgId, subMsgId, data)
     --Logger("lua收到了消息："..data)
     ReceiveMsg(serverId,userId,msgId,subMsgId,data)
 
-    --local now = GetOsTimeMillisecond()
-    --if now - ZswLogShowReceiveLastTime > 1000 then
-    --    ZswLogShowReceiveLastTime = now
-    --    print("1秒接收消息数量", ZswLogShowReceiveMsgNum)
-    --    -- 给服务器一分钟统计提供数据
-    --    if ServerStateReceiveNum == 0 then
-    --        ServerStateReceiveNum = ZswLogShowReceiveMsgNum   -- 赋值即可
-    --    else
-    --        ServerStateReceiveNum =  math.ceil(  (ServerStateReceiveNum+ZswLogShowReceiveMsgNum)/2)   -- 求一下平均值
-    --    end
-    --    ZswLogShowReceiveMsgNum = 0
-    --else
-    --    ZswLogShowReceiveMsgNum = ZswLogShowReceiveMsgNum + 1       -- 没到一秒就加数量
-    --end
---    LuaNetWorkSend(msgId,subMsgId,"lua想发送消息", "")
+end
+-- 网络接收函数
+function GoCallLuaNetWorkReceive(serverId, msgId, subMsgId, data)
+    --Logger("lua收到了消息："..msgId)
+    --Logger("lua收到了消息："..subMsgId)
+    --Logger("lua收到了消息："..data)
+    ReceiveMsgUdp(serverId,msgId,subMsgId,data)
+
 end
 
 
 -- 根据命令进行分支处理
 function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
     print("msgId",msgId, "subMsgId",subMsgId)
+
+    if msgId == CMD_MAIN.MDM_GAME_CCC  then
+        if subMsgId == CMD_CCC.SUB_LOGON  then
+            LoginServer.LoginGameServer(serverId,data)
+        end
+    end
+end
+-- 根据命令进行分支处理
+function ReceiveMsgUdp(serverId, msgId, subMsgId, data)
+    print("msgId",msgId, "subMsgId",subMsgId , "server:",serverId)
 
     if msgId == CMD_MAIN.MDM_GAME_CCC  then
         if subMsgId == CMD_CCC.SUB_LOGON  then

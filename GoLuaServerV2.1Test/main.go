@@ -5,7 +5,7 @@ import (
 	"GoLuaServerV2.1Test/GlobalVar"
 	"GoLuaServerV2.1Test/Lua"
 	"GoLuaServerV2.1Test/NetWork"
-	"GoLuaServerV2.1Test/Utils/log"
+	"GoLuaServerV2.1Test/Utils/zLog"
 	"flag"
 	//"util/logs"
 	//"github.com/astaxie/beego/logs"
@@ -95,7 +95,7 @@ func main() {
 	UdpPort = * uPort
 	ClientStart = * start
 	ClientEnd = *end
-	log.ServerPort = SocketPort
+	zLog.ServerPort = SocketPort
 
 	if WebSocketPort == 0 || SocketPort == 0 ||  UdpPort ==0 || ClientStart == 0 || ClientEnd == 0 {
 
@@ -285,8 +285,8 @@ func GetStaticPrint()  {
 	//	WriteChan = WriteChan/AllConnect		// 求一个平均值
 	//}
 	GlobalVar.RWMutex.Unlock()
-	log.PrintfLogger("连接数量 %d  发送活跃连接 %d 接收活跃 %d 每秒发送 %d  每秒接收 %d   WriteChan数量 %d  %s ",  AllConnect,  successSendClients, successRecClients, successSendMsg , successRecMsg,  WriteChan, GetSysMemInfo())
-	//log.PrintfLogger("内存情况：%s", GetSysMemInfo())
+	zLog.PrintfLogger("连接数量 %d  发送活跃连接 %d 接收活跃 %d 每秒发送 %d  每秒接收 %d   WriteChan数量 %d  %s ",  AllConnect,  successSendClients, successRecClients, successSendMsg , successRecMsg,  WriteChan, GetSysMemInfo())
+	//zLog.PrintfLogger("内存情况：%s", GetSysMemInfo())
 
 }
 

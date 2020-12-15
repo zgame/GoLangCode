@@ -1,7 +1,7 @@
 package zRedis
 
 import (
-	"GoLuaServerV2.1Test/Utils/log"
+	"GoLuaServerV2.1Test/Utils/zLog"
 	//"github.com/gomodule/redigo/redis"
 	"github.com/garyburd/redigo/redis"
 )
@@ -12,13 +12,13 @@ var RRedis redis.Conn
 func InitRedis(address string, pwd string) bool{
 	re, err := redis.Dial("tcp", address)
 	if err != nil {
-		log.PrintLogger("Redis 服务器连接不上"+ address + err.Error())
+		zLog.PrintLogger("Redis 服务器连接不上"+ address + err.Error())
 		return false
 	}
 	// 密码验证
 	if _, err := re.Do("AUTH", pwd); err != nil {
 		re.Close()
-		log.PrintLogger("Redis 服务器密码不正确")
+		zLog.PrintLogger("Redis 服务器密码不正确")
 		return false
 	}
 	RRedis = re
@@ -37,7 +37,7 @@ func SaveStringToRedis(dir string, key string,value string)  {
 	//fmt.Println("保存",dir, key,value)
 	_, err := RRedis.Do("hset", dir, key,value)
 	if err !=nil {
-		log.PrintLogger("redis 保存的时候出错了:"+err.Error())
+		zLog.PrintLogger("redis 保存的时候出错了:"+err.Error())
 	}
 	//if ret == '1'{
 	//	fmt.Println("save success", ret)
@@ -59,14 +59,14 @@ func GetStringFromRedis(dir string,key string) string {
 	//fmt.Println(reflect.TypeOf(ret))
 
 	if err !=nil {
-		log.PrintLogger("redis 读取出错了:"+err.Error())
+		zLog.PrintLogger("redis 读取出错了:"+err.Error())
 	}
 	//fmt.Println(ret.(string))
 	//var player Player.Player
 	if ret!= nil {
 		//fmt.Println("收到",string(ret.([]byte)))
 		//if err := json.Unmarshal(ret.([]byte), &player); err != nil {
-		//	log.Fatalf("JSON unmarshaling failed: %s", err)
+		//	zLog.Fatalf("JSON unmarshaling failed: %s", err)
 		//}
 		return string(ret.([]byte))
 	}else{
@@ -81,7 +81,7 @@ func GetStringFromRedis(dir string,key string) string {
 func DelKeyToRedis(dir string,key string){
 	_, err :=  RRedis.Do("hdel",dir, key)
 	if err !=nil {
-		log.PrintfLogger("redis 删除key %s 出错了:"+err.Error(), key)
+		zLog.PrintfLogger("redis 删除key %s 出错了:"+err.Error(), key)
 	}
 }
 
@@ -102,7 +102,7 @@ var AddScript = redis.NewScript(2,`
 func AddNumberToRedis(dir string,key string, num int) int{
 	v, err := AddScript.Do(RRedis, dir,key, num)
 	if err != nil {
-		log.PrintLogger("AddNumberToRedis Error: " + err.Error())
+		zLog.PrintLogger("AddNumberToRedis Error: " + err.Error())
 		return 0
 	}
 	//fmt.Println("AddNumberToRedis",v , reflect.TypeOf(v))

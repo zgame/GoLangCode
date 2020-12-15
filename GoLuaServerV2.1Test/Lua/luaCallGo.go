@@ -1,7 +1,7 @@
 package Lua
 
 import (
-	"GoLuaServerV2.1Test/Utils/log"
+	"GoLuaServerV2.1Test/Utils/zLog"
 	mysql "GoLuaServerV2.1Test/Utils/mysql"
 	"GoLuaServerV2.1Test/Utils/ztimer"
 	"github.com/yuin/gopher-lua"
@@ -68,7 +68,7 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	//go func() {
 	//bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
 	//_, err := Conn.Write(bufferEnd)
-	//log.CheckError(err)
+	//zLog.CheckError(err)
 
 
 	var result bool
@@ -107,7 +107,7 @@ func luaCallGoResisterUID(L * lua.LState) int  {
 // lua的日志处理
 func luaCallGoPrintLogger(L * lua.LState) int  {
 	str := L.ToString(1)
-	log.PrintLogger(str)
+	zLog.PrintLogger(str)
 	return 0
 }
 

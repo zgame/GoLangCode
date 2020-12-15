@@ -384,24 +384,6 @@ func TimerCommonLogicStart() {
 }
 
 
-////----------------------------------------------------房间逻辑部分-------------------------------------------------------------------
-//
-//// 检查通用逻辑部分的lua是否需要更新
-//func GoroutineTableLuaReloadCheck() {
-//	for i:=1;i<= GoroutineMax;i++ {
-//		if GoroutineTableLuaLuaReloadTime[i] == GlobalVar.LuaReloadTime {
-//			return
-//		}
-//		// 如果跟本地的lua时间戳不一致，就更新
-//		err = GoroutineTableLua[i].GoCallLuaReload()
-//		if err == nil {
-//			// 热更新成功
-//			GoroutineTableLuaLuaReloadTime[i] = GlobalVar.LuaReloadTime
-//		}
-//	}
-//}
-
-
 
 // 这是用来统计所有连接数量，及连接包不全的缓存大小
 func GetAllConnectMsg() (string,int,int,int)  {
