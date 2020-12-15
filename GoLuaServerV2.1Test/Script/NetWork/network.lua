@@ -84,7 +84,7 @@ function GoCallLuaNetWorkReceive(serverId,userId, msgId, subMsgId, data)
 
 end
 -- 网络接收函数
-function GoCallLuaNetWorkReceive(serverId, msgId, subMsgId, data)
+function GoCallLuaNetWorkUdpReceive(serverId, msgId, subMsgId, data)
     --Logger("lua收到了消息："..msgId)
     --Logger("lua收到了消息："..subMsgId)
     --Logger("lua收到了消息："..data)

@@ -128,7 +128,7 @@ function LoginServer.LoginGameServer(serverId, buf)
     msg:ParseFromString(buf)
     local uid = msg.user_right
 
-    print( msg)
+    --print( msg)
 
     --luaCallGoResisterUID(uid,serverId)
     print("--------登录成功---UID:",uid)

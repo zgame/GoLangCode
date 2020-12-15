@@ -30,7 +30,7 @@ function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
 
     sendCmd.room_id = 99099
 
-    print(sendCmd)
+    --print(sendCmd)
 
 
     --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
