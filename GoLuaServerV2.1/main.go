@@ -287,8 +287,8 @@ func NetWorkServerStart()  {
 		udpServer.LenMsgLen = 4
 		udpServer.MaxMsgLen = math.MaxUint32
 		udpServer.NewAgent = func(conn *NetWork.UdpConn) NetWork.Agent {
-			ServerId := Lua.GetServerUid()
-			a := Lua.NewMyUdpServer(conn,ServerId)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+			//ServerId := Lua.GetServerUid()
+			a := Lua.NewMyUdpServer(conn,0)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
 			return a
 		}
 		udpServer.Start()
@@ -413,8 +413,9 @@ func GetAllConnectMsg() (string,int,int,int)  {
 	WriteChan := 0
 	AllConnect :=0
 
-	GlobalVar.RWMutex.RLock()
-	for _,v := range Lua.ConnectMyTcpServer {
+	//GlobalVar.RWMutex.RLock()
+	Lua.ConnectMyTcpServer.Range(func(key, value interface{}) bool {
+		v:= value.(*Lua.MyTcpServer)
 		if v!=nil {
 			AllConnect ++
 			connNum += len(v.ReceiveBuf)
@@ -430,11 +431,12 @@ func GetAllConnectMsg() (string,int,int,int)  {
 			}
 			WriteChan += v.Conn.GetWriteChanCap()
 		}
-	}
+		return true
+	})
 	//if AllConnect>0{
 	//	WriteChan = WriteChan/AllConnect
 	//}
-	GlobalVar.RWMutex.RUnlock()
+	//GlobalVar.RWMutex.RUnlock()
 	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerSendWriteChannelNum", WriteChan)		// 发送缓冲区大小
 	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError)  // 把数据头尾错误发送给lua
 	str:=fmt.Sprintf(" 发送连接数量 %d  接收连接数量  %d 每秒发送 %d  每秒接收 %d    发送缓存WriteChan %d  消息队列长度 %d ",   successSendClients, successRecClients, successSendMsg , successRecMsg, WriteChan, Lua.QueueGetLen())

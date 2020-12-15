@@ -16,7 +16,7 @@ end
 ----------------------------------------------------------------------
 ---发送消息
 ----------------------------------------------------------------------
----- 玩家自己的网络发送函数
+-- 玩家自己的网络发送函数
 function NetWork.Send(myServerId, msgId, subMsgId, sendCmd, err)
     --return LuaNetWorkSendToUser(0,serverId,msgId,subMsgId,sendCmd,err)      -- userId 如果是0的话， 就是给玩家自己回消息 ，这是在go那边定义的
     local buffer = ""
@@ -66,6 +66,20 @@ function NetWork.SendToUser(userId, msgId, subMsgId, sendCmd, err, token)
 
     return luaCallGoNetWorkSend(userId, 0, msgId, subMsgId, buffer, err, token)       -- 返回结果 true 发送成功  false 发送失败
 end
+
+
+-- 玩家自己的网络发送函数 udp  clientAddress 是玩家的地址，这个地址需要客户端先注册到服务器才有
+function NetWork.SendUdp(clientAddress, msgId, subMsgId, sendCmd, err)
+    local buffer = ""
+    if sendCmd ~= nil then
+        buffer = sendCmd:SerializeToString()
+    end
+    if err == nil then
+        err = ""
+    end
+    return luaCallGoNetWorkSendUdp(0, clientAddress, msgId, subMsgId, buffer, err)       -- 返回结果 true 发送成功  false 发送失败
+end
+
 
 
 --连接到其他内部服务器， 返回值是serverId要保存好

@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 //---------------------------------------------------------------------------------------------------
-// udp Socket 的客户端代码， 用来做测试用的，服务器用不上
+// Socket udp 的客户端代码， 用来做测试用的，服务器用不上
 //---------------------------------------------------------------------------------------------------
 
 type UDPClient struct {
@@ -116,7 +116,7 @@ reconnect:
 	//client.conns[conn] = struct{}{}
 	client.Unlock()
 
-	udpConn := newUDPConn(conn, client.UdpAddr)
+	udpConn := newUDPConn(conn, client.UdpAddr,nil)
 	agent := client.NewAgent(udpConn,index)
 	agent.Run()
 

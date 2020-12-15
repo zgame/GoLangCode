@@ -1,7 +1,6 @@
 package Lua
 
 import (
-	"GoLuaServerV2.1/GlobalVar"
 	"GoLuaServerV2.1/Utils/mongoDB"
 	"GoLuaServerV2.1/Utils/mySql"
 	"GoLuaServerV2.1/Utils/redis"
@@ -110,9 +109,10 @@ func luaCallGoResisterUID(L *lua.LState) int {
 	serverId := L.ToNumber(2)                      //
 	server := GetMyServerByServerId(int(serverId)) // my server
 
-	GlobalVar.RWMutex.Lock()
-	ConnectMyTcpServerByUid[int(uid)] = server // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
-	GlobalVar.RWMutex.Unlock()
+	//GlobalVar.RWMutex.Lock()
+	//ConnectMyTcpServerByUid[int(uid)] = server // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
+	//GlobalVar.RWMutex.Unlock()
+	ConnectMyTcpServerByUid.Store(int(uid),server)
 
 	server.UserId = int(uid) // 保存uid
 	return 0
@@ -225,14 +225,14 @@ func luaCallGoGetPWD(L *lua.LState) int {
 // lua发送网络数据udp
 func luaCallGoNetWorkSendUdp(L *lua.LState) int {
 	//userId := L.ToInt(1)
-	serverId := L.ToInt(2)		// udp address
+	serverAddr := L.ToString(2)		// udp address
 	mainCmd := L.ToInt(3)
 	subCmd := L.ToInt(4)
 	data := L.ToString(5)
 	msg := L.ToString(6)
 
 
-	GetMyUdpServerByLSate(serverId).SendMsg(data, msg, mainCmd, subCmd) // 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
+	GetMyUdpServerByLSate(serverAddr).SendMsg(data, msg, mainCmd, subCmd) // 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
 
 	return 0 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
 }

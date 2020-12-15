@@ -1,6 +1,7 @@
 package NetWork
 
 import (
+	"bytes"
 	//"GoLuaServerV2.1Test/Utils/log"
 	//"github.com/name5566/leaf/zLog"
 	"net"
@@ -18,16 +19,17 @@ type UdpConnSet map[*net.UDPConn]struct{}
 type UdpConn struct {
 	sync.Mutex				// 互斥锁 ， 关闭的时候，写入的时候用
 	conn      *net.UDPConn
-	//writeChan chan []byte
+	write	 bytes.Buffer
 	//closeFlag bool
 	UDPAddr *net.UDPAddr
 	//msgParser *MsgParser
 }
 
-func newUDPConn(conn *net.UDPConn, pUDPAddr *net.UDPAddr) *UdpConn {
+func newUDPConn(conn *net.UDPConn, pUDPAddr *net.UDPAddr, data []byte) *UdpConn {
 	udpConn := new(UdpConn)
 	udpConn.conn = conn
 	udpConn.UDPAddr = pUDPAddr
+	udpConn.write.Write(data)
 	//udpConn.writeChan = make(chan []byte, pendingWriteNum)
 
 	//udpConn.msgParser = nil

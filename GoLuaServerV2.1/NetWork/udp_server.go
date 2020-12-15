@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 //---------------------------------------------------------------------------------------------------
-// Socket 服务器
+// Socket udp 服务器
 //---------------------------------------------------------------------------------------------------
 
 type UDPServer struct {
@@ -18,10 +18,11 @@ type UDPServer struct {
 	PendingWriteNum int
 	NewAgent        func(*UdpConn) Agent
 	ln              *net.UDPConn
-	conns           UdpConnSet
-	mutexConns      sync.Mutex		// 互斥锁， 用在保持多线程对map的操作安全上
+	//conns           UdpConnSet
+	//mutexConns      sync.Mutex		// 互斥锁， 用在保持多线程对map的操作安全上
 	wgLn            sync.WaitGroup
 	wgConns         sync.WaitGroup
+	//AddrMap			sync.Map
 
 	// msg parser
 	LenMsgLen    int
@@ -32,7 +33,7 @@ type UDPServer struct {
 }
 
 func (server *UDPServer) Start() {
-	fmt.Println("开始socket服务器")
+	fmt.Println("开始socket Udp 服务器")
 	server.init()
 	go server.run()
 }
@@ -57,7 +58,7 @@ func (server *UDPServer) init() {
 	}
 
 	server.ln = ln
-	server.conns = make(UdpConnSet)
+	//server.conns = make(UdpConnSet)
 
 	// msg parser
 	//msgParser := NewMsgParser()
@@ -94,13 +95,20 @@ func (server *UDPServer) run() {
 		}
 		tempDelay = 0
 
-		server.mutexConns.Lock()
-		//server.conns[remoteAddr] = struct{}{}
-		server.mutexConns.Unlock()
+		//server.mutexConns.Lock()
+		////server.conns[remoteAddr] = struct{}{}
+		//server.mutexConns.Unlock()
 
 		server.wgConns.Add(1)
 
-		udpConn := newUDPConn(server.ln ,remoteAddr)  			// 传递数据给lua
+		//if v,ok := server.AddrMap.Load(remoteAddr.String());ok{
+		//	// 有记录
+		//}else{
+		//	// 没有记录
+		//}
+
+
+		udpConn := newUDPConn(server.ln ,remoteAddr, data)  			// 传递数据给lua
 		agent := server.NewAgent(udpConn)
 		go func() {
 			agent.Run()
@@ -122,11 +130,11 @@ func (server *UDPServer) Close() {
 	server.ln.Close()
 	server.wgLn.Wait()
 
-	server.mutexConns.Lock()
-	for conn := range server.conns {
-		conn.Close()
-	}
-	server.conns = nil
-	server.mutexConns.Unlock()
+	//server.mutexConns.Lock()
+	//for conn := range server.conns {
+	//	conn.Close()
+	//}
+	//server.conns = nil
+	//server.mutexConns.Unlock()
 	server.wgConns.Wait()
 }

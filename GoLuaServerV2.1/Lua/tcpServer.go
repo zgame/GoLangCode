@@ -297,8 +297,9 @@ func (a *MyTcpServer) OnClose() {
 
 	// 清理掉一些调用关系
 	GlobalVar.RWMutex.Lock()
-	delete(ConnectMyTcpServer, a.ServerId)
-	delete(ConnectMyTcpServerByUid, a.UserId)
+	ConnectMyTcpServer.Delete(a.ServerId)
+	//delete(ConnectMyTcpServerByUid, a.UserId)
+	ConnectMyTcpServerByUid.Delete(a.UserId)
 	GlobalVar.RWMutex.Unlock()
 }
 
@@ -391,12 +392,12 @@ func (a *MyTcpServer) Init() {
 	//a.myLua.Init() // 绑定lua脚本
 	//a.luaReloadTime = GlobalVar.LuaReloadTime
 
-	GlobalVar.RWMutex.Lock()
-	if ConnectMyTcpServer[a.ServerId] != nil {
+	//GlobalVar.RWMutex.Lock()
+	if _,ok:=ConnectMyTcpServer.Load(a.ServerId) ;ok {
 		zLog.PrintfLogger("ConnectMyTcpServer  已经有了, map重复了", a.ServerId,  a.UserId)
 	}
-	ConnectMyTcpServer[a.ServerId] = a
-	GlobalVar.RWMutex.Unlock()
+	ConnectMyTcpServer.Store(a.ServerId,a)
+	//GlobalVar.RWMutex.Unlock()
 
 	a.myLua.GoCallLuaNetWorkInit(a.ServerId)
 	// 以后这里可以初始化玩家自己solo的游戏服务器
