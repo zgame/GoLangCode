@@ -72,7 +72,7 @@ func (client *UDPClient) init() {
 		fmt.Println("client is running")
 	}
 
-	client.conns = make(UdpConnSet)
+	//client.conns = make(UdpConnSet)
 	client.closeFlag = false
 
 	// msg parser
@@ -113,7 +113,7 @@ reconnect:
 		conn.Close()
 		return
 	}
-	//client.conns[conn] = struct{}{}
+	//client.conns[Conn] = struct{}{}
 	client.Unlock()
 
 	udpConn := newUDPConn(conn, client.UdpAddr,nil)
@@ -138,8 +138,8 @@ reconnect:
 //	//	client.conns[index].Close()
 //	//}
 //
-//	conn := client.dial()
-//	if conn == nil {
+//	Conn := client.dial()
+//	if Conn == nil {
 //		return
 //	}
 //

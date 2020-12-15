@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 //---------------------------------------------------------------------------------------------------
-// udp Socket 的客户端代码， 用来做测试用的，服务器用不上
+// Socket udp 的客户端代码， 用来做测试用的，服务器用不上
 //---------------------------------------------------------------------------------------------------
 
 type UDPClient struct {
@@ -72,7 +72,7 @@ func (client *UDPClient) init() {
 		fmt.Println("client is running")
 	}
 
-	client.conns = make(UdpConnSet)
+	//client.conns = make(UdpConnSet)
 	client.closeFlag = false
 
 	// msg parser
@@ -113,10 +113,10 @@ reconnect:
 		conn.Close()
 		return
 	}
-	//client.conns[conn] = struct{}{}
+	//client.conns[Conn] = struct{}{}
 	client.Unlock()
 
-	udpConn := newUDPConn(conn, client.PendingWriteNum, client.UdpAddr)
+	udpConn := newUDPConn(conn, client.UdpAddr,nil)
 	agent := client.NewAgent(udpConn,index)
 	agent.Run()
 
@@ -138,8 +138,8 @@ reconnect:
 //	//	client.conns[index].Close()
 //	//}
 //
-//	conn := client.dial()
-//	if conn == nil {
+//	Conn := client.dial()
+//	if Conn == nil {
 //		return
 //	}
 //

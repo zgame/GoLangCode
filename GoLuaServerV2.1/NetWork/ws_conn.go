@@ -39,7 +39,7 @@ func newWSConn(conn *websocket.Conn, pendingWriteNum int, maxMsgLen uint32) *WSC
 
 			err := conn.WriteMessage(websocket.BinaryMessage, b)
 			if err != nil {
-				zLog.PrintfLogger("conn.WriteMessage  Error  发送数据出错 %s", err.Error())
+				zLog.PrintfLogger("Conn.WriteMessage  Error  发送数据出错 %s", err.Error())
 				break
 			}
 		}
@@ -146,7 +146,7 @@ func (wsConn *WSConn) WriteMsg(args ...[]byte) error {
 	//}
 	//
 	wsConn.doWrite(args[0])
-	//err:=wsConn.conn.WriteMessage(websocket.BinaryMessage, args[0])
+	//err:=wsConn.Conn.WriteMessage(websocket.BinaryMessage, args[0])
 
 	return nil
 }

@@ -57,6 +57,11 @@ function CenterServer.Receive(serverId, userId, msgId, subMsgId, data, token)
     end
 end
 
+-- 接受网络消息
+function CenterServer.ReceiveUdp(serverAddr, msgId, subMsgId, data)
+    print("接收udp数据包")
+end
+
 -- 链接我的连接中断
 function CenterServer.Broken(uid, serverId)
 

@@ -31,6 +31,21 @@ end
 
 
 ----------------------------------------------------------------------
+---接收消息
+----------------------------------------------------------------------
+-- 网络接收函数
+function GoCallLuaNetWorkUdpReceive(serverAddr,  msgId, subMsgId, data)
+
+    local switch={}
+    switch["Game"] = GameNetwork.ReceiveUdp                     -- 游戏服
+    switch["Center"] = CenterServer.ReceiveUdp                 -- 主中心服
+    -- 运行对应server type的函数
+    switch[GlobalVar.ServerTypeName](serverAddr, msgId, subMsgId, data)
+
+end
+
+
+----------------------------------------------------------------------
 --- 网络中断
 ----------------------------------------------------------------------
 function GoCallLuaPlayerNetworkBroken(uid, serverId)

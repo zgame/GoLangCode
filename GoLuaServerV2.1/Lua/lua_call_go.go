@@ -232,7 +232,8 @@ func luaCallGoNetWorkSendUdp(L *lua.LState) int {
 	msg := L.ToString(6)
 
 
-	GetMyUdpServerByLSate(serverAddr).SendMsg(data, msg, mainCmd, subCmd) // 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
+	//GetMyUdpServerByLSate(serverAddr).SendMsg(data, msg, mainCmd, subCmd) // 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
+	UdpSendMsg(serverAddr, data, msg, mainCmd, subCmd) // 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
 
 	return 0 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回
 }

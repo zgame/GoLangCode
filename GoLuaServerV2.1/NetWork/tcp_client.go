@@ -136,8 +136,8 @@ reconnect:
 //	//	client.conns[index].Close()
 //	//}
 //
-//	conn := client.dial()
-//	if conn == nil {
+//	Conn := client.dial()
+//	if Conn == nil {
 //		return
 //	}
 //

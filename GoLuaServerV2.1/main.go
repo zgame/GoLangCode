@@ -287,11 +287,11 @@ func NetWorkServerStart()  {
 		udpServer.LenMsgLen = 4
 		udpServer.MaxMsgLen = math.MaxUint32
 		udpServer.NewAgent = func(conn *NetWork.UdpConn) NetWork.Agent {
-			//ServerId := Lua.GetServerUid()
-			a := Lua.NewMyUdpServer(conn,0)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+			a := Lua.NewMyUdpServer(conn)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
 			return a
 		}
 		udpServer.Start()
+		Lua.MyUdpListen = udpServer.Listen
 	}
 }
 

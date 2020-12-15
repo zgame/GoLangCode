@@ -40,7 +40,7 @@ type WSHandler struct {
 	wg              sync.WaitGroup
 }
 
-// webSocket server conn 每当有新用户连接， 就会调用一次该函数
+// webSocket server Conn 每当有新用户连接， 就会调用一次该函数
 func (handler *WSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	//fmt.Println("new  ServeHTTP")

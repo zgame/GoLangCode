@@ -17,9 +17,9 @@ import (
 type UdpConnSet map[*net.UDPConn]struct{}
 
 type UdpConn struct {
-	sync.Mutex				// 互斥锁 ， 关闭的时候，写入的时候用
-	conn      *net.UDPConn
-	write	 bytes.Buffer
+	sync.Mutex  				// 互斥锁 ， 关闭的时候，写入的时候用
+	Conn       *net.UDPConn
+	Buffer     bytes.Buffer
 	//closeFlag bool
 	UDPAddr *net.UDPAddr
 	//msgParser *MsgParser
@@ -27,39 +27,16 @@ type UdpConn struct {
 
 func newUDPConn(conn *net.UDPConn, pUDPAddr *net.UDPAddr, data []byte) *UdpConn {
 	udpConn := new(UdpConn)
-	udpConn.conn = conn
+	udpConn.Conn = conn
 	udpConn.UDPAddr = pUDPAddr
-	udpConn.write.Write(data)
-	//udpConn.writeChan = make(chan []byte, pendingWriteNum)
-
-	//udpConn.msgParser = nil
-
-	//go func() {
-	//	for b := range udpConn.writeChan {
-	//		if b == nil {
-	//			//fmt.Println("udpConn.writeChan is null              Quit!")
-	//			break
-	//		}
-	//
-	//		_, err := conn.WriteToUDP(b,pUDPAddr)
-	//		if err != nil {
-	//			log.PrintfLogger("udpConn.writeChan Error 发送数据出错 %s", err.Error())
-	//			break
-	//		}
-	//	}
-	//
-	//	conn.Close()
-	//	udpConn.Lock()
-	//	udpConn.closeFlag = true
-	//	udpConn.Unlock()
-	//}()
+	udpConn.Buffer.Write(data)
 
 	return udpConn
 }
 
 func (udpConn *UdpConn) doDestroy() {
-	//udpConn.conn.(*net.TCPConn).SetLinger(0)
-	udpConn.conn.Close()
+	//udpConn.Conn.(*net.TCPConn).SetLinger(0)
+	udpConn.Conn.Close()
 
 	//if !udpConn.closeFlag {
 	//	close(udpConn.writeChan)
@@ -77,64 +54,29 @@ func (udpConn *UdpConn) Destroy() {
 func (udpConn *UdpConn) Close() {
 	udpConn.Lock()
 	defer udpConn.Unlock()
-	//if udpConn.closeFlag {
-	//	return
-	//}
-	//
-	////udpConn.doWrite(nil)
-	//udpConn.closeFlag = true
-	//udpConn.doDestroy()
+
 }
 
-//func (udpConn *UdpConn) doWrite(b []byte) {
-//	//if len(udpConn.writeChan) > cap(udpConn.writeChan)/2 {
-//	//	zLog.PrintfLogger("发送数据包的缓冲区大于1/2!!!")
-//	//	time.Sleep(time.Millisecond * 500)
-//	//}
-//	//if len(udpConn.writeChan) > cap(udpConn.writeChan)*2/3 {
-//	//	zLog.PrintfLogger("发送数据包的缓冲区大于2/3!!!")
-//	//	time.Sleep(time.Millisecond * 2000)
-//	//}
-//	if len(udpConn.writeChan) == cap(udpConn.writeChan) {
-//		log.PrintfLogger("发送数据包的缓冲区已经满了，关闭该连接!!!")
-//		udpConn.doDestroy()
-//		return
-//	}
-//
-//	udpConn.writeChan <- b
-//}
-
-// b must not be modified by the others goroutines
-//func (udpConn *UdpConn) Write(b []byte) {
-//	udpConn.Lock()
-//	defer udpConn.Unlock()
-//	if udpConn.closeFlag || b == nil {
-//		return
-//	}
-//
-//	udpConn.doWrite(b)
-//}
-
 func (udpConn *UdpConn) Read(b []byte) (int, error) {
-	return udpConn.conn.Read(b)
+	return udpConn.Conn.Read(b)
 }
 
 func (udpConn *UdpConn) LocalAddr() net.Addr {
-	return udpConn.conn.LocalAddr()
+	return udpConn.Conn.LocalAddr()
 }
 
 func (udpConn *UdpConn) RemoteAddr() net.Addr {
-	return udpConn.conn.RemoteAddr()
+	return udpConn.Conn.RemoteAddr()
 }
 
 func (udpConn *UdpConn) ReadMsg() ([]byte, int, error) {
 
 	msgData := make([]byte, 1024*1)
-	//if _, err := io.ReadFull(udpConn.conn, msgData); err != nil {
+	//if _, err := io.ReadFull(udpConn.Conn, msgData); err != nil {
 	//	return nil,0, err
 	//}
 	//Len:= len(msgData)
-	Len,_,err := udpConn.conn.ReadFromUDP(msgData)
+	Len,_,err := udpConn.Conn.ReadFromUDP(msgData)
 	if err != nil {
 		return nil,0, err
 	}
@@ -145,7 +87,7 @@ func (udpConn *UdpConn) ReadMsg() ([]byte, int, error) {
 
 func (udpConn *UdpConn) WriteMsg(args ...[]byte) error {
 
-	_,_,err :=  udpConn.conn.WriteMsgUDP(args[0],nil, nil)
+	_,_,err :=  udpConn.Conn.WriteMsgUDP(args[0],nil, nil)
 	if err!=nil{
 		println(err.Error())
 		return nil
