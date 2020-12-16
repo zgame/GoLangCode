@@ -113,50 +113,6 @@ func main() {
 	fmt.Println("max conn start :", ClientStart, "--------", ClientEnd)
 	StartClient()
 
-	//
-	//w := sync.WaitGroup{}
-	//for i := ClientStart; i < ClientEnd; i++ {
-	//	w.Add(1)
-	//	//GlobalMutex.Lock()
-	//	go func(i int) {
-	//		defer w.Done()
-	//
-	//		//fmt.Println("connection:", i)
-	//		//conn, e := net.DialTCP("tcp", nil, tcpAddr)
-	//		//if e != nil {
-	//		//	fmt.Println(i, e)
-	//		//	return
-	//		//}
-	//		//defer conn.Close()
-	//
-	//
-	//		tcpClients := &Client{nil, i, nil,nil , nil, 0, false, time.Now(), time.Now(),  time.Now(),0 ,0,0,0,false,nil}
-	//		tcpClients.Gameinfo = tcpClients.Gameinfo.New()
-	//		if i==ClientStart{
-	//			tcpClients.ShowMsgSendTime = true	// 第一个才显示
-	//		}
-	//
-	//		//fmt.Println("发送登录请求",i)
-	//		//tcpClients.LoginSend()		//开始登录请求
-	//		tcpClients.ConnectGameServer("")  // 直接登录游戏服务器
-	//		//fmt.Println("发送登录完成")
-	//		startClient(tcpClients)
-	//
-	//	}(i)
-	//	//GlobalMutex.Unlock()
-	//	time.Sleep(time.Millisecond * 50)
-	//}
-	//
-	//w.Wait()
-	//for{
-	//	time.Sleep(time.Second * 1)
-	//	fmt.Println("timer ")
-	//}
-	//fmt.Println("-----------------------------------------------------")
-	//fmt.Println("---------全部连接已经关闭 -------  ")
-	//fmt.Println("---------压测已经结束! ----- ")
-	//fmt.Println("-----------------------------------------------------")
-
 	for{
 		//GetStaticPrint()
 		time.Sleep(time.Second)
