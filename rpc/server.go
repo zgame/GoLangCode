@@ -2,11 +2,11 @@ package main
 
 import (
 	"errors"
-	"net"
-	"net/rpc"
 	"log"
+	"net"
 	"net/http"
-	. "./rpcz"
+	"net/rpc"
+	"rpcT/rpcz"
 )
 
 //type Args struct {
@@ -19,12 +19,12 @@ import (
 
 type Arith int
 
-func (t *Arith) Multiply(args *Args, reply *int) error {
+func (t *Arith) Multiply(args * rpcz.Args, reply *int) error {
 	*reply = args.A * args.B
 	return nil
 }
 
-func (t *Arith) Divide(args *Args, quo *Quotient) error {
+func (t *Arith) Divide(args *rpcz.Args, quo *rpcz.Quotient) error {
 	if args.B == 0 {
 		return errors.New("divide by zero")
 	}

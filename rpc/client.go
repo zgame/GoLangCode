@@ -1,10 +1,10 @@
 package main
 
 import (
-	"net/rpc"
-	"log"
 	"fmt"
-	. "./rpcz"
+	"log"
+	"net/rpc"
+	"rpcT/rpcz"
 )
 
 //type Args struct {
@@ -22,7 +22,7 @@ func main()  {
 	}
 
 	// Synchronous call
-	args := &Args{7,8}
+	args := &rpcz.Args{7,8}
 	var reply int
 	err = client.Call("Arith.Multiply", args, &reply)
 	if err != nil {
@@ -31,7 +31,7 @@ func main()  {
 	fmt.Printf("Arith: %d*%d=%d\n", args.A, args.B, reply)
 
 	// Asynchronous call
-	quotient := new(Quotient)
+	quotient := new(rpcz.Quotient)
 	divCall := client.Go("Arith.Divide", args, quotient, nil)
 	replyCall := <-divCall.Done // will be equal to divCall
 	if replyCall.Error != nil {
