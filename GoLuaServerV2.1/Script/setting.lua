@@ -13,18 +13,18 @@ Setting = {
     -----------------------------------------------------------------
     ---------------------- redis -------------------
     RedisAddress = "47.92.150.31:6379"  , -- redis 服务器地址
-    RedisPass = "zsw123"     ,           -- redis 密码
+    RedisPass = "LncDnQaR502NWaFdCVXMeKacglgnf3"     ,           -- redis 密码
     ---------------------- mongodb -------------------
     MongoAddress = "47.92.150.31:27017",
     MongoDatabase = "sandrock",
-    MongoUser = "zsw",
-    MongoPass = "zsw123",
+    MongoUser = "patheaDev",
+    MongoPass = "LncDnQaR502NWaFdCVXMeKacglgnf3",
     ---------------------- mySql -------------------
     MySqlServerIP = "47.92.150.31",
     MySqlServerPort = "3306",
     MySqlDatabase = "sandrock",
-    MySqlUid = "zsw",
-    MySqlPwd = "zsw123",
+    MySqlUid = "patheaDev",
+    MySqlPwd = "LncDnQaR502NWaFdCVXMeKacglgnf3",
     ----------------------- sql server --------------------------
     --SqlServerIP = "192.168.0.207"
     --SqlServerDatabase = "DataBase"
