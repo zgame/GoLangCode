@@ -1,3 +1,3 @@
-TestGoLangByServer.exe -WebSocketPort=8090 -SocketPort=8124 -ClientStart=500 -ClientEnd=1000
+GoLuaServerV2.1Test.exe -WebSocketPort=8089 -SocketPort=8123 -UdpPort=8124 -ClientStart=1 -ClientEnd=10
 
 pause
