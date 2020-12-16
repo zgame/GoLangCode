@@ -40,6 +40,7 @@ function GoCallLuaStartGamesServers(serverId)
     LoginServer.SendLogin(serverId)
 
 
+
     --Logger("--------------StartGamesServers  End--------------------------")
 end
 
