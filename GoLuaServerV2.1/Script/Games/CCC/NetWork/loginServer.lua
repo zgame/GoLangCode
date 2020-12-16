@@ -4,10 +4,10 @@
 --- DateTime: 2018/12/5 14:05
 ---
 
-CCCNetWorkLogin={}
+CCCNetWorkLogin = {}
 
 --游客登录申请,获取玩家的数据， 判断是否已经登录，
-function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
+function CCCNetWorkLogin.SevLoginGSGuest(serverId, buf)
 
     local msg = Proto_Game_CCC.GameLogin()
     msg:ParseFromString(buf)
@@ -18,32 +18,26 @@ function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
     local sendCmd = Proto_Game_CCC.GameLoginResult()
 
     sendCmd.success = true
-    sendCmd.err = "未收到发到付……\\sdfsdf&*……&*I"
 
-    sendCmd.user.game = 0
-    --print(sendCmd)
-    --sendCmd.user = {}
-    --sendCmd.user.base_user = {}
-    --sendCmd.user.base_user = Proto_User.BaseUser()
-    sendCmd.user.base_user.nick_name = "234@dfgdfg电饭锅电饭锅"
+    sendCmd.user.user_id = UserId
+    sendCmd.user.open_id = msg.machine_id
+    sendCmd.user.nick_name = "test player"
     --print(sendCmd.user.base_user.nick_name)
-
     sendCmd.room_id = 99099
 
     --print(sendCmd)
 
 
     --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
-    if type(serverId)=='number' then
-        NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
-    else
-        NetWork.SendUdp(serverId,CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
-    end
+
+    NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
+    NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
+
 
     --NetWork.SendToUser(UserId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, "message~!$", nil)
 
-    end
-    local function ss()
+end
+local function ss()
     --print("gamekind id: ".. msg.kind_id)
     --print("user_id id: ".. msg.user_id)
     --print("machine_id : ".. msg.machine_id)
@@ -66,7 +60,7 @@ function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
         MyUser.Exp = 254
         MyUser.Loveliness = 0
         MyUser.Score = 100000009
-        MyUser.NickName = "玩家"..MyUser.UserId
+        MyUser.NickName = "玩家" .. MyUser.UserId
         MyUser.Level = 1
         MyUser.VipLevel = 0
         MyUser.AccountLevel = 3
@@ -79,15 +73,15 @@ function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
         --print("保存",openId,UserId)
         --RedisSavePlayer(MyUser)           -- redis 数据库 save
         --print("保存玩家信息",UserId)
-    --else
-    --    --print("有账号，那么取出账号的信息")
-    --    UserId = tonumber(UserId)       -- 这里需要转一下到数字
-    --    MyUser = RedisGetPlayer(UserId)   -- redis load
+        --else
+        --    --print("有账号，那么取出账号的信息")
+        --    UserId = tonumber(UserId)       -- 这里需要转一下到数字
+        --    MyUser = RedisGetPlayer(UserId)   -- redis load
     end
 
 
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
-    luaCallGoResisterUID(UserId ,serverId)
+    luaCallGoResisterUID(UserId, serverId)
 
     -- 发送登录成功
     local sendCmd = CMD_GameServer_pb.CMD_GR_LogonSuccess()
@@ -98,6 +92,6 @@ function CCCNetWorkLogin.SevLoginGSGuest(serverId,buf)
 
     --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
     LuaNetWorkSendToUser(UserId, MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, sendCmd, nil, nil)
-    LuaNetWorkSendToUser(UserId, MDM_GR_LOGON, SUB_GR_LOGON_FINISH, nil, nil,nil)
+    LuaNetWorkSendToUser(UserId, MDM_GR_LOGON, SUB_GR_LOGON_FINISH, nil, nil, nil)
 
 end

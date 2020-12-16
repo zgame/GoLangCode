@@ -27,7 +27,15 @@ function NetWork.Send(myServerId, msgId, subMsgId, sendCmd, err)
     if err == nil then
         err = ""
     end
-    return luaCallGoNetWorkSend(0, myServerId, msgId, subMsgId, buffer, err)       -- 返回结果 true 发送成功  false 发送失败
+
+    if type(myServerId)=='number' then
+        -- tcp
+        return luaCallGoNetWorkSend(0, myServerId, msgId, subMsgId, buffer, err)       -- 返回结果 true 发送成功  false 发送失败
+    else
+        -- udp
+        local clientAddress = myServerId
+        return luaCallGoNetWorkSendUdp(0, clientAddress, msgId, subMsgId, buffer, err)       -- 返回结果 true 发送成功  false 发送失败
+    end
 end
 
 

@@ -17,18 +17,8 @@ function GameNetwork.Receive(serverId, userId, mainSgId, subMsgId, data, token)
     if mainSgId == CMD_MAIN.MDM_GAME_CCC then
         -- 跳转到ccc处理
         CCCNetWork.Receive(serverId, userId, mainSgId, subMsgId, data, token)
-    end
-
-end
-
--- 根据命令进行分支处理
-function GameNetwork.ReceiveUdp(serverAddr,  mainSgId, subMsgId, data)
-    --print("msgId",msgId, "subMsgId",subMsgId)
-    --UserToken = token           -- 保存到全局里面，发送的时候取出来GameMessage
-
-    if mainSgId == CMD_MAIN.MDM_GAME_CCC then
-        -- 跳转到ccc处理
-        CCCNetWork.ReceiveUdp(serverAddr, mainSgId, subMsgId, data)
+    else
+        -- 跳转到其他游戏处理
     end
 
 end

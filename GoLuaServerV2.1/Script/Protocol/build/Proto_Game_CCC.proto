@@ -1,12 +1,17 @@
 ﻿syntax = "proto3";
 package Proto;
-import "Proto_User.proto";
+//import "Proto_User.proto";
 
 //用户信息------------------------------------------------------------------------------------------------------------
 message User
 {
-	uint32  game = 1;
-	BaseUser base_user = 2;        //用户信息
+	uint32 user_id = 1;          //用户ID
+	string open_id = 2;          //渠道sdkID
+	string nick_name = 3;          //昵称
+	uint32 level = 4;            //用户等级
+	uint32 exp = 5;              //
+	uint32 room_id = 6;          //房间ID
+	uint32 chair_id = 7;          //椅子ID
 
 }
 
