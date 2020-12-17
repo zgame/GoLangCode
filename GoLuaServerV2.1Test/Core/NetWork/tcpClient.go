@@ -12,14 +12,14 @@ import (
 //---------------------------------------------------------------------------------------------------
 
 type TCPClient struct {
-	sync.Mutex      				// 互斥锁 ，作用就是用来防止多线程的map冲突,  conns 读写操作的时候用
+	sync.Mutex				// 互斥锁 ，作用就是用来防止多线程的map冲突,  conns 读写操作的时候用
 	Addr            string
 	ConnNum         int
 	ConnectInterval time.Duration
 	PendingWriteNum int
 	AutoReconnect   bool
 	NewAgent        func(*TCPConn,int) Agent
-	conns           ConnSet
+	conns           map[int]net.Conn
 	wg              sync.WaitGroup
 	closeFlag       bool
 
@@ -71,7 +71,7 @@ func (client *TCPClient) init() {
 		fmt.Println("client is running")
 	}
 
-	client.conns = make(ConnSet)
+	client.conns = make(map[int]net.Conn)
 	client.closeFlag = false
 
 	// msg parser
@@ -96,7 +96,7 @@ func (client *TCPClient) dial() net.Conn {
 
 func (client *TCPClient) connect(index int) {
 
-	//fmt.Println("开始连接...")
+	fmt.Println("开始连接serverId...",index)
 	defer client.wg.Done()
 
 reconnect:
@@ -111,7 +111,7 @@ reconnect:
 		conn.Close()
 		return
 	}
-	client.conns[conn] = struct{}{}
+	client.conns[index] = conn
 	client.Unlock()
 
 	tcpConn := newTCPConn(conn, client.PendingWriteNum)
@@ -121,7 +121,7 @@ reconnect:
 	// cleanup
 	tcpConn.Close()
 	client.Lock()
-	delete(client.conns, conn)
+	delete(client.conns, index)
 	client.Unlock()
 	agent.OnClose()
 
@@ -130,11 +130,24 @@ reconnect:
 		goto reconnect
 	}
 }
+//
+//func (client *UDPClient) reconnect(index int)  {
+//	//if client.conns[index] != nil {
+//	//	client.conns[index].Close()
+//	//}
+//
+//	Conn := client.dial()
+//	if Conn == nil {
+//		return
+//	}
+//
+//}
+
 
 func (client *TCPClient) Close() {
 	client.Lock()
 	client.closeFlag = true
-	for conn := range client.conns {
+	for _,conn := range client.conns {
 		conn.Close()
 	}
 	client.conns = nil

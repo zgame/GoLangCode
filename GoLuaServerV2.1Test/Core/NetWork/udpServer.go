@@ -8,19 +8,21 @@ import (
 	"time"
 )
 //---------------------------------------------------------------------------------------------------
-// Socket 服务器
+// Socket udp 服务器
 //---------------------------------------------------------------------------------------------------
 
-type TCPServer struct {
+type UDPServer struct {
 	Addr            string
+	UdpAddr         *net.UDPAddr
 	MaxConnNum      int
 	PendingWriteNum int
-	NewAgent        func(*TCPConn) Agent
-	ln              net.Listener
-	conns           ConnSet
-	mutexConns      sync.Mutex		// 互斥锁， 用在保持多线程对map的操作安全上
+	NewAgent        func(*UdpConn) Agent
+	Listen          *net.UDPConn
+	//conns           UdpConnSet
+	//mutexConns      sync.Mutex		// 互斥锁， 用在保持多线程对map的操作安全上
 	wgLn            sync.WaitGroup
 	wgConns         sync.WaitGroup
+	//AddrMap			sync.Map
 
 	// msg parser
 	LenMsgLen    int
@@ -30,14 +32,15 @@ type TCPServer struct {
 	//msgParser    *MsgParser
 }
 
-func (server *TCPServer) Start() {
-	fmt.Println("开始socket服务器")
+func (server *UDPServer) Start() {
+	fmt.Println("开始socket Udp 服务器")
 	server.init()
 	go server.run()
 }
 
-func (server *TCPServer) init() {
-	ln, err := net.Listen("tcp", server.Addr)
+func (server *UDPServer) init() {
+	server.UdpAddr, _ = net.ResolveUDPAddr("udp", server.Addr)
+	ln, err := net.ListenUDP("udp", server.UdpAddr)
 	if err != nil {
 		fmt.Printf("%v", err)
 	}
@@ -54,23 +57,19 @@ func (server *TCPServer) init() {
 		fmt.Println("NewAgent must not be nil")
 	}
 
-	server.ln = ln
-	server.conns = make(ConnSet)
-
-	// msg parser
-	//msgParser := NewMsgParser()
-	//msgParser.SetMsgLen(server.LenMsgLen, server.MinMsgLen, server.MaxMsgLen)
-	//msgParser.SetByteOrder(server.LittleEndian)
-	//server.msgParser = msgParser
+	server.Listen = ln
 }
 
-func (server *TCPServer) run() {
+func (server *UDPServer) run() {
 	server.wgLn.Add(1)
 	defer server.wgLn.Done()
 
 	var tempDelay time.Duration
+	data := make([]byte, 1024*1)
 	for {
-		conn, err := server.ln.Accept()				// 一直在监听，如果有新的连接进来了， 那么就一直走到后面建立新的连接
+		// udp 是无连接状态的
+		_, remoteAddr, err := server.Listen.ReadFromUDP(data)
+		//println("消息：",string(data[:n]), remoteAddr.String())
 		if err != nil {
 			if ne, ok := err.(net.Error); ok && ne.Temporary() {
 				if tempDelay == 0 {
@@ -89,28 +88,16 @@ func (server *TCPServer) run() {
 		}
 		tempDelay = 0
 
-		server.mutexConns.Lock()
-		if len(server.conns) >= server.MaxConnNum {
-			server.mutexConns.Unlock()
-			conn.Close()
-			fmt.Println("连接数量超过了最大上限：",server.MaxConnNum)
-			continue
-		}
-		server.conns[conn] = struct{}{}
-		server.mutexConns.Unlock()
 
 		server.wgConns.Add(1)
 
-		tcpConn := newTCPConn(conn, server.PendingWriteNum) // 建立新连接
-		agent := server.NewAgent(tcpConn)
+		udpConn := newUDPConn(server.Listen,remoteAddr, data) // 传递数据给lua
+		agent := server.NewAgent(udpConn)
 		go func() {
 			agent.Run()
 
 			// cleanup
-			tcpConn.Close()
-			server.mutexConns.Lock()
-			delete(server.conns, conn)
-			server.mutexConns.Unlock()
+			udpConn.Close() // 接收的线程关闭的时候， 也会关闭发送的线程
 			agent.OnClose()
 
 			server.wgConns.Done()
@@ -119,15 +106,15 @@ func (server *TCPServer) run() {
 	}
 }
 
-func (server *TCPServer) Close() {
-	server.ln.Close()
+func (server *UDPServer) Close() {
+	server.Listen.Close()
 	server.wgLn.Wait()
 
-	server.mutexConns.Lock()
-	for conn := range server.conns {
-		conn.Close()
-	}
-	server.conns = nil
-	server.mutexConns.Unlock()
+	//server.mutexConns.Lock()
+	//for Conn := range server.conns {
+	//	Conn.Close()
+	//}
+	//server.conns = nil
+	//server.mutexConns.Unlock()
 	server.wgConns.Wait()
 }

@@ -1,8 +1,7 @@
 package NetWork
 
 import (
-	"GoLuaServerV2.1Test/Core/Utils/zLog"
-	//"GoLuaServerV2.1Test/Utils/zLog"
+	"GoLuaServerV2.1/Core/Utils/zLog"
 	//"github.com/name5566/leaf/zLog"
 	"net"
 	"sync"
@@ -37,7 +36,7 @@ func newTCPConn(conn net.Conn, pendingWriteNum int) *TCPConn {
 
 			_, err := conn.Write(b)
 			if err != nil {
-				zLog.PrintfLogger("tcpConn.writeChan   Error %s", err.Error())
+				zLog.PrintfLogger("tcpConn.writeChan Error 发送数据出错 %s", err.Error())
 				break
 			}
 		}
@@ -124,7 +123,7 @@ func (tcpConn *TCPConn) RemoteAddr() net.Addr {
 func (tcpConn *TCPConn) ReadMsg() ([]byte, int, error) {
 
 	msgData := make([]byte, 1024*1)
-	//if _, err := io.ReadFull(tcpConn.conn, msgData); err != nil {
+	//if _, err := io.ReadFull(tcpConn.Conn, msgData); err != nil {
 	//	return nil,0, err
 	//}
 	//Len:= len(msgData)
@@ -140,15 +139,12 @@ func (tcpConn *TCPConn) ReadMsg() ([]byte, int, error) {
 func (tcpConn *TCPConn) WriteMsg(args ...[]byte) error {
 
 	//return tcpConn.msgParser.Write(tcpConn, args...)
-	//_, err :=tcpConn.conn.Write(args[0])
-	//if err != nil {
-	//	//zLog.PrintfLogger("TCPConn .写入错误 %s", err.Error())
-	//	return err
-	//}
-
+	//_, err :=tcpConn.Conn.Write(args[0])
+	//return err
 	tcpConn.Write(args[0])
 	return nil
 }
+
 func (tcpConn *TCPConn) GetWriteChanCap() int {
 	return  len(tcpConn.writeChan)
 }

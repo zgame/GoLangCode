@@ -1,7 +1,7 @@
 package NetWork
 
 import (
-	"GoLuaServerV2.1Test/Core/Utils/zLog"
+	"GoLuaServerV2.1/Core/Utils/zLog"
 	"github.com/gorilla/websocket"
 	//"github.com/name5566/leaf/zLog"
 	"net"
@@ -39,7 +39,7 @@ func newWSConn(conn *websocket.Conn, pendingWriteNum int, maxMsgLen uint32) *WSC
 
 			err := conn.WriteMessage(websocket.BinaryMessage, b)
 			if err != nil {
-				zLog.PrintfLogger("conn.WriteMessage    Error %s", err.Error())
+				zLog.PrintfLogger("Conn.WriteMessage  Error  发送数据出错 %s", err.Error())
 				break
 			}
 		}
@@ -146,7 +146,7 @@ func (wsConn *WSConn) WriteMsg(args ...[]byte) error {
 	//}
 	//
 	wsConn.doWrite(args[0])
-	//err:=wsConn.conn.WriteMessage(websocket.BinaryMessage, args[0])
+	//err:=wsConn.Conn.WriteMessage(websocket.BinaryMessage, args[0])
 
 	return nil
 }
