@@ -79,12 +79,6 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	msg := L.ToString(6)
 	//token := L.ToInt(7)
 
-	// lua传递过来之后， 立即开启一个新的协程去专门做发送工作
-	//go func() {
-	//bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
-	//_, err := Conn.Write(bufferEnd)
-	//zLog.CheckError(err)
-	println("luaCallGoNetWorkSend")
 
 	var result bool
 	// 发送出去
@@ -97,7 +91,6 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 		result = GetMyServerByUID(userId).SendMsg(data, msg, mainCmd, subCmd) // 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
 		//result = GetMyServerByUID(userId).WriteMsg(bufferEnd)
 	}
-	//}()
 
 	L.Push(lua.LBool(result)) /* push result */
 	//fmt.Println("lua send :" + str)
@@ -110,9 +103,6 @@ func luaCallGoResisterUID(L *lua.LState) int {
 	serverId := L.ToNumber(2)                      //
 	server := GetMyServerByServerId(int(serverId)) // my server
 
-	//GlobalVar.RWMutex.Lock()
-	//ConnectMyTcpServerByUid[int(uid)] = server // 进行关联 ,  因为lua是单线程跑， 所以不存在线程安全问题， 如果是go，需要加锁
-	//GlobalVar.RWMutex.Unlock()
 	ConnectMyTcpServerByUid.Store(int(uid),server)
 
 	server.UserId = int(uid) // 保存uid

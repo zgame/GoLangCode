@@ -29,18 +29,18 @@ LoginServer={}
 
 -- 发送登录服务器请求
 function LoginServer.SendLogin(serverId)
-    local sendCmd = Proto_Game_CCC.GameLogin()
+    local sendCmd = ProtoGameCCC.GameLogin()
 
-    sendCmd.machine_id = build_mac_addr(serverId)
+    sendCmd.machineId = build_mac_addr(serverId)
     LuaNetWorkSend(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON,sendCmd,nil,true)
     print("-----申请登录serverId:----------",serverId)
 end
 
 -- 服务器返回登录服务器成功，下发uid
 function LoginServer.LoginGameServer(serverId, buf)
-    local msg = Proto_Game_CCC.GameLoginResult()
+    local msg = ProtoGameCCC.GameLoginResult()
     msg:ParseFromString(buf)
-    local uid = msg.user_right
+    local uid = msg.user.userId
 
     print( msg)
 

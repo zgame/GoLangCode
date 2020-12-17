@@ -1,5 +1,5 @@
 syntax = "proto3";
-package Proto;
+package Server;
 
 ////登录申请
 //message Login

@@ -9,26 +9,24 @@ CCCNetWorkLogin = {}
 --游客登录申请,获取玩家的数据， 判断是否已经登录，
 function CCCNetWorkLogin.SevLoginGSGuest(serverId, buf)
 
-    local msg = Proto_Game_CCC.GameLogin()
+    local msg = protoGameCcc_pb.GameLogin()
     msg:ParseFromString(buf)
     --msg:ParseFromString(sendCmd:SerializeToString())
 
     print(msg)
     local UserId = 2121
-    local sendCmd = Proto_Game_CCC.GameLoginResult()
+    local sendCmd = ProtoGameCCC.GameLoginResult()
 
     sendCmd.success = true
 
-    sendCmd.user.user_id = UserId
-    sendCmd.user.open_id = msg.machine_id
-    sendCmd.user.nick_name = "test player"
+    sendCmd.user.userId = UserId
+    sendCmd.user.openId = msg.machineId
+    sendCmd.user.nickName = "test player"
     --print(sendCmd.user.base_user.nick_name)
-    sendCmd.room_id = 99099
+    sendCmd.roomId = 99099
 
-    --print(sendCmd)
-
-
-    --    LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
+    -- print(sendCmd)
+    -- LuaNetWorkSend( MDM_GR_LOGON, SUB_GR_LOGON_SUCCESS, data, " 这是测试错误")
 
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
 

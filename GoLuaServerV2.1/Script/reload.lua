@@ -41,8 +41,8 @@ table.insert(f, "Script/CSV/mgby_monster")
 LuaFiles.Protocol = {}
 f = LuaFiles.Protocol
 --table.insert(f, "Script/Protocol/build/Proto_Game_CCC_pb")
---table.insert(f, "Script/Protocol/build/Proto_Server_pb")
-table.insert(f, "Script/Games/proto")
+table.insert(f, "Script/Protocol/build/proto")
+--table.insert(f, "Script/Games/proto")
 
 -- Const
 LuaFiles.Const = {}

@@ -29,7 +29,7 @@ package.path = "Script/GameManager/?.lua;"..package.path
 
 require("Const")
 require("Excel")
-require("Proto")
+require("proto")
 require("protocol_cs")
 require("protocol_gs")
 require("protocol_ls")

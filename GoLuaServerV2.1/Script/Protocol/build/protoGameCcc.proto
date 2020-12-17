@@ -1,0 +1,55 @@
+﻿syntax = "proto3";
+package GameCCC;
+
+
+//-------------------------------------用户信息---------------------------
+message _user{
+	uint32 userId = 1;          //用户ID
+	string openId = 2;          //渠道sdkID
+	string nickName = 3;          //昵称
+	uint32 level = 4;            //用户等级
+	uint32 exp = 5;              //
+	uint32 roomId = 6;          //房间ID
+	uint32 chairId = 7;          //位置ID
+}
+
+//---------------------------------------登录-------------------------------
+//游戏服务器登录申请
+message GameLogin{
+	string          openId = 1;              //
+	uint32          userId = 2;              //用户 I D
+	string          machineId = 3;              //机器序列
+	string          password = 4;              //登录密码(32md5)
+	string          ipAddr = 5;              //IP地址
+	uint32          channel = 6;            //渠道号 1为官网
+	string          deviceType = 7;            //设备的型号
+}
+
+// 登录成功
+message GameLoginResult{
+	bool success = 1;     // 1成功，0失败
+	_user user = 2;        //用户信息
+	uint32  roomId = 3;          //房间ID
+	string err = 4;
+}
+
+//其他玩家进入游戏场景
+message OtherEnterRoom{
+	_user user = 1;        //用户信息
+}
+
+//---------------------------------------同步位置-------------------------------
+message _location{
+	uint32 userId = 1;
+	uint32 x = 2;
+	uint32 y = 3;
+	uint32 z = 4;
+	uint32 faceDir = 5 ;     // 面对方向
+
+}
+//位置信息同步
+message PlayerLocation{
+	repeated _location location = 1;
+}
+
+//---------------------------------------同步位置-------------------------------
