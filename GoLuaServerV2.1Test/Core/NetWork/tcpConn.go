@@ -1,7 +1,8 @@
 package NetWork
 
 import (
-	"GoLuaServerV2.1/Core/Utils/zLog"
+	//"GoLuaServerV2.1Test/Core/Utils/zLog"
+	//"GoLuaServerV2.1Test/Core/Utils/zLog"
 	//"github.com/name5566/leaf/zLog"
 	"net"
 	"sync"
@@ -36,7 +37,7 @@ func newTCPConn(conn net.Conn, pendingWriteNum int) *TCPConn {
 
 			_, err := conn.Write(b)
 			if err != nil {
-				zLog.PrintfLogger("tcpConn.writeChan Error 发送数据出错 %s", err.Error())
+				println("tcpConn.writeChan Error 发送数据出错 %s", err.Error())
 				break
 			}
 		}
@@ -89,7 +90,7 @@ func (tcpConn *TCPConn) doWrite(b []byte) {
 	//	time.Sleep(time.Millisecond * 2000)
 	//}
 	if len(tcpConn.writeChan) == cap(tcpConn.writeChan) {
-		zLog.PrintfLogger("发送数据包的缓冲区已经满了，关闭该连接!!!")
+		println("发送数据包的缓冲区已经满了，关闭该连接!!!")
 		tcpConn.doDestroy()
 		return
 	}
