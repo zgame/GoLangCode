@@ -13,7 +13,7 @@ var GameManagerLuaHandle *MyLua      // 主线程的lua句柄
 var ConnectMyTcpServer sync.Map      //[int]*MyTcpServer      // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
 var ConnectMyTcpServerByUid sync.Map //[int]*MyTcpServer // 将uid跟连接句柄进行哈希
 
-var ConnectMyUdpServer sync.Map   // [int]*MyUdpServer      // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
+//var ConnectMyUdpServer sync.Map   // [int]*MyUdpServer      // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
 
 type MyLua struct {
 	L *lua.LState
@@ -28,17 +28,6 @@ func NewMyLua() *MyLua {
 // --------------------全局变量初始化--------------------------
 func InitGlobalVar() {
 
-}
-
-// 通过lua堆栈找到对应的是哪个myServer
-func GetMyServerByServerId(serverId int) *MyTcpServer {
-	re,_ := ConnectMyTcpServer.Load(serverId) // 这是全局变量，所以要加锁， 读写都要加
-	return re.(*MyTcpServer)
-}
-// 通过 user id 找到对应的是哪个myServer
-func GetMyServerByUID(uid int) *MyTcpServer {
-	re,_:= ConnectMyTcpServerByUid.Load(uid) // 这是全局变量，所以要加锁， 读写都要加
-	return re.(*MyTcpServer)
 }
 
 

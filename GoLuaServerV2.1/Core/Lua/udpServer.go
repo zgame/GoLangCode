@@ -17,11 +17,11 @@ type MyUdpServer struct {
 	UserId  int            // 玩家uid
 }
 
-// 通过lua堆栈找到对应的是哪个myServer
-func GetMyUdpServerByLSate(clientAddr string) *MyUdpServer {
-	re, _ := ConnectMyUdpServer.Load(clientAddr) // 这是全局变量，所以要加锁， 读写都要加
-	return re.(*MyUdpServer)
-}
+//// 通过lua堆栈找到对应的是哪个myServer
+//func GetMyUdpServerByLSate(clientAddr string) *MyUdpServer {
+//	re, ok := ConnectMyUdpServer.Load(clientAddr) // 这是全局变量，所以要加锁， 读写都要加
+//	return re.(*MyUdpServer)
+//}
 
 func NewMyUdpServer(conn *NetWork.UdpConn) *MyUdpServer {
 	return &MyUdpServer{Conn: conn, myLua: GameManagerLuaHandle}

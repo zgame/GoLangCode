@@ -4,6 +4,7 @@ import (
 	"GoLuaServerV2.1Test/Core/Utils/zLog"
 	"GoLuaServerV2.1Test/Core/Utils/zPbc"
 	"GoLuaServerV2.1Test/Core/Utils/ztimer"
+	"fmt"
 	"github.com/yuin/gopher-lua"
 	"time"
 	//mysql "github.com/tengattack/gluasql/mysql"
@@ -70,6 +71,7 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	//_, err := Conn.Write(bufferEnd)
 	//zLog.CheckError(err)
 
+	fmt.Println("tcp")
 
 	var result bool
 	// 发送出去
@@ -155,7 +157,7 @@ func luaCallGoNetWorkSendUdp(L *lua.LState) int {
 	data := L.ToString(5)
 	msg := L.ToString(6)
 
-
+println("udp send")
 	GetMyUdpServerByLSate(serverId).SendMsg(data, msg, mainCmd, subCmd) // 把客户端发来的token返回给客户端，标记出这是哪个消息的返回
 
 	return 0 // 返回1个参数 ， 设定2就是返回2个参数，0就是不返回

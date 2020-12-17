@@ -2,7 +2,6 @@ package NetWork
 
 import (
 	"fmt"
-	//"github.com/name5566/leaf/zLog"
 	"net"
 	"sync"
 	"time"
@@ -42,16 +41,16 @@ func (server *UDPServer) init() {
 	server.UdpAddr, _ = net.ResolveUDPAddr("udp", server.Addr)
 	ln, err := net.ListenUDP("udp", server.UdpAddr)
 	if err != nil {
-		fmt.Printf("%v", err)
+		fmt.Printf("%v \n", err)
 	}
 
 	if server.MaxConnNum <= 0 {
 		server.MaxConnNum = 100
-		fmt.Printf("invalid MaxConnNum, reset to %v", server.MaxConnNum)
+		fmt.Printf("invalid MaxConnNum, reset to %v \n", server.MaxConnNum)
 	}
 	if server.PendingWriteNum <= 0 {
 		server.PendingWriteNum = 100
-		fmt.Printf("invalid PendingWriteNum, reset to %v", server.PendingWriteNum)
+		fmt.Printf("invalid PendingWriteNum, reset to %v \n", server.PendingWriteNum)
 	}
 	if server.NewAgent == nil {
 		fmt.Println("NewAgent must not be nil")

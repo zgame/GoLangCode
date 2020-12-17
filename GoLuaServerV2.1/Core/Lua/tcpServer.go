@@ -46,10 +46,25 @@ type MyTcpServer struct {
 	LuaCallClose bool		// lua申请关闭连接
 }
 
+
+// 通过lua堆栈找到对应的是哪个myServer
+func GetMyServerByServerId(serverId int) *MyTcpServer {
+	if re,ok := ConnectMyTcpServer.Load(serverId); ok{
+		return re.(*MyTcpServer)
+	}
+	return nil
+}
+// 通过 user id 找到对应的是哪个myServer
+func GetMyServerByUID(uid int) *MyTcpServer {
+	if re,ok:= ConnectMyTcpServerByUid.Load(uid);ok{
+		return re.(*MyTcpServer)
+	}
+	return nil
+}
+
+
 // 获取唯一的ServerId
 func GetServerUid() int {
-
-
 retry:
 	TcpServerUUID = atomic.AddInt32(&TcpServerUUID, 1)
 

@@ -2,7 +2,6 @@ package NetWork
 
 import (
 	"fmt"
-	//"github.com/name5566/leaf/zLog"
 	"net"
 	"sync"
 	"time"
@@ -55,15 +54,15 @@ func (client *UDPClient) init() {
 
 	if client.ConnNum <= 0 {
 		client.ConnNum = 1
-		fmt.Printf("invalid 连接数量 ConnNum, reset to %v", client.ConnNum)
+		fmt.Printf("invalid 连接数量 ConnNum, reset to %v \n", client.ConnNum)
 	}
 	if client.ConnectInterval <= 0 {
 		client.ConnectInterval = 3 * time.Second
-		fmt.Printf("invalid 断线重连 ConnectInterval, reset to %v", client.ConnectInterval)
+		fmt.Printf("invalid 断线重连 ConnectInterval, reset to %v \n", client.ConnectInterval)
 	}
 	if client.PendingWriteNum <= 0 {
 		client.PendingWriteNum = 100
-		fmt.Printf("invalid 写缓存 PendingWriteNum, reset to %v", client.PendingWriteNum)
+		fmt.Printf("invalid 写缓存 PendingWriteNum, reset to %v \n", client.PendingWriteNum)
 	}
 	if client.NewAgent == nil {
 		fmt.Println("NewAgent must not be nil")
@@ -90,7 +89,7 @@ func (client *UDPClient) dial() *net.UDPConn {
 			return conn
 		}
 
-		fmt.Printf("connect to %v error: %v \n", client.Addr, err)
+		fmt.Printf("connect to %v error: %v \n \n", client.Addr, err)
 		time.Sleep(client.ConnectInterval)
 		continue
 	}
@@ -98,7 +97,7 @@ func (client *UDPClient) dial() *net.UDPConn {
 
 func (client *UDPClient) connect(index int) {
 
-	fmt.Println("开始连接serverId...",index)
+	fmt.Println("开始连接udp serverId...",index)
 	defer client.wg.Done()
 
 reconnect:
@@ -132,18 +131,6 @@ reconnect:
 		goto reconnect
 	}
 }
-//
-//func (client *UDPClient) reconnect(index int)  {
-//	//if client.conns[index] != nil {
-//	//	client.conns[index].Close()
-//	//}
-//
-//	Conn := client.dial()
-//	if Conn == nil {
-//		return
-//	}
-//
-//}
 
 
 func (client *UDPClient) Close() {

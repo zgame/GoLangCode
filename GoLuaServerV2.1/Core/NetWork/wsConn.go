@@ -1,9 +1,7 @@
 package NetWork
 
 import (
-	"GoLuaServerV2.1/Core/Utils/zLog"
 	"github.com/gorilla/websocket"
-	//"github.com/name5566/leaf/zLog"
 	"net"
 	"sync"
 )
@@ -39,7 +37,7 @@ func newWSConn(conn *websocket.Conn, pendingWriteNum int, maxMsgLen uint32) *WSC
 
 			err := conn.WriteMessage(websocket.BinaryMessage, b)
 			if err != nil {
-				zLog.PrintfLogger("Conn.WriteMessage  Error  发送数据出错 %s", err.Error())
+				println("Conn.WriteMessage  Error  发送数据出错 %s", err.Error())
 				break
 			}
 		}
@@ -86,7 +84,7 @@ func (wsConn *WSConn) Close() {
 //将byte数组写入到websocket发送
 func (wsConn *WSConn) doWrite(b []byte) {
 	if len(wsConn.writeChan) == cap(wsConn.writeChan) {
-		zLog.PrintfLogger("发送数据包的缓冲区已经满了，关闭该连接!!!")
+		println("发送数据包的缓冲区已经满了，关闭该连接!!!")
 		wsConn.doDestroy()
 		return
 	}

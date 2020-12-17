@@ -84,6 +84,7 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	//bufferEnd := NetWork.DealSendData(data, msg, mainCmd, subCmd, 0) // token始终是0，服务器不用发token
 	//_, err := Conn.Write(bufferEnd)
 	//zLog.CheckError(err)
+	println("luaCallGoNetWorkSend")
 
 	var result bool
 	// 发送出去

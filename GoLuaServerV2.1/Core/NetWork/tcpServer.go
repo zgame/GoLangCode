@@ -2,7 +2,6 @@ package NetWork
 
 import (
 	"fmt"
-	//"github.com/name5566/leaf/zLog"
 	"net"
 	"sync"
 	"time"
@@ -44,11 +43,11 @@ func (server *TCPServer) init() {
 
 	if server.MaxConnNum <= 0 {
 		server.MaxConnNum = 100
-		fmt.Printf("invalid MaxConnNum, reset to %v", server.MaxConnNum)
+		fmt.Printf("invalid MaxConnNum, reset to %v \n", server.MaxConnNum)
 	}
 	if server.PendingWriteNum <= 0 {
 		server.PendingWriteNum = 100
-		fmt.Printf("invalid PendingWriteNum, reset to %v", server.PendingWriteNum)
+		fmt.Printf("invalid PendingWriteNum, reset to %v \n", server.PendingWriteNum)
 	}
 	if server.NewAgent == nil {
 		fmt.Println("NewAgent must not be nil")
@@ -81,7 +80,7 @@ func (server *TCPServer) run() {
 				if max := 1 * time.Second; tempDelay > max {
 					tempDelay = max
 				}
-				fmt.Printf("accept error: %v; retrying in %v", err, tempDelay)
+				fmt.Printf("accept error: %v; retrying in %v \n", err, tempDelay)
 				time.Sleep(tempDelay)
 				continue
 			}
