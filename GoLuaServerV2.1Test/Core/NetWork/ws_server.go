@@ -2,13 +2,13 @@ package NetWork
 
 import (
 	"crypto/tls"
+	"fmt"
 	"github.com/gorilla/websocket"
 	//"github.com/name5566/leaf/zLog"
 	"net"
 	"net/http"
 	"sync"
 	"time"
-	"fmt"
 )
 //---------------------------------------------------------------------------------------------------
 // WebSocket 服务器部分
@@ -24,7 +24,7 @@ type WSServer struct {
 	HTTPTimeout     time.Duration		// timeout
 	CertFile        string
 	KeyFile         string
-	NewAgent        func(*WSConn) Agent		// 代理回调，提供run函数，保存conn
+	NewAgent        func(*WSConn) Agent // 代理回调，提供run函数，保存conn
 	ln              net.Listener
 	handler         *WSHandler
 }
@@ -32,8 +32,8 @@ type WSServer struct {
 type WSHandler struct {
 	maxConnNum      int			// 最大连接数量
 	pendingWriteNum int
-	maxMsgLen       uint32		// 消息的最大长度
-	newAgent        func(*WSConn) Agent		// 代理回调，提供run函数，保存conn
+	maxMsgLen       uint32              // 消息的最大长度
+	newAgent        func(*WSConn) Agent // 代理回调，提供run函数，保存conn
 	upgrader        websocket.Upgrader
 	conns           WebsocketConnSet
 	mutexConns      sync.Mutex				// 互斥锁， 用在保持多线程对map的操作安全上
@@ -73,7 +73,7 @@ func (handler *WSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	handler.conns[conn] = struct{}{}
 	handler.mutexConns.Unlock()
 
-	wsConn := newWSConn(conn, handler.pendingWriteNum, handler.maxMsgLen)		// 创建连接
+	wsConn := newWSConn(conn, handler.pendingWriteNum, handler.maxMsgLen) // 创建连接
 	agent := handler.newAgent(wsConn)
 	agent.Run()								// 代理run函数
 

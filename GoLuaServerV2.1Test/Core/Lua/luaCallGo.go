@@ -1,9 +1,9 @@
 package Lua
 
 import (
-	"GoLuaServerV2.1Test/Utils/zLog"
-	mysql "GoLuaServerV2.1Test/Utils/mysql"
-	"GoLuaServerV2.1Test/Utils/ztimer"
+	"GoLuaServerV2.1Test/Core/Utils/zLog"
+	"GoLuaServerV2.1Test/Core/Utils/zPbc"
+	"GoLuaServerV2.1Test/Core/Utils/ztimer"
 	"github.com/yuin/gopher-lua"
 	"time"
 	//mysql "github.com/tengattack/gluasql/mysql"
@@ -19,13 +19,13 @@ import (
 func (m *MyLua)InitResister() {
 	// Lua调用go函数声明
 	//m.L.SetGlobal("double", m.L.NewFunction(Double))
-	m.L.SetGlobal("luaCallGoNetWorkSendUdp", m.L.NewFunction(luaCallGoNetWorkSendUdp))                             //注册到lua 网络发送函数
-	m.L.SetGlobal("luaCallGoNetWorkSend", m.L.NewFunction(luaCallGoNetWorkSend))		//注册到lua 网络发送函数
-	m.L.SetGlobal("luaCallGoPrintLogger", m.L.NewFunction(luaCallGoPrintLogger))		//注册到lua 日志打印
-	m.L.SetGlobal("luaCallGoGetOsTimeMillisecond", m.L.NewFunction(luaCallGoGetOsTimeMillisecond))		//注册到lua 获取毫秒时间
-	m.L.SetGlobal("luaCallGoCreateNewTimer", m.L.NewFunction(luaCallGoCreateNewTimer))		//注册到lua 设置定时器
-	m.L.SetGlobal("luaCallGoCreateNewClockTimer", m.L.NewFunction(luaCallGoCreateNewClockTimer))		//注册到lua 设置定时器，固定时间
-	m.L.SetGlobal("luaCallGoResisterUID", m.L.NewFunction(luaCallGoResisterUID))		//注册到lua 将uid注册到列表中
+	m.L.SetGlobal("luaCallGoNetWorkSendUdp", m.L.NewFunction(luaCallGoNetWorkSendUdp))             //注册到lua 网络发送函数
+	m.L.SetGlobal("luaCallGoNetWorkSend", m.L.NewFunction(luaCallGoNetWorkSend))                   //注册到lua 网络发送函数
+	m.L.SetGlobal("luaCallGoPrintLogger", m.L.NewFunction(luaCallGoPrintLogger))                   //注册到lua 日志打印
+	m.L.SetGlobal("luaCallGoGetOsTimeMillisecond", m.L.NewFunction(luaCallGoGetOsTimeMillisecond)) //注册到lua 获取毫秒时间
+	m.L.SetGlobal("luaCallGoCreateNewTimer", m.L.NewFunction(luaCallGoCreateNewTimer))             //注册到lua 设置定时器
+	m.L.SetGlobal("luaCallGoCreateNewClockTimer", m.L.NewFunction(luaCallGoCreateNewClockTimer))   //注册到lua 设置定时器，固定时间
+	m.L.SetGlobal("luaCallGoResisterUID", m.L.NewFunction(luaCallGoResisterUID))                   //注册到lua 将uid注册到列表中
 	//m.L.SetGlobal("luaCallGoRedisSaveString", m.L.NewFunction(luaCallGoRedisSaveString))		//注册到lua redis save
 	//m.L.SetGlobal("luaCallGoRedisGetString", m.L.NewFunction(luaCallGoRedisGetString))		//注册到lua redis load
 	//m.L.SetGlobal("luaCallGoRedisDelKey", m.L.NewFunction(luaCallGoRedisDelKey))		//注册到lua redis del key
@@ -34,8 +34,8 @@ func (m *MyLua)InitResister() {
 	//m.L.SetGlobal("luaCallGoCreateGoroutine", m.L.NewFunction(luaCallGoCreateGoroutine))		//注册到lua 创建go协程
 
 	//加载protobuf
-	luaopen_pb(m.L)
-	m.L.PreloadModule("mysql", mysql.Loader)
+	zPbc.LuaOpenPb(m.L)
+	//m.L.PreloadModule("mysql", mysql.Loader)
 }
 
 

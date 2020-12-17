@@ -1,15 +1,15 @@
-package Lua
+package zPbc
 
 import (
-	"github.com/yuin/gopher-lua"
-	"fmt"
-	"math"
 	"encoding/binary"
+	"fmt"
+	"github.com/yuin/gopher-lua"
+	"math"
 )
 
 const LuaInt64Max  = 18446744073709551615
 
-func luaopen_pb(L *lua.LState) int {
+func LuaOpenPb(L *lua.LState) int {
 	//mt:=L.NewTypeMetatable("zzz")
 
 	//L.Push(lua.LNumber(-1))
@@ -55,19 +55,19 @@ func pbLoader(L *lua.LState) int {
 
 var _pb = map[string]lua.LGFunction{
 	//static const struct luaL_Reg _pb[] = {
-	"varint_encoder": varint_encoder,
-	"signed_varint_encoder": signed_varint_encoder,
-	"read_tag": read_tag,
-	"struct_pack": struct_pack,
-	"struct_unpack": struct_unpack,
-	"varint_decoder": varint_decoder,
-	"signed_varint_decoder": signed_varint_decoder,
-	"zig_zag_decode32": zig_zag_decode32,
-	"zig_zag_encode32": zig_zag_encode32,
-	"zig_zag_decode64": zig_zag_decode64,
-	"zig_zag_encode64": zig_zag_encode64,
-	"new_iostring": iostring_new,
-	"ZswLuaShowBytesToString":ZswLuaShowBytesToString,
+	"varint_encoder":          varint_encoder,
+	"signed_varint_encoder":   signed_varint_encoder,
+	"read_tag":                read_tag,
+	"struct_pack":             struct_pack,
+	"struct_unpack":           struct_unpack,
+	"varint_decoder":          varint_decoder,
+	"signed_varint_decoder":   signed_varint_decoder,
+	"zig_zag_decode32":        zig_zag_decode32,
+	"zig_zag_encode32":        zig_zag_encode32,
+	"zig_zag_decode64":        zig_zag_decode64,
+	"zig_zag_encode64":        zig_zag_encode64,
+	"new_iostring":            iostring_new,
+	"ZswLuaShowBytesToString": ZswLuaShowBytesToString,
 }
 
 
@@ -143,7 +143,7 @@ func varint_encoder(L *lua.LState) int {
 	//println("pb.go   ------------       varint_encoder:")
 	l_value := L.ToNumber(2)
 	value := uint64(l_value)
-	b := pack_varint("", value)			// 把数字变成string
+	b := pack_varint("", value) // 把数字变成string
 
 	l_func := L.ToFunction(1)
 	if err := L.CallByParam(lua.P{
@@ -164,9 +164,9 @@ func signed_varint_encoder(L *lua.LState) int {
 	value := int64(l_value)
 	var b string
 	if value < 0{
-		b = pack_varint("", uint64(value))			// 把数字变成string
+		b = pack_varint("", uint64(value)) // 把数字变成string
 	}else{
-		b = pack_varint("", uint64(value))			// 把数字变成string
+		b = pack_varint("", uint64(value)) // 把数字变成string
 	}
 	//fmt.Printf("pb.go   ------------       signed_varint_encoder     out :  %v \n", []byte(b))
 	if err := L.CallByParam(lua.P{
@@ -283,7 +283,7 @@ func varint_decoder(L *lua.LState) int {
 	//fmt.Printf("pb.go   ------read------      varint_decoder:    %v      %d  \n",[]byte(buffer),pos)
 
 	tLen := size_varint(buf, len(buffer))
-	if tLen == LuaInt64Max{
+	if tLen == LuaInt64Max {
 		println("error varint_decoder data %s, tLen:%d", buffer, tLen)
 	} else {
 		ii := unpack_varint(buf, tLen)
@@ -302,7 +302,7 @@ func signed_varint_decoder(L *lua.LState) int {
 
 	//fmt.Printf("pb.go   ------read------       signed_varint_decoder:    %v      %d  \n",[]byte(buffer),pos)
 	tLen := size_varint(buf, len(buffer))
-	if tLen == LuaInt64Max{
+	if tLen == LuaInt64Max {
 		println("error signed_varint_decoder data %s, tLen:%d", buffer, tLen)
 	} else {
 		ii := int64(unpack_varint(buf, tLen))

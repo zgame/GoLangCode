@@ -2,9 +2,9 @@
 package main
 
 import (
-	"GoLuaServerV2.1Test/Lua"
-	"GoLuaServerV2.1Test/NetWork"
-	"GoLuaServerV2.1Test/Utils/zLog"
+	"GoLuaServerV2.1Test/Core/Lua"
+	"GoLuaServerV2.1Test/Core/NetWork"
+	"GoLuaServerV2.1Test/Core/Utils/zLog"
 	"flag"
 	//"util/logs"
 	//"github.com/astaxie/beego/logs"
@@ -21,7 +21,7 @@ import (
 )
 
 
-var GameManagerLua *Lua.MyLua    // 公共部分lua脚本
+var GameManagerLua *Lua.MyLua // 公共部分lua脚本
 
 var GameServerAddress string
 //var GameServerWebSocketAddress string
@@ -123,7 +123,7 @@ func GameManagerInit() {
 	GameManagerLua.Init() // 绑定lua脚本
 	//Lua.GoCallLuaTest(GameManagerLua.L,1)
 
-	Lua.GameManagerLuaHandle = GameManagerLua  // 把句柄传递给lua保存一份
+	Lua.GameManagerLuaHandle = GameManagerLua // 把句柄传递给lua保存一份
 	//GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
 	GameManagerLua.GoCallLuaSetStringVar("ServerIP_Port", GameServerAddress+ ":" + strconv.Itoa(SocketPort)) //把服务器地址传递给lua
 

@@ -1,12 +1,12 @@
 package zLog
 
 import (
-	"os"
-	"log"
 	"fmt"
-	"time"
-	"strconv"
+	"log"
+	"os"
 	"runtime"
+	"strconv"
+	"time"
 )
 
 //--------------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ func CheckError(e error) bool{
 		file, _ := os.OpenFile("error.zLog",os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
 		logger := log.New(file, "", log.LstdFlags|log.Llongfile)
 		logger.Println("...error:...",e.Error())
-		if ShowLog{
+		if ShowLog {
 			fmt.Println("错误："+e.Error())
 		}
 		return true
@@ -30,7 +30,7 @@ func CheckError(e error) bool{
 // 输出字符串日志，带显示出控制台
 func PrintLogger(str string) {
 	_logger(str)
-	if ShowLog{
+	if ShowLog {
 		fmt.Println("Log："+str)
 	}
 }
@@ -49,7 +49,7 @@ func WritefLogger(format string, a ...interface{}) {
 func PrintfLogger(format string, a...interface{})  {
 	str:= fmt.Sprintf(format,a...)
 	_logger(str)
-	if ShowLog{
+	if ShowLog {
 		fmt.Println("Log："+str)
 	}
 }

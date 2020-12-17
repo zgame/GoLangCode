@@ -67,7 +67,7 @@ func DealSendData(data string, msg string, mainCmd int, subCmd int,token int) []
 	headSize := len(bufferHead)
 
 	// 生成数据包尾部信息
-	endData:=GetSendTcpEndData()
+	endData:= GetSendTcpEndData()
 	endSize := len(endData)
 
 	// 发送最后数据包
@@ -137,9 +137,9 @@ func DealRecvTcpEndData(msg []byte) uint8  {
 func GetSendTcpHeaderData(maincmd uint16, childcmd uint16, size uint16, msgSize uint16, token uint16) []byte {
 
 	bufferT := new(bytes.Buffer)
-	binary.Write(bufferT,binary.LittleEndian,uint8(TCPHead))		// FE
-	binary.Write(bufferT,binary.LittleEndian,msgSize)		// msg错误消息的长度
-	binary.Write(bufferT,binary.LittleEndian,size)			// 服务器发送不带token
+	binary.Write(bufferT,binary.LittleEndian,uint8(TCPHead)) // FE
+	binary.Write(bufferT,binary.LittleEndian,msgSize)        // msg错误消息的长度
+	binary.Write(bufferT,binary.LittleEndian,size)           // 服务器发送不带token
 	binary.Write(bufferT,binary.LittleEndian,maincmd)
 	binary.Write(bufferT,binary.LittleEndian,childcmd)
 	binary.Write(bufferT,binary.LittleEndian,uint16(token))			// 服务器给客户端不用带token
@@ -152,6 +152,6 @@ func GetSendTcpHeaderData(maincmd uint16, childcmd uint16, size uint16, msgSize 
 // 生成数据包尾部信息
 func GetSendTcpEndData() []byte {
 	bufferT := new(bytes.Buffer)
-	binary.Write(bufferT,binary.LittleEndian,uint8(TCPEnd))		// EE
+	binary.Write(bufferT,binary.LittleEndian,uint8(TCPEnd)) // EE
 	return bufferT.Bytes()
 }

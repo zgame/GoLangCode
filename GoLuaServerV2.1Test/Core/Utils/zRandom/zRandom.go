@@ -1,9 +1,9 @@
 package zRandom
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
-	"fmt"
 )
 
 // 随机 [0,num)

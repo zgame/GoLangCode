@@ -50,8 +50,7 @@ require("Time")
 require("Random")
 require("dumpTable")
 require("zTable")
-require("zRedis")
-require("zMySql")
+
 
 -------------------------------------Redis mysql----------------------------------------
 --package.path = "Script/DataBase/?.lua;"..package.path

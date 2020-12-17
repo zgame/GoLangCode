@@ -11,9 +11,9 @@ import (
 
 
 var (
-	GameManagerLuaHandle *MyLua		// 主线程的lua句柄
-	GlobalMutex sync.Mutex // 主要用于lua逻辑调用时候的加锁
-	RWMutex sync.RWMutex // 主要用于针对map进行读写时候的锁
+	GameManagerLuaHandle *MyLua // 主线程的lua句柄
+	GlobalMutex sync.Mutex      // 主要用于lua逻辑调用时候的加锁
+	RWMutex sync.RWMutex        // 主要用于针对map进行读写时候的锁
 )
 
 
@@ -24,7 +24,7 @@ type MyLua struct {
 
 func NewMyLua() *MyLua {
 	l := lua.NewState()
-	return &MyLua{L:l}
+	return &MyLua{L: l}
 }
 
 // --------------------全局变量初始化--------------------------

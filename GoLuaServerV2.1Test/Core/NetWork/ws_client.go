@@ -1,54 +1,48 @@
 package NetWork
 
 import (
+	"fmt"
+	"github.com/gorilla/websocket"
+	"log"
 	//"github.com/name5566/leaf/zLog"
-	"net"
 	"sync"
 	"time"
-	"fmt"
 )
 //---------------------------------------------------------------------------------------------------
-// Socket 的客户端代码， 用来做测试用的，服务器用不上
+// WebSocket 的客户端代码， 用来做测试用的，服务器用不上
 //---------------------------------------------------------------------------------------------------
 
-type TCPClient struct {
-	sync.Mutex				// 互斥锁 ，作用就是用来防止多线程的map冲突,  conns 读写操作的时候用
-	Addr            string
-	ConnNum         int
-	ConnectInterval time.Duration
-	PendingWriteNum int
-	AutoReconnect   bool
-	NewAgent        func(*TCPConn,int) Agent
-	conns           ConnSet
-	wg              sync.WaitGroup
-	closeFlag       bool
 
-	// msg parser
-	LenMsgLen    int
-	MinMsgLen    uint32
-	MaxMsgLen    uint32
-	LittleEndian bool
-	//msgParser    *MsgParser
+
+type WSClient struct {
+	sync.Mutex       			// 互斥锁 ，作用就是用来防止多线程的map冲突,  conns 读写操作的时候用
+	Addr             string
+	ConnNum          int
+	ConnectInterval  time.Duration
+	PendingWriteNum  int
+	MaxMsgLen        uint32
+	HandshakeTimeout time.Duration
+	AutoReconnect    bool
+	NewAgent         func(*WSConn,int) Agent
+	dialer           websocket.Dialer
+	conns            WebsocketConnSet
+	wg               sync.WaitGroup
+	closeFlag        bool
 }
 
-func (client *TCPClient) Number() int{
+func (client *WSClient) Number() int{
 	return len(client.conns)
 }
-
-func (client *TCPClient) Start(start int ,end int) {
-	//fmt.Println("start")
+func (client *WSClient) Start(start int ,end int) {
 	client.init()
 
 	for i := start; i <= end; i++ {
 		client.wg.Add(1)
-		//fmt.Println("for")
 		go client.connect(i)
-		//time.Sleep(time.Millisecond * 10)
 	}
 }
 
-func (client *TCPClient) init() {
-	//fmt.Println("init")
+func (client *WSClient) init() {
 	client.Lock()
 	defer client.Unlock()
 
@@ -64,26 +58,31 @@ func (client *TCPClient) init() {
 		client.PendingWriteNum = 100
 		fmt.Printf("invalid 写缓存 PendingWriteNum, reset to %v", client.PendingWriteNum)
 	}
+	if client.MaxMsgLen <= 0 {
+		client.MaxMsgLen = 4096
+		fmt.Printf("invalid MaxMsgLen, reset to %v", client.MaxMsgLen)
+	}
+	if client.HandshakeTimeout <= 0 {
+		client.HandshakeTimeout = 10 * time.Second
+		fmt.Printf("invalid HandshakeTimeout, reset to %v", client.HandshakeTimeout)
+	}
 	if client.NewAgent == nil {
-		fmt.Println("NewAgent must not be nil")
+		log.Fatal("NewAgent must not be nil")
 	}
 	if client.conns != nil {
-		fmt.Println("client is running")
+		log.Fatal("client is running")
 	}
 
-	client.conns = make(ConnSet)
+	client.conns = make(WebsocketConnSet)
 	client.closeFlag = false
-
-	// msg parser
-	//msgParser := NewMsgParser()
-	//msgParser.SetMsgLen(client.LenMsgLen, client.MinMsgLen, client.MaxMsgLen)
-	//msgParser.SetByteOrder(client.LittleEndian)
-	//client.msgParser = msgParser
+	client.dialer = websocket.Dialer{
+		HandshakeTimeout: client.HandshakeTimeout,
+	}
 }
 
-func (client *TCPClient) dial() net.Conn {
+func (client *WSClient) dial() *websocket.Conn {
 	for {
-		conn, err := net.Dial("tcp", client.Addr)
+		conn, _, err := client.dialer.Dial(client.Addr, nil)
 		if err == nil || client.closeFlag {
 			return conn
 		}
@@ -94,16 +93,15 @@ func (client *TCPClient) dial() net.Conn {
 	}
 }
 
-func (client *TCPClient) connect(index int) {
-
-	//fmt.Println("开始连接...")
+func (client *WSClient) connect(index int) {
 	defer client.wg.Done()
-
 reconnect:
 	conn := client.dial()
 	if conn == nil {
+		fmt.Println("连接失败")
 		return
 	}
+	conn.SetReadLimit(int64(client.MaxMsgLen))
 
 	client.Lock()
 	if client.closeFlag {
@@ -114,12 +112,12 @@ reconnect:
 	client.conns[conn] = struct{}{}
 	client.Unlock()
 
-	tcpConn := newTCPConn(conn, client.PendingWriteNum)
-	agent := client.NewAgent(tcpConn,index)
+	wsConn := newWSConn(conn, client.PendingWriteNum, client.MaxMsgLen)
+	agent := client.NewAgent(wsConn,index)
 	agent.Run()
 
 	// cleanup
-	tcpConn.Close()
+	wsConn.Close()
 	client.Lock()
 	delete(client.conns, conn)
 	client.Unlock()
@@ -131,7 +129,7 @@ reconnect:
 	}
 }
 
-func (client *TCPClient) Close() {
+func (client *WSClient) Close() {
 	client.Lock()
 	client.closeFlag = true
 	for conn := range client.conns {

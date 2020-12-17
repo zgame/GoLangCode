@@ -1,8 +1,8 @@
 package Lua
 
 import (
-	"GoLuaServerV2.1Test/NetWork"
-	"GoLuaServerV2.1Test/Utils/zLog"
+	"GoLuaServerV2.1Test/Core/NetWork"
+	"GoLuaServerV2.1Test/Core/Utils/zLog"
 	"fmt"
 	"math"
 	"net"
@@ -119,7 +119,7 @@ func (a *MyTcpServer) Run() {
 			// ----------------分析和拆包--------------------------------
 			//fmt.Println(" buf ",buf)
 			//fmt.Println(" bufsize ",bufLen)
-			bufTemp := buf[bufHead:bufLen]         //要处理的buffer
+			bufTemp := buf[bufHead:bufLen]                                          //要处理的buffer
 			bufHeadTemp,msgId,subMsgId,finalBuffer := HandlerRead(bufTemp,a.UserId) //处理结束之后返回，接下来要开始的范围
 
 			//fmt.Println("bufHead:",bufHead, " bufLen", bufLen)
@@ -160,7 +160,7 @@ func HandlerRead(buf []byte, uid int) (int,int,int,string) {
 	//-----------------------------解析头部信息----------------------------
 
 	headFlag,msgId, subMsgId, bufferSize, _ ,msgSize := NetWork.DealRecvTcpHeaderData(buf)
-	BufAllSize := NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize) + 1    // 整个数据包长度，末尾有标示位
+	BufAllSize := NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize) + 1 // 整个数据包长度，末尾有标示位
 
 	//-----------------------------头部信息错误----------------------------
 	if headFlag != uint8(254){
@@ -175,7 +175,7 @@ func HandlerRead(buf []byte, uid int) (int,int,int,string) {
 
 	// ------------------------数据包尾部的判断----------------------
 	endData := NetWork.DealRecvTcpEndData(buf[BufAllSize -1 :BufAllSize])
-	if endData!= uint8(NetWork.TCPEnd){		// EE
+	if endData!= uint8(NetWork.TCPEnd){ // EE
 		zLog.WritefLogger("%d数据包尾部判断不正确 %x ",uid, buf)
 		return -1,0,0,""
 	}
@@ -183,13 +183,13 @@ func HandlerRead(buf []byte, uid int) (int,int,int,string) {
 	//-----------------------------错误提示----------------------------
 	if msgSize >0 {
 		fmt.Println("有错误提示了")
-		msgBuffer := buf[NetWork.TCPHeaderSize + int(bufferSize):NetWork.TCPHeaderSize + int(bufferSize)+ int(msgSize)]
+		msgBuffer := buf[NetWork.TCPHeaderSize+ int(bufferSize): NetWork.TCPHeaderSize+ int(bufferSize)+ int(msgSize)]
 		zLog.WritefLogger(string(msgBuffer))
 		return BufAllSize,int(msgId),int(subMsgId),""
 	}
 
 	//-----------------------------取出proto buffer的内容----------------------------
-	finalBuffer := buf[NetWork.TCPHeaderSize:NetWork.TCPHeaderSize + int(bufferSize)]
+	finalBuffer := buf[NetWork.TCPHeaderSize : NetWork.TCPHeaderSize+ int(bufferSize)]
 
 
 	return BufAllSize,int(msgId),int(subMsgId),string(finalBuffer)

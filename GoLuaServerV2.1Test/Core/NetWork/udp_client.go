@@ -1,20 +1,20 @@
 package NetWork
 
 import (
+	"fmt"
 	//"github.com/name5566/leaf/zLog"
 	"net"
 	"sync"
 	"time"
-	"fmt"
 )
 //---------------------------------------------------------------------------------------------------
 // Socket udp 的客户端代码， 用来做测试用的，服务器用不上
 //---------------------------------------------------------------------------------------------------
 
 type UDPClient struct {
-	sync.Mutex				// 互斥锁 ，作用就是用来防止多线程的map冲突,  conns 读写操作的时候用
+	sync.Mutex      				// 互斥锁 ，作用就是用来防止多线程的map冲突,  conns 读写操作的时候用
 	Addr            string
-	UdpAddr            *net.UDPAddr
+	UdpAddr         *net.UDPAddr
 	ConnNum         int
 	ConnectInterval time.Duration
 	PendingWriteNum int

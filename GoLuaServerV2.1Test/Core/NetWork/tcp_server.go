@@ -1,28 +1,26 @@
 package NetWork
 
 import (
+	"fmt"
 	//"github.com/name5566/leaf/zLog"
 	"net"
 	"sync"
 	"time"
-	"fmt"
 )
 //---------------------------------------------------------------------------------------------------
-// Socket udp 服务器
+// Socket 服务器
 //---------------------------------------------------------------------------------------------------
 
-type UDPServer struct {
+type TCPServer struct {
 	Addr            string
-	UdpAddr         *net.UDPAddr
 	MaxConnNum      int
 	PendingWriteNum int
-	NewAgent        func(*UdpConn) Agent
-	Listen          *net.UDPConn
-	//conns           UdpConnSet
-	//mutexConns      sync.Mutex		// 互斥锁， 用在保持多线程对map的操作安全上
+	NewAgent        func(*TCPConn) Agent
+	ln              net.Listener
+	conns           ConnSet
+	mutexConns      sync.Mutex		// 互斥锁， 用在保持多线程对map的操作安全上
 	wgLn            sync.WaitGroup
 	wgConns         sync.WaitGroup
-	//AddrMap			sync.Map
 
 	// msg parser
 	LenMsgLen    int
@@ -32,15 +30,14 @@ type UDPServer struct {
 	//msgParser    *MsgParser
 }
 
-func (server *UDPServer) Start() {
-	fmt.Println("开始socket Udp 服务器")
+func (server *TCPServer) Start() {
+	fmt.Println("开始socket服务器")
 	server.init()
 	go server.run()
 }
 
-func (server *UDPServer) init() {
-	server.UdpAddr, _ = net.ResolveUDPAddr("udp", server.Addr)
-	ln, err := net.ListenUDP("udp", server.UdpAddr)
+func (server *TCPServer) init() {
+	ln, err := net.Listen("tcp", server.Addr)
 	if err != nil {
 		fmt.Printf("%v", err)
 	}
@@ -57,19 +54,23 @@ func (server *UDPServer) init() {
 		fmt.Println("NewAgent must not be nil")
 	}
 
-	server.Listen = ln
+	server.ln = ln
+	server.conns = make(ConnSet)
+
+	// msg parser
+	//msgParser := NewMsgParser()
+	//msgParser.SetMsgLen(server.LenMsgLen, server.MinMsgLen, server.MaxMsgLen)
+	//msgParser.SetByteOrder(server.LittleEndian)
+	//server.msgParser = msgParser
 }
 
-func (server *UDPServer) run() {
+func (server *TCPServer) run() {
 	server.wgLn.Add(1)
 	defer server.wgLn.Done()
 
 	var tempDelay time.Duration
-	data := make([]byte, 1024*1)
 	for {
-		// udp 是无连接状态的
-		n, remoteAddr, err := server.Listen.ReadFromUDP(data)
-		println("消息：",string(data[:n]))
+		conn, err := server.ln.Accept()				// 一直在监听，如果有新的连接进来了， 那么就一直走到后面建立新的连接
 		if err != nil {
 			if ne, ok := err.(net.Error); ok && ne.Temporary() {
 				if tempDelay == 0 {
@@ -88,16 +89,28 @@ func (server *UDPServer) run() {
 		}
 		tempDelay = 0
 
+		server.mutexConns.Lock()
+		if len(server.conns) >= server.MaxConnNum {
+			server.mutexConns.Unlock()
+			conn.Close()
+			fmt.Println("连接数量超过了最大上限：",server.MaxConnNum)
+			continue
+		}
+		server.conns[conn] = struct{}{}
+		server.mutexConns.Unlock()
 
 		server.wgConns.Add(1)
 
-		udpConn := newUDPConn(server.Listen,remoteAddr, data) // 传递数据给lua
-		agent := server.NewAgent(udpConn)
+		tcpConn := newTCPConn(conn, server.PendingWriteNum) // 建立新连接
+		agent := server.NewAgent(tcpConn)
 		go func() {
 			agent.Run()
 
 			// cleanup
-			udpConn.Close() // 接收的线程关闭的时候， 也会关闭发送的线程
+			tcpConn.Close()
+			server.mutexConns.Lock()
+			delete(server.conns, conn)
+			server.mutexConns.Unlock()
 			agent.OnClose()
 
 			server.wgConns.Done()
@@ -106,15 +119,15 @@ func (server *UDPServer) run() {
 	}
 }
 
-func (server *UDPServer) Close() {
-	server.Listen.Close()
+func (server *TCPServer) Close() {
+	server.ln.Close()
 	server.wgLn.Wait()
 
-	//server.mutexConns.Lock()
-	//for Conn := range server.conns {
-	//	Conn.Close()
-	//}
-	//server.conns = nil
-	//server.mutexConns.Unlock()
+	server.mutexConns.Lock()
+	for conn := range server.conns {
+		conn.Close()
+	}
+	server.conns = nil
+	server.mutexConns.Unlock()
 	server.wgConns.Wait()
 }

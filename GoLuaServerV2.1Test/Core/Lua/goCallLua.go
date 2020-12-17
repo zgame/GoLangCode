@@ -1,7 +1,7 @@
 package Lua
 
 import (
-	"GoLuaServerV2.1Test/Utils/zLog"
+	"GoLuaServerV2.1Test/Core/Utils/zLog"
 	"fmt"
 	"github.com/yuin/gopher-lua"
 )
