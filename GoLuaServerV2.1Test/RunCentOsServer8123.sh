@@ -1,2 +1,2 @@
 sudo ulimit -n 65533
-./BYGameClients -WebSocketPort=8089 -SocketPort=8123 -ClientStart=1 -ClientEnd=500
+./client -SocketPort=9001  -UdpPort=10001 -WebSocketPort=11001  -ClientStart=1 -ClientEnd=1

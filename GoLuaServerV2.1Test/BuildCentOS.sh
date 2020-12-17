@@ -1,1 +1,1 @@
-go build -o BYGameClients
+go build -o client

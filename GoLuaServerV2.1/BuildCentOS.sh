@@ -1,1 +1,1 @@
-go build -o BYGameServerLua
+go build -o server
