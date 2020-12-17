@@ -22,13 +22,10 @@ type UDPClient struct {
 	conns           UdpConnSet
 	wg              sync.WaitGroup
 	closeFlag       bool
-
-	// msg parser
 	LenMsgLen    int
 	MinMsgLen    uint32
 	MaxMsgLen    uint32
 	LittleEndian bool
-	//msgParser    *MsgParser
 }
 
 func (client *UDPClient) Number() int{
@@ -70,15 +67,8 @@ func (client *UDPClient) init() {
 	if client.conns != nil {
 		fmt.Println("client is running")
 	}
-
 	//client.conns = make(UdpConnSet)
 	client.closeFlag = false
-
-	// msg parser
-	//msgParser := NewMsgParser()
-	//msgParser.SetMsgLen(client.LenMsgLen, client.MinMsgLen, client.MaxMsgLen)
-	//msgParser.SetByteOrder(client.LittleEndian)
-	//client.msgParser = msgParser
 }
 
 func (client *UDPClient) dial() *net.UDPConn {

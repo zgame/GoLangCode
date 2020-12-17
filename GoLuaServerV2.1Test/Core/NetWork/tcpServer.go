@@ -20,13 +20,10 @@ type TCPServer struct {
 	mutexConns      sync.Mutex		// 互斥锁， 用在保持多线程对map的操作安全上
 	wgLn            sync.WaitGroup
 	wgConns         sync.WaitGroup
-
-	// msg parser
 	LenMsgLen    int
 	MinMsgLen    uint32
 	MaxMsgLen    uint32
 	LittleEndian bool
-	//msgParser    *MsgParser
 }
 
 func (server *TCPServer) Start() {
@@ -38,7 +35,7 @@ func (server *TCPServer) Start() {
 func (server *TCPServer) init() {
 	ln, err := net.Listen("tcp", server.Addr)
 	if err != nil {
-		fmt.Printf("%v", err)
+		fmt.Printf("%v \n", err)
 	}
 
 	if server.MaxConnNum <= 0 {
@@ -52,15 +49,8 @@ func (server *TCPServer) init() {
 	if server.NewAgent == nil {
 		fmt.Println("NewAgent must not be nil")
 	}
-
 	server.ln = ln
 	server.conns = make(ConnSet)
-
-	// msg parser
-	//msgParser := NewMsgParser()
-	//msgParser.SetMsgLen(server.LenMsgLen, server.MinMsgLen, server.MaxMsgLen)
-	//msgParser.SetByteOrder(server.LittleEndian)
-	//server.msgParser = msgParser
 }
 
 func (server *TCPServer) run() {

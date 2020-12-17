@@ -12,9 +12,6 @@ import (
 //---------------------------------------------------------------------------------------------------
 // WebSocket 服务器部分
 //---------------------------------------------------------------------------------------------------
-
-
-
 type WSServer struct {
 	Addr            string		// 服务器地址
 	MaxConnNum      int			// 最大连接数量
@@ -41,7 +38,6 @@ type WSHandler struct {
 
 // webSocket server Conn 每当有新用户连接， 就会调用一次该函数
 func (handler *WSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	//fmt.Println("new  ServeHTTP")
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", 405)
@@ -91,27 +87,27 @@ func (handler *WSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (server *WSServer) Start() {
 	ln, err := net.Listen("tcp", server.Addr)
 	if err != nil {
-		fmt.Printf("开始服务器出错，%v", err)
+		fmt.Printf("开始服务器出错，%v \n", err)
 	}
 
 	if server.MaxConnNum <= 0 {
 		server.MaxConnNum = 100
-		fmt.Printf("invalid MaxConnNum, reset to %v", server.MaxConnNum)
+		fmt.Printf("invalid MaxConnNum, reset to %v \n", server.MaxConnNum)
 	}
 	if server.PendingWriteNum <= 0 {
 		server.PendingWriteNum = 100
-		fmt.Printf("invalid PendingWriteNum, reset to %v", server.PendingWriteNum)
+		fmt.Printf("invalid PendingWriteNum, reset to %v \n", server.PendingWriteNum)
 	}
 	if server.MaxMsgLen <= 0 {
 		server.MaxMsgLen = 4096
-		fmt.Printf("invalid MaxMsgLen, reset to %v", server.MaxMsgLen)
+		fmt.Printf("invalid MaxMsgLen, reset to %v \n", server.MaxMsgLen)
 	}
 	if server.HTTPTimeout <= 0 {
 		server.HTTPTimeout = 10 * time.Second
-		fmt.Printf("invalid HTTPTimeout, reset to %v", server.HTTPTimeout)
+		fmt.Printf("invalid HTTPTimeout, reset to %v \n", server.HTTPTimeout)
 	}
 	if server.NewAgent == nil {
-		fmt.Printf("指定用那种服务器的代理不能为空啊")
+		fmt.Printf("指定用那种服务器的代理不能为空啊 \n")
 	}
 
 	if server.CertFile != "" || server.KeyFile != "" {
@@ -122,7 +118,7 @@ func (server *WSServer) Start() {
 		config.Certificates = make([]tls.Certificate, 1)
 		config.Certificates[0], err = tls.LoadX509KeyPair(server.CertFile, server.KeyFile)
 		if err != nil {
-			fmt.Printf("%v", err)
+			fmt.Printf("%v  \n", err)
 		}
 
 		ln = tls.NewListener(ln, config)
@@ -148,7 +144,6 @@ func (server *WSServer) Start() {
 		WriteTimeout:   server.HTTPTimeout,
 		MaxHeaderBytes: 1024,
 	}
-
 	fmt.Println("开始websocket服务器")
 	go httpServer.Serve(ln)				// 开始服务器的协程
 }

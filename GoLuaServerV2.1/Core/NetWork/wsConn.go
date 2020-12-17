@@ -9,8 +9,6 @@ import (
 //---------------------------------------------------------------------------------------------------
 // WebSocket 连接部分
 //---------------------------------------------------------------------------------------------------
-
-
 type WebsocketConnSet map[*websocket.Conn]struct{}
 
 type WSConn struct {
@@ -34,20 +32,17 @@ func newWSConn(conn *websocket.Conn, pendingWriteNum int, maxMsgLen uint32) *WSC
 				//fmt.Println("wsConn.writeChan is null              Quit!")
 				break
 			}
-
 			err := conn.WriteMessage(websocket.BinaryMessage, b)
 			if err != nil {
 				println("Conn.WriteMessage  Error  发送数据出错 %s", err.Error())
 				break
 			}
 		}
-
 		conn.Close()
 		wsConn.Lock()
 		wsConn.closeFlag = true
 		wsConn.Unlock()
 	}()
-
 	return wsConn
 }
 
@@ -115,36 +110,8 @@ func (wsConn *WSConn) WriteMsg(args ...[]byte) error {
 	if wsConn.closeFlag {
 		return nil
 	}
-	//
-	//// get len
-	//var msgLen uint32
-	//for i := 0; i < len(args); i++ {
-	//	msgLen += uint32(len(args[i]))
-	//}
-	//
-	//// check len
-	//if msgLen > wsConn.maxMsgLen {
-	//	return errors.New("message too long")
-	//} else if msgLen < 1 {
-	//	return errors.New("message too short")
-	//}
-	//
-	//// don't copy
-	//if len(args) == 1 {
-	//	wsConn.doWrite(args[0])
-	//	return nil
-	//}
-	//
-	//// merge the args
-	//msg := make([]byte, msgLen)
-	//l := 0
-	//for i := 0; i < len(args); i++ {
-	//	copy(msg[l:], args[i])
-	//	l += len(args[i])
-	//}
-	//
+
 	wsConn.doWrite(args[0])
-	//err:=wsConn.Conn.WriteMessage(websocket.BinaryMessage, args[0])
 
 	return nil
 }

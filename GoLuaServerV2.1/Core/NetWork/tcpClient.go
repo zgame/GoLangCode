@@ -21,13 +21,11 @@ type TCPClient struct {
 	conns           map[int]net.Conn
 	wg              sync.WaitGroup
 	closeFlag       bool
-
-	// msg parser
 	LenMsgLen    int
 	MinMsgLen    uint32
 	MaxMsgLen    uint32
 	LittleEndian bool
-	//msgParser    *MsgParser
+
 }
 
 func (client *TCPClient) Number() int{
@@ -40,7 +38,6 @@ func (client *TCPClient) Start(start int ,end int) {
 
 	for i := start; i <= end; i++ {
 		client.wg.Add(1)
-		//fmt.Println("for")
 		go client.connect(i)
 		//time.Sleep(time.Millisecond * 10)
 	}
@@ -73,11 +70,7 @@ func (client *TCPClient) init() {
 	client.conns = make(map[int]net.Conn)
 	client.closeFlag = false
 
-	// msg parser
-	//msgParser := NewMsgParser()
-	//msgParser.SetMsgLen(client.LenMsgLen, client.MinMsgLen, client.MaxMsgLen)
-	//msgParser.SetByteOrder(client.LittleEndian)
-	//client.msgParser = msgParser
+
 }
 
 func (client *TCPClient) dial() net.Conn {
@@ -129,18 +122,7 @@ reconnect:
 		goto reconnect
 	}
 }
-//
-//func (client *UDPClient) reconnect(index int)  {
-//	//if client.conns[index] != nil {
-//	//	client.conns[index].Close()
-//	//}
-//
-//	Conn := client.dial()
-//	if Conn == nil {
-//		return
-//	}
-//
-//}
+
 
 
 func (client *TCPClient) Close() {

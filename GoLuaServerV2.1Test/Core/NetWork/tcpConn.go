@@ -4,7 +4,6 @@ import (
 	"net"
 	"sync"
 )
-
 //---------------------------------------------------------------------------------------------------
 // Socket 连接部分
 //---------------------------------------------------------------------------------------------------
@@ -16,14 +15,12 @@ type TCPConn struct {
 	conn      net.Conn
 	writeChan chan []byte
 	closeFlag bool
-	//msgParser *MsgParser
 }
 
 func newTCPConn(conn net.Conn, pendingWriteNum int) *TCPConn {
 	tcpConn := new(TCPConn)
 	tcpConn.conn = conn
 	tcpConn.writeChan = make(chan []byte, pendingWriteNum)
-	//tcpConn.msgParser = nil
 
 	go func() {
 		for b := range tcpConn.writeChan {
@@ -31,7 +28,6 @@ func newTCPConn(conn net.Conn, pendingWriteNum int) *TCPConn {
 				//fmt.Println("tcpConn.writeChan is null              Quit!")
 				break
 			}
-
 			_, err := conn.Write(b)
 			if err != nil {
 				println("tcpConn.writeChan Error 发送数据出错 %s", err.Error())
@@ -74,24 +70,14 @@ func (tcpConn *TCPConn) Close() {
 
 	tcpConn.doWrite(nil)
 	tcpConn.closeFlag = true
-	//tcpConn.doDestroy()
 }
 
 func (tcpConn *TCPConn) doWrite(b []byte) {
-	//if len(tcpConn.writeChan) > cap(tcpConn.writeChan)/2 {
-	//	zLog.PrintfLogger("发送数据包的缓冲区大于1/2!!!")
-	//	time.Sleep(time.Millisecond * 500)
-	//}
-	//if len(tcpConn.writeChan) > cap(tcpConn.writeChan)*2/3 {
-	//	zLog.PrintfLogger("发送数据包的缓冲区大于2/3!!!")
-	//	time.Sleep(time.Millisecond * 2000)
-	//}
 	if len(tcpConn.writeChan) == cap(tcpConn.writeChan) {
 		println("发送数据包的缓冲区已经满了，关闭该连接!!!")
 		tcpConn.doDestroy()
 		return
 	}
-
 	tcpConn.writeChan <- b
 }
 
@@ -121,24 +107,16 @@ func (tcpConn *TCPConn) RemoteAddr() net.Addr {
 func (tcpConn *TCPConn) ReadMsg() ([]byte, int, error) {
 
 	msgData := make([]byte, 1024*1)
-	//if _, err := io.ReadFull(tcpConn.Conn, msgData); err != nil {
-	//	return nil,0, err
-	//}
-	//Len:= len(msgData)
+
 	Len,err := tcpConn.conn.Read(msgData)
 	if err != nil {
 		return nil,0, err
 	}
 
 	return msgData,Len, nil
-	//return tcpConn.msgParser.Read(tcpConn)
 }
 
 func (tcpConn *TCPConn) WriteMsg(args ...[]byte) error {
-
-	//return tcpConn.msgParser.Write(tcpConn, args...)
-	//_, err :=tcpConn.Conn.Write(args[0])
-	//return err
 	tcpConn.Write(args[0])
 	return nil
 }

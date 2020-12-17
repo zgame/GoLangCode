@@ -18,9 +18,7 @@ type UdpConn struct {
 	sync.Mutex  				// 互斥锁 ， 关闭的时候，写入的时候用
 	Conn       *net.UDPConn
 	Buffer     bytes.Buffer
-	//closeFlag bool
 	UDPAddr *net.UDPAddr
-	//msgParser *MsgParser
 }
 
 func newUDPConn(conn *net.UDPConn, pUDPAddr *net.UDPAddr, data []byte) *UdpConn {
@@ -33,13 +31,7 @@ func newUDPConn(conn *net.UDPConn, pUDPAddr *net.UDPAddr, data []byte) *UdpConn 
 }
 
 func (udpConn *UdpConn) doDestroy() {
-	//udpConn.Conn.(*net.TCPConn).SetLinger(0)
 	udpConn.Conn.Close()
-
-	//if !udpConn.closeFlag {
-	//	close(udpConn.writeChan)
-	//	udpConn.closeFlag = true
-	//}
 }
 
 func (udpConn *UdpConn) Destroy() {
@@ -68,19 +60,12 @@ func (udpConn *UdpConn) RemoteAddr() net.Addr {
 }
 
 func (udpConn *UdpConn) ReadMsg() ([]byte, int, error) {
-
 	msgData := make([]byte, 1024*1)
-	//if _, err := io.ReadFull(udpConn.Conn, msgData); err != nil {
-	//	return nil,0, err
-	//}
-	//Len:= len(msgData)
 	Len,_,err := udpConn.Conn.ReadFromUDP(msgData)
 	if err != nil {
 		return nil,0, err
 	}
-
 	return msgData,Len, nil
-	//return udpConn.msgParser.Read(udpConn)
 }
 
 func (udpConn *UdpConn) WriteMsg(args ...[]byte) error {

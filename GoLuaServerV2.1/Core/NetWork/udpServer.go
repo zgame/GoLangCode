@@ -17,18 +17,12 @@ type UDPServer struct {
 	PendingWriteNum int
 	NewAgent        func(*UdpConn) Agent
 	Listen          *net.UDPConn
-	//conns           UdpConnSet
-	//mutexConns      sync.Mutex		// 互斥锁， 用在保持多线程对map的操作安全上
 	wgLn            sync.WaitGroup
 	wgConns         sync.WaitGroup
-	//AddrMap			sync.Map
-
-	// msg parser
 	LenMsgLen    int
 	MinMsgLen    uint32
 	MaxMsgLen    uint32
 	LittleEndian bool
-	//msgParser    *MsgParser
 }
 
 func (server *UDPServer) Start() {
@@ -87,7 +81,6 @@ func (server *UDPServer) run() {
 		}
 		tempDelay = 0
 
-
 		server.wgConns.Add(1)
 
 		udpConn := newUDPConn(server.Listen,remoteAddr, data) // 传递数据给lua
@@ -108,12 +101,5 @@ func (server *UDPServer) run() {
 func (server *UDPServer) Close() {
 	server.Listen.Close()
 	server.wgLn.Wait()
-
-	//server.mutexConns.Lock()
-	//for Conn := range server.conns {
-	//	Conn.Close()
-	//}
-	//server.conns = nil
-	//server.mutexConns.Unlock()
 	server.wgConns.Wait()
 }
