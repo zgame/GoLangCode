@@ -5,11 +5,11 @@
 package main
 
 import (
-	"GoLuaServerV2.1/Lua"
-	"GoLuaServerV2.1/NetWork"
-	"GoLuaServerV2.1/Utils/ip"
-	"GoLuaServerV2.1/Utils/zLog"
-	"GoLuaServerV2.1/Utils/ztimer"
+	"GoLuaServerV2.1/Core/Lua"
+	"GoLuaServerV2.1/Core/NetWork"
+	"GoLuaServerV2.1/Core/Utils/ip"
+	"GoLuaServerV2.1/Core/Utils/zLog"
+	"GoLuaServerV2.1/Core/Utils/ztimer"
 	"fmt"
 	"github.com/go-ini/ini"
 	"math"
@@ -254,7 +254,7 @@ func NetWorkServerStart()  {
 		wsServer.KeyFile = ""
 		wsServer.NewAgent = func(conn *NetWork.WSConn) NetWork.Agent {
 			ServerId := Lua.GetServerUid()
-			a := Lua.NewMyServer(conn,ServerId)				// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+			a := Lua.NewMyServer(conn,ServerId) // 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
 			return a
 		}
 
@@ -271,7 +271,7 @@ func NetWorkServerStart()  {
 		tcpServer.MaxMsgLen = math.MaxUint32
 		tcpServer.NewAgent = func(conn *NetWork.TCPConn) NetWork.Agent {
 			ServerId := Lua.GetServerUid()
-			a := Lua.NewMyServer(conn,ServerId)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+			a := Lua.NewMyServer(conn,ServerId) // 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
 			return a
 		}
 		tcpServer.Start()
@@ -286,7 +286,7 @@ func NetWorkServerStart()  {
 		udpServer.LenMsgLen = 4
 		udpServer.MaxMsgLen = math.MaxUint32
 		udpServer.NewAgent = func(conn *NetWork.UdpConn) NetWork.Agent {
-			a := Lua.NewMyUdpServer(conn)		// 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
+			a := Lua.NewMyUdpServer(conn) // 每个新连接进来的时候创建一个对应的网络处理的MyServer对象
 			return a
 		}
 		udpServer.Start()
@@ -302,7 +302,7 @@ func GameManagerInit() {
 	GameManagerLua.Init() // 绑定lua脚本
 	//Lua.GoCallLuaTest(GameManagerLua.L,1)
 
-	Lua.GameManagerLuaHandle = GameManagerLua  // 把句柄传递给lua保存一份
+	Lua.GameManagerLuaHandle = GameManagerLua // 把句柄传递给lua保存一份
 	GameManagerLuaReloadTime = LuaReloadTime
 	GameManagerLua.GoCallLuaSetStringVar("GlobalVar","ServerIP_Port", ServerAddress+ ":" + strconv.Itoa(SocketPort)) 	//把服务器地址传递给lua
 	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","GameRoomServerID", GameRoomServerID) 								//把服务器地址传递给lua
@@ -418,8 +418,8 @@ func GetAllConnectMsg() (string,int,int,int)  {
 	//	WriteChan = WriteChan/AllConnect
 	//}
 	//GlobalVar.RWMutex.RUnlock()
-	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerSendWriteChannelNum", WriteChan)		// 发送缓冲区大小
-	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError)  // 把数据头尾错误发送给lua
+	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerSendWriteChannelNum", WriteChan)                       // 发送缓冲区大小
+	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError) // 把数据头尾错误发送给lua
 	str:=fmt.Sprintf(" 发送连接数量 %d  接收连接数量  %d 每秒发送 %d  每秒接收 %d    发送缓存WriteChan %d  消息队列长度 %d ",   successSendClients, successRecClients, successSendMsg , successRecMsg, WriteChan, Lua.QueueGetLen())
 	return "所有连接数量："+ strconv.Itoa(AllConnect) + str , successSendMsg , successRecMsg, WriteChan
 }
