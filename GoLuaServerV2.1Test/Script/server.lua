@@ -44,7 +44,7 @@ require("constCmdServer")
 
 
 -------------------------------------Const----------------------------------------
-require("commonLogic")
+--require("commonLogic")
 --require("hotReload")
 require("Time")
 require("Random")
