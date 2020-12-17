@@ -61,7 +61,7 @@ func main() {
 	}
 
 	//LoginServer := f.Section("Server").Key("LoginServer").Value()
-	GameServerAddress = f.Section("Server").Key("GameServerAddress").Value()
+	//GameServerAddress = f.Section("Server").Key("GameServerAddress").Value()
 	//GameServerWebSocketAddress = f.Section("Server").Key("GameServerWebSocketAddress").Value()
 	//ClientStart,err   := f.Section("Server").Key("ClientStart").Int()
 	//ClientEnd ,err   := f.Section("Server").Key("ClientEnd").Int()
@@ -76,18 +76,21 @@ func main() {
 	uPort := flag.Int("UdpPort", 0, "")
 	start := flag.Int("ClientStart", 0, "")
 	end := flag.Int("ClientEnd", 0, "")
+	address := flag.String("ServerAddress", "", "")
+
 	flag.Parse()
 	WebSocketPort = *wsPort
 	SocketPort = *sPort
 	UdpPort = * uPort
 	ClientStart = * start
 	ClientEnd = *end
+	GameServerAddress = *address
 	zLog.ServerPort = SocketPort
 
 	if WebSocketPort == 0 || SocketPort == 0 ||  UdpPort ==0 || ClientStart == 0 || ClientEnd == 0 {
 
 		for{
-			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123 -UdpPort=8124 -ClientStart=1 -ClientEnd=100")
+			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123 -UdpPort=8124 -ClientStart=1 -ClientEnd=2 -ServerAddress=10.96.8.121")
 			time.Sleep(time.Second)
 
 		}

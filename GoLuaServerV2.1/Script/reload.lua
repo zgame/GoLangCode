@@ -53,12 +53,7 @@ table.insert(f, "Script/Const/constCmdGame")
 table.insert(f, "Script/Const/constCmdServer")
 table.insert(f, "Script/setting")
 table.insert(f, "Script/Const/excel")
-table.insert(f, "Script/Const/protocol_cs")
-table.insert(f, "Script/Const/protocol_gs")
-table.insert(f, "Script/Const/protocol_ls")
-table.insert(f, "Script/Const/protocol_mo")
-table.insert(f, "Script/Const/protocol_cp")
-table.insert(f, "Script/Const/protocol_xhs")
+
 
 
 
