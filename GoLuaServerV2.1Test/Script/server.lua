@@ -29,7 +29,7 @@ package.path = "Script/GameCommonLogic/?.lua;"..package.path
 package.path = "Script/HotReload/?.lua;"..package.path
 package.path = "Script/Const/?.lua;"..package.path
 package.path = "Script/Utils/?.lua;"..package.path
-package.path = "Script/GlobalVar/?.lua;"..package.path
+--package.path = "Script/GlobalVar/?.lua;"..package.path
 package.path = "Script/GameManager/?.lua;"..package.path
 
 require("Const")
@@ -54,11 +54,11 @@ require("zRedis")
 require("zMySql")
 
 -------------------------------------Redis mysql----------------------------------------
-package.path = "Script/DataBase/?.lua;"..package.path
-require("redisConst")
-require("redisGame")
-require("redisPlayer")
-require("sqlStatistic")
+--package.path = "Script/DataBase/?.lua;"..package.path
+--require("redisConst")
+--require("redisGame")
+--require("redisPlayer")
+--require("sqlStatistic")
 
 
 --Logger("system ok")
@@ -68,7 +68,7 @@ require("sqlStatistic")
 require("gameFire")
 require("gameEnter")
 require("LoginServer")
-require("Statistic")
+--require("Statistic")
 require("network")
 
 -------------------------------------GameManager----------------------------------------

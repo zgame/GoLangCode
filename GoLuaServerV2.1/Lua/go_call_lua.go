@@ -1,15 +1,16 @@
 package Lua
 
 import (
-	"GoLuaServerV2.1/GlobalVar"
 	"GoLuaServerV2.1/Utils/zLog"
 	"fmt"
 	"github.com/yuin/gopher-lua"
+	"sync"
 )
 
 //--------------------------------------------------------------------------------
 // go 调用 lua的函数
 //--------------------------------------------------------------------------------
+var MyLuaMutex sync.Mutex // 主要用于lua逻辑调用时候的加锁
 
 // ----------------测试用例--------------------------------
 func GoCallLuaTest(L *lua.LState, num int)  {
@@ -34,7 +35,7 @@ func GoCallLuaTest(L *lua.LState, num int)  {
 
 // -------------------go触发lua函数，不带参数和返回值-------------------
 func (m *MyLua) GoCallLuaLogic(module string,funcName string) {
-	GlobalVar.GlobalMutex.Lock()
+	MyLuaMutex.Lock()
 	table:= m.L.GetGlobal(module)
 	value := m.L.GetField(table,funcName)
 	if err := m.L.CallByParam(lua.P{
@@ -44,13 +45,13 @@ func (m *MyLua) GoCallLuaLogic(module string,funcName string) {
 	}); err != nil {		// 参数
 		zLog.PrintLogger("GoCallLuaLogic error :"+funcName+"      "+err.Error())
 	}
-	GlobalVar.GlobalMutex.Unlock()
+	MyLuaMutex.Unlock()
 }
 
 
 // -------------------go通知lua网络连接成功-------------------
 func (m *MyLua)GoCallLuaNetWorkInit(serverId int) {
-	GlobalVar.GlobalMutex.Lock()
+	MyLuaMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal("GoCallLuaNetWorkInit"),		// lua的函数名字
 		NRet: 0,
@@ -58,12 +59,12 @@ func (m *MyLua)GoCallLuaNetWorkInit(serverId int) {
 	}, lua.LNumber(serverId)); err != nil {		// 参数
 		zLog.PrintfLogger("GoCallLuaNetWorkInit  error :  serverId:%d error:%s",serverId, err.Error())
 	}
-	GlobalVar.GlobalMutex.Unlock()
+	MyLuaMutex.Unlock()
 }
 
 // -------------------go传递接收到的网络数据包给lua-------------------
 func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMsgId int ,buf string, token int) {
-	GlobalVar.GlobalMutex.Lock()
+	MyLuaMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal("GoCallLuaNetWorkReceive"),		// lua的函数名字
 		NRet: 0,
@@ -71,12 +72,12 @@ func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMs
 	}, lua.LNumber(serverId),lua.LNumber(userId),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf),  lua.LNumber(token)); err != nil {		// 参数
 		zLog.PrintfLogger("GoCallLuaNetWorkReceive  error :  msgId:%d  subMsgId %d  buf:%s   error:%s",msgId , subMsgId, buf, err.Error())
 	}
-	GlobalVar.GlobalMutex.Unlock()
+	MyLuaMutex.Unlock()
 }
 
 // -------------------go传递接收到的网络数据包给lua-------------------
 func (m *MyLua)GoCallLuaNetWorkReceiveUdp(serverAddr string,msgId int , subMsgId int ,buf string) {
-	GlobalVar.GlobalMutex.Lock()
+	MyLuaMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal("GoCallLuaNetWorkUdpReceive"),		// lua的函数名字
 		NRet: 0,
@@ -84,12 +85,12 @@ func (m *MyLua)GoCallLuaNetWorkReceiveUdp(serverAddr string,msgId int , subMsgId
 	}, lua.LString(serverAddr),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf)); err != nil {		// 参数
 		zLog.PrintfLogger("GoCallLuaNetWorkReceive  error :  msgId:%d  subMsgId %d  buf:%s   error:%s",msgId , subMsgId, buf, err.Error())
 	}
-	GlobalVar.GlobalMutex.Unlock()
+	MyLuaMutex.Unlock()
 }
 
 //------------------------go 给lua传递 1个 int-----------------------------------------------
 func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
-	GlobalVar.GlobalMutex.Lock()
+	MyLuaMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
 		NRet: 0,
@@ -97,11 +98,11 @@ func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
 	},lua.LNumber(ii)); err != nil {		// 参数
 		zLog.PrintLogger("GoCallLuaLogicInt error :"+ funcName+"      "+err.Error())
 	}
-	GlobalVar.GlobalMutex.Unlock()
+	MyLuaMutex.Unlock()
 }
 //------------------------go 给lua传递 2个 int-----------------------------------------------
 func (m *MyLua) GoCallLuaLogicInt2(funcName string,ii int, ii2 int) {
-	GlobalVar.GlobalMutex.Lock()
+	MyLuaMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
 		NRet: 0,
@@ -109,13 +110,13 @@ func (m *MyLua) GoCallLuaLogicInt2(funcName string,ii int, ii2 int) {
 	},lua.LNumber(ii),lua.LNumber(ii2)); err != nil {		// 参数
 		zLog.PrintLogger("GoCallLuaLogicInt2 error :"+ funcName+"      "+err.Error())
 	}
-	GlobalVar.GlobalMutex.Unlock()
+	MyLuaMutex.Unlock()
 }
 
 // ----------------------Lua重新加载，Lua的热更新按钮----------------------------------------
 func (m *MyLua)GoCallLuaReload() error {
 	//fmt.Println("----------lua reload--------------")
-	GlobalVar.GlobalMutex.Lock()
+	MyLuaMutex.Lock()
 	var err error
 	err = m.L.CallByParam(lua.P{
 		Fn: m.L.GetGlobal("ReloadAll"), //reloadUp  ReloadAll
@@ -123,7 +124,7 @@ func (m *MyLua)GoCallLuaReload() error {
 		Protect: true,
 	})
 
-	GlobalVar.GlobalMutex.Unlock()
+	MyLuaMutex.Unlock()
 	if err != nil {
 		zLog.PrintLogger("热更新出错 "+err.Error())
 	}
@@ -133,15 +134,17 @@ func (m *MyLua)GoCallLuaReload() error {
 
 // ----------------------将go的变量传递给lua， 用来改变lua的全局变量值，一般用于统计和监控----------------------
 func (m *MyLua) GoCallLuaSetStringVar(module string,key string, value string) {
-	GlobalVar.GlobalMutex.Lock()
+	MyLuaMutex.Lock()
 	table := m.L.GetGlobal(module)
 	m.L.SetField(table,key, lua.LString(value))
-	GlobalVar.GlobalMutex.Unlock()
+	MyLuaMutex.Unlock()
 }
 func (m *MyLua) GoCallLuaSetIntVar(module string, key string, value int) {
-	GlobalVar.GlobalMutex.Lock()
+	MyLuaMutex.Lock()
 	//m.L.SetGlobal(name, lua.LNumber(value))
 	table := m.L.GetGlobal(module)
 	m.L.SetField(table,key, lua.LNumber(value))
-	GlobalVar.GlobalMutex.Unlock()
+	MyLuaMutex.Unlock()
 }
+
+

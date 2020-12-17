@@ -7,8 +7,8 @@
 --print("start lua")
 
 -------------------------------------Logger----------------------------------------
-package.path = "Script/Logger/?.lua;"..package.path
-require("logger")
+--package.path = "Script/Logger/?.lua;"..package.path
+require("Script/Utils/logger")
 Logger("========Game Server Start ....========")
 
 ---------------------------------------protocol buffer----------------------------------------

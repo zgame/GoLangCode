@@ -1,0 +1,28 @@
+
+Ö
+Proto_Game_CCC.protoProto"±
+User
+user_id (RuserId
+open_id (	RopenId
+	nick_name (	RnickName
+level (Rlevel
+exp (Rexp
+room_id (RroomId
+chair_id (RchairId"Ì
+	GameLogin
+open_id (	RopenId
+user_id (RuserId
+
+machine_id (	R	machineId
+password (	Rpassword
+ip_addr (	RipAddr
+channel (Rchannel
+device_type (	R
+deviceType"w
+GameLoginResult
+success (Rsuccess
+user (2.Proto.UserRuser
+room_id (RroomId
+err (	Rerr"3
+OTHER_ENTER_ROOM
+user (2.Proto.UserRuserbproto3

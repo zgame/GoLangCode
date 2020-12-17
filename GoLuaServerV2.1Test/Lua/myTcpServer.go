@@ -1,7 +1,6 @@
 package Lua
 
 import (
-	"GoLuaServerV2.1Test/GlobalVar"
 	"GoLuaServerV2.1Test/NetWork"
 	"GoLuaServerV2.1Test/Utils/zLog"
 	"fmt"
@@ -56,7 +55,7 @@ func NewMyTcpServer(conn NetWork.Conn,GameManagerLua *MyLua)  *MyTcpServer {
 	//myLua := NewMyLua()
 	myLua:= GameManagerLua		// 改为统一一个LState
 
-	GlobalVar.GlobalMutex.Lock()
+	GlobalMutex.Lock()
 
 	if MyTcpServerUUID == 0 {
 		MyTcpServerUUID = ClientStart
@@ -67,7 +66,7 @@ func NewMyTcpServer(conn NetWork.Conn,GameManagerLua *MyLua)  *MyTcpServer {
 	if MyTcpServerUUID > int(math.MaxInt32) {
 		MyTcpServerUUID = 0
 	}
-	GlobalVar.GlobalMutex.Unlock()
+	GlobalMutex.Unlock()
 	return &MyTcpServer{Conn: conn,myLua:myLua,ServerId:ServerId,ReceiveBuf:nil}
 }
 
@@ -214,12 +213,12 @@ func (a *MyTcpServer) OnClose() {
 	}
 
 	// 清理掉一些调用关系
-	GlobalVar.RWMutex.Lock()
+	RWMutex.Lock()
 	delete(ConnectMyTcpServer, a.ServerId)
 	delete(ConnectMyTcpServerByUID, a.UserId)
 	//ConnectMyTcpServer[a.ServerId] = nil
 	//ConnectMyTcpServerByUID[a.UserId] = nil
-	GlobalVar.RWMutex.Unlock()
+	RWMutex.Unlock()
 
 	//runtime.GC()
 
@@ -268,12 +267,12 @@ func (a *MyTcpServer) Init() {
 	//a.myLua.Init() // 绑定lua脚本
 	//a.luaReloadTime = GlobalVar.LuaReloadTime
 
-	GlobalVar.RWMutex.Lock()
+	RWMutex.Lock()
 	if ConnectMyTcpServer[a.ServerId] != nil {
 		zLog.PrintfLogger("ConnectMyTcpServer  已经有了, map重复了", a.ServerId,  a.UserId)
 	}
 	ConnectMyTcpServer[a.ServerId] = a
-	GlobalVar.RWMutex.Unlock()
+	RWMutex.Unlock()
 
 	// 以后这里可以初始化玩家自己solo的游戏服务器
 

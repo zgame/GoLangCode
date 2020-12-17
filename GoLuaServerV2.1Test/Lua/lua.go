@@ -1,17 +1,20 @@
 package Lua
 
 import (
-	"GoLuaServerV2.1Test/GlobalVar"
 	"fmt"
 	"github.com/yuin/gopher-lua"
+	"sync"
 )
 //--------------------------------------------------------------------------------
 // lua的接口，包含热更新
 //--------------------------------------------------------------------------------
 
-//var GameManagerReceiveCh chan lua.LValue		// 这是每个玩家线程跟主线程之间的通信用channel
-//var GameManagerSendCh chan lua.LValue			// 这是主线程给每个玩家线程跟之间的通信用channel
-var GameManagerLuaHandle *MyLua		// 主线程的lua句柄
+
+var (
+	GameManagerLuaHandle *MyLua		// 主线程的lua句柄
+	GlobalMutex sync.Mutex // 主要用于lua逻辑调用时候的加锁
+	RWMutex sync.RWMutex // 主要用于针对map进行读写时候的锁
+)
 
 
 type MyLua struct {
@@ -36,25 +39,25 @@ func InitGlobalVar() {
 
 // 通过lua堆栈找到对应的是哪个myServer
 func GetMyTcpServerByLSate(id int) *MyTcpServer {
-	GlobalVar.RWMutex.RLock()
+	RWMutex.RLock()
 	re := ConnectMyTcpServer[id] // 这是全局变量，所以要加锁， 读写都要加
-	GlobalVar.RWMutex.RUnlock()
+	RWMutex.RUnlock()
 	return re
 }
 // 通过 user id 找到对应的是哪个myServer
 func GetMyTcpServerByUID(uid int) *MyTcpServer {
-	GlobalVar.RWMutex.RLock()
+	RWMutex.RLock()
 	re:= ConnectMyTcpServerByUID[uid] // 这是全局变量，所以要加锁， 读写都要加
-	GlobalVar.RWMutex.RUnlock()
+	RWMutex.RUnlock()
 	return re
 }
 
 
 // 通过lua堆栈找到对应的是哪个myServer
 func GetMyUdpServerByLSate(id int) *MyUdpServer {
-	GlobalVar.RWMutex.RLock()
+	RWMutex.RLock()
 	re := ConnectMyUdpServer[id] // 这是全局变量，所以要加锁， 读写都要加
-	GlobalVar.RWMutex.RUnlock()
+	RWMutex.RUnlock()
 	return re
 }
 
@@ -76,48 +79,3 @@ func (m *MyLua)Init()   {
 	//return m.L
 	//fmt.Println("--------lua 脚本 加载完成！---------------")
 }
-
-
-//------------------编译lua文件------------------------------
-// CompileLua reads the passed lua file from disk and compiles it.
-//func CompileLua(filePath string) (*lua.FunctionProto, error) {
-//	file, err := os.Open(filePath)
-//	defer file.Close()
-//	if err != nil {
-//		return nil, err
-//	}
-//	reader := bufio.NewReader(file)
-//	chunk, err := parse.Parse(reader, filePath)
-//	if err != nil {
-//		return nil, err
-//	}
-//	proto, err := lua.Compile(chunk, filePath)
-//	if err != nil {
-//		return nil, err
-//	}
-//	return proto, nil
-//}
-//
-//// DoCompiledFile takes a FunctionProto, as returned by CompileLua, and runs it in the LState. It is equivalent
-//// to calling DoFile on the LState with the original source file.
-//func DoCompiledFile(L *lua.LState, proto *lua.FunctionProto) error {
-//	lFunc := L.NewFunctionFromProto(proto)
-//	L.Push(lFunc)
-//	return L.PCall(0, lua.MultRet, nil)
-//}
-
-
-
-//-----------------------lua 对应的类型列表------------------------------
-//Type name	Go type	Type() value	Constants
-//LNilType	(constants)	LTNil	LNil
-//LBool	(constants)	LTBool	LTrue, LFalse
-//LNumber	float64	LTNumber	-
-//LString	string	LTString	-
-//LFunction	struct pointer	LTFunction	-
-//LUserData	struct pointer	LTUserData	-
-//LState	struct pointer	LTThread	-
-//LTable	struct pointer	LTTable	-
-//LChannel	chan LValue	LTChannel	-
-
-

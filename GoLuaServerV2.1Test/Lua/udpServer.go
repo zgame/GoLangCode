@@ -1,7 +1,6 @@
 package Lua
 
 import (
-	"GoLuaServerV2.1Test/GlobalVar"
 	"GoLuaServerV2.1Test/NetWork"
 	"GoLuaServerV2.1Test/Utils/zLog"
 	"fmt"
@@ -19,7 +18,7 @@ type MyUdpServer struct {
 func NewMyUdpServer(conn NetWork.Conn, GameManagerLua *MyLua) *MyUdpServer {
 	//myLua := NewMyLua()
 	myLua:= GameManagerLua		// 改为统一一个LState
-	GlobalVar.GlobalMutex.Lock()
+	GlobalMutex.Lock()
 
 	if MyUdpServerUUID == 0 {
 		MyUdpServerUUID = ClientStart
@@ -30,17 +29,17 @@ func NewMyUdpServer(conn NetWork.Conn, GameManagerLua *MyLua) *MyUdpServer {
 	if MyUdpServerUUID > int(math.MaxInt32) {
 		MyUdpServerUUID = 0
 	}
-	GlobalVar.GlobalMutex.Unlock()
+	GlobalMutex.Unlock()
 	return &MyUdpServer{Conn: conn,myLua:myLua,ServerId: ServerId}
 }
 
 func (a *MyUdpServer) init()  {
-	GlobalVar.RWMutex.Lock()
+	RWMutex.Lock()
 	if ConnectMyUdpServer[a.ServerId] != nil {
 		zLog.PrintfLogger("ConnectMyTcpServer  已经有了, map重复了", a.ServerId)
 	}
 	ConnectMyUdpServer[a.ServerId] = a
-	GlobalVar.RWMutex.Unlock()
+	RWMutex.Unlock()
 	a.myLua.GoCallLuaLogicInt("GoCallLuaStartGamesServers",a.ServerId)
 }
 
@@ -67,9 +66,9 @@ func (a *MyUdpServer) Run() {
 
 func (a *MyUdpServer) OnClose() {
 	// 清理掉一些调用关系
-	GlobalVar.RWMutex.Lock()
+	RWMutex.Lock()
 	delete(ConnectMyUdpServer, a.ServerId)
-	GlobalVar.RWMutex.Unlock()
+	RWMutex.Unlock()
 }
 
 func (a *MyUdpServer) SendMsg(data string, msg string, mainCmd int, subCmd int ) bool {

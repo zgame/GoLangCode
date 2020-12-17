@@ -18,8 +18,7 @@ import (
 	//"./Logic/Player"
 	//"./CSV"
 	"time"
-	//"github.com/yuin/gopher-lua"
-	"GoLuaServerV2.1/GlobalVar"
+
 	"flag"
 	oldLog "log"
 	"net/http"
@@ -56,7 +55,7 @@ var ServerTypeName string    // ServerAddress 服务器地址
 //var RedisAddress string		// redis 服务器地址
 //var RedisPass string		// redis pwd
 var err error
-
+var LuaReloadTime int //lua脚本当前最新版本的时间戳，后台设置的，保存在服务器中，定期去更新一次
 //var MySqlServerIP string		// mySql
 //var MySqlServerPort string		// mySql port
 //var MySqlDatabase string
@@ -231,7 +230,7 @@ func UpdateLuaReload() {
 	//...
 
 	// 从服务器更新lua热更新的时间戳
-	GlobalVar.LuaReloadTime = 1111
+	LuaReloadTime = 1111
 	GameManagerLuaReloadCheck() //共有逻辑检查一下是否需要更新, 玩家部分每个连接自己检查
 	//GoroutineTableLuaReloadCheck()
 	
@@ -304,7 +303,7 @@ func GameManagerInit() {
 	//Lua.GoCallLuaTest(GameManagerLua.L,1)
 
 	Lua.GameManagerLuaHandle = GameManagerLua  // 把句柄传递给lua保存一份
-	GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
+	GameManagerLuaReloadTime = LuaReloadTime
 	GameManagerLua.GoCallLuaSetStringVar("GlobalVar","ServerIP_Port", ServerAddress+ ":" + strconv.Itoa(SocketPort)) 	//把服务器地址传递给lua
 	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","GameRoomServerID", GameRoomServerID) 								//把服务器地址传递给lua
 	GameManagerLua.GoCallLuaSetStringVar("GlobalVar","ServerTypeName", ServerTypeName) 								//把参数传递给lua
@@ -312,14 +311,14 @@ func GameManagerInit() {
 
 // 检查通用逻辑部分的lua是否需要更新
 func GameManagerLuaReloadCheck() {
-	if GameManagerLuaReloadTime == GlobalVar.LuaReloadTime {
+	if GameManagerLuaReloadTime == LuaReloadTime {
 		//return
 	}
 	// 如果跟本地的lua时间戳不一致，就更新
 	err = GameManagerLua.GoCallLuaReload()
 	if err == nil{
 		// 热更新成功
-		GameManagerLuaReloadTime = GlobalVar.LuaReloadTime
+		GameManagerLuaReloadTime = LuaReloadTime
 	}
 }
 

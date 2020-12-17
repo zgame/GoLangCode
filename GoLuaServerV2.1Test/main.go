@@ -2,7 +2,6 @@
 package main
 
 import (
-	"GoLuaServerV2.1Test/GlobalVar"
 	"GoLuaServerV2.1Test/Lua"
 	"GoLuaServerV2.1Test/NetWork"
 	"GoLuaServerV2.1Test/Utils/zLog"
@@ -22,18 +21,6 @@ import (
 )
 
 
-//const (
-//	LoginServer = "192.168.101.109:8300"		// 登录服务器地址
-//	ClientNum = 200								// 压测客户端数量
-//	GameServerAddress =  "192.168.101.109:9902"		// 游戏服务器
-//)
-
-//
-func checkPanic(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 var GameManagerLua *Lua.MyLua    // 公共部分lua脚本
 
 var GameServerAddress string
@@ -206,131 +193,3 @@ func StartClient() {
 }
 
 
-
-
-//-----------------------------------打印输出内容---------------------------------------------------------------
-
-func GetStaticPrint()  {
-	successSendClients := 0
-	successRecClients := 0
-	successSendMsg := 0
-	successRecMsg := 0
-	WriteChan := 0
-	AllConnect :=0
-	//connNum := 0
-
-	GlobalVar.RWMutex.Lock()
-	for _,v := range Lua.ConnectMyTcpServer {
-		if v!=nil {
-			AllConnect ++
-			//connNum += len(v.ReceiveBuf)
-			if v.SendMsgNum>0{
-				successSendClients++
-				successSendMsg += v.SendMsgNum
-				v.SendMsgNum = 0
-			}
-			if v.ReceiveMsgNum>0{
-				successRecClients ++
-				successRecMsg += v.ReceiveMsgNum
-				v.ReceiveMsgNum = 0
-			}
-			WriteChan += v.Conn.GetWriteChanCap()
-		}
-	}
-	//if AllConnect>0{
-	//	WriteChan = WriteChan/AllConnect		// 求一个平均值
-	//}
-	GlobalVar.RWMutex.Unlock()
-	zLog.PrintfLogger("连接数量 %d  发送活跃连接 %d 接收活跃 %d 每秒发送 %d  每秒接收 %d   WriteChan数量 %d  %s ",  AllConnect,  successSendClients, successRecClients, successSendMsg , successRecMsg,  WriteChan, GetSysMemInfo())
-	//zLog.PrintfLogger("内存情况：%s", GetSysMemInfo())
-
-}
-
-
-func GetSysMemInfo()  string{
-	//自身占用
-	memStat := new(runtime.MemStats)
-	runtime.ReadMemStats(memStat)
-
-	str:= ""
-	//str += "   Lookups:" + strconv.Itoa( int(memStat.Lookups))
-	//str += "M   TotalAlloc:" + strconv.Itoa( int(memStat.TotalAlloc/1000000))//从服务开始运行至今分配器为分配的堆空间总和
-	//str += "  Sys:" + strconv.Itoa( int(memStat.Sys/1000000) )+ "M"
-	//str += "M   Mallocs:" + strconv.Itoa( int(memStat.Mallocs))//服务malloc的次数
-	//str += "次   Frees:" + strconv.Itoa( int(memStat.Frees))//服务回收的heap objects
-	//str += "   HeapAlloc:" + strconv.Itoa( int(memStat.HeapAlloc/1000000)) + "M"//服务分配的堆内存
-	//str += "   HeapSys:" + strconv.Itoa( int(memStat.HeapSys/1000000))+ "M"//系统分配的堆内存
-	//str += "   HeapIdle:" + strconv.Itoa( int(memStat.HeapIdle/1000000))+ "M"//申请但是为分配的堆内存，（或者回收了的堆内存）
-	str += "   HeapInuse:" + strconv.Itoa( int(memStat.HeapInuse/1000000))+ "M"//正在使用的堆内存
-	//str += "   HeapReleased:" + strconv.Itoa( int(memStat.HeapReleased/1000000))+ "M"//返回给OS的堆内存，类似C/C++中的free。
-	//str += "   HeapObjects:" + strconv.Itoa( int(memStat.HeapObjects))+ "个"//堆内存块申请的量
-	//str += "   StackInuse:" + strconv.Itoa( int(memStat.StackInuse/1000000)) + "M"//正在使用的栈
-	//str += "   StackSys:" + strconv.Itoa( int(memStat.StackSys/1000000)) + "M"//系统分配的作为运行栈的内存
-	//str += "   NumGC:" + strconv.Itoa( int(memStat.NumGC))+ "次"////垃圾回收的内存大小
-	//str += "   NumForcedGC:" + strconv.Itoa( int(memStat.NumForcedGC))
-	//str += "   LastGC:" + strconv.Itoa( int(memStat.LastGC))
-	return str
-
-}
-
-
-//func startClient(c *Client) {
-//	//var e error
-//	for {
-//
-//		//c.Conn.SetDeadline(time.Now().Add(1e10))
-//		//fmt.Println(" receive ")
-//
-//		if c.Receive() == false{
-//			// 连接关闭， 那么退出吧
-//			//fmt.Println("-------关闭--------")
-//			return
-//		}
-//
-//
-//
-//		time.Sleep(time.Millisecond * 200)
-//		c.GameAI()
-//	}
-//
-//}
-//
-//func (c *Client) ConnectGameServer(addr string)  {
-//	//c.Conn.Close()
-//
-//	addr = GameServerAddress
-//	//addr =  "192.168.101.109:9902"
-//
-//	tcpAddr, _ := net.ResolveTCPAddr("tcp", addr)
-//	//fmt.Println("connection:", c.Index,  "------",  addr)
-//	conn, e := net.DialTCP("tcp", nil, tcpAddr)
-//	if e != nil {
-//		fmt.Println(c.Index, "服务器连接不上",e)
-//		return
-//	}
-//	defer conn.Close()
-//	//c.Conn = conn
-//	c.SendTokenID = 1
-//	//tcpClients := &Client{conn, i, nil,nil , nil}
-//	//tcpClients.Gameinfo = tcpClients.Gameinfo.New()
-//
-//	//fmt.Println("发送登录游戏服务器请求",c.Index)
-//	c.loginGS()
-//	//fmt.Println("发送登录游戏服务器完成")
-//	startClient(c)
-//}
-
-
-func TimerCheckUpdate(f func(), timer time.Duration)  {
-	go func() {
-		tickerCheckUpdateData := time.NewTicker(time.Second * timer)
-		defer tickerCheckUpdateData.Stop()
-
-		for {
-			select {
-			case <-tickerCheckUpdateData.C:
-				f()
-			}
-		}
-	}()
-}
