@@ -4,7 +4,13 @@
 --- DateTime: 2018/10/12 14:52
 ---
 
-
-function Logger(str)
+ZLog={}
+function ZLog.Logger(str)
     luaCallGoPrintLogger(str)
+end
+
+
+
+function ZLog.printTable1(table)
+    printTable(table)
 end

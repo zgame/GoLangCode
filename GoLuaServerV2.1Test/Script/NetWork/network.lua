@@ -3,8 +3,12 @@
 ----------------------------------------------------------------------
 ---发送消息
 ----------------------------------------------------------------------
----- 玩家自己的网络发送函数
-function LuaNetWorkSend(myServerId, msgId, subMsgId, sendCmd, err, udp)
+
+Network ={}
+
+
+------- 玩家自己的网络发送函数
+function Network.Send(myServerId, msgId, subMsgId, sendCmd, err, udp)
     --return LuaNetWorkSendToUser(0,serverId,msgId,subMsgId,sendCmd,err)      -- userId 如果是0的话， 就是给玩家自己回消息 ，这是在go那边定义的
     local buffer = ""
     if sendCmd ~= nil then
@@ -23,7 +27,7 @@ end
 
 
 -- 发送消息给其他玩家
-function LuaNetWorkSendToUser(userId,msgId,subMsgId,sendCmd,err)
+function Network.SendToUser(userId, msgId, subMsgId, sendCmd, err)
     local buffer = ""
     if sendCmd ~= nil then
         buffer = sendCmd:SerializeToString()
@@ -40,23 +44,27 @@ end
 ---接收消息
 ----------------------------------------------------------------------
 -- 网络接收函数
-function GoCallLuaNetWorkReceive(serverId,userId, msgId, subMsgId, data)
+function Network.Receive(serverId, userId, msgId, subMsgId, data)
     --Logger("lua收到了消息："..msgId)
     --Logger("lua收到了消息："..subMsgId)
     --Logger("lua收到了消息："..data)
-    ReceiveMsg(serverId,userId,msgId,subMsgId,data)
+    Network.Msg(serverId,userId,msgId,subMsgId,data)
 
 end
 -- 网络接收函数
-function GoCallLuaNetWorkUdpReceive(serverId, msgId, subMsgId, data)
+function Network.UdpReceive(serverId, msgId, subMsgId, data)
     local serverAddress = serverId
-    GoCallLuaNetWorkReceive(serverAddress,0,msgId,subMsgId,data)
+    Network.Receive(serverAddress,0,msgId,subMsgId,data)
+
+end
+
+function Network.Broken(uId)
 
 end
 
 
 -- 根据命令进行分支处理
-function ReceiveMsg(serverId,userId, msgId, subMsgId, data)
+function Network.Msg(serverId, userId, msgId, subMsgId, data)
     print("msgId",msgId, "subMsgId",subMsgId)
 
     if msgId == CMD_MAIN.MDM_GAME_CCC  then

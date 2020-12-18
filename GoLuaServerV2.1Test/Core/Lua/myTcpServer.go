@@ -209,7 +209,7 @@ func (a *MyTcpServer) OnClose() {
 
 	if a.UserId > 0 {
 		// 连接关闭了， 通知lua， 这个玩家网络中断了
-		a.myLua.GoCallLuaLogicInt("GoCallLuaPlayerNetworkBroken", a.UserId)
+		a.myLua.GoCallLuaLogicInt("Network","Broken", a.UserId)
 	}
 
 	// 清理掉一些调用关系
@@ -276,7 +276,7 @@ func (a *MyTcpServer) Init() {
 
 	// 以后这里可以初始化玩家自己solo的游戏服务器
 
-	a.myLua.GoCallLuaLogicInt("GoCallLuaStartGamesServers",a.ServerId)
+	a.myLua.GoCallLuaLogicInt("GameClient","Start",a.ServerId)
 
 	// 以后如果有逻辑需要循环， 可以这里加一个协程，做逻辑的run
 	//go func() {

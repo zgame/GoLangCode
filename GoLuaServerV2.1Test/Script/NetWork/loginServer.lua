@@ -32,7 +32,8 @@ function LoginServer.SendLogin(serverId)
     local sendCmd = ProtoGameCCC.GameLogin()
 
     sendCmd.machineId = build_mac_addr(serverId)
-    LuaNetWorkSend(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON,sendCmd,nil,true)
+    Network.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON,sendCmd,nil,true)
+
     print("-----申请登录serverId:----------",serverId)
 end
 
@@ -46,4 +47,6 @@ function LoginServer.LoginGameServer(serverId, buf)
 
     --luaCallGoResisterUID(uid,serverId)
     print("--------登录成功---UID:",uid)
+
+    ZTimer.SetNewTimer("GameCCC", "RunGame", 500, GameCCC.RunGame)
 end

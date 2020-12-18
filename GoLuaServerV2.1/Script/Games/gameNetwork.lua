@@ -16,7 +16,7 @@ function GameNetwork.Receive(serverId, userId, mainSgId, subMsgId, data, token)
 
     if mainSgId == CMD_MAIN.MDM_GAME_CCC then
         -- 跳转到ccc处理
-        CCCNetWork.Receive(serverId, userId, mainSgId, subMsgId, data, token)
+        CCCNetwork.Receive(serverId, userId, mainSgId, subMsgId, data, token)
     else
         -- 跳转到其他游戏处理
     end

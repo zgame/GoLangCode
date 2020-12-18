@@ -51,9 +51,11 @@ func (m *MyLua) GoCallLuaLogic(module string,funcName string) {
 
 // -------------------go通知lua网络连接成功-------------------
 func (m *MyLua)GoCallLuaNetWorkInit(serverId int) {
+	table:= m.L.GetGlobal("ServerNetwork")
+	value := m.L.GetField(table,"NetWorkInit")
 	MyLuaMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal("GoCallLuaNetWorkInit"),		// lua的函数名字
+		Fn: value,
 		NRet: 0,
 		Protect: true,
 	}, lua.LNumber(serverId)); err != nil {		// 参数
@@ -64,9 +66,11 @@ func (m *MyLua)GoCallLuaNetWorkInit(serverId int) {
 
 // -------------------go传递接收到的网络数据包给lua-------------------
 func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMsgId int ,buf string, token int) {
+	table:= m.L.GetGlobal("ServerNetwork")
+	value := m.L.GetField(table,"NetWorkReceive")
 	MyLuaMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal("GoCallLuaNetWorkReceive"),		// lua的函数名字
+		Fn: value,
 		NRet: 0,
 		Protect: true,
 	}, lua.LNumber(serverId),lua.LNumber(userId),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf),  lua.LNumber(token)); err != nil {		// 参数
@@ -77,9 +81,11 @@ func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMs
 
 // -------------------go传递接收到的网络数据包给lua-------------------
 func (m *MyLua)GoCallLuaNetWorkReceiveUdp(serverAddr string,msgId int , subMsgId int ,buf string) {
+	table:= m.L.GetGlobal("ServerNetwork")
+	value := m.L.GetField(table,"NetWorkUdpReceive")
 	MyLuaMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal("GoCallLuaNetWorkUdpReceive"),		// lua的函数名字
+		Fn:value,
 		NRet: 0,
 		Protect: true,
 	}, lua.LString(serverAddr),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf)); err != nil {		// 参数
@@ -101,10 +107,12 @@ func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
 	MyLuaMutex.Unlock()
 }
 //------------------------go 给lua传递 2个 int-----------------------------------------------
-func (m *MyLua) GoCallLuaLogicInt2(funcName string,ii int, ii2 int) {
+func (m *MyLua) GoCallLuaLogicInt2(module string,funcName string,ii int, ii2 int) {
+	table:= m.L.GetGlobal(module)
+	value := m.L.GetField(table,funcName)
 	MyLuaMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
+		Fn: value,
 		NRet: 0,
 		Protect: true,
 	},lua.LNumber(ii),lua.LNumber(ii2)); err != nil {		// 参数

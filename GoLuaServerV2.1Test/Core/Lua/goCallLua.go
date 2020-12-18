@@ -32,10 +32,12 @@ func GoCallLuaTest(L *lua.LState, num int)  {
 }
 
 // -------------------go触发lua函数，不带参数和返回值-------------------
-func (m *MyLua) GoCallLuaLogic(funcName string) {
+func (m *MyLua) GoCallLuaLogic(module string,funcName string) {
 	GlobalMutex.Lock()
+	table:= m.L.GetGlobal(module)
+	value := m.L.GetField(table,funcName)
 	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
+		Fn: value,		// lua的函数名字
 		NRet: 0,
 		Protect: true,
 	}); err != nil {		// 参数
@@ -46,9 +48,11 @@ func (m *MyLua) GoCallLuaLogic(funcName string) {
 
 // -------------------go传递接收到的网络数据包给lua-------------------
 func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMsgId int ,buf string) {
+	table:= m.L.GetGlobal("Network")
+	value := m.L.GetField(table,"Receive")
 	GlobalMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal("GoCallLuaNetWorkReceive"),		// lua的函数名字
+		Fn: value,
 		NRet: 0,
 		Protect: true,
 	}, lua.LNumber(serverId),lua.LNumber(userId),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf)); err != nil {		// 参数
@@ -59,9 +63,11 @@ func (m *MyLua)GoCallLuaNetWorkReceive(serverId int,userId int,msgId int , subMs
 
 // -------------------go传递接收到的网络数据包给lua-------------------
 func (m *MyLua)GoCallLuaNetWorkReceiveUdp(serverAddr string,msgId int , subMsgId int ,buf string) {
+	table:= m.L.GetGlobal("Network")
+	value := m.L.GetField(table,"UdpReceive")
 	GlobalMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal("GoCallLuaNetWorkUdpReceive"),		// lua的函数名字
+		Fn: value,
 		NRet: 0,
 		Protect: true,
 	}, lua.LString(serverAddr),lua.LNumber(msgId), lua.LNumber(subMsgId), lua.LString(buf)); err != nil {		// 参数
@@ -71,10 +77,12 @@ func (m *MyLua)GoCallLuaNetWorkReceiveUdp(serverAddr string,msgId int , subMsgId
 }
 
 //------------------------go 给lua传递 1个 int-----------------------------------------------
-func (m *MyLua) GoCallLuaLogicInt(funcName string,ii int) {
+func (m *MyLua) GoCallLuaLogicInt(module string,funcName string,ii int) {
+	table:= m.L.GetGlobal(module)
+	value := m.L.GetField(table,funcName)
 	GlobalMutex.Lock()
 	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal(funcName),		// lua的函数名字
+		Fn: value,
 		NRet: 0,
 		Protect: true,
 	},lua.LNumber(ii)); err != nil {		// 参数
@@ -100,27 +108,27 @@ func (m *MyLua)GoCallLuaReload() error {
 	}
 	return err
 }
-
-// ----------------------Lua连接mysql----------------------------------------
-func (m *MyLua)GoCallLuaConnectMysql(addr string,db string ,user string ,pwd string) bool {
-	GlobalMutex.Lock()
-
-	if err := m.L.CallByParam(lua.P{
-		Fn: m.L.GetGlobal("MysqlConnect"),
-		NRet: 1,
-		Protect: true,
-	},lua.LString(addr),lua.LString(db),lua.LString(user),lua.LString(pwd)); err != nil {		// 参数
-		zLog.PrintLogger("GoCallLuaConnectMysql error :"+err.Error())
-	}
-	ret := m.L.Get(1) // returned value
-	//fmt.Println("ret",ret, reflect.TypeOf(ret))
-	m.L.Pop(1)  // remove received value
-	GlobalMutex.Unlock()
-	if ret == lua.LTrue {
-		return true
-	}
-	return false
-}
+//
+//// ----------------------Lua连接mysql----------------------------------------
+//func (m *MyLua)GoCallLuaConnectMysql(addr string,db string ,user string ,pwd string) bool {
+//	GlobalMutex.Lock()
+//
+//	if err := m.L.CallByParam(lua.P{
+//		Fn: m.L.GetGlobal("MysqlConnect"),
+//		NRet: 1,
+//		Protect: true,
+//	},lua.LString(addr),lua.LString(db),lua.LString(user),lua.LString(pwd)); err != nil {		// 参数
+//		zLog.PrintLogger("GoCallLuaConnectMysql error :"+err.Error())
+//	}
+//	ret := m.L.Get(1) // returned value
+//	//fmt.Println("ret",ret, reflect.TypeOf(ret))
+//	m.L.Pop(1)  // remove received value
+//	GlobalMutex.Unlock()
+//	if ret == lua.LTrue {
+//		return true
+//	}
+//	return false
+//}
 
 // ----------------------将go的变量传递给lua， 用来改变lua的全局变量值，一般用于统计和监控----------------------
 func (m *MyLua) GoCallLuaSetStringVar(name string, value string) {

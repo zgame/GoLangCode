@@ -115,25 +115,26 @@ func luaCallGoPrintLogger(L * lua.LState) int  {
 
 // lua 创建一个计时器
 func luaCallGoCreateNewTimer(L * lua.LState) int  {
-	funcName := L.ToString(1)	// 定期调用函数名字
-	time1 := L.ToInt(2) 			// 时间，秒
+	module := L.ToString(1) //
+	funcName := L.ToString(2) // 定期调用函数名字
+	time1 := L.ToInt(3)       // 时间，秒
 
-	ztimer.TimerCheckUpdate(func() {
-		GameManagerLuaHandle.GoCallLuaLogic(funcName) //定时调用函数
-	},  time.Duration(time1) )
-
+	ztimer.TimerMillisecondCheckUpdate(func() {
+		GameManagerLuaHandle.GoCallLuaLogic(module,funcName) //定时调用函数
+	}, time.Duration(time1))
 
 	return 0
 }
 
 // lua 创建一个到固定时间触发器
 func luaCallGoCreateNewClockTimer(L * lua.LState) int  {
-	funcName := L.ToString(1)	// 定期调用函数名字
-	clock := L.ToInt(2) 			// 时间，几点，24小时制
+	module := L.ToString(1) //
+	funcName := L.ToString(2) // 定期调用函数名字
+	clock := L.ToInt(3)       // 时间，几点，24小时制
 
 	ztimer.TimerClock(func() {
-		GameManagerLuaHandle.GoCallLuaLogic(funcName) //定时调用函数
-	},  clock )
+		GameManagerLuaHandle.GoCallLuaLogic(module,funcName) //定时调用函数
+	}, clock)
 
 	return 0
 }

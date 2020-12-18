@@ -40,7 +40,7 @@ func (a *MyUdpServer) init()  {
 	}
 	ConnectMyUdpServer[a.ServerId] = a
 	RWMutex.Unlock()
-	a.myLua.GoCallLuaLogicInt("GoCallLuaStartGamesServers",a.ServerId)
+	a.myLua.GoCallLuaLogicInt("GameClient","Start",a.ServerId)
 }
 
 func (a *MyUdpServer) Run() {

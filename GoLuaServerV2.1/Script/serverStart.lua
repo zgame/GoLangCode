@@ -44,8 +44,8 @@ function Main.GoCallLuaStartAllServers()
     --    MainCenterServer.Start()                 -- 启动主中心服
     --end
     local switch={}
-    switch["Game"] = GameServer.Start               -- 启动游戏服
-    switch["MainCenter"] = CenterServer.Start                 -- 启动主中心服
+    switch[Const.ServerGame] = GameServer.Start               -- 启动游戏服
+    switch[Const.ServerCenter] = CenterServer.Start                 -- 启动主中心服
     -- 运行对应server type的函数
     switch[GlobalVar.ServerTypeName]()
 end

@@ -153,7 +153,7 @@ func (a *MyTcpServer) Run() {
 // 在网络中断的时候会自动调用， 关闭lua脚本
 func (a *MyTcpServer) OnClose() {
 	// 连接关闭了， 通知lua， 这个玩家网络中断了
-	a.myLua.GoCallLuaLogicInt2("GoCallLuaPlayerNetworkBroken", a.UserId, a.ServerId)
+	a.myLua.GoCallLuaLogicInt2("ServerNetwork","PlayerNetworkBroken", a.UserId, a.ServerId)
 
 	// 清理掉一些调用关系
 	ConnectMyTcpServer.Delete(a.ServerId)

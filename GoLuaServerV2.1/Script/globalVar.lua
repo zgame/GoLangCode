@@ -10,7 +10,7 @@
 
 GlobalVar = {
     ------------------------统计信息用-----------------------
-    ServerTypeName = "", -- 定义了当前服务器的类型名字
+    ServerTypeName = "", -- 定义了当前服务器的类型名字   例子 ： Game  Center
     ServerIP_Port = "", -- 当前服务器的地址和端口号
     GameRoomServerID = 0, -- 游戏房间的ServerID(用于夹在游戏房间相关信息)
 

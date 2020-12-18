@@ -4,10 +4,10 @@
 --- DateTime: 2018/12/5 14:05
 ---
 
-CCCNetWorkLogin = {}
+CCCNetworkLogin = {}
 
 --游客登录申请,获取玩家的数据， 判断是否已经登录，
-function CCCNetWorkLogin.SevLoginGSGuest(serverId, buf)
+function CCCNetworkLogin.SevLoginGSGuest(serverId, buf)
 
     local msg = protoGameCcc_pb.GameLogin()
     msg:ParseFromString(buf)

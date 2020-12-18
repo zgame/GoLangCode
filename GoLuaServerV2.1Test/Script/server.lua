@@ -30,9 +30,6 @@ package.path = "Script/GameManager/?.lua;"..package.path
 require("Const")
 require("Excel")
 require("proto")
-require("protocol_cs")
-require("protocol_gs")
-require("protocol_ls")
 require("constCmd")
 require("constCmdGame")
 require("constCmdServer")
@@ -41,19 +38,18 @@ require("constCmdServer")
 -------------------------------------Const----------------------------------------
 --require("commonLogic")
 --require("hotReload")
-require("Time")
-require("Random")
+require("zTime")
+require("zTimer")
+require("zRandom")
 require("dumpTable")
 require("zTable")
 
 
 -------------------------------------NetWork----------------------------------------
 
---require("multiThreadChannel")
-require("gameFire")
-require("gameEnter")
-require("LoginServer")
---require("Statistic")
+
+require("loginServer")
+require("gameCCC")
 require("network")
 
 -------------------------------------GameManager----------------------------------------
@@ -65,3 +61,4 @@ require("user")
 
 require("gameManager")
 
+ZJson = require("Json")
