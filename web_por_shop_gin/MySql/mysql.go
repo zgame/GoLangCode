@@ -33,6 +33,8 @@ func InitDataBase() * xorm.Engine{
 	engine, err2 := xorm.NewEngine("mysql", uid+":"+pwd+"@tcp("+ServerIP+")/"+Database+"?charset=utf8")
 	//engine.ShowSQL(true)
 	err2 = engine.Ping()
+	engine.SetMaxOpenConns(200)
+	engine.SetMaxIdleConns(200)
 
 	if err2 != nil {
 		fmt.Println("数据库引擎出错！", err2)
