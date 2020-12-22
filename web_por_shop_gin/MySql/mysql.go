@@ -30,13 +30,13 @@ func InitDataBase() * xorm.Engine{
 
 	// 从sql中获取数据
 	//Engine, err := xorm.NewEngine("odbc", "driver={SQL Server};Server="+ServerIP+";Database="+Database+";uid="+uid+";pwd="+pwd+";")
-	engine, error := xorm.NewEngine("mysql", uid+":"+pwd+"@tcp("+ServerIP+")/"+Database+"?charset=utf8")
+	engine, err2 := xorm.NewEngine("mysql", uid+":"+pwd+"@tcp("+ServerIP+")/"+Database+"?charset=utf8")
 	//engine.ShowSQL(true)
-	error = engine.Ping()
+	err2 = engine.Ping()
 
-	if error != nil {
-		fmt.Println("数据库引擎出错！", error)
-		log.Fatal(error)
+	if err2 != nil {
+		fmt.Println("数据库引擎出错！", err2)
+		log.Fatal(err2)
 		return nil
 	}
 

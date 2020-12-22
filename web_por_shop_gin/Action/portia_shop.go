@@ -1,8 +1,6 @@
 package Action
 
 import (
-	"bytes"
-	"compress/zlib"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -76,21 +74,13 @@ func GetUserMallList(c *gin.Context) {
 
 
 	// zip 压缩
-	var in bytes.Buffer
-	w,err := zlib.NewWriterLevel(&in,zlib.DefaultCompression)
-	_,err = w.Write([]byte(result))
-	err =   w.Close()
-	if err!=nil {
-		zLog.PrintfLogger("压缩错误 %s \n ", err.Error())
-	}
-	//sss := in.String()
-	//fmt.Println(sss)
+	//var in bytes.Buffer
+	//w,err := zlib.NewWriterLevel(&in,zlib.DefaultCompression)
+	//_,err = w.Write([]byte(result))
+	//err =   w.Close()
+	//if err!=nil {
+	//	zLog.PrintfLogger("压缩错误 %s \n ", err.Error())
+	//}
 
-
-	//var out bytes.Buffer
-	//r, _ := zlib.NewReader(strings.NewReader(sss))
-	//io.Copy(&out, r)
-	//fmt.Println(out.String())
-
-	c.JSON(200, gin.H{"MallList": result, "bytes": in.String()})
+	c.JSON(200, gin.H{"MallList": result, "bytes": ""})
 }
