@@ -1,19 +1,16 @@
 package main
 
-
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"reflect"
 )
 
 type TestS struct {
-	IP string
+	IP   string
 	Name string
-	ID  float32
+	ID   float32
 }
-
-
 
 func main() {
 	var test1 TestS
@@ -41,7 +38,6 @@ func main() {
 	fmt.Println("--------------------------------------------")
 	fmt.Println("test1:", test1)
 	fmt.Println("test1.IP:", test1.IP)
-
 
 	fmt.Println("--------------------------------------------")
 	fmt.Println("--------------------------------------------")
