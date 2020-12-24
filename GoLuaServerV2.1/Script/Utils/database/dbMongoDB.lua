@@ -67,7 +67,7 @@ function MongoDB.Insert(collection, table, handle)
     end
     local err = handle:insert(collection, table)
     if err ~= nil then
-        Logger(err)
+        ZLog.Logger(err)
     end
     return err
 end
@@ -80,7 +80,7 @@ function MongoDB.Del(collection, table, handle)
     end
     local err = handle:del(collection, table)
     if err ~= nil then
-        Logger(err)
+        ZLog.Logger(err)
     end
     return err
 end
@@ -96,7 +96,7 @@ function MongoDB.Update(collection, selectTable, updateTable, cmd, handle )
     end
     local err = handle:update(collection, selectTable, updateTable, cmd)
     if err ~= nil then
-        Logger(err)
+        ZLog.Logger(err)
     end
     return err
 end

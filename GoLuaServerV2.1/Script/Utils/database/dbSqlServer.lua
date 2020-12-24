@@ -33,31 +33,26 @@ function SqlServer.Init(handle,h,p,d,u,ps)
 end
 
 --- 执行sql select语句
---- @param handel   连接句柄
---- @param sql      sql语句
---- @return ret查询结果
 function SqlServer.Query(sql,handle)
     if handle == nil then
         handle = GlobalVar.SqlServerMainEngineConnect
     end
     local re,err = handle:query(sql)
     if err ~= nil then
-        Logger(err)
+        ZLog.Logger(err)
     end
     return re
 end
 
 
 --- 执行sql exec语句
---- @param handel   连接句柄
---- @param sql      sql语句
 function SqlServer.Exec(sql,handle)
     if handle == nil then
         handle = GlobalVar.SqlServerMainEngineConnect
     end
     local err = handle:exec(sql)
     if err ~= nil then
-        Logger(err)
+        ZLog.Logger(err)
     end
 end
 

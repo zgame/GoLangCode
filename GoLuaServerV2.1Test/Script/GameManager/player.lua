@@ -8,8 +8,8 @@ function Player:New(user)
     c = {
         User = user,  -- user数据
 
-        TableID = TABLE_CHAIR_NOBODY ,  -- 桌子id
-        ChairID = TABLE_CHAIR_NOBODY,   -- 椅子id
+        TableID = Const.ROOM_CHAIR_NOBODY ,  -- 桌子id
+        ChairID = Const.ROOM_CHAIR_NOBODY,   -- 椅子id
 
         IsRobot = false,            -- 是不是机器人
         ActivityBulletNum = 0,   --当前已经发射的子弹数量

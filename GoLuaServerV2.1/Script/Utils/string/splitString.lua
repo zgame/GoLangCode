@@ -5,9 +5,7 @@
 ---这里放通用的关于string的接口
 
 ---------------将字符串以某个自定的标记，拆分成字符串数组---------------
----@param sBaseString 待拆分的字符串
----@param sSpeString 拆分字符串的标记
----@param tContString 被拆开的字符串数组。注意调用的时候必须在外面用table接受函数返回值！
+
 function SplitString(sBaseString,sSpeString,tContString)
     tContString = {};
     --sBaseString = string.format("%s%s",sBaseString,"SplitStringEnd")
@@ -50,10 +48,7 @@ end
 
 
 --- 功能: 按照正则表达式规则拆分string字符串
---- @param str 原始待拆分数字字符串
---- @param delim 分隔符
---- @param maxNb 最大拆分数量默认全部拆分
---- @param 返回string数组
+
 function StringSplitToStringArrayBYZZ( str,reps )
     local resultStrList = {}
     string.gsub(str,'[^'..reps..']+',function ( w )
@@ -63,10 +58,7 @@ function StringSplitToStringArrayBYZZ( str,reps )
 end
 
 --- 功能: 拆分string字符串
---- @param str 原始待拆分数字字符串
---- @param delim 分隔符
---- @param maxNb 最大拆分数量默认全部拆分
---- @param 返回string数组
+
 function StringSplitToStringArray(str, delim, maxNb)
     if string.find(str, delim, 1, true) == nil then
         return { str }
@@ -97,10 +89,6 @@ function StringSplitToStringArray(str, delim, maxNb)
 end
 
 --- 功能: 拆分数字字符串
---- @param str 原始待拆分数字字符串
---- @param delim 分隔符
---- @param maxNb 最大拆分数量默认全部拆分
---- @param 返回Int数组
 function StringSplitToNumberArray(str, delim, maxNb)
     local result = {}
     if str == nil or string.len(str) == 0 or string.gmatch(str, delim) == nil then

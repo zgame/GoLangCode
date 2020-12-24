@@ -50,9 +50,6 @@ end
 ; --//end function
 
 --//网摘,直接打印到屏幕
----@param t 需要打印的表
----@param n 制表符（空格）数
----@param name 需要打印的表的名称
 function printTable(t, n, name)
     if "table" ~= type(t) then
         return 0;
@@ -90,8 +87,7 @@ function printTable(t, n, name)
 end
 
 
----@param table  获取表的长度
----@return number 表的长度
+--- table  获取表的长度
 function GetHashTableLen(tab)
     local len = 0
     if tab == nil or type(tab) ~= 'table' then

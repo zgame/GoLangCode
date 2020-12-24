@@ -70,8 +70,6 @@
 
 
 --- 从权重数组中选择对应的索引下标
---- @param weightArray 权重数组(下标从0开始的连续数组)
---- @return 权重索引
 function TableWeightSelect(weightArray)
     local nCurWeight = 0
     local nTotalWeight = 0
@@ -80,7 +78,7 @@ function TableWeightSelect(weightArray)
         nTotalWeight = nTotalWeight + weightArray[i]
     end
 
-    local random = GetRandom(1,nTotalWeight)
+    local random = ZRandom.GetRandom(1,nTotalWeight)
     for i=1, #weightArray do
         nCurWeight = nCurWeight + weightArray[i]
         if nCurWeight >= random then

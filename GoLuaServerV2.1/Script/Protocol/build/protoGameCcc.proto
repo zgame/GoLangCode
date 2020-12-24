@@ -35,7 +35,7 @@ message GameLoginResult{
 
 //其他玩家进入游戏场景
 message OtherEnterRoom{
-	_user user = 1;        //用户信息
+	repeated _user user = 1;        //用户信息
 }
 
 //---------------------------------------同步位置-------------------------------

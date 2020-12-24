@@ -34,7 +34,7 @@ function MySql.Query(sql,handle)
     end
     local re,err = handle:query(sql)
     if err ~= nil then
-        Logger(err)
+        ZLog.Logger(err)
     end
     return re
 end
@@ -47,7 +47,7 @@ function MySql.Exec(sql,handle)
     end
     local err = handle:exec(sql)
     if err ~= nil then
-        Logger(err)
+        ZLog.Logger(err)
     end
 end
 

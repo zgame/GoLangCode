@@ -89,11 +89,11 @@ function UInt64ByteSize(field_number, uint64)
 end
 
 function SInt32ByteSize(field_number, int32)
-  return UInt32ByteSize(field_number, ZigZagEncode(int32))
+  return UInt32ByteSize(field_number, ZigZagEncode32(int32))
 end
 
 function SInt64ByteSize(field_number, int64)
-  return UInt64ByteSize(field_number, ZigZagEncode(int64))
+  return UInt64ByteSize(field_number, ZigZagEncode64(int64))
 end
 
 function Fixed32ByteSize(field_number, fixed32)

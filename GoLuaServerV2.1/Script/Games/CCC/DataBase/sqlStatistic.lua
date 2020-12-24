@@ -17,10 +17,10 @@ SQLStaticSwitch = true     -- 统计的数据保存到数据库中开关
 ----------------------------保存服务器状态信息，是按照时间保存的，可以看历史记录-----------------------------
 function SqlSaveServerState(state)
     if SQLStaticSwitch then
-        local time= GetOsDateNow()
+        local time= ZTime.GetOsDateNow()
         local sql = string.format("insert into server_state (server_ip,time,table_num,player_num,rece_num,send_num, write_chan, head_err , heap_inuse, network_delay ) values ('%s','%s', %d,%d,%d,%d,%d,%d,%d,%d)",
-                ServerIP_Port,time,state.TableNum,state.PlayerNum,state.ReceiveNum,state.SendNum,state.WriteChannelNum,state.HeadErrorNum , state.HeapInUse, state.NetWorkDelay)
-        MysqlExec(sql)
+                GlobalVar.ServerIP_Port,time,state.TableNum,state.PlayerNum,state.ReceiveNum,state.SendNum,state.WriteChannelNum,state.HeadErrorNum , state.HeapInUse, state.NetWorkDelay)
+        MySql.Exec(sql)
     end
 end
 
@@ -37,7 +37,7 @@ end
 function SqlSaveGameState(gameType,roomId, state)
     if SQLStaticSwitch then
 
-        ZMySqlSaveGameState(ServerIP_Port,gameType,roomId ,state.FishNum,state.BulletNum,state.SeatArray)   -- 采用go来做这个事情了， lua太费性能
+        ZMySqlSaveGameState(GlobalVar.ServerIP_Port,gameType,roomId ,state.FishNum,state.BulletNum,state.SeatArray)   -- 采用go来做这个事情了， lua太费性能
 
         --RedisSaveString(RedisDirGameState..ServerIP_Port..":GameID_"..gameType..":roomId"..roomId, roomId, ZJson.encode(state))
 
@@ -67,8 +67,8 @@ end
 ----------------------------删掉房间状态信息-----------------------------
 function SqlDelGameState(gameType,roomId)         -- 清理掉房间的运行状态
     if SQLStaticSwitch then
-        local sql = string.format("delete from game_state where server_ip = '%s' and game_id = %d and table_id = %d ",ServerIP_Port,gameType,roomId)
+        local sql = string.format("delete from game_state where server_ip = '%s' and game_id = %d and table_id = %d ",GlobalVar.ServerIP_Port,gameType,roomId)
         --print(sql)
-        MysqlExec(sql)
+        MySql.Exec(sql)
     end
 end

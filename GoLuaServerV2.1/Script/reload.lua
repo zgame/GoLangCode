@@ -162,7 +162,7 @@ function ReloadAll()
     --if true then
     --    return
     --end
-    Logger("------------------start reload all---------------------------")
+    ZLog.Logger("------------------start reload all---------------------------")
 
 
     --HotReload

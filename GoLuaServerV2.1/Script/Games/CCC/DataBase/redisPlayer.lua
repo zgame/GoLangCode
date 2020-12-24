@@ -9,12 +9,12 @@
 
 ----------------------------玩家的数据-----------------------------
 function RedisSavePlayer(User)
-    RedisSaveString(RedisDirAllPlayers..User.UserID,User.UserID, ZJson.encode(User))
+    Redis.SaveString(RedisDirAllPlayers..User.UserID,User.UserID, ZJson.encode(User))
 end
 
 function RedisGetPlayer(uid)
     --return  ZJson.decode(RedisGetString(RedisDirAllPlayers..uid, uid))
-    local json =  ZJson.decode(RedisGetString(RedisDirAllPlayers..uid, uid))
+    local json =  ZJson.decode(Redis.GetString(RedisDirAllPlayers..uid, uid))
     local user = User:New(uid,"")
 
     --printTable(user)
@@ -36,32 +36,9 @@ end
 
 ----------------------------玩家登录 open id -----------------------------
 function RedisSavePlayerLogin(openId,Uid)
-    RedisSaveString(RedisDirAllPlayersLogin..openId,openId, Uid)
+    Redis.SaveString(RedisDirAllPlayersLogin..openId,openId, Uid)
 end
 
 function RedisGetPlayerLogin(openId)
-    return  RedisGetString(RedisDirAllPlayersLogin..openId, openId)     -- 返回Uid
-end
-
-----------------------------玩家登录 聊天相关 -----------------------------
---- 保存玩家聊天相关信息
---- @param UserID 用户ID
---- @param ChatUser 用户聊天信息
-function RedisSavePlayerChatInfo(UserID, ChatUser)
-    RedisSaveString(RedisDirChatPlayers, UserID, ZJson.encode(ChatUser))
-end
-
---- 获取用户聊天信息
-function RedisGetPlayerChatInfo(UserID)
-    local json =  ZJson.decode(RedisGetString(RedisDirChatPlayers, UserID))
-    local chatUser = ChatUser:New()
-
-    if json ~= nil then
-        for k,v in pairs(chatUser) do
-            if json[k] ~= nil then
-                chatUser[k] = json[k]       -- 将数据库保存数据赋值
-            end
-        end
-    end
-    return  chatUser
+    return  Redis.GetString(RedisDirAllPlayersLogin..openId, openId)     -- 返回Uid
 end

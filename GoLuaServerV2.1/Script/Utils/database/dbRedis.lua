@@ -17,7 +17,7 @@ Redis = require('redis')
 -- 有些命令会返回string 或者int
 local function cmdForRedis(cmd, handle, ...)
     if handle == nil then
-        handle = RedisEngineConnect
+        handle = GlobalVar.RedisConnect
     end
     local arg = { ... }
     local slice = {}
@@ -31,7 +31,7 @@ end
 -- 有些命令会返回table
 local function getStringListFromRedis(cmd, handle, ...)
     if handle == nil then
-        handle = RedisEngineConnect
+        handle = GlobalVar.RedisConnect
     end
     local arg = { ... }
     local slice = {}
@@ -151,11 +151,11 @@ end
 function Redis.RunLuaScript(redis_lua_str, name, handle)
     -- name 是用来报错用的，定位问题用
     if handle == nil then
-        handle = RedisEngineConnect
+        handle = GlobalVar.RedisConnect
     end
-    local number, err = RedisEngineConnect:script(redis_lua_str, name)
+    local number, err = handle:script(redis_lua_str, name)
     if err ~= nil then
-        Logger(err)
+        ZLog.Logger(err)
     end
     return number       -- 一般情况都是针对数字的处理，返回结果值
 end

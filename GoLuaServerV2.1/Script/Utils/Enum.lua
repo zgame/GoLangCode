@@ -20,8 +20,7 @@ Util = {
 --   这一次加5
 --    print("-------------------------next--------------------",next2(5))
 ---获取枚举生成器
----@param initid 初始化下标
----@param step 每次增长步长
+
 function Util.GetEnumIndexGenerater(initid,step)
     local CurrentIndex = initid or 0
     step = step or 1

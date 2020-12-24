@@ -7,7 +7,6 @@
 ZTime ={}
 
 --- 获取系统时间，毫秒级别 ,  注意 os.time() 是秒级别
---- @return 获取系统时间毫秒级别
 function ZTime.GetOsTimeMillisecond()
     return luaCallGoGetOsTimeMillisecond()
 end
@@ -33,7 +32,7 @@ function ZTime.GetOsDayNow()
 end
 
 --- 获取今天来显示
---- @return 当天的时间字符串格式(20191030)
+-- @return 当天的时间字符串格式(20191030)
 function ZTime.GetOsDayNowEx()
     return os.date("%Y%m%d",os.time())
 end
@@ -115,21 +114,21 @@ function ZTime.GetHourFromString(dateTimeString)
 end
 
 --- 获取今天初的时间戳
---- @return 今天凌晨的时间戳 单位:秒
+-- @return 今天凌晨的时间戳 单位:秒
 function ZTime.GetTodayStartTime()
     local todayTimeStr = os.date("%Y-%m-%d 00:00:00", os.time())
     return ZTime.GetTimeFromString(todayTimeStr)
 end
 
 --- 获取今天过多少秒的时间
---- @param tSec 秒数
---- @return 时间戳
+-- @param tSec 秒数
+-- @return 时间戳
 function ZTime.GetNextTimeFromTodayStartTime(tSec)
     return ZTime.GetTodayStartTime() + tSec
 end
 
 --- 获取当前时间距离明天凌晨的时间间隔(单位:秒)
---- @return 到明天凌晨的时间间隔单位秒
+-- @return 到明天凌晨的时间间隔单位秒
 function ZTime.GetIntervalBetweenNowAndTomorrow()
     return ZTime.GetNextTimeFromTodayStartTime(24*60*60) - os.time()
 end

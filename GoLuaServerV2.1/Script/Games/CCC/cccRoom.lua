@@ -127,7 +127,7 @@ end
 ----玩家登陆的时候,发送场景其他消息
 function CCCRoom:SendTableSceneInfo(player)
     if player == nil then
-        Logger("ByTable:SendTableSceneInfo player 对象nil")
+        ZLog.Logger("ByTable:SendTableSceneInfo player 对象nil")
         return
     end
     --1.发送场景Enter_scene信息
@@ -136,9 +136,10 @@ function CCCRoom:SendTableSceneInfo(player)
     --self:SendSceneFishes(player.User.userId)
 end
 
+
 --- 同步场景信息
 function CCCRoom:SendEnterSceneInfo(UserId)
-    local sendCmd = CMD_Game_pb.CMD_S_ENTER_SCENE()
+    local sendCmd = protoGameCcc_pb.OtherEnterRoom()
     sendCmd.scene_id = self.GameID
     sendCmd.table_id = self.roomId
     for index, player in pairs(self.UserSeatArray) do
@@ -150,7 +151,7 @@ function CCCRoom:SendEnterSceneInfo(UserId)
         end
     end
 
-    LuaNetWorkSendToUser(UserId, MDM_GF_GAME, SUB_S_ENTER_SCENE, sendCmd, nil, nil) --进入房间
+    NetWork.SendToUser(UserId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON, sendCmd, nil, nil) --进入房间
 end
 ----玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
 --function CCCTable:SendSceneFishes(UserId)
