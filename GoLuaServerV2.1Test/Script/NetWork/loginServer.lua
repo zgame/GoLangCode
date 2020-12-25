@@ -32,7 +32,8 @@ function LoginServer.SendLogin(serverId)
     local sendCmd = ProtoGameCCC.GameLogin()
 
     sendCmd.machineId = build_mac_addr(serverId)
-    Network.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON,sendCmd,nil,true)
+    sendCmd.gameId = Const.GameTypeCCC
+    Network.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON,sendCmd,nil)
 
     print("-----申请登录serverId:----------",serverId)
 end

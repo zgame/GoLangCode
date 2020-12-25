@@ -1,31 +1,35 @@
 
-û
-protoGameCcc.protoGameCCC"­
+Õ
+protoGameCcc.protoGameCCC"Ý
 _user
 userId (RuserId
 openId (	RopenId
 nickName (	RnickName
 level (Rlevel
 exp (Rexp
-roomId (RroomId
-chairId (RchairId"Ç
-	GameLogin
-openId (	RopenId
-userId (RuserId
-	machineId (	R	machineId
+faceId (RfaceId
+gender (Rgender
+roomId (RroomId
+chairId	 (RchairId"ß
+	GameLogin
+	machineId (	R	machineId
+openId (	RopenId
+userId (RuserId
 password (	Rpassword
 ipAddr (	RipAddr
 channel (Rchannel
 
 deviceType (	R
-deviceType"y
+deviceType
+gameId (RgameId"a
 GameLoginResult
 success (Rsuccess"
-user (2.GameCCC._userRuser
-roomId (RroomId
-err (	Rerr"4
+user (2.GameCCC._userRuser
+err (	Rerr"4
 OtherEnterRoom"
-user (2.GameCCC._userRuser"g
+user (2.GameCCC._userRuser"(
+OtherLeaveRoom
+userId (RuserId"g
 	_location
 userId (RuserId
 x (Rx

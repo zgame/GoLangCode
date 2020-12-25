@@ -9,33 +9,40 @@ message _user{
 	string nickName = 3;          //昵称
 	uint32 level = 4;            //用户等级
 	uint32 exp = 5;              //
-	uint32 roomId = 6;          //房间ID
-	uint32 chairId = 7;          //位置ID
+	uint32 faceId = 6;              //
+	uint32 gender = 7;              //
+	uint32 roomId = 8;          //房间ID
+	uint32 chairId = 9;          //位置ID
 }
 
 //---------------------------------------登录-------------------------------
-//游戏服务器登录申请
+//游戏服务器登录申请, 服务器处理优先级是mac地址， openid, uid，
 message GameLogin{
-	string          openId = 1;              //
-	uint32          userId = 2;              //用户 I D
-	string          machineId = 3;              //机器序列
-	string          password = 4;              //登录密码(32md5)
-	string          ipAddr = 5;              //IP地址
-	uint32          channel = 6;            //渠道号 1为官网
-	string          deviceType = 7;            //设备的型号
+	string machineId = 1;              //机器序列
+	string openId = 2;              //  渠道id
+	uint32 userId = 3;              //用户 I D
+	string password = 4;              //登录密码(32md5)
+	string ipAddr = 5;              //IP地址
+	uint32 channel = 6;            //渠道号 1为官网
+	string deviceType = 7;            //设备的型号
+	uint32 gameId = 8;            //登录游戏编号 , 必须发
 }
 
 // 登录成功
 message GameLoginResult{
 	bool success = 1;     // 1成功，0失败
 	_user user = 2;        //用户信息
-	uint32  roomId = 3;          //房间ID
-	string err = 4;
+//	uint32  roomId = 3;          //房间ID
+	string err = 3;
 }
 
 //其他玩家进入游戏场景
 message OtherEnterRoom{
-	_user user = 1;        //用户信息
+	repeated _user user = 1;        //用户信息
+}
+
+message OtherLeaveRoom{
+	repeated uint32 userId = 1;     // 离开的玩家uid
 }
 
 //---------------------------------------同步位置-------------------------------
