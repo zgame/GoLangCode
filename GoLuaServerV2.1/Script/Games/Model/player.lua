@@ -15,7 +15,7 @@ Player = Class:extend()
 function Player:New(user)
 
     self.user = user                    -- user数据
-    self.gameType = 0                   -- 游戏类型
+    self.gameId = 0                   -- 游戏类型
 
     self.roomId = Const.ROOM_CHAIR_NOBODY   -- 房间id
     self.chairId = Const.ROOM_CHAIR_NOBODY   -- 椅子id

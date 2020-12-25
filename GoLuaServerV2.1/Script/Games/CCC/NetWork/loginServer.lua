@@ -30,7 +30,6 @@ local function findUserInfo(msg)
     -- 注意如果客户端， 同时发mac 和 openid， 会使用mac，忽略openid
     if openId ~= nil then
         userId = CCCLoginDB.UId(openId)
-        print(userId)
         user = CCCLoginDB.User(userId)
     end
 
@@ -51,7 +50,6 @@ function CCCNetworkLogin.SevLoginGSGuest(serverId, buf)
     -- 加载玩家数据
     local user = findUserInfo(msg)
     local player = Player(user)
-    printTable(player)
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
     luaCallGoResisterUID(player:UId(), serverId)
 
@@ -62,6 +60,7 @@ function CCCNetworkLogin.SevLoginGSGuest(serverId, buf)
         ZLog.Logger("没有找到游戏类型"..msg.gameId)
         return
     end
+    --player
     Game.PlayerLoginGame(game,player)
 
 
@@ -69,8 +68,9 @@ function CCCNetworkLogin.SevLoginGSGuest(serverId, buf)
     local sendCmd = ProtoGameCCC.GameLoginResult()
     sendCmd.success = true
     Player.Copy(player,sendCmd.user)
-    print(sendCmd)
 
+    print(serverId)
+    print(type(serverId))
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
 
     -- 给该玩家下发其他玩家信息
@@ -82,8 +82,6 @@ function CCCNetworkLogin.SevLoginGSGuest(serverId, buf)
     -- NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON, sendCmd, nil)
 
     -- 给其他玩家下发该玩家信息
-
-
 
 
 

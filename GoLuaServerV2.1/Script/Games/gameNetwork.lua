@@ -30,11 +30,12 @@ function GameNetwork.Broken(uid, serverId)
     ZLog.Logger("通知：" .. uid .. "  掉线了")
 
     local player = GameServer.GetPlayerByUID(uid)
+    printTable(player)
     if player ~= nil then
         --printTable(player,0,"LeavePlayer")
         --print("LeavePlayer.UID="..player.User.UserId)
-        local game = GameServer.GetGameByID(player.gameType)
-        --printTable(game)
+        local game = GameServer.GetGameByID(player.gameId)
+        printTable(game)
         if game ~= nil then
             Game.PlayerLogOutGame(game,player)
             --player.NetWorkState = false

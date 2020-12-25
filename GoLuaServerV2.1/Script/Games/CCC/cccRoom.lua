@@ -1,9 +1,9 @@
 
 CCCRoom = BaseRoom:extend()
-function CCCRoom:New(roomId, gameTypeId)
+function CCCRoom:New(roomId, gameId)
     -- 重新赋值某些属性值
     CCCRoom.super.New(self)
-    self.gameId = gameTypeId
+    self.gameId = gameId
     self.roomId = roomId
     self.tableMax = Const.CCC_ROOM_MAX_PLAYER
 

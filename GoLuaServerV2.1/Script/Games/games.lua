@@ -5,10 +5,10 @@
 
 
 Game = Class:extend()
-function Game:New(name, gameTypeId)
+function Game:New(name, gameId)
 
     self.name = name
-    self.gameTypeId = gameTypeId
+    self.gameId = gameId
     self.switch = true              -- 游戏是否开启
 
     self.allRoomList = {}                  -- 所有房间列表       key tableUid  ,value table          --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
@@ -36,18 +36,18 @@ end
 -----------------------------管理房间---------------------------
 
 -- 创建房间，并启动它
-function Game:CreateRoom(gameType)
+function Game:CreateRoom(gameId)
     local room
-    if gameType == Const.GameTypeCCC then
-        room = CCCRoom(self.tableUUID, gameType)
+    if gameId == Const.GameTypeCCC then
+        room = CCCRoom(self.tableUUID, gameId)
         --elseif
     end
     if room == nil then
-        ZLog.Logger("Create room error , gameType" .. gameType)
+        ZLog.Logger("Create room error , gameType" .. gameId)
         return nil
     end
 
-    ZLog.Logger("创建了一个新的房间,type:" .. gameType)
+    ZLog.Logger("创建了一个新的房间,type:" .. gameId)
 
     --增加该房间到总列表中
     self.allRoomList[tostring(self.tableUUID)] = room
@@ -104,10 +104,13 @@ end
 --- 有玩家登陆游戏
 function Game.PlayerLoginGame(self,oldPlayer)
     local player = GameServer.GetPlayerByUID(oldPlayer:UId()) -- 把之前的玩家数据取出来
+    print("PlayerLoginGame 玩家是否存在内存中")
+    printTable(player)
+    print("------------------------------")
     -- 如果玩家是断线重连的
     if player ~= nil then
         --找到之前有玩家在线
-        if oldPlayer.gameType == player.gameType then
+        if oldPlayer.gameId == player.gameId then
             -- 同一个游戏， 并且玩家状态是等待断线重连
             --player.NetWorkState = true                      -- 网络恢复正常
             --player.NetWorkCloseTimer = 0
@@ -125,22 +128,22 @@ function Game.PlayerLoginGame(self,oldPlayer)
     --player = Player:New(oldPlayer.User)
     --player.GameType = oldPlayer.GameType            -- 设定游戏类型
     player = oldPlayer
-    GameServer.SetAllPlayerList(oldPlayer:UId(), player)  --创建好之后加入玩家总列表
+    GameServer.SetAllPlayerList(player:UId(), player)  --创建好之后加入玩家总列表
 
     --然后找一个有空位的房间让玩家加入游戏
     for k, room in pairs(self.allRoomList) do
         local seatId = BaseRoom.GetEmptySeatInTable(room)
         if seatId > 0 then
-            --print("有空座位")
+            print("有空座位")
             room:InitRoom()    -- 看看是不是空房间，如果是，需要初始化
             return seat(room,player,seatId)
         end
     end
 
     --没有空座位的房间了，创建一个
-    --    print("没有空座位的房间了，创建一个吧,  score".. self.GameTypeID)
-    local gameType = self.allRoomList["1"].gameId
-    local room = Game.CreateRoom(self,gameType)
+    print("没有空座位的房间了，创建一个吧,  score".. self.gameId)
+    local gameId = self.allRoomList["1"].gameId
+    local room = Game.CreateRoom(self, gameId)
     local seatId = BaseRoom.GetEmptySeatInTable(room)  --获取空椅位
     return seat(room,player,seatId)
 
@@ -149,10 +152,10 @@ end
 
 ----玩家登出
 function Game.PlayerLogOutGame(self,player)
-    --Logger("玩家登出 "..player.User.UserID.. "    房间 "..player.roomId)
+    ZLog.Logger("玩家登出 "..player:UId().. "    房间 "..player.roomId)
     local room = Game.GetRoomByUID(self,player.roomId)
     if room ~= nil then
         room:PlayerStandUp(player.chairId, player)        -- 玩家离开房间
-        --Logger("玩家"..player.User.UserID.."离开房间 "..player.roomId.."椅子"..player.ChairID)
+        ZLog.Logger("玩家"..player:UId().."离开房间 "..player.roomId.."椅子"..player.chairId)
     end
 end

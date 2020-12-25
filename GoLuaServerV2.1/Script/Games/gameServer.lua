@@ -11,18 +11,18 @@ GameServer = {}
 
 -----------------------------------游戏服务器入口点-------------------------------------
 --增加一个游戏， 指定这个游戏的类型， 并且创建一个房间，并启动房间逻辑
-local function addGame(name, gameType)
-    if GameServer.GetGameByID(gameType) ~= nil then
-        ZLog.Logger("游戏类型["..gameType.."已经添加过了，不用重复添加")
+local function addGame(name, gameId)
+    if GameServer.GetGameByID(gameId) ~= nil then
+        ZLog.Logger("游戏类型[".. gameId .."已经添加过了，不用重复添加")
         return
     end
 
-    local game = Game(name, gameType)
+    local game = Game(name, gameId)
     -- 加入到游戏总列表中
-    GameServer.SetAllGamesList(gameType, game)
+    GameServer.SetAllGamesList(gameId, game)
 
     --Logger("--------------AddGame--------------------------")
-    Game.CreateRoom(game,gameType)
+    Game.CreateRoom(game, gameId)
     --game.GameScore = gameScore
 end
 
@@ -100,12 +100,12 @@ end
 
 -----------------------------------游戏列表管理-------------------------------------
 --通过gameID获取是哪个游戏
-function GameServer.GetGameByID(gameType)
-    return GlobalVar.AllGamesList[tostring(gameType)]
+function GameServer.GetGameByID(gameId)
+    return GlobalVar.AllGamesList[tostring(gameId)]
 end
 
-function GameServer.SetAllGamesList(gameType, value)
-    GlobalVar.AllGamesList[tostring(gameType)] = value
+function GameServer.SetAllGamesList(gameId, value)
+    GlobalVar.AllGamesList[tostring(gameId)] = value
 end
 
 -----------------------------------房间-------------------------------------
