@@ -9,22 +9,24 @@
 --- 一定确保字段名与数据库表中字段名相同
 --------------------------------------------------------------------------------------
 
-User = Class:extend()
-function User:New(userId,openId,machineId)
+User = {}
+function User.New(userId, openId, machineId)
 
-    --- 玩家基础信息
-    self.userId = userId                --  # 用户id
-    self.openId = openId
-    self.machineId = machineId
-    self.gameId = 0                --  # 游戏id
-    self.nickName = "玩家"..userId               --  # 昵称
-    self.level = 0                --  # 等级
-    self.exp = 0                --  # 经验
-    self.faceId = 0                --  # 头像id
-    self.gender = 0                --  # 性别
-    self.payTotal = 0                --  # 充值总金额
-    self.offLineTime = 0                --  # 离线时间
-
+    local c = {
+        --- 玩家基础信息
+        userId = userId, --  # 用户id
+        openId = openId,
+        machineId = machineId,
+        gameId = 0, --  # 游戏id
+        nickName = "玩家" .. tostring(userId), --  # 昵称
+        level = 0, --  # 等级
+        exp = 0, --  # 经验
+        faceId = 0, --  # 头像id
+        gender = 0, --  # 性别
+        payTotal = 0, --  # 充值总金额
+        offLineTime = 0, --  # 离线时间
+    }
+    return c
 
 end
 

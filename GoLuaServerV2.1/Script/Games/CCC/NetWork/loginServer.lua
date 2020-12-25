@@ -3,31 +3,42 @@
 CCCNetworkLogin = {}
 
 
-local function newPlayer(openId,machineId)
+local function newUser(openId,machineId)
     local userId = GameServer.GetLastUserID()
-    local user = User:New(userId,openId,machineId)
+    local user = User.New(userId,openId,machineId)
+    CCCLoginDB.UserInsert(user)
+    CCCLoginDB.OpenIdInsert(openId,user.userId)
+    return user
 end
 
--- 根据客户端发来的信息，进行登录
+-- 根据客户端发来的信息，进行登录， 优先级是 mac地址， openid, uid，
 local function findUserInfo(msg)
     print(msg)
     local userId = msg.userId
     local openId = msg.openId
     local machineId = msg.machineId
 
+    local user
     if userId ~= nil then
-
-    end
-
-    if openId ~= nil then
-
+        user =  CCCLoginDB.User(userId)
     end
 
     if machineId ~= nil then
-       
+        openId = 'cccmac'..machineId
     end
 
-    return nil
+    -- 注意如果客户端， 同时发mac 和 openid， 会使用mac，忽略openid
+    if openId ~= nil then
+        userId = CCCLoginDB.UId(openId)
+        print(userId)
+        user = CCCLoginDB.User(userId)
+    end
+
+    if user == nil then
+        return newUser(openId,machineId)
+    end
+
+    return user
 end
 
 
@@ -37,17 +48,15 @@ function CCCNetworkLogin.SevLoginGSGuest(serverId, buf)
     local msg = ProtoGameCCC.GameLogin()
     msg:ParseFromString(buf)
 
-    local player = findUserInfo(msg)
-    if player == nil then
-        ZLog.Logger("登录错误"..msg)
-        return
-    end
+    -- 加载玩家数据
+    local user = findUserInfo(msg)
+    local player = Player(user)
+    printTable(player)
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
     luaCallGoResisterUID(player:UId(), serverId)
 
 
     --玩家登录游戏
-    local gameId = msg.gameId
     local game = GameServer.GetGameByID(msg.gameId)
     if game == nil then
         ZLog.Logger("没有找到游戏类型"..msg.gameId)

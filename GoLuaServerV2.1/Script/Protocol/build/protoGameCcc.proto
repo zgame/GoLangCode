@@ -16,16 +16,16 @@ message _user{
 }
 
 //---------------------------------------登录-------------------------------
-//游戏服务器登录申请
+//游戏服务器登录申请, 服务器处理优先级是mac地址， openid, uid，
 message GameLogin{
-	string openId = 1;              //
-	uint32 userId = 2;              //用户 I D
-	string machineId = 3;              //机器序列
+	string machineId = 1;              //机器序列
+	string openId = 2;              //  渠道id
+	uint32 userId = 3;              //用户 I D
 	string password = 4;              //登录密码(32md5)
 	string ipAddr = 5;              //IP地址
 	uint32 channel = 6;            //渠道号 1为官网
 	string deviceType = 7;            //设备的型号
-	uint32 gameId = 8;            //登录游戏编号
+	uint32 gameId = 8;            //登录游戏编号 , 必须发
 }
 
 // 登录成功

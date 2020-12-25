@@ -81,6 +81,7 @@ LuaFiles.Games = {}
 f = LuaFiles.Games
 --ccc
 table.insert(f, "Script/Games/CCC/cccRoom")
+table.insert(f, "Script/Games/CCC/DataBase/loginServer")
 
 
 

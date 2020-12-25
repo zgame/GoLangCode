@@ -29,7 +29,7 @@ function Player:UId()
 end
 
 -- 把用户信息整理准备发送
-function Player.Copy(player, sendCmdUser)
+function Player.Copy(self, sendCmdUser)
     sendCmdUser.userId = self.user.userId
     sendCmdUser.openId = self.user.openId
     sendCmdUser.nickName = self.user.nickName
