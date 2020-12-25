@@ -25,7 +25,7 @@ deviceType"y
 roomId (RroomId
 err (	Rerr"4
 OtherEnterRoom"
-user (2.GameCCC._userRuser"g
+user (2.GameCCC._userRuser"g
 	_location
 userId (RuserId
 x (Rx

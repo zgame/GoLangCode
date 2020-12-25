@@ -10,22 +10,21 @@
 --------------------------------------------------------------------------------------
 
 User = Class:extend()
-function User:New()
+function User:New(userId,openId,machineId)
 
     --- 玩家基础信息
-    self.UserID = 0                --  # 用户id
-    self.GameID = 0                --  # 游戏id
-    self.NickName = ""               --  # 昵称
-    self.FaceID = 0                --  # 头像id
-    self.Gender = 0                --  # 性别
-    self.Experience = 0                --  # 经验
-    self.Loveliness = 0                --  # 魅力
-    self.Lev = 0                --  # 等级
-    self.VipLev = 0                --  # vip等级
-    self.VipExp = 0                --  # Vip经验
-    self.AccountLev = 0                --  # 账号等级
-    self.PayTotal = 0                --  # 充值总金额
-    self.OffLineTime = 0                --  # 离线时间
+    self.userId = userId                --  # 用户id
+    self.openId = openId
+    self.machineId = machineId
+    self.gameId = 0                --  # 游戏id
+    self.nickName = "玩家"..userId               --  # 昵称
+    self.level = 0                --  # 等级
+    self.exp = 0                --  # 经验
+    self.faceId = 0                --  # 头像id
+    self.gender = 0                --  # 性别
+    self.payTotal = 0                --  # 充值总金额
+    self.offLineTime = 0                --  # 离线时间
+
 
 end
 

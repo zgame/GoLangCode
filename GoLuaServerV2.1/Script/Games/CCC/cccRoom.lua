@@ -3,13 +3,13 @@ CCCRoom = BaseRoom:extend()
 function CCCRoom:New(roomId, gameTypeId)
     -- 重新赋值某些属性值
     CCCRoom.super.New(self)
-    self.GameID = gameTypeId
+    self.gameId = gameTypeId
     self.roomId = roomId
-    self.TableMax = Const.CCC_ROOM_MAX_PLAYER
+    self.tableMax = Const.CCC_ROOM_MAX_PLAYER
 
     -- 椅子
-    self.UserSeatArray = {}        -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
-    self.UserSeatArrayNumber = 0         -- 房间上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
+    self.userSeatArray = {}        -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
+    self.userSeatArrayNumber = 0         -- 房间上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
 
 end
 
@@ -108,8 +108,8 @@ end
 
 ----------------------- 玩家操作 ---------------------------------
 ----玩家坐到椅子上
-function CCCRoom:PlayerSeat(seatID, player)
-    BaseRoom.PlayerSeat(self,seatID,player)
+function CCCRoom:PlayerSeat(seatId, player)
+    BaseRoom.PlayerSeat(self, seatId,player)
 end
 --- 发消息给同房间的其他玩家，告诉他们你登录了
 function CCCRoom:SendYouLoginToOthers(player, table)
@@ -131,7 +131,7 @@ function CCCRoom:SendTableSceneInfo(player)
         return
     end
     --1.发送场景Enter_scene信息
-    self:SendEnterSceneInfo(player.User.userId)
+    self:SendEnterSceneInfo(player:UId())
     --2.发送场景中鱼信息
     --self:SendSceneFishes(player.User.userId)
 end
@@ -139,14 +139,14 @@ end
 
 --- 同步场景信息
 function CCCRoom:SendEnterSceneInfo(UserId)
-    local sendCmd = protoGameCcc_pb.OtherEnterRoom()
-    sendCmd.scene_id = self.GameID
+    local sendCmd = ProtoGameCCC.OtherEnterRoom()
+    sendCmd.scene_id = self.gameId
     sendCmd.table_id = self.roomId
-    for index, player in pairs(self.UserSeatArray) do
+    for index, player in pairs(self.userSeatArray) do
         -- 从房间传递过来的其他玩家信息，原来坐着的玩家信息
         if player ~= nil then
-            local uu = sendCmd.table_users:add()
-            uu.user_id = player.User.UserID
+            local uu = sendCmd.user:add()
+            uu.user_id = player:UId()
             uu.chair_id = index
         end
     end

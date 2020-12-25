@@ -33,7 +33,7 @@ function GameNetwork.Broken(uid, serverId)
     if player ~= nil then
         --printTable(player,0,"LeavePlayer")
         --print("LeavePlayer.UID="..player.User.UserId)
-        local game = GameServer.GetGameByID(player.GameType)
+        local game = GameServer.GetGameByID(player.gameType)
         --printTable(game)
         if game ~= nil then
             Game.PlayerLogOutGame(game,player)

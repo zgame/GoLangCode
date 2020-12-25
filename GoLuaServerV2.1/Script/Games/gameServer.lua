@@ -38,12 +38,6 @@ function GameServer.Start()
     print("-------------------  添加游戏  ------------------------------")
     addGame("沙石镇", Const.GameTypeCCC)
 
-    --addGame("满贯捕鱼", GameTypeBY , 1)           -- 普通房间
-    --addGame("满贯捕鱼30倍", GameTypeBY30 , 30)    -- 30倍房间
-    --addGame("满贯捕鱼2", GameTypeBY2)
-    --addGame("满贯捕鱼3", GameTypeBY3)
-    --addGame("小海兽", GameTypeXHS, 1)
-
     --SetNewTimer("NewTimerBy2Second",2 * 1000)      -- lua 自己设定计时器
     --SetNewClockTimer("NewTimerByAfternoon4", 16)    -- lua 自己设定的固定时间定时器，  16:00
 
@@ -61,7 +55,7 @@ function GameServer.Start()
 end
 
 -----------------------------------玩家列表管理-------------------------------------
-local RedisDirAllPlayersUUID          = "CCC:AllPlayers_UUID:"                         -- 所有玩家UUID
+local RedisDirAllPlayersUUID          = "CCC:AllUer_UUID:"                         -- 所有玩家UUID
 local function GetAllPlayersUUID(num)
     --return RedisAddNumber(RedisDirAllPlayersUUID.."BY_UUID" ,"BY_UUID",num)
     local dir = RedisDirAllPlayersUUID.."CCC_UUID"
@@ -79,6 +73,7 @@ local function GetAllPlayersUUID(num)
     redis_lua_str = string.format(redis_lua_str,dir,key, num, dir,key)
     return Redis.RunLuaScript(redis_lua_str, "RedisMultiProcessGetAllPlayersUUID")
 end
+
 --有一个新的玩家注册了，那么给他分配一个UID
 function GameServer.GetLastUserID()
     local r = 1     -- math.random(1, 4)        --返回[1,4]的随机整数
@@ -127,7 +122,7 @@ end
 -- 遍历所有的列表，然后依次run,  改为服务器自己创建定时器处理
 function GameServer.RunGamesRooms()
     for _, game in pairs(GlobalVar.AllGamesList) do
-        for _, room in pairs(game.AllRoomList) do
+        for _, room in pairs(game.allRoomList) do
             room:RunRoom() -- 执行注册的函数，table run
         end
     end

@@ -7,13 +7,13 @@
 Game = Class:extend()
 function Game:New(name, gameTypeId)
 
-    self.Name = name
-    self.GameTypeID = gameTypeId
-    self.Switch = true              -- 游戏是否开启
+    self.name = name
+    self.gameTypeId = gameTypeId
+    self.switch = true              -- 游戏是否开启
 
-    self.AllRoomList = {}                  -- 所有房间列表       key tableUid  ,value table          --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
-    self.AllRoomNumber = 0                  -- 所有该游戏的房间数量
-    self.TableUUID = 1                   -- tableUid 从1开始
+    self.allRoomList = {}                  -- 所有房间列表       key tableUid  ,value table          --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
+    self.allRoomNumber = 0                  -- 所有该游戏的房间数量
+    self.tableUUID = 1                   -- tableUid 从1开始
 
     --GoRunTableAllList = {},                   -- 房间的run函数在里面                --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
     --GameScore           = 0 ,                   --  游戏倍率
@@ -39,7 +39,7 @@ end
 function Game:CreateRoom(gameType)
     local room
     if gameType == Const.GameTypeCCC then
-        room = CCCRoom(self.TableUUID, gameType)
+        room = CCCRoom(self.tableUUID, gameType)
         --elseif
     end
     if room == nil then
@@ -50,9 +50,9 @@ function Game:CreateRoom(gameType)
     ZLog.Logger("创建了一个新的房间,type:" .. gameType)
 
     --增加该房间到总列表中
-    self.AllRoomList[tostring(self.TableUUID)] = room
-    self.AllRoomNumber = self.AllRoomNumber + 1
-    self.TableUUID = self.TableUUID + 1     -- table uuid 自增
+    self.allRoomList[tostring(self.tableUUID)] = room
+    self.allRoomNumber = self.allRoomNumber + 1
+    self.tableUUID = self.tableUUID + 1     -- table uuid 自增
 
     -- 房间开始
     room:InitRoom()
@@ -63,14 +63,14 @@ end
 
 -- 根据房间uid 返回房间的句柄
 function Game.GetRoomByUID(game, roomId)
-    return game.AllRoomList[tostring(roomId)]
+    return game.allRoomList[tostring(roomId)]
 end
 
 -- 房间回收
 function Game.ReleaseRoom(game, roomId)
     if roomId ~= 1 then
-        game.AllRoomList[tostring(roomId)] = nil
-        game.AllRoomNumber = game.AllRoomNumber - 1
+        game.allRoomList[tostring(roomId)] = nil
+        game.allRoomNumber = game.allRoomNumber - 1
         --self.GoRunTableAllList[tostring(roomId)] = nil
         --SqlDelGameState(self.GameTypeID, roomId)   -- 把记录房间状态的redis删掉
         ZLog.Logger("清理掉房间" .. roomId)
@@ -97,17 +97,17 @@ end
 local function seat(room, player, seatId)
     room:PlayerSeat(seatId, player)              --让玩家坐下.
     player.roomId = room.roomId
-    player.ChairID = seatId
+    player.chairId = seatId
     --self:SendYouLoginToOthers(player, room)-- 发消息给同房间的其他玩家，告诉他们你登录了
     return player
 end
 --- 有玩家登陆游戏
 function Game.PlayerLoginGame(self,oldPlayer)
-    local player = GameServer.GetPlayerByUID(oldPlayer.User.UserID) -- 把之前的玩家数据取出来
+    local player = GameServer.GetPlayerByUID(oldPlayer:UId()) -- 把之前的玩家数据取出来
     -- 如果玩家是断线重连的
     if player ~= nil then
         --找到之前有玩家在线
-        if oldPlayer.GameType == player.GameType then
+        if oldPlayer.gameType == player.gameType then
             -- 同一个游戏， 并且玩家状态是等待断线重连
             --player.NetWorkState = true                      -- 网络恢复正常
             --player.NetWorkCloseTimer = 0
@@ -125,10 +125,10 @@ function Game.PlayerLoginGame(self,oldPlayer)
     --player = Player:New(oldPlayer.User)
     --player.GameType = oldPlayer.GameType            -- 设定游戏类型
     player = oldPlayer
-    GameServer.SetAllPlayerList(oldPlayer.User.UserID, player)  --创建好之后加入玩家总列表
+    GameServer.SetAllPlayerList(oldPlayer:UId(), player)  --创建好之后加入玩家总列表
 
     --然后找一个有空位的房间让玩家加入游戏
-    for k, room in pairs(self.AllRoomList) do
+    for k, room in pairs(self.allRoomList) do
         local seatId = BaseRoom.GetEmptySeatInTable(room)
         if seatId > 0 then
             --print("有空座位")
@@ -139,7 +139,7 @@ function Game.PlayerLoginGame(self,oldPlayer)
 
     --没有空座位的房间了，创建一个
     --    print("没有空座位的房间了，创建一个吧,  score".. self.GameTypeID)
-    local gameType = self.AllRoomList["1"].GameID
+    local gameType = self.allRoomList["1"].gameId
     local room = Game.CreateRoom(self,gameType)
     local seatId = BaseRoom.GetEmptySeatInTable(room)  --获取空椅位
     return seat(room,player,seatId)
@@ -152,7 +152,7 @@ function Game.PlayerLogOutGame(self,player)
     --Logger("玩家登出 "..player.User.UserID.. "    房间 "..player.roomId)
     local room = Game.GetRoomByUID(self,player.roomId)
     if room ~= nil then
-        room:PlayerStandUp(player.ChairID, player)        -- 玩家离开房间
+        room:PlayerStandUp(player.chairId, player)        -- 玩家离开房间
         --Logger("玩家"..player.User.UserID.."离开房间 "..player.roomId.."椅子"..player.ChairID)
     end
 end
