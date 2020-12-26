@@ -53,24 +53,17 @@ function CCCNetworkLogin.SevLoginGSGuest(serverId, uId, buf)
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
     luaCallGoResisterUID(Player.UId(player), serverId)
 
-
     --玩家登录游戏
-    local game = GameServer.GetGameByID(msg.gameId)
-    if game == nil then
-        ZLog.Logger("没有找到游戏类型"..msg.gameId)
+    if GameServer.Login(msg.gameId,player) == false then
         return
     end
-    --player
-    Game.PlayerLoginGame(game,player)
-
 
     -- 发送消息
     local sendCmd = ProtoGameCCC.GameLoginResult()
     sendCmd.success = true
     Player.Copy(player,sendCmd.user)
+    print(sendCmd)
 
-    print(serverId)
-    print(type(serverId))
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
 
     -- 给该玩家下发其他玩家信息
@@ -82,7 +75,5 @@ function CCCNetworkLogin.SevLoginGSGuest(serverId, uId, buf)
     -- NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON, sendCmd, nil)
 
     -- 给其他玩家下发该玩家信息
-
-
 
 end

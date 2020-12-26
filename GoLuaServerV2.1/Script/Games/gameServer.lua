@@ -1,4 +1,3 @@
-
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 --- 游戏管理器， 管理很多游戏， 每个游戏再去管理自己的房间和玩家
@@ -13,7 +12,7 @@ GameServer = {}
 --增加一个游戏， 指定这个游戏的类型， 并且创建一个房间，并启动房间逻辑
 local function addGame(name, gameId)
     if GameServer.GetGameByID(gameId) ~= nil then
-        ZLog.Logger("游戏类型[".. gameId .."已经添加过了，不用重复添加")
+        ZLog.Logger("游戏类型[" .. gameId .. "已经添加过了，不用重复添加")
         return
     end
 
@@ -55,10 +54,10 @@ function GameServer.Start()
 end
 
 -----------------------------------玩家列表管理-------------------------------------
-local RedisDirAllPlayersUUID          = "CCC:AllUer_UUID:"                         -- 所有玩家UUID
+local RedisDirAllPlayersUUID = "CCC:AllUer_UUID:"                         -- 所有玩家UUID
 local function GetAllPlayersUUID(num)
     --return RedisAddNumber(RedisDirAllPlayersUUID.."BY_UUID" ,"BY_UUID",num)
-    local dir = RedisDirAllPlayersUUID.."CCC_UUID"
+    local dir = RedisDirAllPlayersUUID .. "CCC_UUID"
     local key = "CCC_UUID"
     local redis_lua_str = [[
     local r = redis.call('hget',"%s","%s")
@@ -70,7 +69,7 @@ local function GetAllPlayersUUID(num)
     redis.call('hset',"%s","%s", r)
     return r
     ]]
-    redis_lua_str = string.format(redis_lua_str,dir,key, num, dir,key)
+    redis_lua_str = string.format(redis_lua_str, dir, key, num, dir, key)
     return Redis.RunLuaScript(redis_lua_str, "RedisMultiProcessGetAllPlayersUUID")
 end
 
@@ -95,11 +94,18 @@ function GameServer.SetAllPlayerList(userId, value)
     else
         GlobalVar.AllPlayerListNumber = GlobalVar.AllPlayerListNumber + 1   -- 玩家人数增加
     end
-    ZLog.Logger("在线玩家数量"..tostring(GlobalVar.AllPlayerListNumber))
+    ZLog.Logger("在线玩家数量" .. tostring(GlobalVar.AllPlayerListNumber))
 end
 
 
 -----------------------------------游戏列表管理-------------------------------------
+function GameServer.GetRoomClass(gameId)
+    local switch = {}
+    switch[Const.GameTypeCCC] = CCCRoom
+    return  switch[gameId]
+end
+
+
 --通过gameID获取是哪个游戏
 function GameServer.GetGameByID(gameId)
     return GlobalVar.AllGamesList[tostring(gameId)]
@@ -109,8 +115,52 @@ function GameServer.SetAllGamesList(gameId, value)
     GlobalVar.AllGamesList[tostring(gameId)] = value
 end
 
+function GameServer.GetGameByUserId(userId)
+    local player = GameServer.GetPlayerByUID(userId)
+    if player ~= nil then
+        local game = GameServer.GetGameByID(player.gameId)
+        if game ~= nil then
+            return game
+        else
+            ZLog.Logger("GetGameByID 游戏为空" .. player.gameId)
+        end
+    else
+        ZLog.Logger("GetPlayerByUID 玩家为空" .. userId)
+    end
+    return nil
+end
 -----------------------------------房间-------------------------------------
 
+function GameServer.GetRoomByUserId(userId)
+    local player = GameServer.GetPlayerByUID(userId)
+    if player ~= nil then
+        local game = GameServer.GetGameByID(player.gameId)
+        if game ~= nil then
+            local room = Game.GetRoomById(game, player.roomId)
+            if room ~= nil then
+                return room
+            else
+                ZLog.Logger("GetRoomById room为空" .. player.roomId)
+            end
+        else
+            ZLog.Logger("GetGameByID 游戏为空" .. player.gameId)
+        end
+    else
+        ZLog.Logger("GetPlayerByUID 玩家为空" .. userId)
+    end
+    return nil
+end
+
+function GameServer.Login(gameId,player)
+    local game = GameServer.GetGameByID(gameId)
+    if game == nil then
+        ZLog.Logger("没有找到游戏类型".. gameId)
+        return false
+    end
+    player.gameId = gameId
+    Game.PlayerLoginGame(game,player)
+    return true
+end
 
 -----------------------------------定时器run-------------------------------------
 -- 遍历所有的列表，然后依次run,  改为服务器自己创建定时器处理

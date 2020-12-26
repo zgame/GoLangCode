@@ -129,8 +129,9 @@ func (a *MyTcpServer) Run() {
 			}else if bufHeadTemp > 0 {				// 解析完成
 				if a.ReceiveBuf != nil {			// 如果是拼接包，只要成功解析，就可以清理了
 					a.ReceiveBuf = nil
-					a.myLua.GoCallLuaNetWorkReceive( a.ServerId,  a.UserId,int(msgId),int(subMsgId),string(finalBuffer))		// 把收到的数据传递给lua进行处理
 				}
+				a.myLua.GoCallLuaNetWorkReceive( a.ServerId,  a.UserId,int(msgId),int(subMsgId),string(finalBuffer))		// 把收到的数据传递给lua进行处理
+
 			}else if bufHeadTemp == -1 {
 				a.ReceiveBuf = nil
 				return  		//数据包不正确，放弃连接

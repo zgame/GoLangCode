@@ -1,5 +1,5 @@
 
-CCCRoom = BaseRoom:extend()
+CCCRoom = Class:extend()
 function CCCRoom:New(roomId, gameId)
     -- 重新赋值某些属性值
     CCCRoom.super.New(self)
@@ -52,7 +52,6 @@ function CCCRoom:GetEmptySeatInTable()
     end
     return -1
 end
-
 
 -- 房间的主循环
 function CCCRoom:RunRoom()
@@ -132,19 +131,25 @@ end
 ----------------------- 玩家操作 ---------------------------------
 
 --玩家坐到椅子上
-function CCCRoom:PlayerSeat(seatId, player)
-    self.userSeatArray[seatId] = player
+function CCCRoom:PlayerSeat(chairId, player)
+    self.userSeatArray[chairId] = player
     self.userSeatArrayNumber = self.userSeatArrayNumber + 1   -- 房间上玩家数量增加
+    player.roomId = self.roomId
+    player.chairId = chairId
+
+    GameServer.SetAllPlayerList(Player.UId(player), player)  --创建好之后加入玩家总列表
+    return player
 end
 
 --玩家离开椅子
-function CCCRoom:PlayerStandUp(seatId, player)
-    ZLog.Logger(Player.UId(player) .. "离开房间" .. player.roomId .. "椅子" .. player.chairId .. "self.roomId" .. self.gameId)
+function CCCRoom:PlayerStandUp(uId)
+    local player = GameServer.GetPlayerByUID(uId)
+    ZLog.Logger(uId .. "离开房间" .. player.roomId .. "椅子" .. player.chairId .. "self.roomId" .. self.gameId)
     -- 保存玩家基础数据
     --SaveUserBaseData(player.User)
 
     GameServer.SetAllPlayerList(Player.UId(player), nil)         -- 清理掉游戏管理的玩家总列表
-    self.userSeatArray[seatId] = nil                -- 清理掉房间的玩家列表
+    self.userSeatArray[player.chairId] = nil                -- 清理掉房间的玩家列表
     self.userSeatArrayNumber = self.userSeatArrayNumber - 1  -- 房间上玩家数量减少
     player.roomId = Const.ROOM_CHAIR_NOBODY
     player.chairId = Const.ROOM_CHAIR_NOBODY
@@ -152,80 +157,9 @@ function CCCRoom:PlayerStandUp(seatId, player)
     --如果是空房间的话，清理一下房间
     if self:CheckTableEmpty() then
         self:ClearTable()
-        local game = GameServer.GetGameByID(self.gameId)
-        Game.ReleaseRoom(game,self.roomId)    --回收房间
+        Game.ReleaseRoom(self.gameId,self.roomId)    --回收房间
     end
 end
-
-
--------------------------管理玩家-------------------------------------
-
-local function seat(room, player, seatId)
-    room:PlayerSeat(seatId, player)              --让玩家坐下.
-    player.roomId = room.roomId
-    player.chairId = seatId
-    --self:SendYouLoginToOthers(player, room)-- 发消息给同房间的其他玩家，告诉他们你登录了
-    return player
-end
---- 有玩家登陆游戏
-function Game.PlayerLoginGame(self,oldPlayer)
-    local player = GameServer.GetPlayerByUID(Player.UId(oldPlayer)) -- 把之前的玩家数据取出来
-    -- 如果玩家是断线重连的
-    if player ~= nil then
-        --找到之前有玩家在线
-        if oldPlayer.gameId == player.gameId then
-            -- 同一个游戏， 并且玩家状态是等待断线重连
-            --player.NetWorkState = true                      -- 网络恢复正常
-            --player.NetWorkCloseTimer = 0
-            print("把断线重连的player返回去， 玩家本来就坐在这里，不用同步信息给其他玩家， 就是反应他傻了一会后继续游戏了")
-            return player
-        else
-            -- 不是同一个游戏，或者有玩家在里面玩呢
-            -- player会被替换掉，那么之前的连接也到t掉才可以
-
-            -- 这里以后增加，t掉玩家的连接的功能
-        end
-    end
-
-    -- 不是断线重连的就重新建一个玩家数据
-    --player = Player:New(oldPlayer.User)
-    --player.GameType = oldPlayer.GameType            -- 设定游戏类型
-    player = oldPlayer
-    GameServer.SetAllPlayerList(Player.UId(player), player)  --创建好之后加入玩家总列表
-
-    --然后找一个有空位的房间让玩家加入游戏
-    for k, room in pairs(self.allRoomList) do
-        local seatId = BaseRoom.GetEmptySeatInTable(room)
-        if seatId > 0 then
-            print("有空座位")
-            room:InitRoom()    -- 看看是不是空房间，如果是，需要初始化
-            return seat(room,player,seatId)
-        end
-    end
-
-    --没有空座位的房间了，创建一个
-    print("没有空座位的房间了，创建一个吧,  score".. self.gameId)
-    local gameId = self.allRoomList["1"].gameId
-    local room = Game.CreateRoom(self, gameId)
-    local seatId = BaseRoom.GetEmptySeatInTable(room)  --获取空椅位
-    return seat(room,player,seatId)
-
-end
-
-
-----玩家登出
-function Game.PlayerLogOutGame(self,player)
-    ZLog.Logger("玩家登出 "..Player.UId(player).. "    房间 "..player.roomId)
-    local room = Game.GetRoomByUID(self,player.roomId)
-    if room ~= nil then
-        room:PlayerStandUp(player.chairId, player)        -- 玩家离开房间
-        ZLog.Logger("玩家"..Player.UId(player).."离开房间 "..player.roomId.."椅子"..player.chairId)
-    else
-        ZLog.Logger("玩家登出时候房间为空"..player.roomId)
-    end
-end
-
-
 
 
 ----------------------- 消息 ---------------------------------
@@ -293,7 +227,7 @@ function CCCRoom:SendMsgToAllUsers(mainCmd, subCmd, sendCmd)
                 -- 发送失败了，玩家网络中断了
                 --player.NetWorkState = false
                 --player.NetWorkCloseTimer = GetOsTimeMillisecond()
-                self:PlayerStandUp(player.chairId, player)
+                self:PlayerStandUp(Player.UId(player))
             end
         end
     end
