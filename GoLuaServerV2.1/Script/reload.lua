@@ -73,7 +73,7 @@ table.insert(f, "Script/Games/Model/playerLogic")
 table.insert(f, "Script/Games/Model/user")
 table.insert(f, "Script/Games/gameServer") --  游戏服务器入口点
 table.insert(f, "Script/Games/games")
-table.insert(f, "Script/Games/baseRoom")
+--table.insert(f, "Script/Games/baseRoom")
 table.insert(f, "Script/Games/gameNetwork")     -- 游戏网络分发入口
 
 -- game

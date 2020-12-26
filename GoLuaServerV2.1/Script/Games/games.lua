@@ -36,7 +36,7 @@ end
 -----------------------------管理房间---------------------------
 
 -- 创建房间，并启动它
-function Game:CreateRoom(gameId)
+function Game: CreateRoom(gameId)
     local room
     if gameId == Const.GameTypeCCC then
         room = CCCRoom(self.tableUUID, gameId)
@@ -90,60 +90,60 @@ end
 --    self.GoRunTableAllList[tostring(roomId)] = func  --注册TableRun函数
 --end
 
-
--------------------------管理玩家-------------------------------------
-
-local function seat(room, player, seatId)
-    room:PlayerSeat(seatId, player)              --让玩家坐下.
-    player.roomId = room.roomId
-    player.chairId = seatId
-    --self:SendYouLoginToOthers(player, room)-- 发消息给同房间的其他玩家，告诉他们你登录了
-    return player
-end
---- 有玩家登陆游戏
-function Game.PlayerLoginGame(self,oldPlayer)
-    local player = GameServer.GetPlayerByUID(Player.UId(oldPlayer)) -- 把之前的玩家数据取出来
-    -- 如果玩家是断线重连的
-    if player ~= nil then
-        --找到之前有玩家在线
-        if oldPlayer.gameId == player.gameId then
-            -- 同一个游戏， 并且玩家状态是等待断线重连
-            --player.NetWorkState = true                      -- 网络恢复正常
-            --player.NetWorkCloseTimer = 0
-            print("把断线重连的player返回去， 玩家本来就坐在这里，不用同步信息给其他玩家， 就是反应他傻了一会后继续游戏了")
-            return player
-        else
-            -- 不是同一个游戏，或者有玩家在里面玩呢
-            -- player会被替换掉，那么之前的连接也到t掉才可以
-
-            -- 这里以后增加，t掉玩家的连接的功能
-        end
-    end
-
-    -- 不是断线重连的就重新建一个玩家数据
-    --player = Player:New(oldPlayer.User)
-    --player.GameType = oldPlayer.GameType            -- 设定游戏类型
-    player = oldPlayer
-    GameServer.SetAllPlayerList(Player.UId(player), player)  --创建好之后加入玩家总列表
-
-    --然后找一个有空位的房间让玩家加入游戏
-    for k, room in pairs(self.allRoomList) do
-        local seatId = BaseRoom.GetEmptySeatInTable(room)
-        if seatId > 0 then
-            print("有空座位")
-            room:InitRoom()    -- 看看是不是空房间，如果是，需要初始化
-            return seat(room,player,seatId)
-        end
-    end
-
-    --没有空座位的房间了，创建一个
-    print("没有空座位的房间了，创建一个吧,  score".. self.gameId)
-    local gameId = self.allRoomList["1"].gameId
-    local room = Game.CreateRoom(self, gameId)
-    local seatId = BaseRoom.GetEmptySeatInTable(room)  --获取空椅位
-    return seat(room,player,seatId)
-
-end
+--
+---------------------------管理玩家-------------------------------------
+--
+--local function seat(room, player, seatId)
+--    room:PlayerSeat(seatId, player)              --让玩家坐下.
+--    player.roomId = room.roomId
+--    player.chairId = seatId
+--    --self:SendYouLoginToOthers(player, room)-- 发消息给同房间的其他玩家，告诉他们你登录了
+--    return player
+--end
+----- 有玩家登陆游戏
+--function Game.PlayerLoginGame(self,oldPlayer)
+--    local player = GameServer.GetPlayerByUID(Player.UId(oldPlayer)) -- 把之前的玩家数据取出来
+--    -- 如果玩家是断线重连的
+--    if player ~= nil then
+--        --找到之前有玩家在线
+--        if oldPlayer.gameId == player.gameId then
+--            -- 同一个游戏， 并且玩家状态是等待断线重连
+--            --player.NetWorkState = true                      -- 网络恢复正常
+--            --player.NetWorkCloseTimer = 0
+--            print("把断线重连的player返回去， 玩家本来就坐在这里，不用同步信息给其他玩家， 就是反应他傻了一会后继续游戏了")
+--            return player
+--        else
+--            -- 不是同一个游戏，或者有玩家在里面玩呢
+--            -- player会被替换掉，那么之前的连接也到t掉才可以
+--
+--            -- 这里以后增加，t掉玩家的连接的功能
+--        end
+--    end
+--
+--    -- 不是断线重连的就重新建一个玩家数据
+--    --player = Player:New(oldPlayer.User)
+--    --player.GameType = oldPlayer.GameType            -- 设定游戏类型
+--    player = oldPlayer
+--    GameServer.SetAllPlayerList(Player.UId(player), player)  --创建好之后加入玩家总列表
+--
+--    --然后找一个有空位的房间让玩家加入游戏
+--    for k, room in pairs(self.allRoomList) do
+--        local seatId = BaseRoom.GetEmptySeatInTable(room)
+--        if seatId > 0 then
+--            print("有空座位")
+--            room:InitRoom()    -- 看看是不是空房间，如果是，需要初始化
+--            return seat(room,player,seatId)
+--        end
+--    end
+--
+--    --没有空座位的房间了，创建一个
+--    print("没有空座位的房间了，创建一个吧,  score".. self.gameId)
+--    local gameId = self.allRoomList["1"].gameId
+--    local room = Game.CreateRoom(self, gameId)
+--    local seatId = BaseRoom.GetEmptySeatInTable(room)  --获取空椅位
+--    return seat(room,player,seatId)
+--
+--end
 
 
 ----玩家登出

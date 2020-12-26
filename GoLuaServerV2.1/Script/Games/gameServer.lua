@@ -110,13 +110,6 @@ function GameServer.SetAllGamesList(gameId, value)
 end
 
 -----------------------------------房间-------------------------------------
----- 显示当前的状态
---function ShowAllGameStates()
---    for gameType, game in pairs(GlobalVar.AllGamesList) do
---        --local game = GetGameByID(k)
---        --print("游戏"..gameType.."有房间数量"..game.AllTableListNumber..",有玩家数量".. AllPlayerListNumber)
---    end
---end
 
 
 -----------------------------------定时器run-------------------------------------
