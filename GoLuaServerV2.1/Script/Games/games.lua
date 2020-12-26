@@ -40,6 +40,8 @@ function Game:CreateRoom(gameId)
     local room
     if gameId == Const.GameTypeCCC then
         room = CCCRoom(self.tableUUID, gameId)
+        -- 房间开始
+        room:InitRoom()
         --elseif
     end
     if room == nil then
@@ -53,9 +55,6 @@ function Game:CreateRoom(gameId)
     self.allRoomList[tostring(self.tableUUID)] = room
     self.allRoomNumber = self.allRoomNumber + 1
     self.tableUUID = self.tableUUID + 1     -- table uuid 自增
-
-    -- 房间开始
-    room:InitRoom()
 
     return room
 
@@ -103,10 +102,7 @@ local function seat(room, player, seatId)
 end
 --- 有玩家登陆游戏
 function Game.PlayerLoginGame(self,oldPlayer)
-    local player = GameServer.GetPlayerByUID(oldPlayer:UId()) -- 把之前的玩家数据取出来
-    print("PlayerLoginGame 玩家是否存在内存中")
-    printTable(player)
-    print("------------------------------")
+    local player = GameServer.GetPlayerByUID(Player.UId(oldPlayer)) -- 把之前的玩家数据取出来
     -- 如果玩家是断线重连的
     if player ~= nil then
         --找到之前有玩家在线
@@ -128,7 +124,7 @@ function Game.PlayerLoginGame(self,oldPlayer)
     --player = Player:New(oldPlayer.User)
     --player.GameType = oldPlayer.GameType            -- 设定游戏类型
     player = oldPlayer
-    GameServer.SetAllPlayerList(player:UId(), player)  --创建好之后加入玩家总列表
+    GameServer.SetAllPlayerList(Player.UId(player), player)  --创建好之后加入玩家总列表
 
     --然后找一个有空位的房间让玩家加入游戏
     for k, room in pairs(self.allRoomList) do
@@ -152,10 +148,12 @@ end
 
 ----玩家登出
 function Game.PlayerLogOutGame(self,player)
-    ZLog.Logger("玩家登出 "..player:UId().. "    房间 "..player.roomId)
+    ZLog.Logger("玩家登出 "..Player.UId(player).. "    房间 "..player.roomId)
     local room = Game.GetRoomByUID(self,player.roomId)
     if room ~= nil then
         room:PlayerStandUp(player.chairId, player)        -- 玩家离开房间
-        ZLog.Logger("玩家"..player:UId().."离开房间 "..player.roomId.."椅子"..player.chairId)
+        ZLog.Logger("玩家"..Player.UId(player).."离开房间 "..player.roomId.."椅子"..player.chairId)
+    else
+        ZLog.Logger("玩家登出时候房间为空"..player.roomId)
     end
 end

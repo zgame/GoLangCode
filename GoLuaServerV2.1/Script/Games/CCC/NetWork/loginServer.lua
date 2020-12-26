@@ -12,7 +12,7 @@ local function newUser(openId,machineId)
 end
 
 -- 根据客户端发来的信息，进行登录， 优先级是 mac地址， openid, uid，
-local function findUserInfo(msg)
+local function getUserDB(msg)
     print(msg)
     local userId = msg.userId
     local openId = msg.openId
@@ -42,16 +42,16 @@ end
 
 
 --游客登录申请,获取玩家的数据， 判断是否已经登录，
-function CCCNetworkLogin.SevLoginGSGuest(serverId, buf)
+function CCCNetworkLogin.SevLoginGSGuest(serverId, uId, buf)
 
     local msg = ProtoGameCCC.GameLogin()
     msg:ParseFromString(buf)
 
     -- 加载玩家数据
-    local user = findUserInfo(msg)
+    local user = getUserDB(msg)
     local player = Player(user)
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
-    luaCallGoResisterUID(player:UId(), serverId)
+    luaCallGoResisterUID(Player.UId(player), serverId)
 
 
     --玩家登录游戏

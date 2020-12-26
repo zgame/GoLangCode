@@ -14,9 +14,6 @@ import (
 	"github.com/go-ini/ini"
 	"math"
 	"strconv"
-	//"./Games"
-	//"./Logic/Player"
-	//"./CSV"
 	"time"
 
 	"flag"
@@ -26,13 +23,6 @@ import (
 	"runtime"
 )
 
-
-//func checkPanic(e error) {
-//	if e != nil {
-//		panic(e)
-//	}
-//}
-//var ServerOpen bool		//服务器开启完毕
 
 // ---------------------------程序入口-----------------------------------
 var wsServer *NetWork.WSServer
@@ -49,35 +39,14 @@ var UdpPort int
 var GameRoomServerID int	// 游戏原有的ServerID(来源于GameRoomInfo中对应的)
 var ServerAddress string    // ServerAddress 服务器地址
 var ServerTypeName string    // ServerAddress 服务器地址
-//var WebSocketAddress string // WebSocketAddress 服务器地址
 
-
-//var RedisAddress string		// redis 服务器地址
-//var RedisPass string		// redis pwd
 var err error
 var LuaReloadTime int //lua脚本当前最新版本的时间戳，后台设置的，保存在服务器中，定期去更新一次
-//var MySqlServerIP string		// mySql
-//var MySqlServerPort string		// mySql port
-//var MySqlDatabase string
-//var MySqlUid string
-//var MySqlPwd string
-
-//var SqlServerIP string		// sql tcpServer
-//var SqlServerPort string		// sql  tcpServer port
-//var SqlServerDatabase string
-//var SqlServerUid string
-//var SqlServerPwd string
-
 
 
 var GameManagerLua *Lua.MyLua    // 公共部分lua脚本
 var GameManagerLuaReloadTime int // 公共逻辑处理的lua更新时间
 
-
-
-//var GoroutineMax int 			// 给lua的游戏房间使用的协程数量		暂时没用
-//var GoroutineTableLua *Lua.MyLua		// 房间lua脚本
-//var GoroutineTableLuaLuaReloadTime int  // 公共逻辑处理的lua更新时间
 
 func main() {
 
@@ -104,7 +73,7 @@ func main() {
 	fmt.Println("WebSocketPort=",WebSocketPort,"SocketPort=",SocketPort,"GameServerID=",GameRoomServerID)
 	if WebSocketPort==0 || UdpPort ==0 ||SocketPort==0{
 		for{
-			fmt.Println("缺少命令行参数！ 参数要设置类似 -WebSocketPort=8089 -SocketPort=8123  -UdpPort=8124 -ServerTypeName=Game")
+			fmt.Println("缺少命令行参数！ 参数要设置类似 -SocketPort=9001 -UdpPort=10001 -WebSocketPort=11001   -ServerTypeName=Game")
 			time.Sleep(time.Second)
 		}
 	}
@@ -166,23 +135,7 @@ func main() {
 			//fmt.Println("一个循环用时", end-start)
 		//}
 	}
-
-
-	// 主逻辑退出时候
-//	defer func() {
-//		GameManagerLua.L.DoString(`	// 关闭channel
-//	GameManagerReceiveCh:close()
-//    GameManagerSendCh:close()
-//`)
-//		GameManagerLua.L.Close()
-//	}()
-
 }
-
-
-
-
-// -WebSocketPort=8089 -SocketPort=8124
 //-----------------------------本地配置文件---------------------------------------------------
 func initSetting()  {
 	f, err := ini.Load("Setting.ini")
@@ -191,35 +144,21 @@ func initSetting()  {
 		return
 	}
 
-	//-------------------------------------------------------------------
-	//if WebSocketPort == 0 {
-	//	WebSocketPort, err = f.Section("Server").Key("WebSocketPort").Int()
-	//}
-	//if SocketPort == 0 {
-	//	fmt.Println("Warning!!!! You sould write arguments like : -WebSocketPort=8089 -SocketPort=8124")
-	//	SocketPort, err = f.Section("Server").Key("SocketPort").Int()
-	//}
-
 	zLog.ShowLog,err  = f.Section("Server").Key("ShowLog").Bool()
 	WebSocketServer,err  = f.Section("Server").Key("WebSocketServer").Bool()
 	SocketServer,err  = f.Section("Server").Key("SocketServer").Bool()
 	UDPServer,err   = f.Section("Server").Key("UDPSocket").Bool()
 	ServerAddress = f.Section("Server").Key("ServerAddress").String()
-	//WebSocketAddress = f.Section("Server").Key("WebSocketAddress").String()
-	//GoroutineMax ,err  = f.Section("Server").Key("GoroutineMax").Int()
-
 
 	zLog.CheckError(err)
 
 	ServerAddress = string(ip.GetInternal(0)) // 获取本机内网ip
+	ServerAddress = "192.168.0.197"
 	fmt.Println("本机内网ip :",ServerAddress)
 }
 
 //----------------------------变量的初始化---------------------------------------------------------------
 func initVar()  {
-	//Client.AllClientsList = make(map[*Client.Client]struct{})
-	//Client.AllUserClientList = make(map[uint32]*Client.Client)
-	//Games.AllGamesList = make(map[int]*Games.Games)
 	Lua.InitGlobalVar()
 }
 
@@ -233,9 +172,6 @@ func UpdateLuaReload() {
 	LuaReloadTime = 1111
 	GameManagerLuaReloadCheck() //共有逻辑检查一下是否需要更新, 玩家部分每个连接自己检查
 	//GoroutineTableLuaReloadCheck()
-	
-
-
 }
 
 //-----------------------------------建立服务器的网络功能---------------------------------------------------------------

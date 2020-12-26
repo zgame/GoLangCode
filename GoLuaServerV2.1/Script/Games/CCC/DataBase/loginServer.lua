@@ -4,7 +4,7 @@ CCCLoginDB = {}
 function CCCLoginDB.OpenIdInsert(openId,uId)
     local t={}
     t.openId = openId
-    t.uId = uId
+    t.uerId = uId
     MongoDB.Insert('OpenId',t)
 end
 
@@ -15,7 +15,7 @@ function CCCLoginDB.UId(openId)
     if result == nil then
         return nil
     else
-        return result.uId
+        return result.uerId
     end
 end
 

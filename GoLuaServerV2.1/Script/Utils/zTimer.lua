@@ -9,7 +9,7 @@
 ZTimer ={}
 
 --- 自己设定定时器 模块名 | 回调函数的名字 | 间隔 毫秒数
-function ZTimer.SetNewTimer(module,funcName,timer,func)
+function ZTimer.SetNewTimer(module,funcName,timer,funcTips)
     -- funcName is string
     luaCallGoCreateNewTimer(module,funcName,timer)
 end

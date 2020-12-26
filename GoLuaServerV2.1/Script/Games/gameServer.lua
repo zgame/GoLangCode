@@ -84,8 +84,8 @@ end
 
 
 -- 根据user uid 返回user的句柄
-function GameServer.GetPlayerByUID(uid)
-    return GlobalVar.AllPlayerList[tostring(uid)]
+function GameServer.GetPlayerByUID(uId)
+    return GlobalVar.AllPlayerList[tostring(uId)]
 end
 
 function GameServer.SetAllPlayerList(userId, value)
@@ -95,6 +95,7 @@ function GameServer.SetAllPlayerList(userId, value)
     else
         GlobalVar.AllPlayerListNumber = GlobalVar.AllPlayerListNumber + 1   -- 玩家人数增加
     end
+    ZLog.Logger("在线玩家数量"..tostring(GlobalVar.AllPlayerListNumber))
 end
 
 

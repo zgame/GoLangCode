@@ -65,11 +65,11 @@ end
 
 --玩家离开椅子
 function BaseRoom:PlayerStandUp(seatId, player)
-    ZLog.Logger(player:UId() .. "离开房间" .. player.roomId .. "椅子" .. player.chairId .. "self.roomId" .. self.gameId)
+    ZLog.Logger(Player.UId(player) .. "离开房间" .. player.roomId .. "椅子" .. player.chairId .. "self.roomId" .. self.gameId)
     -- 保存玩家基础数据
     --SaveUserBaseData(player.User)
 
-    GameServer.SetAllPlayerList(player:UId(), nil)         -- 清理掉游戏管理的玩家总列表
+    GameServer.SetAllPlayerList(Player.UId(player), nil)         -- 清理掉游戏管理的玩家总列表
     self.userSeatArray[seatId] = nil                -- 清理掉房间的玩家列表
     self.userSeatArrayNumber = self.userSeatArrayNumber - 1  -- 房间上玩家数量减少
     player.roomId = Const.ROOM_CHAIR_NOBODY
@@ -88,7 +88,7 @@ end
 function BaseRoom:SendMsgToAllUsers(mainCmd, subCmd, sendCmd)
     for _, player in pairs(self.userSeatArray) do
         if player ~= nil and player.netWorkState then
-            local result = NetWork.SendToUser(player:UId(), mainCmd, subCmd, sendCmd, nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
+            local result = NetWork.SendToUser(Player.UId(player), mainCmd, subCmd, sendCmd, nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
             if not result then
                 -- 发送失败了，玩家网络中断了
                 --player.NetWorkState = false
@@ -102,8 +102,8 @@ end
 --给桌上的其他玩家同步消息
 function BaseRoom:SendMsgToOtherUsers(userId, sendCmd, mainCmd, subCmd)
     for _, player in pairs(self.userSeatArray) do
-        if player ~= nil and userId ~= player:UId() and player.netWorkState then
-            NetWork.SendToUser(player:UId(), mainCmd, subCmd, sendCmd, nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
+        if player ~= nil and userId ~= Player.UId(player) and player.netWorkState then
+            NetWork.SendToUser(Player.UId(player), mainCmd, subCmd, sendCmd, nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
         end
     end
 end

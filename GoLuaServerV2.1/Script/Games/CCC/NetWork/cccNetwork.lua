@@ -5,7 +5,12 @@
 CCCNetwork = {}
 
 function CCCNetwork.Receive(serverId, userId, mainSgId, subMsgId, data, token)
-    if subMsgId == CMD_CCC.SUB_LOGON then
-        CCCNetworkLogin.SevLoginGSGuest(serverId, data)
-    end
+    local switch={}
+    switch[CMD_CCC.SUB_LOGON] = CCCNetworkLogin.SevLoginGSGuest
+
+    switch[subMsgId](serverId, userId, data)
+
+
+
+
 end

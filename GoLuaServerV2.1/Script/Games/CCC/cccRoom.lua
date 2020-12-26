@@ -131,7 +131,7 @@ function CCCRoom:SendTableSceneInfo(player)
         return
     end
     --1.发送场景Enter_scene信息
-    self:SendEnterSceneInfo(player:UId())
+    self:SendEnterSceneInfo(Player.UId(player))
     --2.发送场景中鱼信息
     --self:SendSceneFishes(player.User.userId)
 end
@@ -146,7 +146,7 @@ function CCCRoom:SendEnterSceneInfo(UserId)
         -- 从房间传递过来的其他玩家信息，原来坐着的玩家信息
         if player ~= nil then
             local uu = sendCmd.user:add()
-            uu.user_id = player:UId()
+            uu.user_id = Player.UId(player)
             uu.chair_id = index
         end
     end
