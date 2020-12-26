@@ -138,6 +138,7 @@ function CCCRoom:PlayerSeat(chairId, player)
     player.chairId = chairId
 
     GameServer.SetAllPlayerList(Player.UId(player), player)  --创建好之后加入玩家总列表
+    self:SendLoginToOthers(player)
     return player
 end
 
@@ -153,6 +154,7 @@ function CCCRoom:PlayerStandUp(uId)
     self.userSeatArrayNumber = self.userSeatArrayNumber - 1  -- 房间上玩家数量减少
     player.roomId = Const.ROOM_CHAIR_NOBODY
     player.chairId = Const.ROOM_CHAIR_NOBODY
+    self:SendLogoutToOthers(player)
 
     --如果是空房间的话，清理一下房间
     if self:CheckTableEmpty() then
@@ -163,81 +165,42 @@ end
 
 
 ----------------------- 消息 ---------------------------------
-----玩家登陆的时候,发送场景其他消息
-function CCCRoom:SendTableSceneInfo(player)
-    if player == nil then
-        ZLog.Logger("ByTable:SendTableSceneInfo player 对象nil")
-        return
-    end
-    --1.发送场景Enter_scene信息
-    self:SendEnterSceneInfo(Player.UId(player))
-    --2.发送场景中鱼信息
-    --self:SendSceneFishes(player.User.userId)
-end
 
-
---- 发消息给同房间的其他玩家，告诉他们你登录了
-function CCCRoom:SendYouLoginToOthers(player, table)
-    --    print("玩家",player.User.UserID, "房间",table.roomId,"椅子",player.ChairID)
-
-    --local CMD_Game_pb = require("CMD_Game_pb")
-    --local sendCmd = CMD_Game_pb.CMD_S_OTHER_ENTER_SCENE()
-    --sendCmd.user_info.user_id = player.User.UserID
-    --sendCmd.user_info.chair_id = player.ChairID
-    --sendCmd.user_info.table_id = player.roomId
-    --table:SendMsgToOtherUsers(player.User.UserID, sendCmd, MDM_GF_GAME, SUB_S_OTHER_ENTER_SCENE)
-end
---- 同步场景信息
-function CCCRoom:SendEnterSceneInfo(UserId)
+-- 发消息给同房间的其他玩家，告诉他们你登录了
+function CCCRoom:SendLoginToOthers(player)
+    local userId =  Player.UId(player)
+    print("玩家登录", userId, "房间",self.roomId,"椅子",player.chairId)
     local sendCmd = ProtoGameCCC.OtherEnterRoom()
-    sendCmd.scene_id = self.gameId
-    sendCmd.table_id = self.roomId
-    for index, player in pairs(self.userSeatArray) do
-        -- 从房间传递过来的其他玩家信息，原来坐着的玩家信息
-        if player ~= nil then
-            local uu = sendCmd.user:add()
-            uu.user_id = Player.UId(player)
-            uu.chair_id = index
-        end
-    end
-
-    NetWork.SendToUser(UserId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON, sendCmd, nil, nil) --进入房间
+    local uu = sendCmd.user:add()
+    Player.Copy(player,uu)
+    self:SendMsgToOtherUsers(CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON,sendCmd,userId)
 end
-----玩家登陆的时候， 同步给玩家场景中目前鱼群的信息
---function CCCTable:SendSceneFishes(UserId)
---    --    print("鱼数量"..self.FishArrayNumber)
---    local sendCmd = CMD_Game_pb.CMD_S_SCENE_FISH()
---    local cmd
---    for _,fish in pairs(self.FishArray) do
---        cmd = sendCmd.scene_fishs:add()
---        cmd.uid = fish.FishUID
---        cmd.kind_id = fish.FishKindID
---    end
---    LuaNetWorkSendToUser(UserId, MDM_GF_GAME, SUB_S_SCENE_FISH, sendCmd, nil, nil)
---
---end
+
+-- 发消息给同房间的其他玩家，告诉他们你登出了
+function CCCRoom:SendLogoutToOthers(player)
+    local userId =  Player.UId(player)
+    print("玩家登出", userId, "房间",self.roomId,"椅子",player.chairId)
+    local sendCmd = ProtoGameCCC.OtherLeaveRoom()
+    sendCmd.userId = userId
+    self:SendMsgToOtherUsers(CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGOUT,sendCmd,userId)
+end
 
 ----------------------- 同步消息 ---------------------------------
 --给桌上的所有玩家同步消息
 function CCCRoom:SendMsgToAllUsers(mainCmd, subCmd, sendCmd)
-    for _, player in pairs(self.userSeatArray) do
-        if player ~= nil and player.netWorkState then
-            local result = NetWork.SendToUser(Player.UId(player), mainCmd, subCmd, sendCmd, nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
-            if not result then
-                -- 发送失败了，玩家网络中断了
-                --player.NetWorkState = false
-                --player.NetWorkCloseTimer = GetOsTimeMillisecond()
-                self:PlayerStandUp(Player.UId(player))
-            end
-        end
-    end
+    self:SendMsgToOtherUsers(mainCmd, subCmd, sendCmd,nil)
 end
 
 --给桌上的其他玩家同步消息
-function CCCRoom:SendMsgToOtherUsers(userId, sendCmd, mainCmd, subCmd)
+function CCCRoom:SendMsgToOtherUsers(mainCmd, subCmd,sendCmd,userId)
     for _, player in pairs(self.userSeatArray) do
-        if player ~= nil and userId ~= Player.UId(player) and player.netWorkState then
-            NetWork.SendToUser(Player.UId(player), mainCmd, subCmd, sendCmd, nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
+        local uId = Player.UId(player)
+        if player ~= nil and userId ~= uId then
+            local result = NetWork.SendToUser(uId, mainCmd, subCmd, sendCmd, nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
+            if not result then
+                -- 发送失败了，玩家网络中断了
+                self:PlayerStandUp(uId)
+            end
         end
     end
 end

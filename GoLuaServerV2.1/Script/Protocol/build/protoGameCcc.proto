@@ -32,13 +32,29 @@ message GameLogin{
 message GameLoginResult{
 	bool success = 1;     // 1成功，0失败
 	_user user = 2;        //用户信息
-//	uint32  roomId = 3;          //房间ID
 	string err = 3;
+}
+
+// 登出
+message GameLogout{
+	uint32 userId = 1;
+}
+// 登出结果
+message GameLogoutResult{
+	bool success = 1;     // 1成功，0失败
+}
+// 游戏的信息同步
+message GameInfo{
+	uint32 npcList = 1;
 }
 
 //其他玩家进入游戏场景
 message OtherEnterRoom{
 	repeated _user user = 1;        //用户信息
+}
+// 其他玩家离开游戏
+message OtherLeaveRoom{
+	uint32 userId = 1;
 }
 
 //---------------------------------------同步位置-------------------------------

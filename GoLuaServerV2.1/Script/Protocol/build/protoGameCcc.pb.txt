@@ -1,5 +1,5 @@
 
-«
+Ï
 protoGameCcc.protoGameCCC"Ý
 _user
 userId (RuserId
@@ -25,9 +25,18 @@ deviceType
 GameLoginResult
 success (Rsuccess"
 user (2.GameCCC._userRuser
-err (	Rerr"4
+err (	Rerr"$
+
+GameLogout
+userId (RuserId",
+GameLogoutResult
+success (Rsuccess"$
+GameInfo
+npcList (RnpcList"4
 OtherEnterRoom"
-user (2.GameCCC._userRuser"g
+user (2.GameCCC._userRuser"(
+OtherLeaveRoom
+userId (RuserId"g
 	_location
 userId (RuserId
 x (Rx

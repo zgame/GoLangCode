@@ -51,7 +51,8 @@ function CCCNetworkLogin.SevLoginGSGuest(serverId, uId, buf)
     local user = getUserDB(msg)
     local player = Player(user)
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
-    luaCallGoResisterUID(Player.UId(player), serverId)
+    local userId = Player.UId(player)
+    luaCallGoResisterUID(userId, serverId)
 
     --玩家登录游戏
     if GameServer.Login(msg.gameId,player) == false then
@@ -67,13 +68,45 @@ function CCCNetworkLogin.SevLoginGSGuest(serverId, uId, buf)
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
 
     -- 给该玩家下发其他玩家信息
-    -- sendCmd = ProtoGameCCC.OtherEnterRoom()
-    -- local cmd
-    -- for k,v in pairs(self.FishArray) do
-    --     cmd = sendCmd.user:add()
-    -- end
-    -- NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON, sendCmd, nil)
+    CCCNetworkLogin.SendPlayersInfo(userId)
+    -- 同步场景信息给登录的玩家
+    CCCNetworkLogin.SendEnterSceneInfo(userId)
+end
 
-    -- 给其他玩家下发该玩家信息
+
+-- 给该玩家下发其他玩家信息
+function CCCNetworkLogin.SendPlayersInfo(userId)
+    local sendCmd = ProtoGameCCC.OtherEnterRoom()
+    local room = GameServer.GetRoomByUserId(userId)
+    for i, player in pairs(room.userSeatArray) do
+        if player ~= nil then
+            local uu = sendCmd.user:add()
+            Player.Copy(player,uu)
+        end
+    end
+    NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON, sendCmd, nil, nil)
+end
+
+
+-- 同步场景信息给登录的玩家
+function CCCNetworkLogin.SendEnterSceneInfo(userId)
+    local sendCmd = ProtoGameCCC.GameInfo()
+    sendCmd.npcList = 1
+    NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_GAME_INFO, sendCmd, nil, nil)
+end
+
+
+
+
+--登出申请
+function CCCNetworkLogin.SevLogout(serverId, uId, buf)
+    local msg = ProtoGameCCC.GameLogout()
+    msg:ParseFromString(buf)
+
+    GameNetwork.Broken(uId, serverId)
+    -- 发送消息
+    local sendCmd = ProtoGameCCC.GameLogoutResult()
+    sendCmd.success = true
+    NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGOUT, sendCmd, nil)
 
 end

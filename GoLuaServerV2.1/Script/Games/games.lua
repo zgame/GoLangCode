@@ -77,8 +77,6 @@ function Game.ReleaseRoom(gameId,roomId)
     collectgarbage()        -- 强制gc
 end
 
-
-
 ---------------------------管理玩家-------------------------------------
 
 --- 有玩家登陆游戏
