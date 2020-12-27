@@ -145,16 +145,16 @@ end
 --玩家离开椅子
 function CCCRoom:PlayerStandUp(uId)
     local player = GameServer.GetPlayerByUID(uId)
-    ZLog.Logger(uId .. "离开房间" .. player.roomId .. "椅子" .. player.chairId .. "self.roomId" .. self.gameId)
+    --ZLog.Logger(uId .. "离开房间" .. player.roomId .. "椅子" .. player.chairId .. "self.roomId" .. self.gameId)
     -- 保存玩家基础数据
     --SaveUserBaseData(player.User)
 
     GameServer.SetAllPlayerList(Player.UId(player), nil)         -- 清理掉游戏管理的玩家总列表
     self.userSeatArray[player.chairId] = nil                -- 清理掉房间的玩家列表
     self.userSeatArrayNumber = self.userSeatArrayNumber - 1  -- 房间上玩家数量减少
+    self:SendLogoutToOthers(player)
     player.roomId = Const.ROOM_CHAIR_NOBODY
     player.chairId = Const.ROOM_CHAIR_NOBODY
-    self:SendLogoutToOthers(player)
 
     --如果是空房间的话，清理一下房间
     if self:CheckTableEmpty() then
@@ -170,7 +170,7 @@ end
 function CCCRoom:SendLoginToOthers(player)
     local userId =  Player.UId(player)
     print("玩家登录", userId, "房间",self.roomId,"椅子",player.chairId)
-    local sendCmd = ProtoGameCCC.OtherEnterRoom()
+    local sendCmd = ProtoGameCCC.UserList()
     local uu = sendCmd.user:add()
     Player.Copy(player,uu)
     self:SendMsgToOtherUsers(CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON,sendCmd,userId)

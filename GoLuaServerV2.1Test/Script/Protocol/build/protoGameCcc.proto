@@ -49,7 +49,7 @@ message GameInfo{
 }
 
 //其他玩家进入游戏场景
-message OtherEnterRoom{
+message UserList{
 	repeated _user user = 1;        //用户信息
 }
 // 其他玩家离开游戏

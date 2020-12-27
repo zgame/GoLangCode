@@ -1,11 +1,8 @@
-
-
 ----------------------------------------------------------------------
 ---发送消息
 ----------------------------------------------------------------------
 
-Network ={}
-
+Network = {}
 
 ------- 玩家自己的网络发送函数
 function Network.Send(myServerId, msgId, subMsgId, sendCmd, err, udp)
@@ -18,10 +15,10 @@ function Network.Send(myServerId, msgId, subMsgId, sendCmd, err, udp)
     if err == nil then
         err = ""
     end
-    if udp==nil then
-        return luaCallGoNetWorkSend(0, myServerId,msgId,subMsgId,buffer,err)       -- 返回结果 true 发送成功  false 发送失败
+    if udp == nil then
+        return luaCallGoNetWorkSend(0, myServerId, msgId, subMsgId, buffer, err)       -- 返回结果 true 发送成功  false 发送失败
     else
-        return luaCallGoNetWorkSendUdp(0, myServerId,msgId,subMsgId,buffer,err)       -- 返回结果 true 发送成功  false 发送失败
+        return luaCallGoNetWorkSendUdp(0, myServerId, msgId, subMsgId, buffer, err)       -- 返回结果 true 发送成功  false 发送失败
     end
 end
 
@@ -36,7 +33,7 @@ function Network.SendToUser(userId, msgId, subMsgId, sendCmd, err)
     if err == nil then
         err = ""
     end
-    return luaCallGoNetWorkSend(userId,0,msgId,subMsgId,buffer,err)       -- 返回结果 true 发送成功  false 发送失败
+    return luaCallGoNetWorkSend(userId, 0, msgId, subMsgId, buffer, err)       -- 返回结果 true 发送成功  false 发送失败
 end
 
 
@@ -48,13 +45,13 @@ function Network.Receive(serverId, userId, msgId, subMsgId, data)
     --Logger("lua收到了消息："..msgId)
     --Logger("lua收到了消息："..subMsgId)
     --Logger("lua收到了消息："..data)
-    Network.Msg(serverId,userId,msgId,subMsgId,data)
+    Network.Msg(serverId, userId, msgId, subMsgId, data)
 
 end
 -- 网络接收函数
 function Network.UdpReceive(serverId, msgId, subMsgId, data)
     local serverAddress = serverId
-    Network.Receive(serverAddress,0,msgId,subMsgId,data)
+    Network.Receive(serverAddress, 0, msgId, subMsgId, data)
 
 end
 
@@ -65,11 +62,30 @@ end
 
 -- 根据命令进行分支处理
 function Network.Msg(serverId, userId, msgId, subMsgId, data)
-    print("msgId",msgId, "subMsgId",subMsgId)
+    --print("msgId", msgId, "subMsgId", subMsgId)
 
-    if msgId == CMD_MAIN.MDM_GAME_CCC  then
-        if subMsgId == CMD_CCC.SUB_LOGON  then
-            LoginServer.LoginGameServer(serverId,data)
-        end
+    if msgId == CMD_MAIN.MDM_GAME_CCC then
+        local switch={}
+        switch[CMD_CCC.SUB_LOGON] = LoginServer.Login
+        switch[CMD_CCC.SUB_LOGOUT] = LoginServer.Logout
+        switch[CMD_CCC.SUB_ROOM_INFO] = LoginServer.GameInfo
+        switch[CMD_CCC.SUB_ROOM_LIST] = LoginServer.RoomList
+        switch[CMD_CCC.SUB_OTHER_LOGON] = LoginServer.OtherLogin
+        switch[CMD_CCC.SUB_OTHER_LOGOUT] = LoginServer.OtherLogout
+
+        switch[subMsgId](serverId,userId,data)
+
+        --if subMsgId == CMD_CCC.SUB_LOGON then
+        --    LoginServer.LoginGameServer(serverId, data)
+        --elseif subMsgId == CMD_CCC.SUB_LOGOUT then
+        --    LoginServer.Logout(data)
+        --end
     end
+end
+
+
+function Network.Print(func,buf)
+    local msg = func()
+    msg:ParseFromString(buf)
+    print(msg)
 end

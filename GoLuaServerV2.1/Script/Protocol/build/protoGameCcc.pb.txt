@@ -1,5 +1,5 @@
 
-Ï
+É
 protoGameCcc.protoGameCCC"Ý
 _user
 userId (RuserId
@@ -32,8 +32,8 @@ GameLogout
 GameLogoutResult
 success (Rsuccess"$
 GameInfo
-npcList (RnpcList"4
-OtherEnterRoom"
+npcList (RnpcList".
+UserList"
 user (2.GameCCC._userRuser"(
 OtherLeaveRoom
 userId (RuserId"g

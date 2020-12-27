@@ -13,7 +13,7 @@ end
 
 -- 根据客户端发来的信息，进行登录， 优先级是 mac地址， openid, uid，
 local function getUserDB(msg)
-    print(msg)
+    --print(msg)
     local userId = msg.userId
     local openId = msg.openId
     local machineId = msg.machineId
@@ -42,8 +42,7 @@ end
 
 
 --游客登录申请,获取玩家的数据， 判断是否已经登录，
-function CCCNetworkLogin.SevLoginGSGuest(serverId, uId, buf)
-
+function CCCNetworkLogin.Login(serverId, uId, buf)
     local msg = ProtoGameCCC.GameLogin()
     msg:ParseFromString(buf)
 
@@ -63,7 +62,7 @@ function CCCNetworkLogin.SevLoginGSGuest(serverId, uId, buf)
     local sendCmd = ProtoGameCCC.GameLoginResult()
     sendCmd.success = true
     Player.Copy(player,sendCmd.user)
-    print(sendCmd)
+    --print(sendCmd)
 
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON, sendCmd, nil)
 
@@ -76,15 +75,18 @@ end
 
 -- 给该玩家下发其他玩家信息
 function CCCNetworkLogin.SendPlayersInfo(userId)
-    local sendCmd = ProtoGameCCC.OtherEnterRoom()
+    local sendCmd = ProtoGameCCC.UserList()
     local room = GameServer.GetRoomByUserId(userId)
     for i, player in pairs(room.userSeatArray) do
-        if player ~= nil then
+        if player ~= nil and Player.UId(player)~= userId then
             local uu = sendCmd.user:add()
             Player.Copy(player,uu)
         end
     end
-    NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON, sendCmd, nil, nil)
+    --print("下发其他玩家数据")
+    --print(sendCmd)
+    --print(sendCmd == nil)
+    NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_ROOM_LIST, sendCmd, nil, nil)
 end
 
 
@@ -92,14 +94,14 @@ end
 function CCCNetworkLogin.SendEnterSceneInfo(userId)
     local sendCmd = ProtoGameCCC.GameInfo()
     sendCmd.npcList = 1
-    NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_GAME_INFO, sendCmd, nil, nil)
+    NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_ROOM_INFO, sendCmd, nil, nil)
 end
 
 
 
 
 --登出申请
-function CCCNetworkLogin.SevLogout(serverId, uId, buf)
+function CCCNetworkLogin.Logout(serverId, uId, buf)
     local msg = ProtoGameCCC.GameLogout()
     msg:ParseFromString(buf)
 

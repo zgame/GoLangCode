@@ -4,7 +4,7 @@
 GameNetwork = {}
 
 function GameNetwork.Init(serverId)
-
+    print("创建了新链接"..tostring(serverId))
 end
 
 
@@ -23,7 +23,7 @@ end
 
 --- go通知lua 所有掉线的连接都要走这里
 function GameNetwork.Broken(uId, serverId)
-    ZLog.Logger("通知：" .. uId .. "  掉线了")
+    --ZLog.Logger("通知：" .. uId .. "  掉线了")
     local room = GameServer.GetRoomByUserId(uId)
     if room ~= nil then
         room:PlayerStandUp(uId)

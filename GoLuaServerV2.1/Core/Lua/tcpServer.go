@@ -77,7 +77,7 @@ retry:
 		goto retry
 		fmt.Printf("serverId  %d 被占用", TcpServerUUID)
 	}
-	fmt.Println("连接创建了ServerId ： ",ServerId)
+	//fmt.Println("连接创建了ServerId ： ",ServerId)
 
 	return ServerId
 }
@@ -101,7 +101,7 @@ func (a *MyTcpServer) Run() {
 		buf,bufLen, err := a.Conn.ReadMsg()
 
 		if err != nil {
-			zLog.PrintfLogger("跟对方的连接中断了")
+			//zLog.PrintfLogger("跟对方的连接中断了")
 			// 中断网络连接，关闭网络连接，关闭lua
 			break
 		}
