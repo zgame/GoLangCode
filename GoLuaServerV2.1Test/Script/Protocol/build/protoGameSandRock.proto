@@ -60,10 +60,10 @@ message OtherLeaveRoom{
 //---------------------------------------同步位置-------------------------------
 message _location{
 	uint32 userId = 1;
-	uint32 x = 2;
-	uint32 y = 3;
-	uint32 z = 4;
-	uint32 faceDir = 5 ;     // 面对方向
+	float x = 2;
+	float y = 3;
+	float z = 4;
+	float faceDir = 5 ;     // 面对方向
 	uint64 action = 6 ; //玩家当前行为
 }
 //位置信息同步
