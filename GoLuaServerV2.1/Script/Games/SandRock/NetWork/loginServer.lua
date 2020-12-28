@@ -5,6 +5,10 @@ SandRockLogin = {}
 
 local function newUser(openId,machineId)
     local userId = GameServer.GetLastUserID()
+    if userId == nil then
+        ZLog.Logger("redis 出问题 没有获取到userId")
+        return nil
+    end
     local user = User.New(userId,openId,machineId)
     CCCLoginDB.UserInsert(user)
     CCCLoginDB.OpenIdInsert(openId,user.userId)
@@ -48,6 +52,9 @@ function SandRockLogin.Login(serverId, uId, buf)
 
     -- 加载玩家数据
     local user = getUserDB(msg)
+    if user == nil then
+        return
+    end
     local player = Player(user)
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
     local userId = Player.UId(player)
