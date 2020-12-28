@@ -4,9 +4,12 @@ SandRockLocation = {}
 function SandRockLocation.Location(serverId, userId, buf)
     local msg = ProtoGameSandRock.PlayerLocation()
     msg:ParseFromString(buf)
-    --print("上报位置")
+    print("上报位置")
+    print(msg)
     local room = GameServer.GetRoomByUserId(userId)
-    SandRockRoom.SetPlayerLocation(room,userId, msg.location[1])
+    local location = {}
+    location = SandRockLocation.Copy(msg.location[1],location)
+    SandRockRoom.SetPlayerLocation(room, userId, location)
 
 end
 
