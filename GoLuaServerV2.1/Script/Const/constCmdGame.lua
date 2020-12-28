@@ -6,7 +6,6 @@ CMD_CCC = {
     SUB_OTHER_LOGOUT = 4, -- 其他玩家登出命令OtherLeaveRoom()
     SUB_ROOM_INFO = 5, -- 游戏信息同步GameInfo()
     SUB_ROOM_LIST = 6, -- 游戏中玩家列表UserList()
-    SUB_LOCATION = 7, -- 上报位置信息PlayerLocation(),   同步其他玩家位置PlayerLocation()
-
-
+    SUB_LOCATION = 7, -- 上报位置信息PlayerLocation()
+    SUB_OTHER_LOCATION = 8, -- 同步其他玩家位置PlayerLocation()
 }

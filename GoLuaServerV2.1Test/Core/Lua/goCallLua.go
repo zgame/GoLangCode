@@ -32,7 +32,7 @@ func GoCallLuaTest(L *lua.LState, num int)  {
 }
 
 // -------------------go触发lua函数，不带参数和返回值-------------------
-func (m *MyLua) GoCallLuaLogic(module string,funcName string) {
+func (m *MyLua) GoCallLuaLogic(module string,funcName string,param int) {
 	GlobalMutex.Lock()
 	table:= m.L.GetGlobal(module)
 	value := m.L.GetField(table,funcName)
@@ -40,7 +40,7 @@ func (m *MyLua) GoCallLuaLogic(module string,funcName string) {
 		Fn: value,		// lua的函数名字
 		NRet: 0,
 		Protect: true,
-	}); err != nil {		// 参数
+	},lua.LNumber(param)); err != nil {		// 参数
 		zLog.PrintLogger("GoCallLuaLogic error :"+funcName+"      "+err.Error())
 	}
 	GlobalMutex.Unlock()

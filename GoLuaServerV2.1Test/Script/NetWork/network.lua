@@ -61,7 +61,7 @@ end
 
 
 -- 根据命令进行分支处理
-function Network.Msg(serverId, userId, msgId, subMsgId, data)
+function Network.Msg(serverId, userId, msgId, subMsgId, buf)
     --print("msgId", msgId, "subMsgId", subMsgId)
 
     if msgId == CMD_MAIN.MDM_GAME_CCC then
@@ -72,8 +72,9 @@ function Network.Msg(serverId, userId, msgId, subMsgId, data)
         switch[CMD_CCC.SUB_ROOM_LIST] = LoginServer.RoomList
         switch[CMD_CCC.SUB_OTHER_LOGON] = LoginServer.OtherLogin
         switch[CMD_CCC.SUB_OTHER_LOGOUT] = LoginServer.OtherLogout
+        switch[CMD_CCC.SUB_OTHER_LOCATION] = Location.OtherLocation
 
-        switch[subMsgId](serverId,userId,data)
+        switch[subMsgId](serverId,userId, buf)
 
         --if subMsgId == CMD_CCC.SUB_LOGON then
         --    LoginServer.LoginGameServer(serverId, data)

@@ -43,9 +43,14 @@ function LoginServer.Login(serverId, uId,buf)
     msg:ParseFromString(buf)
     local uid = msg.user.userId
 
-    print( msg)
+    local user = User:New()
+    user.UserId = uid
+    local player = Player:New(user)
+    GameClient.AddPlayer(serverId,player)
+
+    --print( msg)
     --luaCallGoResisterUID(uid,serverId)
-    ZTimer.SetNewTimer("GameCCC", "RunGame", 500, GameCCC.RunGame)
+    ZTimer.SetNewTimer("GameCCC", "RunGame", 2000, serverId, GameCCC.RunGame)
 end
 
 function LoginServer.SendLogout(uId)

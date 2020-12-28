@@ -92,6 +92,7 @@ table.insert(f, "Script/network")       -- 网络分发入口点
 -- table.insert(f, "Script/Games/CCC/NetWork/gameEnter")
 -- table.insert(f, "Script/Games/CCC/NetWork/gameFire")
 table.insert(f, "Script/Games/CCC/NetWork/loginServer")
+table.insert(f, "Script/Games/CCC/NetWork/location")
 table.insert(f, "Script/Games/CCC/NetWork/cccNetwork")
 
 

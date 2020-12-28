@@ -49,6 +49,7 @@ require("zTable")
 
 
 require("loginServer")
+require("location")
 require("gameCCC")
 require("network")
 

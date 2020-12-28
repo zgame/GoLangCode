@@ -5,7 +5,7 @@
 
 User = {}
 function User:New()
-    c = {
+    local c = {
         FaceId = 0, -- # 头像id
         Gender = 0, --  # 性别
         UserId = 0, --  # 用户id

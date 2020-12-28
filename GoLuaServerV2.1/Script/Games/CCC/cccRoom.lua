@@ -11,6 +11,7 @@ function CCCRoom:New(roomId, gameId)
     self.userSeatArray = {}        -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
     self.userSeatArrayNumber = 0         -- 房间上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
 
+    self.LocationList = {}          -- uid  player's location 
 end
 
 function CCCRoom:Reload(c)
@@ -86,6 +87,9 @@ function CCCRoom:RunRoom()
         --self.LastRunTime = ZTime.GetOsTimeMillisecond()
     else
         local now = ZTime.GetOsTimeMillisecond()
+
+        self:OtherLocation()
+        --self:SetPlayerLocation(nil,nil)      -- 清空
 
         --if self:GetFishNum() < MAX_Fish_NUMBER then
         --    self:RunDistributeInfo(table.RoomScore)
@@ -183,8 +187,6 @@ function CCCRoom:PlayerStandUp(uId)
 end
 
 
------------------------ 消息 ---------------------------------
-
 ----------------------- 同步消息 ---------------------------------
 --给桌上的所有玩家同步消息
 function CCCRoom:SendMsgToAllUsers(mainCmd, subCmd, sendCmd)
@@ -203,4 +205,36 @@ function CCCRoom:SendMsgToOtherUsers(mainCmd, subCmd,sendCmd,userId)
             end
         end
     end
+end
+
+-------------------------位置---------------------------------
+function CCCRoom:SetPlayerLocation(uId,msg)
+    if uId==nil and msg ==nil then      -- 如果都是空的， 那么就清空
+        self.LocationList={}
+        return
+    end
+    self.LocationList[tostring(uId)] = msg  -- 不是空的就添加
+end
+function CCCRoom:GetPlayerLocation(uId)
+    if uId == nil then                      -- 输入空，返回所有
+        return self.LocationList
+    else
+        return self.LocationList[tostring(uId)]     -- 不空返回单条
+    end
+end
+
+-- 同步其他玩家位置和状态
+-- 这个地方为了节省cpu和内存，我就统一形成一次发送数据， 每个玩家都一样的发送，不然我要针对每个玩家单独处理数据，要费一些
+function CCCRoom:OtherLocation()
+    --print("同步所有玩家位置")
+    local sendCmd = ProtoGameCCC.PlayerLocation()
+    sendCmd.time = 22
+    for i, value in pairs(self.LocationList)do
+        local location = sendCmd.location:add()
+        location = CCCNetworkLocation.Copy(value, location)
+    end
+    --print(sendCmd)
+
+    self:SendMsgToAllUsers(CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOCATION, sendCmd)
+    self:SetPlayerLocation(nil,nil)      -- 清空
 end

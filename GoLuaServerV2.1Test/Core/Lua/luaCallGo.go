@@ -4,7 +4,6 @@ import (
 	"GoLuaServerV2.1Test/Core/Utils/zLog"
 	"GoLuaServerV2.1Test/Core/Utils/zPbc"
 	"GoLuaServerV2.1Test/Core/Utils/ztimer"
-	"fmt"
 	"github.com/yuin/gopher-lua"
 	"time"
 	//mysql "github.com/tengattack/gluasql/mysql"
@@ -71,7 +70,7 @@ func luaCallGoNetWorkSend(L *lua.LState) int {
 	//_, err := Conn.Write(bufferEnd)
 	//zLog.CheckError(err)
 
-	fmt.Println("tcp")
+	//fmt.Println("tcp")
 
 	var result bool
 	// 发送出去
@@ -118,9 +117,10 @@ func luaCallGoCreateNewTimer(L * lua.LState) int  {
 	module := L.ToString(1) //
 	funcName := L.ToString(2) // 定期调用函数名字
 	time1 := L.ToInt(3)       // 时间，秒
+	param := L.ToInt(4)
 
 	ztimer.TimerMillisecondCheckUpdate(func() {
-		GameManagerLuaHandle.GoCallLuaLogic(module,funcName) //定时调用函数
+		GameManagerLuaHandle.GoCallLuaLogic(module,funcName,param) //定时调用函数
 	}, time.Duration(time1))
 
 	return 0
@@ -131,9 +131,10 @@ func luaCallGoCreateNewClockTimer(L * lua.LState) int  {
 	module := L.ToString(1) //
 	funcName := L.ToString(2) // 定期调用函数名字
 	clock := L.ToInt(3)       // 时间，几点，24小时制
+	param := L.ToInt(4)
 
 	ztimer.TimerClock(func() {
-		GameManagerLuaHandle.GoCallLuaLogic(module,funcName) //定时调用函数
+		GameManagerLuaHandle.GoCallLuaLogic(module,funcName,param) //定时调用函数
 	}, clock)
 
 	return 0

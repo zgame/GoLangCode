@@ -4,12 +4,13 @@
 
 CCCNetwork = {}
 
-function CCCNetwork.Receive(serverId, userId, mainSgId, subMsgId, data, token)
+function CCCNetwork.Receive(serverId, userId, mainSgId, subMsgId, buf, token)
     local switch={}
     switch[CMD_CCC.SUB_LOGON] = CCCNetworkLogin.Login
     switch[CMD_CCC.SUB_LOGOUT] = CCCNetworkLogin.Logout
-
-    switch[subMsgId](serverId, userId, data)
+    switch[CMD_CCC.SUB_LOCATION] = CCCNetworkLocation.Location
+    
+    switch[subMsgId](serverId, userId, buf)
 
 
 

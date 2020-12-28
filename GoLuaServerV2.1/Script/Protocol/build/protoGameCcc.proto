@@ -64,11 +64,12 @@ message _location{
 	uint32 y = 3;
 	uint32 z = 4;
 	uint32 faceDir = 5 ;     // 面对方向
-
+	uint64 action = 6 ; //玩家当前行为
 }
 //位置信息同步
 message PlayerLocation{
 	repeated _location location = 1;
+	uint64 time = 2; //时间戳
 }
 
 //---------------------------------------同步位置-------------------------------
