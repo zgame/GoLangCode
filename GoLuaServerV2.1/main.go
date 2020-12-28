@@ -153,7 +153,6 @@ func initSetting()  {
 	zLog.CheckError(err)
 
 	ServerAddress = string(ip.GetInternal(0)) // 获取本机内网ip
-	ServerAddress = "192.168.0.197"
 	fmt.Println("本机内网ip :",ServerAddress)
 }
 

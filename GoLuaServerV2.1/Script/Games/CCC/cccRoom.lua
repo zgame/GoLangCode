@@ -131,22 +131,22 @@ end
 ----------------------- 玩家操作 ---------------------------------
 
 -- 发消息给同房间的其他玩家，告诉他们你登录了
-local function sendLoginToOthers(player)
+local function sendLoginToOthers(room, player)
     local userId =  Player.UId(player)
-    print("玩家登录", userId, "房间",self.roomId,"椅子",player.chairId)
+    print("玩家登录", userId, "房间", room.roomId,"椅子",player.chairId)
     local sendCmd = ProtoGameCCC.UserList()
     local uu = sendCmd.user:add()
     Player.Copy(player,uu)
-    self:SendMsgToOtherUsers(CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON,sendCmd,userId)
+    CCCRoom.SendMsgToOtherUsers(room,CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON,sendCmd,userId)
 end
 
 -- 发消息给同房间的其他玩家，告诉他们你登出了
-local function sendLogoutToOthers(player)
+local function sendLogoutToOthers(room, player)
     local userId =  Player.UId(player)
-    print("玩家登出", userId, "房间",self.roomId,"椅子",player.chairId)
+    print("玩家登出", userId, "房间", room.roomId,"椅子",player.chairId)
     local sendCmd = ProtoGameCCC.OtherLeaveRoom()
     sendCmd.userId = userId
-    self:SendMsgToOtherUsers(CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGOUT,sendCmd,userId)
+    CCCRoom.SendMsgToOtherUsers(room,CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGOUT,sendCmd,userId)
 end
 
 --玩家坐到椅子上
@@ -157,7 +157,7 @@ function CCCRoom:PlayerSeat(chairId, player)
     player.chairId = chairId
 
     GameServer.SetAllPlayerList(Player.UId(player), player)  --创建好之后加入玩家总列表
-    sendLoginToOthers(player)
+    sendLoginToOthers(self,player)
     return player
 end
 
@@ -171,7 +171,7 @@ function CCCRoom:PlayerStandUp(uId)
     GameServer.SetAllPlayerList(Player.UId(player), nil)         -- 清理掉游戏管理的玩家总列表
     self.userSeatArray[player.chairId] = nil                -- 清理掉房间的玩家列表
     self.userSeatArrayNumber = self.userSeatArrayNumber - 1  -- 房间上玩家数量减少
-    sendLogoutToOthers(player)
+    sendLogoutToOthers(self,player)
     player.roomId = Const.ROOM_CHAIR_NOBODY
     player.chairId = Const.ROOM_CHAIR_NOBODY
 
