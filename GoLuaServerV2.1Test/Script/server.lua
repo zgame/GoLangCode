@@ -50,7 +50,7 @@ require("zTable")
 
 require("loginServer")
 require("location")
-require("gameCCC")
+require("gameSandRock")
 require("network")
 
 -------------------------------------GameManager----------------------------------------

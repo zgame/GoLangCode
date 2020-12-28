@@ -1,5 +1,5 @@
 ﻿syntax = "proto3";
-package GameCCC;
+package GameSandRock;
 
 
 //-------------------------------------用户信息---------------------------

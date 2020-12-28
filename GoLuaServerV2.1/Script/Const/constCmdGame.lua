@@ -1,5 +1,5 @@
 
-CMD_CCC = {
+CMD_SAND_ROCK = {
     SUB_LOGON = 1, -- 登陆命令GameLogin() , 登录结果GameLoginResult()
     SUB_LOGOUT = 2, -- 登出命令GameLogout() , 登出结果GameLogoutResult()
     SUB_OTHER_LOGON = 3, -- 其他玩家登陆命令UserList()

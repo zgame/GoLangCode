@@ -12,16 +12,16 @@ local f
 --数据库
 LuaFiles.DataBase = {}
 f = LuaFiles.DataBase
-table.insert(f, "Script/Games/CCC/DataBase/redisConst")
-table.insert(f, "Script/Games/CCC/DataBase/redisGame")
-table.insert(f, "Script/Games/CCC/DataBase/redisPlayer")
-table.insert(f, "Script/Games/CCC/DataBase/sqlStatistic")
--- table.insert(f, "Script/Games/CCC/DataBase/SQLServer/LoadGameServerInfo")
--- table.insert(f, "Script/Games/CCC/DataBase/SQLServer/LoadUserInfo")
--- table.insert(f, "Script/Games/CCC/DataBase/SQLServer/LoadUserChatInfo")
--- table.insert(f, "Script/Games/CCC/DataBase/SQLServer/SaveUserDataInfo")
--- table.insert(f, "Script/Games/CCC/DataBase/SQLServer/SaveDataBaseLogInfo")
--- table.insert(f, "Script/Games/CCC/DataBase/redisChat")
+table.insert(f, "Script/Games/SandRock/DataBase/redisConst")
+table.insert(f, "Script/Games/SandRock/DataBase/redisGame")
+table.insert(f, "Script/Games/SandRock/DataBase/redisPlayer")
+table.insert(f, "Script/Games/SandRock/DataBase/sqlStatistic")
+-- table.insert(f, "Script/Games/SandRock/DataBase/SQLServer/LoadGameServerInfo")
+-- table.insert(f, "Script/Games/SandRock/DataBase/SQLServer/LoadUserInfo")
+-- table.insert(f, "Script/Games/SandRock/DataBase/SQLServer/LoadUserChatInfo")
+-- table.insert(f, "Script/Games/SandRock/DataBase/SQLServer/SaveUserDataInfo")
+-- table.insert(f, "Script/Games/SandRock/DataBase/SQLServer/SaveDataBaseLogInfo")
+-- table.insert(f, "Script/Games/SandRock/DataBase/redisChat")
 
 
 -- CSV
@@ -80,20 +80,20 @@ table.insert(f, "Script/Games/gameNetwork")     -- 游戏网络分发入口
 LuaFiles.Games = {}
 f = LuaFiles.Games
 --ccc
-table.insert(f, "Script/Games/CCC/cccRoom")
-table.insert(f, "Script/Games/CCC/DataBase/loginServer")
+table.insert(f, "Script/Games/SandRock/sandRockRoom")
+table.insert(f, "Script/Games/SandRock/DataBase/loginServer")
 
 
 
 -- network
 LuaFiles.NetWork = {}
 f = LuaFiles.NetWork
-table.insert(f, "Script/network")       -- 网络分发入口点
--- table.insert(f, "Script/Games/CCC/NetWork/gameEnter")
--- table.insert(f, "Script/Games/CCC/NetWork/gameFire")
-table.insert(f, "Script/Games/CCC/NetWork/loginServer")
-table.insert(f, "Script/Games/CCC/NetWork/location")
-table.insert(f, "Script/Games/CCC/NetWork/cccNetwork")
+table.insert(f, "Script/network")       -- 网络分发入口点n
+-- table.insert(f, "Script/Games/SandRock/NetWork/gameEnter")
+-- table.insert(f, "Script/Games/SandRock/NetWork/gameFire")
+table.insert(f, "Script/Games/SandRock/NetWork/loginServer")
+table.insert(f, "Script/Games/SandRock/NetWork/location")
+table.insert(f, "Script/Games/SandRock/NetWork/network")
 
 
 

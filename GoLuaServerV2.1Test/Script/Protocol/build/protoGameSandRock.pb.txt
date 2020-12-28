@@ -1,6 +1,6 @@
 
-õ
-protoGameCcc.protoGameCCC"Ý
+Ž
+protoGameSandRock.protoGameSandRock"Ý
 _user
 userId (RuserId
 openId (	RopenId
@@ -21,10 +21,10 @@
 
 deviceType (	R
 deviceType
-gameId (RgameId"a
+gameId (RgameId"f
 GameLoginResult
-success (Rsuccess"
-user (2.GameCCC._userRuser
+success (Rsuccess'
+user (2.GameSandRock._userRuser
 err (	Rerr"$
 
 GameLogout
@@ -32,9 +32,9 @@ GameLogout
 GameLogoutResult
 success (Rsuccess"$
 GameInfo
-npcList (RnpcList".
-UserList"
-user (2.GameCCC._userRuser"(
+npcList (RnpcList"3
+UserList'
+user (2.GameSandRock._userRuser"(
 OtherLeaveRoom
 userId (RuserId"
 	_location
@@ -43,7 +43,7 @@ GameLogout
 y (Ry
 z (Rz
 faceDir (RfaceDir
-action (Raction"T
-PlayerLocation.
-location (2.GameCCC._locationRlocation
+action (Raction"Y
+PlayerLocation3
+location (2.GameSandRock._locationRlocation
 time (Rtimebproto3

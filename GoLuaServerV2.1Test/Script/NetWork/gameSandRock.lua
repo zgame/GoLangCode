@@ -1,8 +1,8 @@
 
 
-GameCCC={}
+GameSandRock ={}
 
-function GameCCC.RunGame(serverId)
+function GameSandRock.RunGame(serverId)
     --游戏循环
     --print("Run game")
     Location.SendLocation(serverId)

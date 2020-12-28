@@ -1,8 +1,8 @@
 
-CCCRoom = Class:extend()
-function CCCRoom:New(roomId, gameId)
+SandRockRoom = Class:extend()
+function SandRockRoom:New(roomId, gameId)
     -- 重新赋值某些属性值
-    CCCRoom.super.New(self)
+    SandRockRoom.super.New(self)
     self.gameId = gameId
     self.roomId = roomId
     self.tableMax = Const.CCC_ROOM_MAX_PLAYER
@@ -14,7 +14,7 @@ function CCCRoom:New(roomId, gameId)
     self.LocationList = {}          -- uid  player's location 
 end
 
-function CCCRoom:Reload(c)
+function SandRockRoom:Reload(c)
     setmetatable(c, self)
     self.__index = self
 
@@ -25,19 +25,19 @@ function CCCRoom:Reload(c)
 end
 
 ----------------------- 房间操作 ---------------------------------
-function CCCRoom:InitRoom()
+function SandRockRoom:InitRoom()
     if self:CheckTableEmpty() then
         -- 如果房间是空的， 那么需要初始化一下
         --self:InitDistributeInfo()
     end
 end
 --清理房间
-function CCCRoom:ClearTable()
+function SandRockRoom:ClearTable()
     self.userSeatArray = {}     --  seatID    player
     self.userSeatArrayNumber = 0
 end
 --判断房间是有人，还是空房间
-function CCCRoom:CheckTableEmpty()
+function SandRockRoom:CheckTableEmpty()
     if self.userSeatArrayNumber > 0 then
         return false
     end
@@ -45,7 +45,7 @@ function CCCRoom:CheckTableEmpty()
 end
 
 --获取房间的空座位, 返回座椅的编号，从0开始到tableMax， 如果返回-1说明满了-
-function CCCRoom:GetEmptySeatInTable()
+function SandRockRoom:GetEmptySeatInTable()
     for i = 1, self.tableMax do
         if self.userSeatArray[i] == nil then
             return i
@@ -55,7 +55,7 @@ function CCCRoom:GetEmptySeatInTable()
 end
 
 -- 房间的主循环
-function CCCRoom:RunRoom()
+function SandRockRoom:RunRoom()
     if self:CheckTableEmpty() then
         --print("这是一个空房间" .. self.GameID)
 
@@ -138,23 +138,23 @@ end
 local function sendLoginToOthers(room, player)
     local userId =  Player.UId(player)
     print("玩家登录", userId, "房间", room.roomId,"椅子",player.chairId)
-    local sendCmd = ProtoGameCCC.UserList()
+    local sendCmd = ProtoGameSandRock.UserList()
     local uu = sendCmd.user:add()
     Player.Copy(player,uu)
-    CCCRoom.SendMsgToOtherUsers(room,CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGON,sendCmd,userId)
+    SandRockRoom.SendMsgToOtherUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_OTHER_LOGON,sendCmd,userId)
 end
 
 -- 发消息给同房间的其他玩家，告诉他们你登出了
 local function sendLogoutToOthers(room, player)
     local userId =  Player.UId(player)
     print("玩家登出", userId, "房间", room.roomId,"椅子",player.chairId)
-    local sendCmd = ProtoGameCCC.OtherLeaveRoom()
+    local sendCmd = ProtoGameSandRock.OtherLeaveRoom()
     sendCmd.userId = userId
-    CCCRoom.SendMsgToOtherUsers(room,CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOGOUT,sendCmd,userId)
+    SandRockRoom.SendMsgToOtherUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_OTHER_LOGOUT,sendCmd,userId)
 end
 
 --玩家坐到椅子上
-function CCCRoom:PlayerSeat(chairId, player)
+function SandRockRoom:PlayerSeat(chairId, player)
     self.userSeatArray[chairId] = player
     self.userSeatArrayNumber = self.userSeatArrayNumber + 1   -- 房间上玩家数量增加
     player.roomId = self.roomId
@@ -166,7 +166,7 @@ function CCCRoom:PlayerSeat(chairId, player)
 end
 
 --玩家离开椅子
-function CCCRoom:PlayerStandUp(uId)
+function SandRockRoom:PlayerStandUp(uId)
     local player = GameServer.GetPlayerByUID(uId)
     --ZLog.Logger(uId .. "离开房间" .. player.roomId .. "椅子" .. player.chairId .. "self.roomId" .. self.gameId)
     -- 保存玩家基础数据
@@ -189,12 +189,12 @@ end
 
 ----------------------- 同步消息 ---------------------------------
 --给桌上的所有玩家同步消息
-function CCCRoom:SendMsgToAllUsers(mainCmd, subCmd, sendCmd)
+function SandRockRoom:SendMsgToAllUsers(mainCmd, subCmd, sendCmd)
     self:SendMsgToOtherUsers(mainCmd, subCmd, sendCmd,nil)
 end
 
 --给桌上的其他玩家同步消息
-function CCCRoom:SendMsgToOtherUsers(mainCmd, subCmd,sendCmd,userId)
+function SandRockRoom:SendMsgToOtherUsers(mainCmd, subCmd, sendCmd, userId)
     for _, player in pairs(self.userSeatArray) do
         local uId = Player.UId(player)
         if player ~= nil and userId ~= uId then
@@ -208,14 +208,14 @@ function CCCRoom:SendMsgToOtherUsers(mainCmd, subCmd,sendCmd,userId)
 end
 
 -------------------------位置---------------------------------
-function CCCRoom:SetPlayerLocation(uId,msg)
+function SandRockRoom:SetPlayerLocation(uId, msg)
     if uId==nil and msg ==nil then      -- 如果都是空的， 那么就清空
         self.LocationList={}
         return
     end
     self.LocationList[tostring(uId)] = msg  -- 不是空的就添加
 end
-function CCCRoom:GetPlayerLocation(uId)
+function SandRockRoom:GetPlayerLocation(uId)
     if uId == nil then                      -- 输入空，返回所有
         return self.LocationList
     else
@@ -225,16 +225,16 @@ end
 
 -- 同步其他玩家位置和状态
 -- 这个地方为了节省cpu和内存，我就统一形成一次发送数据， 每个玩家都一样的发送，不然我要针对每个玩家单独处理数据，要费一些
-function CCCRoom:OtherLocation()
+function SandRockRoom:OtherLocation()
     --print("同步所有玩家位置")
-    local sendCmd = ProtoGameCCC.PlayerLocation()
+    local sendCmd = ProtoGameSandRock.PlayerLocation()
     sendCmd.time = 22
     for i, value in pairs(self.LocationList)do
         local location = sendCmd.location:add()
-        location = CCCNetworkLocation.Copy(value, location)
+        location = SandRockLocation.Copy(value, location)
     end
     --print(sendCmd)
 
-    self:SendMsgToAllUsers(CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_OTHER_LOCATION, sendCmd)
+    self:SendMsgToAllUsers(CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_OTHER_LOCATION, sendCmd)
     self:SetPlayerLocation(nil,nil)      -- 清空
 end

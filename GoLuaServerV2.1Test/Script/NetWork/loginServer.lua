@@ -30,16 +30,16 @@ LoginServer={}
 -- 发送登录服务器请求
 function LoginServer.SendLogin(serverId)
     print("-----申请登录serverId:----------",serverId)
-    local sendCmd = ProtoGameCCC.GameLogin()
+    local sendCmd = ProtoGameSandRock.GameLogin()
     sendCmd.machineId = build_mac_addr(serverId)
     sendCmd.gameId = Const.GameTypeCCC
-    Network.Send(serverId, CMD_MAIN.MDM_GAME_CCC, CMD_CCC.SUB_LOGON,sendCmd,nil)
+    Network.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_LOGON,sendCmd,nil)
 end
 
 -- 服务器返回登录服务器成功，下发uid
 function LoginServer.Login(serverId, uId,buf)
     print("--------登录成功---UID:",uId)
-    local msg = ProtoGameCCC.GameLoginResult()
+    local msg = ProtoGameSandRock.GameLoginResult()
     msg:ParseFromString(buf)
     local uid = msg.user.userId
 
@@ -50,39 +50,39 @@ function LoginServer.Login(serverId, uId,buf)
 
     --print( msg)
     --luaCallGoResisterUID(uid,serverId)
-    ZTimer.SetNewTimer("GameCCC", "RunGame", 2000, serverId, GameCCC.RunGame)
+    ZTimer.SetNewTimer("GameSandRock", "RunGame", 2000, serverId, GameSandRock.RunGame)
 end
 
 function LoginServer.SendLogout(uId)
     print("--------申请玩家登出-----------")
-    local sendCmd = ProtoGameCCC.GameLogout()
+    local sendCmd = ProtoGameSandRock.GameLogout()
     sendCmd.userId = uId
-    Network.SendToUser(uId,CMD_MAIN.MDM_GAME_CCC,CMD_CCC.SUB_LOGOUT,sendCmd,nil)
+    Network.SendToUser(uId,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_LOGOUT,sendCmd,nil)
 end
 
 function LoginServer.Logout(serverId, uId,buf)
     print("--------玩家登出-----------")
-    Network.Print(ProtoGameCCC.GameLogoutResult, buf)
+    Network.Print(ProtoGameSandRock.GameLogoutResult, buf)
 end
 
 function LoginServer.GameInfo(serverId, uId, buf)
     print("--------场景信息下发-----------")
-    Network.Print(ProtoGameCCC.GameInfo, buf)
+    Network.Print(ProtoGameSandRock.GameInfo, buf)
 end
 
 function LoginServer.RoomList(serverId, uId, buf)
     print("--------场景玩家下发-----------")
-    Network.Print(ProtoGameCCC.UserList, buf)
+    Network.Print(ProtoGameSandRock.UserList, buf)
 end
 
 function LoginServer.OtherLogin(serverId, uId, buf)
     print("--------其他玩家登录-----------")
-    Network.Print(ProtoGameCCC.UserList, buf)
+    Network.Print(ProtoGameSandRock.UserList, buf)
 end
 
 function LoginServer.OtherLogout(serverId, uId, buf)
     print("--------其他玩家登出-----------")
-    Network.Print(ProtoGameCCC.OtherLeaveRoom, buf)
+    Network.Print(ProtoGameSandRock.OtherLeaveRoom, buf)
 end
 
 -----------------------------其他玩家登录----------------------------

@@ -54,7 +54,7 @@ function GameServer.Start()
 end
 
 -----------------------------------玩家列表管理-------------------------------------
-local RedisDirAllPlayersUUID = "CCC:AllUer_UUID:"                         -- 所有玩家UUID
+local RedisDirAllPlayersUUID = "SandRock:AllUer_UUID:"                         -- 所有玩家UUID
 local function GetAllPlayersUUID(num)
     --return RedisAddNumber(RedisDirAllPlayersUUID.."BY_UUID" ,"BY_UUID",num)
     local dir = RedisDirAllPlayersUUID .. "CCC_UUID"
@@ -101,7 +101,7 @@ end
 -----------------------------------游戏列表管理-------------------------------------
 function GameServer.GetRoomClass(gameId)
     local switch = {}
-    switch[Const.GameTypeCCC] = CCCRoom
+    switch[Const.GameTypeCCC] = SandRockRoom
     return  switch[gameId]
 end
 

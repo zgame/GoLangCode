@@ -64,15 +64,15 @@ end
 function Network.Msg(serverId, userId, msgId, subMsgId, buf)
     --print("msgId", msgId, "subMsgId", subMsgId)
 
-    if msgId == CMD_MAIN.MDM_GAME_CCC then
+    if msgId == CMD_MAIN.MDM_GAME_SAND_ROCK then
         local switch={}
-        switch[CMD_CCC.SUB_LOGON] = LoginServer.Login
-        switch[CMD_CCC.SUB_LOGOUT] = LoginServer.Logout
-        switch[CMD_CCC.SUB_ROOM_INFO] = LoginServer.GameInfo
-        switch[CMD_CCC.SUB_ROOM_LIST] = LoginServer.RoomList
-        switch[CMD_CCC.SUB_OTHER_LOGON] = LoginServer.OtherLogin
-        switch[CMD_CCC.SUB_OTHER_LOGOUT] = LoginServer.OtherLogout
-        switch[CMD_CCC.SUB_OTHER_LOCATION] = Location.OtherLocation
+        switch[CMD_SAND_ROCK.SUB_LOGON] = LoginServer.Login
+        switch[CMD_SAND_ROCK.SUB_LOGOUT] = LoginServer.Logout
+        switch[CMD_SAND_ROCK.SUB_ROOM_INFO] = LoginServer.GameInfo
+        switch[CMD_SAND_ROCK.SUB_ROOM_LIST] = LoginServer.RoomList
+        switch[CMD_SAND_ROCK.SUB_OTHER_LOGON] = LoginServer.OtherLogin
+        switch[CMD_SAND_ROCK.SUB_OTHER_LOGOUT] = LoginServer.OtherLogout
+        switch[CMD_SAND_ROCK.SUB_OTHER_LOCATION] = Location.OtherLocation
 
         switch[subMsgId](serverId,userId, buf)
 

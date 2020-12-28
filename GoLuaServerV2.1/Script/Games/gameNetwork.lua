@@ -14,7 +14,7 @@ function GameNetwork.Receive(serverId, userId, mainSgId, subMsgId, data, token)
     --UserToken = token           -- 保存到全局里面，发送的时候取出来GameMessage
 
     local switch = {}
-    switch[CMD_MAIN.MDM_GAME_CCC] = CCCNetwork.Receive         -- 跳转到ccc处理
+    switch[CMD_MAIN.MDM_GAME_SAND_ROCK] = SandRockNetwork.Receive         -- 跳转到ccc处理
 
     switch[mainSgId](serverId, userId, mainSgId, subMsgId, data, token)
 
