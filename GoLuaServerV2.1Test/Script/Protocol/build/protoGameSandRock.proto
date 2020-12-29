@@ -64,8 +64,8 @@ message _location{
 	float y = 3;
 	float z = 4;
 	float faceDir = 5 ;     // 面对方向
-	uint64 action = 6 ; //玩家当前行为
-	int32  param = 7  ;  
+	uint64 action = 6 ;     //玩家当前行为
+	int32  param = 7  ;     //行为的参数
 }
 //位置信息同步
 message PlayerLocation{
