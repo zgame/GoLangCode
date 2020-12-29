@@ -290,15 +290,15 @@ func TimerCommonLogicStart() {
 	//	runtime.GC()
 	//}, 60)	// 1 分钟
 
-	// ---------------------创建计时器，定期去更新lua脚本reload---------------------
-	//ztimer.TimerCheckUpdate(func() {
-	//	// 定期更新后台的配置数据
-	//	ztimer.CheckRunTimeCost(func() {
-	//		UpdateLuaReload()
-	//	}, "UpdateLuaReload")
-	//
-	//
-	//},  20 * 1)  // 1 分钟
+	//---------------------创建计时器，定期去更新lua脚本reload---------------------
+	ztimer.TimerCheckUpdate(func() {
+		// 定期更新后台的配置数据
+		ztimer.CheckRunTimeCost(func() {
+			UpdateLuaReload()
+		}, "UpdateLuaReload")
+
+
+	},  30 * 1)  // 0.5 分钟
 
 	//---------------------创建计时器，夜里12点触发---------------------
 	//ztimer.TimerClock0(func() {

@@ -15,6 +15,7 @@ function SandRockRoom:New(roomId, gameId)
 end
 
 function SandRockRoom:Reload(c)
+    print("room reload")
     setmetatable(c, self)
     self.__index = self
 
@@ -226,14 +227,14 @@ end
 -- 同步其他玩家位置和状态
 -- 这个地方为了节省cpu和内存，我就统一形成一次发送数据， 每个玩家都一样的发送，不然我要针对每个玩家单独处理数据，要费一些
 function SandRockRoom:OtherLocation()
-    --print("同步所有玩家位置")
+    --print("************************同步所有玩家位置*****************")
     local sendCmd = ProtoGameSandRock.PlayerLocation()
     sendCmd.time = 22
     for i, value in pairs(self.LocationList)do
         local location = sendCmd.location:add()
         location = SandRockLocation.Copy(value, location)
     end
-    --print(sendCmd)
+    print(sendCmd)
 
     self:SendMsgToAllUsers(CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_OTHER_LOCATION, sendCmd)
     self:SetPlayerLocation(nil,nil)      -- 清空
