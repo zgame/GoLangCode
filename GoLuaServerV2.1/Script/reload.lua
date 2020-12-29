@@ -89,7 +89,7 @@ table.insert(f, "Script/Games/SandRock/NetWork/network")
 function ReloadAll()
     --HotReload
     ReloadFile("Script/reload")
-    ZLog.Logger("------------------***** start reload all ****---------------------------")
+    --ZLog.Logger("------------------***** start reload all ****---------------------------")
     -- Games
     for _,fileName in ipairs(LuaFiles.Games) do
         ReloadFile(fileName)

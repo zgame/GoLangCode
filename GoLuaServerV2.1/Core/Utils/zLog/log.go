@@ -28,6 +28,13 @@ func CheckError(e error) bool{
 }
 
 // 输出字符串日志，带显示出控制台
+func PrintLoggerLua(str string,Show bool) {
+	_logger(str)
+	if Show {
+		fmt.Println("Log："+str)
+	}
+}
+// 输出字符串日志，带显示出控制台
 func PrintLogger(str string) {
 	_logger(str)
 	if ShowLog {

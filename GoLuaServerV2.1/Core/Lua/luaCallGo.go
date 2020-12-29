@@ -147,7 +147,8 @@ func luaCallGoNetWorkClose(L *lua.LState) int {
 // lua的日志处理
 func luaCallGoPrintLogger(L *lua.LState) int {
 	str := L.ToString(1)
-	zLog.PrintLogger(str)
+	show := L.ToBool(2)
+	zLog.PrintLoggerLua(str,show)
 	return 0
 }
 

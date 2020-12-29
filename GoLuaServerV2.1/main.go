@@ -297,8 +297,7 @@ func TimerCommonLogicStart() {
 			UpdateLuaReload()
 		}, "UpdateLuaReload")
 
-
-	},  30 * 1)  // 0.5 分钟
+	},  10 * 1)  // 10 秒
 
 	//---------------------创建计时器，夜里12点触发---------------------
 	//ztimer.TimerClock0(func() {

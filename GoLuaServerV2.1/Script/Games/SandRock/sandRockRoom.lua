@@ -58,7 +58,7 @@ end
 -- 房间的主循环
 function SandRockRoom:RunRoom()
     if self:CheckTableEmpty() then
-        --print("这是一个空房间" .. self.GameID)
+        --print("这是一个空房间" .. self.gameId)
 
         -- 这部分是做一个内存的测试
         ---- create Global Map hash
