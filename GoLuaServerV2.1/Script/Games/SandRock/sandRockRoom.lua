@@ -239,8 +239,8 @@ function SandRockRoom:OtherLocation()
         return  --没有消息就不发
     end
     sendCmd.time = 22
-    print("------------------------------------------同步位置------------------------------")
-    print(sendCmd)
+    --print("------------------------------------------同步位置------------------------------")
+    --print(sendCmd)
 
     self:SendMsgToAllUsers(CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_OTHER_LOCATION, sendCmd)
     self:SetPlayerLocation(nil,nil)      -- 清空
