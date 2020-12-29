@@ -90,51 +90,21 @@ function ReloadAll()
     --HotReload
     ReloadFile("Script/reload")
     --ZLog.Logger("------------------***** start reload all ****---------------------------")
-    -- Games
-    for _,fileName in ipairs(LuaFiles.Games) do
-        ReloadFile(fileName)
-    end
 
-    for _, game in pairs(GlobalVar.AllGamesList) do
-        local roomClass = GameServer.GetRoomClass(game.gameId)
-        for _, room in pairs(game.allRoomList) do
-            --room:Reload(roomClass)
-            roomClass:Reload(room)
-        end
-    end
-
-
-    ----    -- 已经生成的对象需要刷新函数
-    --for _, game in pairs(AllGamesList) do
-    --    Game:Reload(game)
-    --    -- 捕鱼游戏
-    --    if game.GameTypeID == GameTypeBY or game.GameTypeID == GameTypeBY30 then
-    --        for _, table in pairs(game.AllTableList) do
-    --            -- 遍历所有游戏，所有房间， 所有鱼，所有子弹，所有生成鱼池， 因为这些都是类， 已经生成的对象需要刷新函数
-    --            ByTable:Reload(table)
-    --            for _, fish in pairs(table.FishArray) do
-    --                Fish:Reload(fish)
-    --            end
-    --            for _, bullet in pairs(table.BulletArray) do
-    --                Bullet:Reload(bullet)
-    --            end
-    --            for _, distribute in pairs(table.DistributeArray) do
-    --                FishDistribute:Reload(distribute)
-    --            end
-    --            for _, bossDistribute in pairs(table.BossDistributeArray) do
-    --                FishDistribute:Reload(bossDistribute)
-    --            end
-    --        end
-    --    end
-    --    -- 小海兽
-    --    if game.GameTypeID == GameTypeXHS then
-    --        for _, table in pairs(game.AllTableList) do
-    --            XhsTable:Reload(table)
-    --        end
-    --    end
-    --    -- 其他游戏
+    --for _,fileName in ipairs(LuaFiles.Games) do
+    --    ReloadFile(fileName)
     --end
-    --
+    --for _, game in pairs(GlobalVar.AllGamesList) do
+    --    local roomClass = GameServer.GetRoomClass(game.gameId)
+    --    for _, room in pairs(game.allRoomList) do
+    --        --room:Reload(roomClass)
+    --        roomClass:Reload(room)
+    --    end
+    --end
+    --for _,fileName in ipairs(LuaFiles.NetWork) do
+    --    ReloadFile(fileName)
+    --end
+
     ---- 所有玩家的数据刷新（如果结构定义有修改的话）
     --for _,player in pairs(AllPlayerList) do
     --    User:Reload(player.User)

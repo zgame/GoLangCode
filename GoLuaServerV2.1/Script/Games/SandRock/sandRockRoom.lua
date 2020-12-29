@@ -15,7 +15,6 @@ function SandRockRoom:New(roomId, gameId)
 end
 
 function SandRockRoom:Reload(c)
-    print("room reload")
     setmetatable(c, self)
     self.__index = self
 
@@ -59,6 +58,7 @@ end
 function SandRockRoom:RunRoom()
     if self:CheckTableEmpty() then
         --print("这是一个空房间" .. self.gameId)
+
 
         -- 这部分是做一个内存的测试
         ---- create Global Map hash
@@ -229,11 +229,17 @@ end
 function SandRockRoom:OtherLocation()
     --print("************************同步所有玩家位置*****************")
     local sendCmd = ProtoGameSandRock.PlayerLocation()
-    sendCmd.time = 22
-    for i, value in pairs(self.LocationList)do
+    local lens = 0
+    for key, value in pairs(self.LocationList)do
         local location = sendCmd.location:add()
         location = SandRockLocation.Copy(value, location)
+        lens = lens + 1
     end
+    if lens == 0 then
+        return  --没有消息就不发
+    end
+    sendCmd.time = 22
+    print("------------------------------------------同步位置------------------------------")
     print(sendCmd)
 
     self:SendMsgToAllUsers(CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_OTHER_LOCATION, sendCmd)
