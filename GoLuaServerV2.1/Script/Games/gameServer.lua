@@ -32,7 +32,7 @@ function GameServer.Start()
     --print("协调服 serverId ",ServerMainServer)
 
     print("-------------------  添加主循环  ------------------------------")
-    ZTimer.SetNewTimer("GameServer", "RunGamesRooms", 500, GameServer.RunGamesRooms)
+    ZTimer.SetNewTimer("GameServer", "RunGamesRooms", 200, GameServer.RunGamesRooms)
 
     print("-------------------  添加游戏  ------------------------------")
     addGame("沙石镇", Const.GameTypeCCC)
