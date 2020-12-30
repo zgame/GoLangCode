@@ -68,11 +68,11 @@ func GetServerUid() int {
 retry:
 	TcpServerUUID = atomic.AddInt32(&TcpServerUUID, 1)
 
-	if TcpServerUUID > math.MaxInt32 {
-		TcpServerUUID = 0 // 如果越界了， 那么重头来过
+	if TcpServerUUID > math.MaxInt32/2 {
+		TcpServerUUID = 1 // 如果越界了， 那么重头来过
 	}
 	ServerId := int(TcpServerUUID)
-	if  GetMyServerByServerId(int(TcpServerUUID)) != nil {
+	if  GetMyServerByServerId(ServerId) != nil {
 		// 如果被占用了， 那么尝试下一个
 		goto retry
 		fmt.Printf("serverId  %d 被占用", TcpServerUUID)
