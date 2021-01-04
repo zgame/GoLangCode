@@ -9,7 +9,7 @@
 -------------------------------------Logger----------------------------------------
 --package.path = "Script/Logger/?.lua;"..package.path
 require("Script/Utils/logger")
-ZLog.Logger("========Game Server Start ....========")
+ZLog.Logger("========Game Client Start ....========")
 
 ---------------------------------------protocol buffer----------------------------------------
 --package.path = "Script/Protocol/build/?.lua;"..package.path
