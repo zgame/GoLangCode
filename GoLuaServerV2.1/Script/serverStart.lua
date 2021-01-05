@@ -36,5 +36,8 @@ function Main.GoCallLuaStartAllServers()
     switch[Const.ServerCenter] = CenterServer.Start                 -- 启动主中心服
     -- 运行对应server type的函数
     switch[GlobalVar.ServerTypeName]()
+
+
+    print("ServerIP_Port:"..GlobalVar.ServerIP_Port.."用来做日志")
 end
 

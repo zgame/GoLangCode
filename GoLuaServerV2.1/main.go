@@ -176,6 +176,8 @@ func UpdateLuaReload() {
 //-----------------------------------建立服务器的网络功能---------------------------------------------------------------
 func NetWorkServerStart()  {
 
+	ServerAddress = "0.0.0.0"
+
 	if WebSocketServer {
 		// websocket 服务器开启---------------------------------
 		wsServer = new(NetWork.WSServer)
@@ -215,7 +217,7 @@ func NetWorkServerStart()  {
 		// socket udp 服务器开启----------------------------------
 		udpServer = new(NetWork.UDPServer)
 		udpServer.Addr = ServerAddress +":"+strconv.Itoa(UdpPort)
-		fmt.Println("socket udp 绑定：", UdpPort)
+		fmt.Println("socket udp 绑定：", udpServer.Addr)
 		udpServer.MaxConnNum = int(math.MaxInt32)
 		udpServer.PendingWriteNum = 1000 // 发送区缓存
 		udpServer.LenMsgLen = 4
