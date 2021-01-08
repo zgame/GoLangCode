@@ -89,6 +89,7 @@ message _resourcePoint{
 }
 message ResourceUpdate{
 	repeated _resourcePoint points=1;   //刷新点列表
+	uint32 weather =2;          // 天气变化
 }
 
 message ResourceGet{

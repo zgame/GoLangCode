@@ -6,6 +6,7 @@ function SandRockSleep.Sleep(serverId, userId, buf)
         return
     end
     SandRockRoom.ResourcePointUpdate(room)      -- 刷新资源列表
+    SandRockRoom.UpdateWeather(room)
     SandRockResourcePoint.SendPointList(userId)       -- 发送资源刷新
 
 end

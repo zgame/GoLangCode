@@ -14,5 +14,7 @@ function SandRockRoom:GetWeather()
 end
 
 function SandRockRoom:UpdateWeather()
-    local ran = ZRandom.GetRandom()
+    -- 目前都是晴天， 任务触发下雨和沙尘暴
+    self.weather = ZRandom.GetRandom(1,5)
+    return self.weather
 end

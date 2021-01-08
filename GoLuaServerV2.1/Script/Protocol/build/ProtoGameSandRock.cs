@@ -43,12 +43,13 @@ namespace GameSandRock {
             "bGF5ZXJMb2NhdGlvbhIpCghsb2NhdGlvbhgBIAMoCzIXLkdhbWVTYW5kUm9j",
             "ay5fbG9jYXRpb24SDAoEdGltZRgCIAEoBCIXCgVTbGVlcBIOCgZ1c2VySWQY",
             "ASABKA0iSwoOX3Jlc291cmNlUG9pbnQSEAoIYXJlYU5hbWUYASABKAkSEQoJ",
-            "YXJlYVBvaW50GAIgASgNEhQKDHJlc291cmNlVHlwZRgDIAEoDSI+Cg5SZXNv",
+            "YXJlYVBvaW50GAIgASgNEhQKDHJlc291cmNlVHlwZRgDIAEoDSJPCg5SZXNv",
             "dXJjZVVwZGF0ZRIsCgZwb2ludHMYASADKAsyHC5HYW1lU2FuZFJvY2suX3Jl",
-            "c291cmNlUG9pbnQiOQoLUmVzb3VyY2VHZXQSKgoEaW5mbxgBIAEoCzIcLkdh",
-            "bWVTYW5kUm9jay5fcmVzb3VyY2VQb2ludCIoCgVfaXRlbRIOCgZpdGVtSWQY",
-            "ASABKA0SDwoHaXRlbU51bRgCIAEoDSIsCgdJdGVtR2V0EiEKBGl0ZW0YASAD",
-            "KAsyEy5HYW1lU2FuZFJvY2suX2l0ZW1iBnByb3RvMw=="));
+            "c291cmNlUG9pbnQSDwoHd2VhdGhlchgCIAEoDSI5CgtSZXNvdXJjZUdldBIq",
+            "CgRpbmZvGAEgASgLMhwuR2FtZVNhbmRSb2NrLl9yZXNvdXJjZVBvaW50IigK",
+            "BV9pdGVtEg4KBml0ZW1JZBgBIAEoDRIPCgdpdGVtTnVtGAIgASgNIiwKB0l0",
+            "ZW1HZXQSIQoEaXRlbRgBIAMoCzITLkdhbWVTYW5kUm9jay5faXRlbWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -64,7 +65,7 @@ namespace GameSandRock {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.PlayerLocation), global::GameSandRock.PlayerLocation.Parser, new[]{ "Location", "Time" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.Sleep), global::GameSandRock.Sleep.Parser, new[]{ "UserId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._resourcePoint), global::GameSandRock._resourcePoint.Parser, new[]{ "AreaName", "AreaPoint", "ResourceType" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceUpdate), global::GameSandRock.ResourceUpdate.Parser, new[]{ "Points" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceUpdate), global::GameSandRock.ResourceUpdate.Parser, new[]{ "Points", "Weather" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceGet), global::GameSandRock.ResourceGet.Parser, new[]{ "Info" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._item), global::GameSandRock._item.Parser, new[]{ "ItemId", "ItemNum" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ItemGet), global::GameSandRock.ItemGet.Parser, new[]{ "Item" }, null, null, null)
@@ -2484,6 +2485,7 @@ namespace GameSandRock {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ResourceUpdate(ResourceUpdate other) : this() {
       points_ = other.points_.Clone();
+      weather_ = other.weather_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2505,6 +2507,20 @@ namespace GameSandRock {
       get { return points_; }
     }
 
+    /// <summary>Field number for the "weather" field.</summary>
+    public const int WeatherFieldNumber = 2;
+    private uint weather_;
+    /// <summary>
+    /// 天气变化
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Weather {
+      get { return weather_; }
+      set {
+        weather_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as ResourceUpdate);
@@ -2519,6 +2535,7 @@ namespace GameSandRock {
         return true;
       }
       if(!points_.Equals(other.points_)) return false;
+      if (Weather != other.Weather) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2526,6 +2543,7 @@ namespace GameSandRock {
     public override int GetHashCode() {
       int hash = 1;
       hash ^= points_.GetHashCode();
+      if (Weather != 0) hash ^= Weather.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2540,6 +2558,10 @@ namespace GameSandRock {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
       points_.WriteTo(output, _repeated_points_codec);
+      if (Weather != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(Weather);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2549,6 +2571,9 @@ namespace GameSandRock {
     public int CalculateSize() {
       int size = 0;
       size += points_.CalculateSize(_repeated_points_codec);
+      if (Weather != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Weather);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -2561,6 +2586,9 @@ namespace GameSandRock {
         return;
       }
       points_.Add(other.points_);
+      if (other.Weather != 0) {
+        Weather = other.Weather;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -2574,6 +2602,10 @@ namespace GameSandRock {
             break;
           case 10: {
             points_.AddEntriesFrom(input, _repeated_points_codec);
+            break;
+          }
+          case 16: {
+            Weather = input.ReadUInt32();
             break;
           }
         }

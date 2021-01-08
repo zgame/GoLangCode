@@ -11,13 +11,14 @@ function SandRockResourcePoint.SendPointList(userId)
 
     --printTable(room.resourcePoint)
     for areaName, pointList in pairs(room.resourcePoint) do
-            for pointIndex, point in pairs(pointList) do
-                local points = sendCmd.points:add()
-                points.areaName = areaName
-                points.areaPoint = pointIndex
-                points.resourceType = point.resourceType
-            end
+        for pointIndex, point in pairs(pointList) do
+            local points = sendCmd.points:add()
+            points.areaName = areaName
+            points.areaPoint = pointIndex
+            points.resourceType = point.resourceType
+        end
     end
+    sendCmd.weather = SandRockRoom.GetWeather(room)
     --print(sendCmd)
     NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd, nil)
 
@@ -32,7 +33,7 @@ function SandRockResourcePoint.GetResource(serverId, userId, buf)
     --print(msg)
 
     local room = GameServer.GetRoomByUserId(userId)
-    if room ==nil then
+    if room == nil then
         return
     end
 
@@ -40,7 +41,7 @@ function SandRockResourcePoint.GetResource(serverId, userId, buf)
     local areaPoint = msg.info.areaPoint
     local resourceType = msg.info.resourceType
 
-    local itemGet = SandRockRoom.GetResource(room,userId, areaName, areaPoint, resourceType)
+    local itemGet = SandRockRoom.GetResource(room, userId, areaName, areaPoint, resourceType)
     if itemGet == nil then
         ZLog.Logger("资源采集失败")
         return
