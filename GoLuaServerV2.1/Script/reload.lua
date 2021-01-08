@@ -20,9 +20,9 @@ table.insert(f, "Script/Games/SandRock/DataBase/sqlStatistic")
 -- CSV
 LuaFiles.CSV = {}
 f = LuaFiles.CSV
-table.insert(f, "Script/CSV/mgby_vip")
-table.insert(f, "Script/CSV/mgby_item")
-table.insert(f, "Script/CSV/mgby_monster")
+table.insert(f, "Script/CSV/resourceGenerate")
+table.insert(f, "Script/CSV/resourceType")
+
 
 
 -- Protocol
@@ -69,7 +69,10 @@ table.insert(f, "Script/Games/gameNetwork")     -- 游戏网络分发入口
 LuaFiles.Games = {}
 f = LuaFiles.Games
 --ccc
-table.insert(f, "Script/Games/SandRock/sandRockRoom")
+table.insert(f, "Script/Games/SandRock/Room/sandRockRoom")
+table.insert(f, "Script/Games/SandRock/Room/login")
+table.insert(f, "Script/Games/SandRock/Room/location")
+table.insert(f, "Script/Games/SandRock/Room/resourcePoint")
 table.insert(f, "Script/Games/SandRock/DataBase/loginServer")
 
 
@@ -81,6 +84,8 @@ table.insert(f, "Script/network")       -- 网络分发入口点n
 -- table.insert(f, "Script/Games/SandRock/NetWork/gameFire")
 table.insert(f, "Script/Games/SandRock/NetWork/loginServer")
 table.insert(f, "Script/Games/SandRock/NetWork/location")
+table.insert(f, "Script/Games/SandRock/NetWork/sleep")
+table.insert(f, "Script/Games/SandRock/NetWork/resourcePoint")
 table.insert(f, "Script/Games/SandRock/NetWork/network")
 
 

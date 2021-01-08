@@ -11,7 +11,8 @@ function SandRockRoom:New(roomId, gameId)
     self.userSeatArray = {}        -- 座椅对应玩家uid的哈希表 ， key ： seatID (1,2,3,4)   ，value： player
     self.userSeatArrayNumber = 0         -- 房间上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
 
-    self.LocationList = {}          -- uid  player's location 
+    self.locationList = {}          -- uid  player's location
+    self.resourcePoint = {}         -- 资源点列表 key 是 区域的名字  value是point的list
 end
 
 function SandRockRoom:Reload(c)
@@ -133,60 +134,6 @@ function SandRockRoom:RunRoom()
     end
 end
 
------------------------ 玩家操作 ---------------------------------
-
--- 发消息给同房间的其他玩家，告诉他们你登录了
-local function sendLoginToOthers(room, player)
-    local userId =  Player.UId(player)
-    print("玩家登录", userId, "房间", room.roomId,"椅子",player.chairId)
-    local sendCmd = ProtoGameSandRock.UserList()
-    local uu = sendCmd.user:add()
-    Player.Copy(player,uu)
-    SandRockRoom.SendMsgToOtherUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_OTHER_LOGON,sendCmd,userId)
-end
-
--- 发消息给同房间的其他玩家，告诉他们你登出了
-local function sendLogoutToOthers(room, player)
-    local userId =  Player.UId(player)
-    print("玩家登出", userId, "房间", room.roomId,"椅子",player.chairId)
-    local sendCmd = ProtoGameSandRock.OtherLeaveRoom()
-    sendCmd.userId = userId
-    SandRockRoom.SendMsgToOtherUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_OTHER_LOGOUT,sendCmd,userId)
-end
-
---玩家坐到椅子上
-function SandRockRoom:PlayerSeat(chairId, player)
-    self.userSeatArray[chairId] = player
-    self.userSeatArrayNumber = self.userSeatArrayNumber + 1   -- 房间上玩家数量增加
-    player.roomId = self.roomId
-    player.chairId = chairId
-
-    GameServer.SetAllPlayerList(Player.UId(player), player)  --创建好之后加入玩家总列表
-    sendLoginToOthers(self,player)
-    return player
-end
-
---玩家离开椅子
-function SandRockRoom:PlayerStandUp(uId)
-    local player = GameServer.GetPlayerByUID(uId)
-    --ZLog.Logger(uId .. "离开房间" .. player.roomId .. "椅子" .. player.chairId .. "self.roomId" .. self.gameId)
-    -- 保存玩家基础数据
-    --SaveUserBaseData(player.User)
-
-    GameServer.SetAllPlayerList(Player.UId(player), nil)         -- 清理掉游戏管理的玩家总列表
-    self.userSeatArray[player.chairId] = nil                -- 清理掉房间的玩家列表
-    self.userSeatArrayNumber = self.userSeatArrayNumber - 1  -- 房间上玩家数量减少
-    sendLogoutToOthers(self,player)
-    player.roomId = Const.ROOM_CHAIR_NOBODY
-    player.chairId = Const.ROOM_CHAIR_NOBODY
-
-    --如果是空房间的话，清理一下房间
-    if self:CheckTableEmpty() then
-        self:ClearTable()
-        Game.ReleaseRoom(self.gameId,self.roomId)    --回收房间
-    end
-end
-
 
 ----------------------- 同步消息 ---------------------------------
 --给桌上的所有玩家同步消息
@@ -206,42 +153,4 @@ function SandRockRoom:SendMsgToOtherUsers(mainCmd, subCmd, sendCmd, userId)
             end
         end
     end
-end
-
--------------------------位置---------------------------------
-function SandRockRoom:SetPlayerLocation(uId, msg)
-    if uId==nil and msg ==nil then      -- 如果都是空的， 那么就清空
-        self.LocationList={}
-        return
-    end
-    self.LocationList[tostring(uId)] = msg  -- 不是空的就添加
-end
-function SandRockRoom:GetPlayerLocation(uId)
-    if uId == nil then                      -- 输入空，返回所有
-        return self.LocationList
-    else
-        return self.LocationList[tostring(uId)]     -- 不空返回单条
-    end
-end
-
--- 同步其他玩家位置和状态
--- 这个地方为了节省cpu和内存，我就统一形成一次发送数据， 每个玩家都一样的发送，不然我要针对每个玩家单独处理数据，要费一些
-function SandRockRoom:OtherLocation()
-    --print("************************同步所有玩家位置*****************")
-    local sendCmd = ProtoGameSandRock.PlayerLocation()
-    local lens = 0
-    for key, value in pairs(self.LocationList)do
-        local location = sendCmd.location:add()
-        location = SandRockLocation.Copy(value, location)
-        lens = lens + 1
-    end
-    if lens == 0 then
-        return  --没有消息就不发
-    end
-    sendCmd.time = 22
-    --print("------------------------------------------同步位置------------------------------")
-    --print(sendCmd)
-
-    self:SendMsgToAllUsers(CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_OTHER_LOCATION, sendCmd)
-    self:SetPlayerLocation(nil,nil)      -- 清空
 end

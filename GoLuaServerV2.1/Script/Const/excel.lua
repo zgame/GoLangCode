@@ -44,16 +44,16 @@ end
 
 
 --------------------------------------------mgby_item.lua----------------------------------------------
-local ItemExcel = mgby_item.mgby_item
---- 获取mgby_item.csv数据对外接口
--- @param index    主键
--- @param key      属性名
----- @return 表mgby_item主键index所对应对象数据中key属性的值
-function GetExcelItemValue(index, key)
-    return GetValue(ItemExcel, index, key)
-end
---- 获取 mgby_item.csv中所有的key
----- @return 表mgby_item所有key组成的table
-function GetExcelItemAllKeys()
-    return GetAllKeys(ItemExcel)
-end
+--local ItemExcel = resourceType.resourceType
+----- 获取mgby_item.csv数据对外接口
+---- @param index    主键
+---- @param key      属性名
+------ @return 表mgby_item主键index所对应对象数据中key属性的值
+--function GetExcelItemValue(index, key)
+--    return GetValue(ItemExcel, index, key)
+--end
+----- 获取 mgby_item.csv中所有的key
+------ @return 表mgby_item所有key组成的table
+--function GetExcelItemAllKeys()
+--    return GetAllKeys(ItemExcel)
+--end
