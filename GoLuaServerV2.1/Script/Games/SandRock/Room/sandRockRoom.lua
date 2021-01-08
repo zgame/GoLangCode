@@ -93,7 +93,7 @@ function SandRockRoom:RunRoom()
     else
         local now = ZTime.GetOsTimeMillisecond()
 
-        self:OtherLocation()
+        self:LocationOther()
         --self:SetPlayerLocation(nil,nil)      -- 清空
 
         --if self:GetFishNum() < MAX_Fish_NUMBER then

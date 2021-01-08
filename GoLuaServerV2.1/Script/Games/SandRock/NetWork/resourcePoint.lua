@@ -30,4 +30,10 @@ function SandRockResourcePoint.GetResource(serverId, userId, buf)
     msg:ParseFromString(buf)
     print(msg)
 
+    local room = GameServer.GetRoomByUserId(userId)
+    if room ==nil then
+        return
+    end
+
+    SandRockRoom.GetResource(userId, areaName, pointIndex, resourceType)
 end

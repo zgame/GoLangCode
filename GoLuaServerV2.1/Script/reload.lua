@@ -59,6 +59,7 @@ table.insert(f, "Script/Server/commonLogic")
 table.insert(f, "Script/Server/centerServer")
 table.insert(f, "Script/Games/Model/player")
 table.insert(f, "Script/Games/Model/playerLogic")
+table.insert(f, "Script/Games/Model/playerValue")
 table.insert(f, "Script/Games/Model/user")
 table.insert(f, "Script/Games/gameServer") --  游戏服务器入口点
 table.insert(f, "Script/Games/games")

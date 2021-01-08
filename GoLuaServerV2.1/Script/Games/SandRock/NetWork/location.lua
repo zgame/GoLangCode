@@ -13,7 +13,7 @@ function SandRockLocation.Location(serverId, userId, buf)
     end
     local location = {}
     location = SandRockLocation.Copy(msg.location[1],location)
-    SandRockRoom.SetPlayerLocation(room, userId, location)
+    SandRockRoom.LocationPlayerSet(room, userId, location)
 
 end
 

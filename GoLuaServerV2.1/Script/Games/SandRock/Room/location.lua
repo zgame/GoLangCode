@@ -1,6 +1,6 @@
 
 -------------------------位置---------------------------------
-function SandRockRoom:SetPlayerLocation(uId, msg)
+function SandRockRoom:LocationPlayerSet(uId, msg)
     if uId==nil and msg ==nil then      -- 如果都是空的， 那么就清空
         self.locationList ={}
         return
@@ -17,7 +17,7 @@ end
 
 -- 同步其他玩家位置和状态
 -- 这个地方为了节省cpu和内存，我就统一形成一次发送数据， 每个玩家都一样的发送，不然我要针对每个玩家单独处理数据，要费一些
-function SandRockRoom:OtherLocation()
+function SandRockRoom:LocationOther()
     --print("************************同步所有玩家位置*****************")
     local sendCmd = ProtoGameSandRock.PlayerLocation()
     local lens = 0
@@ -34,5 +34,5 @@ function SandRockRoom:OtherLocation()
     --print(sendCmd)
 
     self:SendMsgToAllUsers(CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_OTHER_LOCATION, sendCmd)
-    self:SetPlayerLocation(nil,nil)      -- 清空
+    self:LocationPlayerSet(nil,nil)      -- 清空
 end
