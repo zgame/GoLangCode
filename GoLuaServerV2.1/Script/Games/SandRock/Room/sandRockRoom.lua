@@ -61,6 +61,8 @@ function SandRockRoom:RunRoom()
         --print("这是一个空房间" .. self.gameId)
 
 
+
+
         -- 这部分是做一个内存的测试
         ---- create Global Map hash
         --for i=1,40 do

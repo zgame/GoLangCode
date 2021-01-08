@@ -73,4 +73,19 @@ message PlayerLocation{
 	uint64 time = 2; //时间戳
 }
 
-//---------------------------------------同步位置-------------------------------
+//---------------------------------------睡觉-------------------------------
+message Sleep{
+	uint32 userId = 1;
+}
+
+
+message _resourcePoint{
+	string areaName =1;   // 区域的名字
+	uint32 areaPoint =2;  // 区域中第几个point
+	uint32 resourceType= 3;  // 生成了什么东西
+
+
+}
+message ResourceUpdate{
+	repeated _resourcePoint points=1;   //刷新点列表
+}

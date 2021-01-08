@@ -28,7 +28,7 @@ package.path = "Script/Utils/?.lua;"..package.path
 package.path = "Script/GameManager/?.lua;"..package.path
 
 require("Const")
-require("Excel")
+--require("Excel")
 require("proto")
 require("constCmd")
 require("constCmdGame")
@@ -52,6 +52,8 @@ require("loginServer")
 require("location")
 require("gameSandRock")
 require("network")
+require("resource")
+require("sleep")
 
 -------------------------------------GameManager----------------------------------------
 

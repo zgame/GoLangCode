@@ -40,7 +40,7 @@ table.insert(f, "Script/Const/constCmd")
 table.insert(f, "Script/Const/constCmdGame")
 table.insert(f, "Script/Const/constCmdServer")
 table.insert(f, "Script/setting")
-table.insert(f, "Script/Const/excel")
+--table.insert(f, "Script/Const/excel")
 
 
 -- Utils

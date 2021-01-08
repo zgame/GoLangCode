@@ -73,6 +73,7 @@ function Network.Msg(serverId, userId, msgId, subMsgId, buf)
         switch[CMD_SAND_ROCK.SUB_OTHER_LOGON] = LoginServer.OtherLogin
         switch[CMD_SAND_ROCK.SUB_OTHER_LOGOUT] = LoginServer.OtherLogout
         switch[CMD_SAND_ROCK.SUB_OTHER_LOCATION] = Location.OtherLocation
+        switch[CMD_SAND_ROCK.SUB_RESOURCE_POINT] = Sleep.UpdateResource
 
         switch[subMsgId](serverId,userId, buf)
 

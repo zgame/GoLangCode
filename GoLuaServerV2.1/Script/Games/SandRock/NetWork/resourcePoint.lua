@@ -9,15 +9,16 @@ function SandRockResourcePoint.SendPointList(userId)
         return
     end
 
-    for i,areaName in ipairs(room.resourcePoint) do
-        for ii,vv in ipairs(room.resourcePoint[areaName]) do
-            local points = sendCmd.points:add()
-            points.areaName = areaName
-            points.areaPoint = vv.areaPoint
-            points.resourceType = vv.resourceType
-
-        end
+    --printTable(room.resourcePoint)
+    for areaName,list in pairs(room.resourcePoint) do
+            for ii,vv in ipairs(list) do
+                local points = sendCmd.points:add()
+                points.areaName = areaName
+                points.areaPoint = vv.areaPoint
+                points.resourceType = vv.resourceType
+            end
     end
+    --print(sendCmd)
     NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd, nil)
 
 
