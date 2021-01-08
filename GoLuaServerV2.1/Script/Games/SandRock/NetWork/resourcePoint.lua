@@ -10,12 +10,12 @@ function SandRockResourcePoint.SendPointList(userId)
     end
 
     --printTable(room.resourcePoint)
-    for areaName,list in pairs(room.resourcePoint) do
-            for ii,vv in ipairs(list) do
+    for areaName, pointList in pairs(room.resourcePoint) do
+            for pointIndex, point in pairs(pointList) do
                 local points = sendCmd.points:add()
                 points.areaName = areaName
-                points.areaPoint = vv.areaPoint
-                points.resourceType = vv.resourceType
+                points.areaPoint = pointIndex
+                points.resourceType = point.resourceType
             end
     end
     --print(sendCmd)

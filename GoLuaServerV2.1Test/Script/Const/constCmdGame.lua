@@ -12,3 +12,4 @@ CMD_SAND_ROCK = {
     SUB_RESOURCE_POINT = 10 ,   -- 刷新资源
     SUB_RESOURCE_GET = 11 ,   -- 采集资源
 }
+

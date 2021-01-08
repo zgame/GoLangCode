@@ -2,7 +2,7 @@
 SandRockRoom = Class:extend()
 function SandRockRoom:New(roomId, gameId)
     -- 重新赋值某些属性值
-    SandRockRoom.super.New(self)
+    --SandRockRoom.super.New(self)
     self.gameId = gameId
     self.roomId = roomId
     self.tableMax = Const.CCC_ROOM_MAX_PLAYER
@@ -12,7 +12,8 @@ function SandRockRoom:New(roomId, gameId)
     self.userSeatArrayNumber = 0         -- 房间上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
 
     self.locationList = {}          -- uid  player's location
-    self.resourcePoint = {}         -- 资源点列表 key 是 区域的名字  value是point的list
+    self.resourcePoint = {}         -- 资源点列表 key 是 区域的名字  value是point的map   , key是点的index， value是资源和生命周期
+    self.weather = 1           -- 天气
 end
 
 function SandRockRoom:Reload(c)
