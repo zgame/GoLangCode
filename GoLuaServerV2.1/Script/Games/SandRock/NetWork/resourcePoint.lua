@@ -26,14 +26,31 @@ end
 
 -- 采集资源
 function SandRockResourcePoint.GetResource(serverId, userId, buf)
-    local msg = ProtoGameSandRock.PlayerLocation()
+    --print("客户端开始采集资源")
+    local msg = ProtoGameSandRock.ResourceGet()
     msg:ParseFromString(buf)
-    print(msg)
+    --print(msg)
 
     local room = GameServer.GetRoomByUserId(userId)
     if room ==nil then
         return
     end
 
-    SandRockRoom.GetResource(userId, areaName, pointIndex, resourceType)
+    local areaName = msg.info.areaName
+    local areaPoint = msg.info.areaPoint
+    local resourceType = msg.info.resourceType
+
+    local itemGet = SandRockRoom.GetResource(room,userId, areaName, areaPoint, resourceType)
+    if itemGet == nil then
+        ZLog.Logger("资源采集失败")
+        return
+    end
+    local sendCmd = ProtoGameSandRock.ItemGet()
+    local item = sendCmd.item:add()
+    item.itemId = itemGet
+    item.itemNum = 1
+    --print(sendCmd)
+    --print("发送客户端采集结果")
+    NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_GET, sendCmd, nil)
+
 end

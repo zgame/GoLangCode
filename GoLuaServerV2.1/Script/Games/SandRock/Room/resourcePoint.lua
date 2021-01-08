@@ -92,11 +92,12 @@ function SandRockRoom:GetResource(userId, areaName, pointIndex, resourceType)
 
     Player.ExpAdd(player,exp)
     Player.SpAdd(player, -spCost)
-    -- 获得物品
-    local item = CSV_resourceType.GetValue(resourceType,"GeneratorGroup")
 
     -- 销毁采集点
     self.resourcePoint[areaName][pointIndex] = nil
-
+    -- 获得物品
+    local item = CSV_resourceType.GetValue(resourceType,"GeneratorGroup")
+    -- 保存到背包
+    return item
 
 end

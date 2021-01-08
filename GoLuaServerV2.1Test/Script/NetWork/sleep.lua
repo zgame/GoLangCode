@@ -12,7 +12,12 @@ function Sleep.UpdateResource(serverId,userId, buf)
     print("资源刷新列表")
     local msg = ProtoGameSandRock.ResourceUpdate()
     msg:ParseFromString(buf)
-    print(msg)
+    --print(msg)
+    --print(msg.points[1].areaName)
+    --print(msg.points[1].areaPoint)
+    --print(msg.points[1].resourceType)
 
+    -- 采集资源
+    Resource.Get(serverId,msg.points[1].areaName,msg.points[1].areaPoint,msg.points[1].resourceType )
 end
 

@@ -45,7 +45,10 @@ namespace GameSandRock {
             "ASABKA0iSwoOX3Jlc291cmNlUG9pbnQSEAoIYXJlYU5hbWUYASABKAkSEQoJ",
             "YXJlYVBvaW50GAIgASgNEhQKDHJlc291cmNlVHlwZRgDIAEoDSI+Cg5SZXNv",
             "dXJjZVVwZGF0ZRIsCgZwb2ludHMYASADKAsyHC5HYW1lU2FuZFJvY2suX3Jl",
-            "c291cmNlUG9pbnRiBnByb3RvMw=="));
+            "c291cmNlUG9pbnQiOQoLUmVzb3VyY2VHZXQSKgoEaW5mbxgBIAEoCzIcLkdh",
+            "bWVTYW5kUm9jay5fcmVzb3VyY2VQb2ludCIoCgVfaXRlbRIOCgZpdGVtSWQY",
+            "ASABKA0SDwoHaXRlbU51bRgCIAEoDSIsCgdJdGVtR2V0EiEKBGl0ZW0YASAD",
+            "KAsyEy5HYW1lU2FuZFJvY2suX2l0ZW1iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -61,7 +64,10 @@ namespace GameSandRock {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.PlayerLocation), global::GameSandRock.PlayerLocation.Parser, new[]{ "Location", "Time" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.Sleep), global::GameSandRock.Sleep.Parser, new[]{ "UserId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._resourcePoint), global::GameSandRock._resourcePoint.Parser, new[]{ "AreaName", "AreaPoint", "ResourceType" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceUpdate), global::GameSandRock.ResourceUpdate.Parser, new[]{ "Points" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceUpdate), global::GameSandRock.ResourceUpdate.Parser, new[]{ "Points" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceGet), global::GameSandRock.ResourceGet.Parser, new[]{ "Info" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._item), global::GameSandRock._item.Parser, new[]{ "ItemId", "ItemNum" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ItemGet), global::GameSandRock.ItemGet.Parser, new[]{ "Item" }, null, null, null)
           }));
     }
     #endregion
@@ -2255,6 +2261,9 @@ namespace GameSandRock {
 
   }
 
+  /// <summary>
+  ///---------------------------------------资源刷新和采集----------------------------------
+  /// </summary>
   public sealed partial class _resourcePoint : pb::IMessage<_resourcePoint> {
     private static readonly pb::MessageParser<_resourcePoint> _parser = new pb::MessageParser<_resourcePoint>(() => new _resourcePoint());
     private pb::UnknownFieldSet _unknownFields;
@@ -2565,6 +2574,425 @@ namespace GameSandRock {
             break;
           case 10: {
             points_.AddEntriesFrom(input, _repeated_points_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class ResourceGet : pb::IMessage<ResourceGet> {
+    private static readonly pb::MessageParser<ResourceGet> _parser = new pb::MessageParser<ResourceGet>(() => new ResourceGet());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ResourceGet> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[13]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ResourceGet() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ResourceGet(ResourceGet other) : this() {
+      Info = other.info_ != null ? other.Info.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ResourceGet Clone() {
+      return new ResourceGet(this);
+    }
+
+    /// <summary>Field number for the "info" field.</summary>
+    public const int InfoFieldNumber = 1;
+    private global::GameSandRock._resourcePoint info_;
+    /// <summary>
+    /// 资源点采集
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::GameSandRock._resourcePoint Info {
+      get { return info_; }
+      set {
+        info_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ResourceGet);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ResourceGet other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Info, other.Info)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (info_ != null) hash ^= Info.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (info_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Info);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (info_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Info);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ResourceGet other) {
+      if (other == null) {
+        return;
+      }
+      if (other.info_ != null) {
+        if (info_ == null) {
+          info_ = new global::GameSandRock._resourcePoint();
+        }
+        Info.MergeFrom(other.Info);
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (info_ == null) {
+              info_ = new global::GameSandRock._resourcePoint();
+            }
+            input.ReadMessage(info_);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  ///----------------------------------------道具----------------------------------------------
+  /// </summary>
+  public sealed partial class _item : pb::IMessage<_item> {
+    private static readonly pb::MessageParser<_item> _parser = new pb::MessageParser<_item>(() => new _item());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<_item> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[14]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _item() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _item(_item other) : this() {
+      itemId_ = other.itemId_;
+      itemNum_ = other.itemNum_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _item Clone() {
+      return new _item(this);
+    }
+
+    /// <summary>Field number for the "itemId" field.</summary>
+    public const int ItemIdFieldNumber = 1;
+    private uint itemId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint ItemId {
+      get { return itemId_; }
+      set {
+        itemId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "itemNum" field.</summary>
+    public const int ItemNumFieldNumber = 2;
+    private uint itemNum_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint ItemNum {
+      get { return itemNum_; }
+      set {
+        itemNum_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as _item);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(_item other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (ItemId != other.ItemId) return false;
+      if (ItemNum != other.ItemNum) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ItemId != 0) hash ^= ItemId.GetHashCode();
+      if (ItemNum != 0) hash ^= ItemNum.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (ItemId != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(ItemId);
+      }
+      if (ItemNum != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(ItemNum);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (ItemId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ItemId);
+      }
+      if (ItemNum != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ItemNum);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(_item other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ItemId != 0) {
+        ItemId = other.ItemId;
+      }
+      if (other.ItemNum != 0) {
+        ItemNum = other.ItemNum;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            ItemId = input.ReadUInt32();
+            break;
+          }
+          case 16: {
+            ItemNum = input.ReadUInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class ItemGet : pb::IMessage<ItemGet> {
+    private static readonly pb::MessageParser<ItemGet> _parser = new pb::MessageParser<ItemGet>(() => new ItemGet());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ItemGet> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[15]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ItemGet() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ItemGet(ItemGet other) : this() {
+      item_ = other.item_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ItemGet Clone() {
+      return new ItemGet(this);
+    }
+
+    /// <summary>Field number for the "item" field.</summary>
+    public const int ItemFieldNumber = 1;
+    private static readonly pb::FieldCodec<global::GameSandRock._item> _repeated_item_codec
+        = pb::FieldCodec.ForMessage(10, global::GameSandRock._item.Parser);
+    private readonly pbc::RepeatedField<global::GameSandRock._item> item_ = new pbc::RepeatedField<global::GameSandRock._item>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::GameSandRock._item> Item {
+      get { return item_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ItemGet);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ItemGet other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!item_.Equals(other.item_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= item_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      item_.WriteTo(output, _repeated_item_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      size += item_.CalculateSize(_repeated_item_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ItemGet other) {
+      if (other == null) {
+        return;
+      }
+      item_.Add(other.item_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            item_.AddEntriesFrom(input, _repeated_item_codec);
             break;
           }
         }

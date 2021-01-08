@@ -17,5 +17,8 @@ function Player:SpGet()
     return self.user.SP
 end
 function Player:SpAdd(hp)
+    if self.user.SP == nil then
+        self.user.SP = 0
+    end
     self.user.SP = self.user.SP + hp
 end

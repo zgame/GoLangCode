@@ -79,6 +79,7 @@ message Sleep{
 }
 
 
+//---------------------------------------资源刷新和采集----------------------------------
 message _resourcePoint{
 	string areaName =1;   // 区域的名字
 	uint32 areaPoint =2;  // 区域中第几个point
@@ -88,4 +89,17 @@ message _resourcePoint{
 }
 message ResourceUpdate{
 	repeated _resourcePoint points=1;   //刷新点列表
+}
+
+message ResourceGet{
+	_resourcePoint info = 1;    // 资源点采集
+}
+
+//----------------------------------------道具----------------------------------------------
+message _item{
+	uint32 itemId = 1;
+	uint32 itemNum = 2;
+}
+message ItemGet{
+	repeated _item item = 1;
 }
