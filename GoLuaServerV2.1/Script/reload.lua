@@ -74,6 +74,7 @@ table.insert(f, "Script/Games/SandRock/Room/sandRockRoom")
 table.insert(f, "Script/Games/SandRock/Room/login")
 table.insert(f, "Script/Games/SandRock/Room/location")
 table.insert(f, "Script/Games/SandRock/Room/resourcePoint")
+table.insert(f, "Script/Games/SandRock/Room/weather")
 table.insert(f, "Script/Games/SandRock/DataBase/loginServer")
 
 
