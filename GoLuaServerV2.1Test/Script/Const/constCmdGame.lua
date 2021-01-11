@@ -8,8 +8,8 @@ CMD_SAND_ROCK = {
     SUB_ROOM_LIST = 6, -- 游戏中玩家列表UserList()
     SUB_LOCATION = 7, -- 上报位置信息PlayerLocation()
     SUB_OTHER_LOCATION = 8, -- 同步其他玩家位置PlayerLocation()
-    SUB_SLEEP = 9 ,         -- 睡觉
-    SUB_RESOURCE_POINT = 10 ,   -- 刷新资源
-    SUB_RESOURCE_GET = 11 ,   -- 采集资源
+    SUB_SLEEP = 9 ,         -- 睡觉Sleep()
+    SUB_RESOURCE_POINT = 10 ,   -- 刷新资源ResourceUpdate()
+    SUB_RESOURCE_GET = 11 ,   -- 采集资源ResourceGet()  , 获得结果ItemGet()
 }
 
