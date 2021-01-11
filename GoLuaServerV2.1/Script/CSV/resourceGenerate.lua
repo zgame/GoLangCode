@@ -106,11 +106,11 @@ function CSV_resourceGenerate.GetValue(index, key)
 	index = tostring(index)
 	key = tostring(key)
     if resourceGenerate[index] == nil then
-        ZLog.Logger("Excel 获取表: 主键:出错!".. index)
+        ZLog.Logger("Excel 获取表:resourceGenerate  主键:".. index .." key:".. key.."出错!")
         return nil
     end
     if resourceGenerate[index][key] == nil then
-        ZLog.Logger("Excel 获取表: 主键: 列名: 出错!"..index.."   "..key)
+        ZLog.Logger("Excel 获取表: resourceGenerate  主键:".. index .." key:".. key.."出错!")
         return nil
     end
 

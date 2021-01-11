@@ -6,6 +6,9 @@
 -- 获取没有被占用的资源点列表
 local function _getEmpty(areaName, resourcePoint)
     local number_max = CSV_resourceGenerate.GetValue(areaName, 'Points')
+    if number_max == 0 then
+        return 1
+    end
     local pointList = {}            --没有占用的列表
     for j = 1, number_max do
         table.insert(pointList, j)           -- 生成全数组
@@ -39,6 +42,7 @@ function SandRockRoom:ResourcePointUpdate()
     local areaList = CSV_resourceGenerate.GetAllKeys()
     for _, areaName in ipairs(areaList) do
 
+        print("areaName"..areaName)
         if self.resourcePoint[areaName] == nil then
             self.resourcePoint[areaName] = {}           -- 初始化生成点列表
         end

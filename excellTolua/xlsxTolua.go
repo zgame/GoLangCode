@@ -210,11 +210,11 @@ function CSV_%s.GetValue(index, key)
 	index = tostring(index)
 	key = tostring(key)
     if %s[index] == nil then
-        ZLog.Logger("Excel 获取表: 主键:出错!".. index)
+        ZLog.Logger("Excel 获取表:%s  主键:".. index .." key:".. key.."出错!")
         return nil
     end
     if %s[index][key] == nil then
-        ZLog.Logger("Excel 获取表: 主键: 列名: 出错!"..index.."   "..key)
+        ZLog.Logger("Excel 获取表: %s  主键:".. index .." key:".. key.."出错!")
         return nil
     end
 
@@ -231,7 +231,7 @@ function CSV_%s.GetAllKeys()
         return nil
     end
     return keys
-end`, fileName, fileName, fileName, fileName, fileName, fileName, fileName)
+end`, fileName, fileName, fileName, fileName, fileName, fileName, fileName,fileName,fileName)
 
 	//fmt.Println("",StrOut)
 	return StrOut
