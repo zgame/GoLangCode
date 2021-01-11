@@ -5,6 +5,8 @@ SandRockItemGenerator = {}
 --  道具掉落 ，正常返回 hash  key是itemId， value是数量
 function SandRockItemGenerator.GetItems(groupId)
 
-
-    return nil
+    local itemList ={}
+    itemList["97879"] = 1
+    return itemList
+    --return nil
 end

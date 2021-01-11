@@ -4,17 +4,17 @@
 
 
 -- 获取没有被占用的资源点列表
-local function _getEmpty(areaName,resourcePoint)
+local function _getEmpty(areaName, resourcePoint)
     local number_max = CSV_resourceGenerate.GetValue(areaName, 'Points')
     local pointList = {}            --没有占用的列表
-    for j=1,number_max do
-        table.insert(pointList,j)           -- 生成全数组
+    for j = 1, number_max do
+        table.insert(pointList, j)           -- 生成全数组
     end
     for pointIndex, point in pairs(resourcePoint[areaName]) do
         table.remove(pointList, pointIndex)         -- 把已经占用的删掉
     end
     -- 剩下的就是没有被占用的了
-    local ran = ZRandom.GetRandom(1,#pointList)
+    local ran = ZRandom.GetRandom(1, #pointList)
     return pointList[ran]
 end
 
@@ -24,7 +24,7 @@ function SandRockRoom:ResourcePointUpdate()
     -- 判断生命周期， 到期的给删除掉
     for areaName, pointList in pairs(self.resourcePoint) do
         --local temp = {}     -- 不包含过期的
-        for index, point in pairs(pointList)do
+        for index, point in pairs(pointList) do
             if point.live <= 1 then
                 pointList[index] = nil              -- 删掉生命周期已经到了的点
                 --table.remove(pointList,index)       -- 删掉生命周期已经到了的点
@@ -38,65 +38,64 @@ function SandRockRoom:ResourcePointUpdate()
     -- 开始刷新新东西
     local areaList = CSV_resourceGenerate.GetAllKeys()
     for _, areaName in ipairs(areaList) do
-        if areaName == "ResourceArea_Herb_1" then
-            if self.resourcePoint[areaName] == nil then
-                self.resourcePoint[areaName] = {}           -- 初始化生成点列表
-            end
 
-            local count = CSV_resourceGenerate.GetValue(areaName, 'Count')
-            local list = ZString.Split(count, ',')
-            local num = ZRandom.GetRandom(tonumber(list[1]), tonumber(list[2]))
-            --print("随机获取本次更新资源数量num ："..num)
-            local number_now = #self.resourcePoint[areaName]        -- 已经包含多少个点
-            --print("number_now"..number_now)
-            if num > number_now then
-                for i = 1, num - number_now do
-                    --print('生成一个point, 下面是point的结构')
-                    local resourceType = CSV_resourceGenerate.GetValue(areaName,"Resource")
-                    local element ={}
-                    local areaPoint = _getEmpty(areaName, self.resourcePoint)
-                    element.resourceType = tonumber(resourceType)    -- 以后改为多个权重
-                    element.live = CSV_resourceType.GetValue(resourceType,"LifeCycle")
-                    --print("保存到房间的资源列表里面")
-                    self.resourcePoint[areaName][areaPoint] = element
-                    --table.insert(self.resourcePoint[areaName],element)
-                    --printTable(self.resourcePoint[areaName])
-                end
+        if self.resourcePoint[areaName] == nil then
+            self.resourcePoint[areaName] = {}           -- 初始化生成点列表
+        end
+
+        local count = CSV_resourceGenerate.GetValue(areaName, 'Count')
+        local list = ZString.Split(count, ',')
+        local num = ZRandom.GetRandom(tonumber(list[1]), tonumber(list[2]))
+        --print("随机获取本次更新资源数量num ："..num)
+        local number_now = #self.resourcePoint[areaName]        -- 已经包含多少个点
+        --print("number_now"..number_now)
+        if num > number_now then
+            for i = 1, num - number_now do
+                --print('生成一个point, 下面是point的结构')
+                local resourceType = CSV_resourceGenerate.GetValue(areaName, "Resource")
+                local element = {}
+                local areaPoint = _getEmpty(areaName, self.resourcePoint)
+                element.resourceType = tonumber(resourceType)    -- 以后改为多个权重
+                element.live = CSV_resourceType.GetValue(resourceType, "LifeCycle")
+                --print("保存到房间的资源列表里面")
+                self.resourcePoint[areaName][areaPoint] = element
+                --table.insert(self.resourcePoint[areaName],element)
+                --printTable(self.resourcePoint[areaName])
             end
         end
+
     end
 
     --printTable(self.resourcePoint)
 end
 
-
 -----------------------------------采集------------------------------------------
 function SandRockRoom:GetResource(userId, areaName, pointIndex, resourceType)
     if self.resourcePoint[areaName] == nil then
-        ZLog.Logger("GetResource  areaName 生成区域出错 ".. areaName)
+        ZLog.Logger("GetResource  areaName 生成区域出错 " .. areaName)
         return
     end
 
     local point = self.resourcePoint[areaName][pointIndex]
     if point == nil then
-        ZLog.Logger("GetResource pointIndex 生成点index出错".. pointIndex)
+        ZLog.Logger("GetResource pointIndex 生成点index出错" .. pointIndex)
         return
     end
     if point.resourceType ~= resourceType then
-        ZLog.Logger("GetResource resourceType 生成资源类型出错".. resourceType)
+        ZLog.Logger("GetResource resourceType 生成资源类型出错" .. resourceType)
     end
     local player = GameServer.GetPlayerByUID(userId)
     -- 采集
-    local spCost = CSV_resourceType.GetValue(resourceType,"SpCost")
-    local exp = CSV_resourceType.GetValue(resourceType,"Exp")
+    local spCost = CSV_resourceType.GetValue(resourceType, "SpCost")
+    local exp = CSV_resourceType.GetValue(resourceType, "Exp")
 
-    Player.ExpAdd(player,exp)
+    Player.ExpAdd(player, exp)
     Player.SpAdd(player, -spCost)
 
     -- 销毁采集点
     self.resourcePoint[areaName][pointIndex] = nil
     -- 获得物品
-    local generatorGroup = CSV_resourceType.GetValue(resourceType,"GeneratorGroup")
+    local generatorGroup = CSV_resourceType.GetValue(resourceType, "GeneratorGroup")
     local itemList = SandRockItemGenerator.GetItems(generatorGroup)
     -- 保存到背包
 

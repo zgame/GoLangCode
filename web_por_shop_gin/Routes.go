@@ -28,6 +28,8 @@ func Routes(r *gin.Engine) {
 	//r.GET("/portia_shop/recharge", Action.GetUserRechargeList)
 	r.GET("/portia_shop/buy_list", Action.GetUserBuyList)
 	r.GET("/portia_shop/mall_list", Action.GetUserMallList)
+	r.GET("/portia_shop/control_list", Action.GetControlMallList)
+
 
 	// --------------------- ali wx---------------------------
 	r.POST("/portia_shop/alipayget", aliPay.GetPayInfo)      //客户端获取订单信息

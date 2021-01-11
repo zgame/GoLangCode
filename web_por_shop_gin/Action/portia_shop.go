@@ -15,6 +15,7 @@ func GetShopHelp(c *gin.Context)  {
 		//"/portia_shop/recharge?openid=***": "查询玩家一共充值多少",
 		"https://shop.portia.xyz:8097/portia_shop/buy_list?openid=***": "查询玩家购买道具列表",
 		"https://shop.portia.xyz:8097/portia_shop/mall_list": "查询商城道具列表",
+		"https://shop.portia.xyz:8097/portia_shop/control_list": "查询商城控制列表",
 	})
 }
 
@@ -83,4 +84,17 @@ func GetUserMallList(c *gin.Context) {
 	//}
 
 	c.JSON(200, gin.H{"MallList": result, "bytes": ""})
+}
+
+// 获取商城控制列表
+func GetControlMallList(c *gin.Context) {
+	controlList := MySql.GetMallControlData()
+	list,err := json.Marshal(controlList)
+	if err!= nil{
+		zLog.PrintfLogger("获取商城控制列表错误 %s \n",err.Error())
+	}
+	result := string(list)
+	//fmt.Println(result)
+
+	c.JSON(200, gin.H{"ControlList": result, "bytes": ""})
 }
