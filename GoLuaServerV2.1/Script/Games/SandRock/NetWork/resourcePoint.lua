@@ -41,15 +41,17 @@ function SandRockResourcePoint.GetResource(serverId, userId, buf)
     local areaPoint = msg.info.areaPoint
     local resourceType = msg.info.resourceType
 
-    local itemGet = SandRockRoom.GetResource(room, userId, areaName, areaPoint, resourceType)
-    if itemGet == nil then
+    local itemList = SandRockRoom.GetResource(room, userId, areaName, areaPoint, resourceType)
+    if itemList == nil then
         ZLog.Logger("资源采集失败")
         return
     end
     local sendCmd = ProtoGameSandRock.ItemGet()
-    local item = sendCmd.item:add()
-    item.itemId = itemGet
-    item.itemNum = 1
+    for itemId,num in pairs(itemList) do
+        local item = sendCmd.item:add()
+        item.itemId = itemId
+        item.itemNum = num
+    end
     --print(sendCmd)
     --print("发送客户端采集结果")
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_GET, sendCmd, nil)

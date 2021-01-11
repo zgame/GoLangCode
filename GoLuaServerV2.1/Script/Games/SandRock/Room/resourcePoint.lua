@@ -73,17 +73,17 @@ end
 -----------------------------------采集------------------------------------------
 function SandRockRoom:GetResource(userId, areaName, pointIndex, resourceType)
     if self.resourcePoint[areaName] == nil then
-        ZLog.Logger("GetResource  areaName error ".. areaName)
+        ZLog.Logger("GetResource  areaName 生成区域出错 ".. areaName)
         return
     end
 
     local point = self.resourcePoint[areaName][pointIndex]
     if point == nil then
-        ZLog.Logger("GetResource pointIndex error".. pointIndex)
+        ZLog.Logger("GetResource pointIndex 生成点index出错".. pointIndex)
         return
     end
     if point.resourceType ~= resourceType then
-        ZLog.Logger("GetResource resourceType error".. resourceType)
+        ZLog.Logger("GetResource resourceType 生成资源类型出错".. resourceType)
     end
     local player = GameServer.GetPlayerByUID(userId)
     -- 采集
@@ -96,8 +96,12 @@ function SandRockRoom:GetResource(userId, areaName, pointIndex, resourceType)
     -- 销毁采集点
     self.resourcePoint[areaName][pointIndex] = nil
     -- 获得物品
-    local item = CSV_resourceType.GetValue(resourceType,"GeneratorGroup")
+    local generatorGroup = CSV_resourceType.GetValue(resourceType,"GeneratorGroup")
+    local itemList = SandRockItemGenerator.GetItems(generatorGroup)
     -- 保存到背包
-    return item
+
+
+    -- 保存完毕
+    return itemList
 
 end
