@@ -1,6 +1,32 @@
-
 -- 道具生成组
 SandRockItemGenerator = {}
+
+
+-- 处理一下几率， 处理完之后，计算的时候方便
+local function _setRateList(list)
+    local total = 0
+    for i,v in ipairs(list) do      -- 计算总和
+        total = total + v
+    end
+
+    local newList = {}
+    for i,v in ipairs(list) do
+        local rate =  math.floor( v * 100 / total )         -- 计算几率
+        table.insert(newList,rate)
+    end
+
+    for i=2, #newList do
+        if newList[i] ~= nil then
+            newList[i] = newList[i] + newList[i-1]              -- 把几率进行累加
+        end
+        if i==#newList then
+            newList[i] = 100
+        end
+    end
+
+    return newList
+end
+
 
 -- 初始化道具生成组的数据
 local function _setGroup(groupId)
@@ -8,49 +34,62 @@ local function _setGroup(groupId)
     local generator = SandRockItemGenerator[groupId]
 
     local GeneratorList = CSV_generateGroup.GetValue(groupId, "GeneratorList")
-    --local GeneratorList = "29600315,100,0.0|29600072,200,1.0;29500000,300,0.0;29600605,150,1.0|29500000,400,0.0;29600606,300,1.0"
-    local allDropList = ZString.Split(GeneratorList,"|")
+    local allDropList = ZString.Split(GeneratorList, "|")
     for i, mainDrop in ipairs(allDropList) do
-        print(mainDrop)
-        local subList = ZString.Split(mainDrop,";")
-        for i,subDrop in ipairs(subList) do
-            print(subDrop)
+        local sub = {}
+        sub.rateList = {}
+        local rateList = {}
+        local subList = ZString.Split(mainDrop, ";")
+        for i, subDrop in ipairs(subList) do
+            local element = {}
+            local subStr = ZString.Split(subDrop, ",")
+            element.id = tonumber(subStr[1])
+            --element.rate = tonumber(subStr[2])
+            element.lucky = tonumber(subStr[3])                                         -- 幸运值以后再处理
+            table.insert(sub, element)                  -- 把每个元素添加进去
+
+            local rate = tonumber(subStr[2])
+            table.insert(rateList,rate)                 -- 把几率单独弄成一个list
         end
+
+        sub.rateList = _setRateList(rateList)
+        table.insert(generator, sub)
     end
 
+    --printTable(generator)
 end
 
 function SandRockItemGenerator.Init()
     local GeneratorList = CSV_generateGroup.GetAllKeys()
-    --for _, groupId in ipairs(GeneratorList) do
-    --    _setGroup(groupId)
-    --end
-    _setGroup("20900008")
+    for _, groupId in ipairs(GeneratorList) do
+        _setGroup(groupId)
+    end
+    --_setGroup("20900008")
 end
 
 
 --  道具掉落 ，正常返回 hash  key是itemId， value是数量
 function SandRockItemGenerator.GetItems(groupId)
-    groupId = 20900008
+    local itemList = {}
+
     local GenSceneType = CSV_generateGroup.GetValue(groupId, "GenSceneType")
     if GenSceneType == "Item" then
         -- 走道具掉落规则
-        for k, v in pairs(SandRockItemGenerator[tostring(groupId)].GeneratorList) do
+        local generator = SandRockItemGenerator[tostring(groupId)]
+        for index, allType in pairs(generator) do
+            local subIndex = 1                    -- 如果只有一个元素，那么就是这个
+            if #generator[index] > 1 then
+                subIndex = ZRandom.GetList(generator[index].rateList)       -- 多个元素就随机一个
+            end
 
+            if itemList[generator[index][subIndex].id] == nil then
+                itemList[generator[index][subIndex].id] = 1                 -- 如果没有，那么发一个
+            else
+                itemList[generator[index][subIndex].id] = itemList[generator[index][subIndex].id] + 1       -- 如果已经有了，那么数量增加
+            end
         end
-
     end
-
-
-
-
-
-
-
-
-
-    local itemList ={}
-    itemList[999] = 1
+    --printTable(itemList)
     return itemList
     --return nil
 end
