@@ -21,18 +21,6 @@ local function _getEmpty(areaName, resourcePoint)
     return pointList[ran]
 end
 
--- 根据权重随机生成类型
-local function _getType(areaName)
-    local resourceType = CSV_resourceArea.GetValue(areaName, "Resource")
-    local weight = CSV_resourceArea.GetValue(areaName, "Weight")
-    local resourceList = ZString.Split(resourceType,",")
-    if #resourceList == 1 then
-        return resourceType
-    end
-    local weightList = ZString.Split(weight,",")
-    local resource = ZRandom.GetList(resourceList, weightList)
-    return  ZString.Trim(resource)
-end
 
 
 -----------------------------------刷新------------------------------------------
@@ -58,16 +46,16 @@ function SandRockRoom:ResourcePointUpdate()
             self.resourcePoint[areaName] = {}           -- 初始化生成点列表
         end
 
-        local count = CSV_resourceArea.GetValue(areaName, 'Count')
-        local list = ZString.Split(count, ',')
-        local num = ZRandom.GetRandom(tonumber(list[1]), tonumber(list[2]))
+        local countMin = CSV_resourceArea.GetValue(areaName, 'Min')
+        local countMax = CSV_resourceArea.GetValue(areaName, 'Max')
+        local num = ZRandom.GetRandom(countMin, countMax)
         --print("随机获取本次更新资源数量num ："..num)
         local number_now = ZTable.Len(self.resourcePoint[areaName])        -- 已经包含多少个点
         --print("number_now"..number_now)
         if num > number_now then
             for i = 1, num - number_now do
                 --print('生成一个point, 下面是point的结构')
-                local resourceTypeRandom = _getType(areaName)           -- 获取一个生成类型，根据权重
+                local resourceTypeRandom = SandRockResourceGenerator.GetType(areaName)           -- 获取一个生成类型，根据权重
                 if resourceTypeRandom == "0" then
                     break
                 end

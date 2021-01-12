@@ -18,12 +18,11 @@ function ZRandom.PercentRate(rate)
 end
 
 -- 通过权重获得元素
-function ZRandom.GetList(list,weightList)
-    local total = 0
+function ZRandom.GetList(weightList)
     local ran = ZRandom.GetRandom(1,100)
     for index,rate in ipairs(weightList) do
         if ran <= tonumber(rate) then
-            return list[index]
+            return index
         end
     end
 end

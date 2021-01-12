@@ -10,7 +10,7 @@ type Shopmall struct {
 	Sellingway        int     `xorm:"int"`
 	Recommend         int     `xorm:"int"`
 	Recommendactivity int     `xorm:"int"`
-	Price             int     `xorm:"int"`
+	Price             int     `xorm:"double"`
 	Discountprice     float64 `xorm:"double"`
 	Starttime         string  `xorm:"varchar(20)"`
 	Endtime           string  `xorm:"varchar(20)"`
