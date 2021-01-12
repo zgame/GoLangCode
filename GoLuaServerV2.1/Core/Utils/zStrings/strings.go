@@ -13,6 +13,7 @@ import (
 var exports = map[string]lua.LGFunction{
 	"split": split,
 	"join":  join,
+	"trim":  Trim,
 }
 
 // ----------------------------------------------------------------------------
@@ -46,7 +47,6 @@ func join(L *lua.LState) int {
 	list:= zLua.LuaGetValue(L,1)
 	sep := L.CheckString(2)
 
-
 	str:= strings.Join(list.([]string),sep)
 	//fmt.Println(string(out))
 	L.Push(lua.LString(str))
@@ -54,3 +54,11 @@ func join(L *lua.LState) int {
 	return 1
 }
 
+// 字符串修剪
+func Trim(L *lua.LState) int {
+	str := L.CheckString(1)
+	cut := L.CheckString(2)
+	re:= strings.Trim(str, cut)
+	L.Push(lua.LString(re))
+	return 1
+}

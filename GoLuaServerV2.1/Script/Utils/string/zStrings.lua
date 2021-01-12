@@ -26,6 +26,12 @@ function ZString.Contains(org, find)
     return true
 end
 
+-- 去掉空格
+function ZString.Trim(str)
+    return zStrings.trim(str," ")
+end
+
+
 
 --local sss = "23424,sdfsdf,4564gdftg,45ydfgsdfsa~@#$!@E,H%^^#$RFEDFS,sdfsdf  sdfsf"
 --print(sss)

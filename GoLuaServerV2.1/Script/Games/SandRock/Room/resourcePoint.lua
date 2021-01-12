@@ -21,12 +21,26 @@ local function _getEmpty(areaName, resourcePoint)
     return pointList[ran]
 end
 
+-- 根据权重随机生成类型
+local function _getType(areaName)
+    local resourceType = CSV_resourceGenerate.GetValue(areaName, "Resource")
+    local weight = CSV_resourceGenerate.GetValue(areaName, "Weight")
+    local resourceList = ZString.Split(resourceType,",")
+    if #resourceList == 1 then
+        return resourceType
+    end
+    local weightList = ZString.Split(weight,",")
+    local resource = ZRandom.GetList(resourceList, weightList)
+    return  ZString.Trim(resource)
+end
 
 -- 资源点刷新
 function SandRockRoom:ResourcePointUpdate()
     -- 判断生命周期， 到期的给删除掉
     for areaName, pointList in pairs(self.resourcePoint) do
         --local temp = {}     -- 不包含过期的
+        --print(areaName)
+        --printTable(pointList)
         for index, point in pairs(pointList) do
             if point.live <= 1 then
                 pointList[index] = nil              -- 删掉生命周期已经到了的点
@@ -41,8 +55,7 @@ function SandRockRoom:ResourcePointUpdate()
     -- 开始刷新新东西
     local areaList = CSV_resourceGenerate.GetAllKeys()
     for _, areaName in ipairs(areaList) do
-
-        print("areaName"..areaName)
+        --print("areaName"..areaName)
         if self.resourcePoint[areaName] == nil then
             self.resourcePoint[areaName] = {}           -- 初始化生成点列表
         end
@@ -51,16 +64,19 @@ function SandRockRoom:ResourcePointUpdate()
         local list = ZString.Split(count, ',')
         local num = ZRandom.GetRandom(tonumber(list[1]), tonumber(list[2]))
         --print("随机获取本次更新资源数量num ："..num)
-        local number_now = #self.resourcePoint[areaName]        -- 已经包含多少个点
+        local number_now = ZTable.Len(self.resourcePoint[areaName])        -- 已经包含多少个点
         --print("number_now"..number_now)
         if num > number_now then
             for i = 1, num - number_now do
                 --print('生成一个point, 下面是point的结构')
-                local resourceType = CSV_resourceGenerate.GetValue(areaName, "Resource")
+                local resourceTypeRandom = _getType(areaName)           -- 获取一个生成类型，根据权重
+                if resourceTypeRandom == "0" then
+                    break
+                end
                 local element = {}
-                local areaPoint = _getEmpty(areaName, self.resourcePoint)
-                element.resourceType = tonumber(resourceType)    -- 以后改为多个权重
-                element.live = CSV_resourceType.GetValue(resourceType, "LifeCycle")
+                local areaPoint = _getEmpty(areaName, self.resourcePoint)   -- 获取一个空的位置
+                element.resourceType = tonumber(resourceTypeRandom)
+                element.live = CSV_resourceType.GetValue(resourceTypeRandom, "LifeCycle")
                 --print("保存到房间的资源列表里面")
                 self.resourcePoint[areaName][areaPoint] = element
                 --table.insert(self.resourcePoint[areaName],element)

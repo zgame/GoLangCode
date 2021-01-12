@@ -6,7 +6,7 @@ SandRockItemGenerator = {}
 function SandRockItemGenerator.GetItems(groupId)
 
     local itemList ={}
-    itemList["97879"] = 1
+    itemList[999] = 1
     return itemList
     --return nil
 end

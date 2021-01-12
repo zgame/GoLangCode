@@ -10,30 +10,30 @@ function User.New(userId, openId, machineId)
 
     local c = {
         --- 玩家基础信息
-        userId = userId, --  # 用户id
+        userId = userId, --   用户id
         openId = openId,
         machineId = machineId,
-        gameId = 0, --  # 游戏id
+        gameId = 0, --   游戏id
 
-        nickName = "玩家" .. tostring(userId), --  # 昵称
-        gender = 0, --  # 性别
-        faceId = 0, --  # 头像id
-        --hairMain = 0, -- # 头发
+        nickName = "玩家" .. tostring(userId), --   昵称
+        gender = 0, --   性别
+        faceId = 0, --   头像id
+        --hairMain = 0, --  头发
         --hairFront = 0,
         --hairBack = 0,
         --hairColor1 = 0,
         --hairColor2 = 0,
         customPlayer = "",  -- 玩家自定义捏脸
 
-        level = 0, --  # 等级
-        exp = 0, --  # 经验
+        level = 0, --   等级
+        exp = 0, --   经验
         HP = 0 ,
         HPMax = 0,
         SP = 0,
         SPMax = 0,
 
-        payTotal = 0, --  # 充值总金额
-        offLineTime = 0, --  # 离线时间
+        payTotal = 0, --   充值总金额
+        offLineTime = 0, --   离线时间
 
     }
     return c

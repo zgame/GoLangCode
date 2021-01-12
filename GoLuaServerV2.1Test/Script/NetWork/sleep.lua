@@ -18,6 +18,6 @@ function Sleep.UpdateResource(serverId,userId, buf)
     --print(msg.points[1].resourceType)
 
     -- 采集资源
-    Resource.Get(serverId,msg.points[1].areaName,msg.points[1].areaPoint,msg.points[1].resourceType )
+    Resource.Action(serverId,msg.points[1].areaName,msg.points[1].areaPoint,msg.points[1].resourceType )
 end
 
