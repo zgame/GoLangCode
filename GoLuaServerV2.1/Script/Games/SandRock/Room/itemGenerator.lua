@@ -70,7 +70,7 @@ end
 
 --  道具掉落 ，正常返回 hash  key是itemId， value是数量
 function SandRockItemGenerator.GetItems(groupId)
-    local itemList = {}
+    local groupList = {}
 
     local GenSceneType = CSV_generateGroup.GetValue(groupId, "GenSceneType")
     if GenSceneType == "Item" then
@@ -82,13 +82,24 @@ function SandRockItemGenerator.GetItems(groupId)
                 subIndex = ZRandom.GetList(generator[index].rateList)       -- 多个元素就随机一个
             end
 
-            if itemList[generator[index][subIndex].id] == nil then
-                itemList[generator[index][subIndex].id] = 1                 -- 如果没有，那么发一个
+            if groupList[generator[index][subIndex].id] == nil then
+                groupList[generator[index][subIndex].id] = 1                 -- 如果没有，那么发一个
             else
-                itemList[generator[index][subIndex].id] = itemList[generator[index][subIndex].id] + 1       -- 如果已经有了，那么数量增加
+                groupList[generator[index][subIndex].id] = groupList[generator[index][subIndex].id] + 1       -- 如果已经有了，那么数量增加
             end
         end
     end
+
+    local itemList = {}
+    for groupId,num in pairs(groupList) do
+        local itemId = CSV_generateItem.GetValue(tostring(groupId), "GenObjectId")
+        -- 根据生成规则进行生成
+
+        .... ...................................
+        itemList[itemId] = num
+    end
+
+
     --printTable(itemList)
     return itemList
     --return nil
