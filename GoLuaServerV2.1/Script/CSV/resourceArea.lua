@@ -1,4 +1,4 @@
-local resourceGenerate = {
+local resourceArea = {
 ["ResourceArea_Herb_1"] = {  Count = "1,3",  Resource = "1",  Weight = "100",  Points = 8,  },
 ["ResourceArea_Herb_11"] = {  Count = "1,3",  Resource = "1",  Weight = "100",  Points = 10,  },
 ["ResourceArea_Herb_12"] = {  Count = "0,2",  Resource = "1",  Weight = "100",  Points = 4,  },
@@ -100,26 +100,26 @@ local resourceGenerate = {
 ["ResourceArea_Wood_8"] = {  Count = "1,1",  Resource = "6",  Weight = "20",  Points = 6,  },
 ["ResourceArea_Wood_9"] = {  Count = "0,0",  Resource = "1025",  Weight = "20",  Points = 1,  },
 } 
- CSV_resourceGenerate = {}
+ CSV_resourceArea = {}
 
-function CSV_resourceGenerate.GetValue(index, key)
+function CSV_resourceArea.GetValue(index, key)
 	index = tostring(index)
 	key = tostring(key)
-    if resourceGenerate[index] == nil then
-        ZLog.Logger("Excel 获取表:resourceGenerate  主键:".. index .." key:".. key.."出错!")
+    if resourceArea[index] == nil then
+        ZLog.Logger("Excel 获取表:resourceArea  主键:".. index .." key:".. key.."出错!")
         return nil
     end
-    if resourceGenerate[index][key] == nil then
-        ZLog.Logger("Excel 获取表: resourceGenerate  主键:".. index .." key:".. key.."出错!")
+    if resourceArea[index][key] == nil then
+        ZLog.Logger("Excel 获取表: resourceArea  主键:".. index .." key:".. key.."出错!")
         return nil
     end
 
-    return resourceGenerate[index][key]
+    return resourceArea[index][key]
 end
 
-function CSV_resourceGenerate.GetAllKeys()
+function CSV_resourceArea.GetAllKeys()
     local keys = {}
-    for k in pairs(resourceGenerate) do
+    for k in pairs(resourceArea) do
         keys[#keys + 1] = k
     end
     if #keys == 0 then

@@ -5,7 +5,7 @@
 
 -- 获取没有被占用的资源点列表
 local function _getEmpty(areaName, resourcePoint)
-    local number_max = CSV_resourceGenerate.GetValue(areaName, 'Points')
+    local number_max = CSV_resourceArea.GetValue(areaName, 'Points')
     if number_max == 0 then
         return 1
     end
@@ -23,8 +23,8 @@ end
 
 -- 根据权重随机生成类型
 local function _getType(areaName)
-    local resourceType = CSV_resourceGenerate.GetValue(areaName, "Resource")
-    local weight = CSV_resourceGenerate.GetValue(areaName, "Weight")
+    local resourceType = CSV_resourceArea.GetValue(areaName, "Resource")
+    local weight = CSV_resourceArea.GetValue(areaName, "Weight")
     local resourceList = ZString.Split(resourceType,",")
     if #resourceList == 1 then
         return resourceType
@@ -51,14 +51,14 @@ function SandRockRoom:ResourcePointUpdate()
         end
     end
     -- 开始刷新新东西
-    local areaList = CSV_resourceGenerate.GetAllKeys()
+    local areaList = CSV_resourceArea.GetAllKeys()
     for _, areaName in ipairs(areaList) do
         --print("areaName"..areaName)
         if self.resourcePoint[areaName] == nil then
             self.resourcePoint[areaName] = {}           -- 初始化生成点列表
         end
 
-        local count = CSV_resourceGenerate.GetValue(areaName, 'Count')
+        local count = CSV_resourceArea.GetValue(areaName, 'Count')
         local list = ZString.Split(count, ',')
         local num = ZRandom.GetRandom(tonumber(list[1]), tonumber(list[2]))
         --print("随机获取本次更新资源数量num ："..num)

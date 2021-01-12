@@ -20,7 +20,8 @@ table.insert(f, "Script/Games/SandRock/DataBase/sqlStatistic")
 -- CSV
 LuaFiles.CSV = {}
 f = LuaFiles.CSV
-table.insert(f, "Script/CSV/resourceGenerate")
+table.insert(f, "Script/CSV/resourceGenerateGroup")
+table.insert(f, "Script/CSV/resourceArea")
 table.insert(f, "Script/CSV/resourceType")
 
 
