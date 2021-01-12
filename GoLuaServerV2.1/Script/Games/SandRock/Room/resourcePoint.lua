@@ -34,23 +34,21 @@ local function _getType(areaName)
     return  ZString.Trim(resource)
 end
 
+
+-----------------------------------刷新------------------------------------------
 -- 资源点刷新
 function SandRockRoom:ResourcePointUpdate()
     -- 判断生命周期， 到期的给删除掉
     for areaName, pointList in pairs(self.resourcePoint) do
-        --local temp = {}     -- 不包含过期的
         --print(areaName)
         --printTable(pointList)
         for index, point in pairs(pointList) do
             if point.live <= 1 then
                 pointList[index] = nil              -- 删掉生命周期已经到了的点
-                --table.remove(pointList,index)       -- 删掉生命周期已经到了的点
             else
                 point.live = point.live - 1
-                --table.insert(temp,point)
             end
         end
-        --self.resourcePoint[areaName] = temp
     end
     -- 开始刷新新东西
     local areaList = CSV_resourceGenerate.GetAllKeys()
@@ -79,7 +77,6 @@ function SandRockRoom:ResourcePointUpdate()
                 element.live = CSV_resourceType.GetValue(resourceTypeRandom, "LifeCycle")
                 --print("保存到房间的资源列表里面")
                 self.resourcePoint[areaName][areaPoint] = element
-                --table.insert(self.resourcePoint[areaName],element)
                 --printTable(self.resourcePoint[areaName])
             end
         end
