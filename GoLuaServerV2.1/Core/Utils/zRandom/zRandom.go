@@ -1,20 +1,76 @@
 package zRandom
 
 import (
-	"fmt"
+	"GoLuaServerV2.1/Core/Utils/zLua"
+	lua "github.com/yuin/gopher-lua"
 	"math/rand"
 	"time"
 )
 
+
+var exports = map[string]lua.LGFunction{
+	"intN": IntN,
+	"random":  Random,
+	"float":  RandomFloatTo,
+	"percent":  PercentRate,
+	"normal":  Normal,
+	"exp":  Exp,
+	"perm":  Perm,
+}
+
+// ----------------------------------------------------------------------------
+
+func zRandomLoader(l *lua.LState) int {
+	mod := l.SetFuncs(l.NewTable(), exports)
+	l.Push(mod)
+	return 1
+}
+
+// ----------------------------------------------------------------------------
+
+func LuaRandomLoad(L *lua.LState) {
+	L.PreloadModule("zRandom", zRandomLoader)
+}
+
+
 // 随机 [0,num)
-func ZRandom(num int) int {
+func IntN(L *lua.LState) int {
+	num := L.CheckInt(1)
 	rand.Seed(time.Now().UnixNano()) //利用当前时间的UNIX时间戳初始化rand包
 	x := rand.Intn(num)
-	return x
+	L.Push(lua.LNumber(x))
+	return 1
 }
 
 // 随机[ min, max)
-func ZRandomTo(min int, max int) int {
+func Random(L *lua.LState) int {
+	min := L.CheckInt(1)
+	max := L.CheckInt(2)
+	if min >= max || max == 0 {
+		//fmt.Println("随机数格式不正确")
+		return max
+	}
+	rand.Seed(time.Now().UnixNano())
+	L.Push(lua.LNumber(rand.Intn(max-min) + min))
+	return 1
+}
+
+// 随机[ min, max) float32
+func RandomFloatTo(L *lua.LState) int {
+	min := L.CheckNumber(1)
+	max := L.CheckNumber(2)
+	if min >= max || max <= 0 {
+		//fmt.Println("随机数格式不正确")
+		L.Push(max)
+		return 1
+	}
+	rand.Seed(time.Now().UnixNano())
+	ran := lua.LNumber(rand.Float64())
+	L.Push(min + ran * (max-min))
+	return 1
+}
+// 随机[ min, max)
+func RandomTo(min int,max int) int {
 	if min >= max || max == 0 {
 		//fmt.Println("随机数格式不正确")
 		return max
@@ -23,26 +79,37 @@ func ZRandomTo(min int, max int) int {
 	return rand.Intn(max-min) + min
 }
 
-// 随机[ min, max) float32
-func ZRandomFloatTo(min float32, max float32) float32 {
-	if min >= max || max <= 0 {
-		fmt.Println("随机数格式不正确")
-		return max
+// 获取百分比方法， 比如10几率， 那么小于等于10，返回true
+func PercentRate(L *lua.LState) int {
+	rate := L.CheckNumber(1)
+	rr := lua.LNumber(RandomTo(1,101))
+	if rr <= rate{
+		L.Push(lua.LTrue)
+	}else{
+		L.Push(lua.LFalse)
 	}
-	rand.Seed(time.Now().UnixNano())
 
-	ma:= int(max*1000)
-	mi:= int(min*1000)
-	re := rand.Intn(ma-mi) + mi
-	return float32(re/1000)
+	return 1
 }
 
-// 获取百分比方法， 比如10几率， 那么小于等于10，返回true
-func ZRandomPercentRate(rate int) bool {
-	rr := ZRandomTo(1,101)
-	if rr <= rate{
-		return true
-	}else{
-		return false
-	}
+// 正态分布
+func Normal(L * lua.LState)  int{
+	rand.Seed(time.Now().UnixNano())
+	L.Push(lua.LNumber(rand.NormFloat64()))
+	return 1
+}
+
+// 指数分布
+func Exp(L * lua.LState)  int{
+	rand.Seed(time.Now().UnixNano())
+	L.Push(lua.LNumber(rand.ExpFloat64()))
+	return 1
+}
+
+// 随机数组切片
+func Perm(L * lua.LState)  int{
+	len := L.CheckInt(1)
+	rand.Seed(time.Now().UnixNano())
+	L.Push(zLua.LuaSetValue(L,rand.Perm(len)))
+	return 1
 }

@@ -71,15 +71,14 @@ end
 local function _getGroupItemNum(groupId)
     local GenDistType = CSV_generateItem.GetValue(groupId,"GenDistType")
     local GenDistParams = CSV_generateItem.GetValue(groupId,"GenDistParams")
+    local GenDistParams2 = CSV_generateItem.GetValue(groupId,"GenDistParams2")
     if GenDistType == "Num" then        -- 固定数值
         return tonumber(GenDistParams)
-    else if  GenDistType == "Uniform" then      -- 随机区间
-
-
-    else if  GenDistType == "UniformFloat" then      -- 随机区间
-
-
-    else if  GenDistType == "Normal" then      -- 正态分布区间
+    elseif  GenDistType == "Uniform" then      -- 随机区间
+        return ZRandom.GetRandom(GenDistParams,GenDistParams2)
+    elseif  GenDistType == "UniformFloat" then      -- 随机区间
+        return ZRandom.GetFloat(GenDistParams,GenDistParams2,3)
+    elseif  GenDistType == "Normal" then      -- 正态分布区间
 
     end
 end

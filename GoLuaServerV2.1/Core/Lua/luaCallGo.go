@@ -10,6 +10,7 @@ import (
 	"GoLuaServerV2.1/Core/Utils/zJson"
 	"GoLuaServerV2.1/Core/Utils/zLog"
 	"GoLuaServerV2.1/Core/Utils/zProtocol"
+	"GoLuaServerV2.1/Core/Utils/zRandom"
 	"GoLuaServerV2.1/Core/Utils/zStrings"
 	"GoLuaServerV2.1/Core/Utils/zip"
 	"GoLuaServerV2.1/Core/Utils/ztimer"
@@ -56,6 +57,7 @@ func (m *MyLua) InitResister() {
 	zCrypto.LuaCryptoLoad(m.L)
 	zip.LuaZipLoad(m.L)
 	zStrings.LuaStringsLoad(m.L)
+	zRandom.LuaRandomLoad(m.L)
 
 	m.L.PreloadModule("mySql", mySql.Loader)         //加载mysql的lua调用 ，性能一般，写起来方便
 	m.L.PreloadModule("sqlServer", sqlServer.Loader) //加载sql server 的lua调用
