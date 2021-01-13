@@ -40,4 +40,9 @@ func Routes(r *gin.Engine) {
 	r.POST("/portia_shop/wxpayget", wxPay.GetPayInfo)
 	r.POST("/portia_shop/wxpaysign", wxPay.ClientGetSign)
 	r.POST("/portia_shop/wxpay", wxPay.WxPayCallBack)
+
+
+	r.POST("/portia_shop/zswpay", Action.ZswPay)
+
+
 }

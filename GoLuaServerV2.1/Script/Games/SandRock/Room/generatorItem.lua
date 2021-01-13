@@ -81,8 +81,9 @@ local function _getGroupItemNum(groupId)
     elseif  GenDistType == "Normal" then      -- 正态分布区间
         local normal = ZRandom.Normal()
         if normal > 1 or normal < -1 then
-            normal = 1 - normal
+            normal = math.random()*2-1
         end
+        return GenDistParams + GenDistParams2 * normal
     end
 end
 
@@ -113,12 +114,8 @@ function SandRockGeneratorItem.GetItems(groupId)
     for groupId,num in pairs(groupList) do
         groupId = tostring(groupId)
         local itemId = CSV_generateItem.GetValue(groupId, "GenObjectId")
-
-
-
-
-
-        itemList[itemId] = num
+        local itemNum  = _getGroupItemNum(groupId)
+        itemList[itemId] = num * itemNum
     end
 
 

@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"strconv"
+	"time"
 	"web_gin/MiddleWare/zLog"
 	"web_gin/MySql"
 )
@@ -16,6 +18,7 @@ func GetShopHelp(c *gin.Context)  {
 		"https://shop.portia.xyz:8097/portia_shop/buy_list?openid=***": "查询玩家购买道具列表",
 		"https://shop.portia.xyz:8097/portia_shop/mall_list": "查询商城道具列表",
 		"https://shop.portia.xyz:8097/portia_shop/control_list": "查询商城控制列表",
+		"https://shop.portia.xyz:8097/portia_shop/zswpay": "测试用充值接口，上线去掉，不能对外",
 	})
 }
 
@@ -99,4 +102,23 @@ func GetControlMallList(c *gin.Context) {
 	//fmt.Println(result)
 
 	c.JSON(200, gin.H{"ControlList": result, "bytes": ""})
+}
+
+
+
+// 默认充值成功的接口
+func ZswPay(c * gin.Context)  {
+	OpenId := c.PostForm("OpenId") // 获取post的参数
+	ItemId ,_ := strconv.Atoi(c.PostForm("ItemId"))
+	_, _, err := CheckItemId(c)
+	if err {
+		return
+	}
+	// 然后保存数据库并发放道具
+	SaveDataBase(&MySql.Recharge{Openid: OpenId, Payno: "假的订单，测试用", RechargeTime: time.Now().String(), Rmb: "0", ItemId: ItemId, Channel: "测试"})
+
+	// 返回用户的道具列表
+	ShopList := MySql.GetUserShopList(OpenId)
+	fmt.Println("玩家道具列表：",ShopList)
+	c.JSON(200, gin.H{"openid": OpenId, "ShopList": ShopList})
 }
