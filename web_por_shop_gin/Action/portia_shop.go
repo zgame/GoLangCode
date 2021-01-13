@@ -115,7 +115,7 @@ func ZswPay(c * gin.Context)  {
 		return
 	}
 	// 然后保存数据库并发放道具
-	SaveDataBase(&MySql.Recharge{Openid: OpenId, Payno: "假的订单，测试用", RechargeTime: time.Now().String(), Rmb: "0", ItemId: ItemId, Channel: "测试"})
+	SaveDataBase(&MySql.Recharge{Openid: OpenId, Payno: "假的订单，测试用"+ strconv.FormatInt(time.Now().UnixNano(), 10), RechargeTime: time.Now().String(), Rmb: "0", ItemId: ItemId, Channel: "测试"})
 
 	// 返回用户的道具列表
 	ShopList := MySql.GetUserShopList(OpenId)

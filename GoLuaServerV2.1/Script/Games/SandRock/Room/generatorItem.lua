@@ -73,6 +73,8 @@ local function _getGroupItemNum(groupId)
     local GenDistParams = CSV_generateItem.GetValue(groupId,"GenDistParams")
     local GenDistParams2 = CSV_generateItem.GetValue(groupId,"GenDistParams2")
     if GenDistType == "Num" then        -- 固定数值
+        local num = tonumber(GenDistParams)
+
         return tonumber(GenDistParams)
     elseif  GenDistType == "Uniform" then      -- 随机区间
         return ZRandom.GetRandom(GenDistParams,GenDistParams2)
