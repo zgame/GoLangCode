@@ -79,7 +79,10 @@ local function _getGroupItemNum(groupId)
     elseif  GenDistType == "UniformFloat" then      -- 随机区间
         return ZRandom.GetFloat(GenDistParams,GenDistParams2,3)
     elseif  GenDistType == "Normal" then      -- 正态分布区间
-
+        local normal = ZRandom.Normal()
+        if normal > 1 or normal < -1 then
+            normal = 1 - normal
+        end
     end
 end
 

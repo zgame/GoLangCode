@@ -1,4 +1,4 @@
-package Logic
+package Action
 
 import (
 	"encoding/json"
@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
-	"web_gin/Action"
 	"web_gin/GlobalVar"
 	"web_gin/MiddleWare/zLog"
 	"web_gin/MySql"
@@ -79,6 +78,9 @@ func GiveItemToUser(Openid string, ItemId int) string {
 // 道具是否已经购买
 func ItemCanBuy(Openid string, itemId int) bool {
 	ShopList := MySql.GetUserShopList(Openid)
+	if ShopList == ""{
+		return true			// 没有玩家数据
+	}
 	var arrDB []int
 	err := json.Unmarshal([]byte(ShopList), &arrDB)
 	if err != nil {
@@ -129,11 +131,11 @@ func CheckItemId(c *gin.Context) (float64, string, bool) {
 		ItemId = c.Query("ItemId") // 获取get的参数
 	}
 	if OpenId == "" {
-		Action.Error("OpenId不能为空", c)
+		Error("OpenId不能为空", c)
 		return 0, "", true
 	}
 	if ItemId == "" {
-		Action.Error("ItemId不能为空", c)
+		Error("ItemId不能为空", c)
 		return 0, "", true
 	}
 	itemId, _ := strconv.Atoi(ItemId)
@@ -148,7 +150,7 @@ func CheckItemId(c *gin.Context) (float64, string, bool) {
 
 	// 道具是否合法
 	if ItemInfo == nil {
-		Action.Error("道具id不合法", c)
+		Error("道具id不合法", c)
 		return 0, "", true
 	} else {
 		ItemPrice = GetItemPrice(ItemInfo) //获取道具价格
@@ -161,7 +163,7 @@ func CheckItemId(c *gin.Context) (float64, string, bool) {
 	// 增加道具是否购买重复的验证
 	if !debug {
 		if ItemCanBuy(OpenId, itemId) == false {
-			Action.Error("道具重复购买", c)
+			Error("道具重复购买", c)
 			return 0, "", true
 		}
 	}

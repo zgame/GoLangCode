@@ -14,7 +14,6 @@ import (
 	"strconv"
 	"time"
 	"web_gin/GlobalVar"
-	"web_gin/Logic"
 	"web_gin/MySql"
 )
 
@@ -42,7 +41,7 @@ func Init() {
 // 获取订单信息
 func GetPayInfo(c *gin.Context)  {
 
-	ItemPrice, myData, err := Logic.CheckItemId(c)
+	ItemPrice, myData, err := Action.CheckItemId(c)
 	if err {
 		return
 	}
@@ -115,7 +114,7 @@ func WxPayCallBack(c *gin.Context) {
 	rmb := fmt.Sprintf("%.2f", float64(notification.TotalFee) * 0.01)
 	st, _ := time.Parse("20060102150405", notification.TimeEnd) //string转time
 	ts := st.Format("2006-01-02 15:04:05") //time转string
-	Logic.SaveDataBase(&MySql.Recharge{Openid: pInfo.OpenId, Payno: notification.TransactionId, RechargeTime:ts , Rmb: rmb, ItemId: pInfo.ItemId, Channel: "wx"})
+	Action.SaveDataBase(&MySql.Recharge{Openid: pInfo.OpenId, Payno: notification.TransactionId, RechargeTime:ts , Rmb: rmb, ItemId: pInfo.ItemId, Channel: "wx"})
 
 
 	//返回成功

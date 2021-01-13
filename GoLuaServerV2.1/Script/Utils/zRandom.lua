@@ -30,6 +30,8 @@ end
 function ZRandom.Normal()
     return ZRan.normal()
 end
+
+
 -- 指数分布
 function ZRandom.Exp()
     return ZRan.exp()

@@ -54,6 +54,8 @@ func GetUserRechargeList(c *gin.Context) {
 
 // 获取已购买列表
 func GetUserBuyList(c *gin.Context) {
+	//ItemCanBuy("zsw222", 12)
+
 	openId := c.Query("openid") // 获取get的参数
 	if openId == "" {
 		Error(fmt.Sprintf("输入参数openid为空 %s", openId),c)

@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"web_gin/Action"
 	"web_gin/GlobalVar"
-	"web_gin/Logic"
 	"web_gin/MiddleWare/zLog"
 	"web_gin/MySql"
 )
@@ -33,7 +33,7 @@ func Init() {
 // 拉起订单
 func GetPayInfo(c *gin.Context) {
 
-	ItemPrice, myData, err := Logic.CheckItemId(c)
+	ItemPrice, myData, err := Action.CheckItemId(c)
 	if err {
 		return
 	}
@@ -85,7 +85,7 @@ func CallBack(c *gin.Context) {
 		return
 	}
 	// 然后保存数据库并发放道具
-	Logic.SaveDataBase(&MySql.Recharge{Openid: pInfo.OpenId, Payno: notification.TradeNo, RechargeTime: notification.NotifyTime, Rmb: notification.TotalAmount, ItemId: pInfo.ItemId, Channel: "ali"})
+	Action.SaveDataBase(&MySql.Recharge{Openid: pInfo.OpenId, Payno: notification.TradeNo, RechargeTime: notification.NotifyTime, Rmb: notification.TotalAmount, ItemId: pInfo.ItemId, Channel: "ali"})
 
 	//返回成功
 	c.JSON(200, "success")
