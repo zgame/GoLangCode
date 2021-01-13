@@ -15,12 +15,12 @@ end
 
 ---获取百分比方法， 比如10几率， 那么小于等于10，返回true
 function ZRandom.PercentRate(rate)
-    return ZRan.PercentRate(rate)
+    return ZRan.percent(rate)
 end
 
 --- 获取浮点的随机数
 function ZRandom.GetFloat(min,max,bit)
-    local ranF ZRan.RandomFloatTo(min,max)
+    local ranF ZRan.float(min,max)
     local nRet = tonumber(string.format('%.' .. bit .. 'f',ranF))
     --print("ranf " .. nRet)
     return nRet

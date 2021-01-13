@@ -74,15 +74,18 @@ local function _getGroupItemNum(groupId)
     local GenDistParams2 = CSV_generateItem.GetValue(groupId,"GenDistParams2")
     if GenDistType == "Num" then        -- 固定数值
         local num = tonumber(GenDistParams)
-
-        return tonumber(GenDistParams)
+        local a , b = math.modf(num);
+        if ZRandom.PercentRate(b * 100) then
+            a = a + 1           -- 如果小数点后面的几率达到了， 那么就增加一个
+        end
+        return a
     elseif  GenDistType == "Uniform" then      -- 随机区间
         return ZRandom.GetRandom(GenDistParams,GenDistParams2)
     elseif  GenDistType == "UniformFloat" then      -- 随机区间
         return ZRandom.GetFloat(GenDistParams,GenDistParams2,3)
     elseif  GenDistType == "Normal" then      -- 正态分布区间
         local normal = ZRandom.Normal()
-        if normal > 1 or normal < -1 then
+        if normal > 1 or normal < -1 then       -- 如果落到了一倍方差之外，那么进行均匀的概率分布，策划设计如此
             normal = math.random()*2-1
         end
         return GenDistParams + GenDistParams2 * normal
@@ -118,6 +121,10 @@ function SandRockGeneratorItem.GetItems(groupId)
         local itemId = CSV_generateItem.GetValue(groupId, "GenObjectId")
         local itemNum  = _getGroupItemNum(groupId)
         itemList[itemId] = num * itemNum
+
+        if num * itemNum == 0 then
+            itemList[itemId] = nil   -- 这是因为表格里面配置有数量为0， 不掉， 那配置它干啥呢， 理解不了，闲的蛋疼 ，害的我代码都乱了
+        end
     end
 
 
