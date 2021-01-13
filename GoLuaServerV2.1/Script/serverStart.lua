@@ -29,7 +29,7 @@ function Main.GoCallLuaStartAllServers()
 
     print("------------------   服务器启动初始化  ---------------------------")
     SandRockResourceGenerator.Init()
-    SandRockItemGenerator.Init()
+    SandRockGeneratorItem.Init()
     print("------------------   数据初始化完成  ---------------------------")
     print("ServerTypeName:".. GlobalVar.ServerTypeName)
 

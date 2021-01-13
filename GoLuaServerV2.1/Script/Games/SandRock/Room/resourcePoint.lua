@@ -101,7 +101,7 @@ function SandRockRoom:GetResource(userId, areaName, pointIndex, resourceType)
     self.resourcePoint[areaName][pointIndex] = nil
     -- 获得物品
     local generatorGroup = CSV_resourceType.GetValue(resourceType, "GeneratorGroup")
-    local itemList = SandRockItemGenerator.GetItems(generatorGroup)
+    local itemList = SandRockGeneratorItem.GetItems(generatorGroup)
     -- 保存到背包
 
 

@@ -156,10 +156,19 @@ func getString(RowIndex int, ListIndex int, rows []*xlsx.Row) string {
 	if ListType == "string" {
 		strOut = fmt.Sprintf(" %s = \"%s\", ", ListName, data)
 	} else if ListType == "int" {
+		if data == "" {
+			data = "0"
+		}
 		strOut = fmt.Sprintf(" %s = %s, ", ListName, data)
 	} else if ListType == "float" {
+		if data == "" {
+			data = "0"
+		}
 		strOut = fmt.Sprintf(" %s = %s, ", ListName, data)
 	} else if ListType == "double" {
+		if data == "" {
+			data = "0"
+		}
 		strOut = fmt.Sprintf(" %s = %s, ", ListName, data)
 	} else if ListType == "bool" {
 		data = strings.ToUpper(data)

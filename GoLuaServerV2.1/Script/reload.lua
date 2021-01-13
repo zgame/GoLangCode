@@ -77,7 +77,7 @@ table.insert(f, "Script/Games/SandRock/Room/login")
 table.insert(f, "Script/Games/SandRock/Room/location")
 table.insert(f, "Script/Games/SandRock/Room/resourcePoint")
 table.insert(f, "Script/Games/SandRock/Room/weather")
-table.insert(f, "Script/Games/SandRock/Room/itemGenerator")
+table.insert(f, "Script/Games/SandRock/Room/generatorItem")
 table.insert(f, "Script/Games/SandRock/Room/resourceGenerator")
 
 

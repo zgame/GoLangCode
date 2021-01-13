@@ -1,5 +1,5 @@
 -- 道具生成组
-SandRockItemGenerator = {}
+SandRockGeneratorItem = {}
 
 
 -- 处理一下几率， 处理完之后，计算的时候方便
@@ -30,8 +30,8 @@ end
 
 -- 初始化道具生成组的数据
 local function _setGroup(groupId)
-    SandRockItemGenerator[groupId] = {}
-    local generator = SandRockItemGenerator[groupId]
+    SandRockGeneratorItem[groupId] = {}
+    local generator = SandRockGeneratorItem[groupId]
 
     local GeneratorList = CSV_generateGroup.GetValue(groupId, "GeneratorList")
     local allDropList = ZString.Split(GeneratorList, "|")
@@ -59,7 +59,7 @@ local function _setGroup(groupId)
     --printTable(generator)
 end
 
-function SandRockItemGenerator.Init()
+function SandRockGeneratorItem.Init()
     local GeneratorList = CSV_generateGroup.GetAllKeys()
     for _, groupId in ipairs(GeneratorList) do
         _setGroup(groupId)
@@ -67,15 +67,32 @@ function SandRockItemGenerator.Init()
     --_setGroup("20900008")
 end
 
+-- 根据生成规则获取道具的数量
+local function _getGroupItemNum(groupId)
+    local GenDistType = CSV_generateItem.GetValue(groupId,"GenDistType")
+    local GenDistParams = CSV_generateItem.GetValue(groupId,"GenDistParams")
+    if GenDistType == "Num" then        -- 固定数值
+        return tonumber(GenDistParams)
+    else if  GenDistType == "Uniform" then      -- 随机区间
+
+
+    else if  GenDistType == "UniformFloat" then      -- 随机区间
+
+
+    else if  GenDistType == "Normal" then      -- 正态分布区间
+
+    end
+end
+
 
 --  道具掉落 ，正常返回 hash  key是itemId， value是数量
-function SandRockItemGenerator.GetItems(groupId)
+function SandRockGeneratorItem.GetItems(groupId)
     local groupList = {}
 
     local GenSceneType = CSV_generateGroup.GetValue(groupId, "GenSceneType")
     if GenSceneType == "Item" then
         -- 走道具掉落规则
-        local generator = SandRockItemGenerator[tostring(groupId)]
+        local generator = SandRockGeneratorItem[tostring(groupId)]
         for index, allType in pairs(generator) do
             local subIndex = 1                    -- 如果只有一个元素，那么就是这个
             if #generator[index] > 1 then
@@ -92,10 +109,13 @@ function SandRockItemGenerator.GetItems(groupId)
 
     local itemList = {}
     for groupId,num in pairs(groupList) do
-        local itemId = CSV_generateItem.GetValue(tostring(groupId), "GenObjectId")
-        -- 根据生成规则进行生成
+        groupId = tostring(groupId)
+        local itemId = CSV_generateItem.GetValue(groupId, "GenObjectId")
 
-        .... ...................................
+
+
+
+
         itemList[itemId] = num
     end
 
