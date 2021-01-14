@@ -99,6 +99,11 @@ function CSV_resourceType.GetValue(index, key)
     return resourceType[index][key]
 end
 
+
+function CSV_resourceType.Get()
+    return resourceType
+end
+
 function CSV_resourceType.GetAllKeys()
     local keys = {}
     for k in pairs(resourceType) do

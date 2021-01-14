@@ -1061,6 +1061,11 @@ function CSV_generateItem.GetValue(index, key)
     return generateItem[index][key]
 end
 
+
+function CSV_generateItem.Get()
+    return generateItem
+end
+
 function CSV_generateItem.GetAllKeys()
     local keys = {}
     for k in pairs(generateItem) do

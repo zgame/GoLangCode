@@ -29,8 +29,7 @@ end
 
 -- 为了效率，初始化的时候生成一下数据
 function SandRockResourceGenerator.Init()
-    local areaList = CSV_resourceArea.GetAllKeys()
-    for _, areaName in ipairs(areaList) do
+    for  areaName,_ in pairs(CSV_resourceArea.Get()) do
         _setType(areaName)
     end
 end

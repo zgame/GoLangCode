@@ -60,8 +60,7 @@ local function _setGroup(groupId)
 end
 
 function SandRockGeneratorItem.Init()
-    local GeneratorList = CSV_generateGroup.GetAllKeys()
-    for _, groupId in ipairs(GeneratorList) do
+    for  groupId,_ in pairs(CSV_generateGroup.Get()) do
         _setGroup(groupId)
     end
     --_setGroup("20900008")

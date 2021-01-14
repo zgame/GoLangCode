@@ -117,6 +117,11 @@ function CSV_resourceArea.GetValue(index, key)
     return resourceArea[index][key]
 end
 
+
+function CSV_resourceArea.Get()
+    return resourceArea
+end
+
 function CSV_resourceArea.GetAllKeys()
     local keys = {}
     for k in pairs(resourceArea) do

@@ -230,6 +230,11 @@ function CSV_%s.GetValue(index, key)
     return %s[index][key]
 end
 
+
+function CSV_%s.Get()
+    return %s
+end
+
 function CSV_%s.GetAllKeys()
     local keys = {}
     for k in pairs(%s) do
@@ -240,7 +245,7 @@ function CSV_%s.GetAllKeys()
         return nil
     end
     return keys
-end`, fileName, fileName, fileName, fileName, fileName, fileName, fileName,fileName,fileName)
+end`, fileName, fileName, fileName, fileName, fileName, fileName, fileName,fileName,fileName,fileName,fileName)
 
 	//fmt.Println("",StrOut)
 	return StrOut

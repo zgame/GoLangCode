@@ -39,8 +39,8 @@ function SandRockRoom:ResourcePointUpdate()
         end
     end
     -- 开始刷新新东西
-    local areaList = CSV_resourceArea.GetAllKeys()
-    for _, areaName in ipairs(areaList) do
+    --local areaList = CSV_resourceArea.Get()
+    for areaName,_ in pairs(CSV_resourceArea.Get()) do
         --print("areaName"..areaName)
         if self.resourcePoint[areaName] == nil then
             self.resourcePoint[areaName] = {}           -- 初始化生成点列表

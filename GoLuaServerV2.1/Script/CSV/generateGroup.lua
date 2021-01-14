@@ -420,6 +420,11 @@ function CSV_generateGroup.GetValue(index, key)
     return generateGroup[index][key]
 end
 
+
+function CSV_generateGroup.Get()
+    return generateGroup
+end
+
 function CSV_generateGroup.GetAllKeys()
     local keys = {}
     for k in pairs(generateGroup) do
