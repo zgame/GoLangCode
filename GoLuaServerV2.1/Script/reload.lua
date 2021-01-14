@@ -22,9 +22,10 @@ LuaFiles.CSV = {}
 f = LuaFiles.CSV
 table.insert(f, "Script/CSV/generateGroup")
 table.insert(f, "Script/CSV/generateItem")
-table.insert(f, "Script/CSV/resourceArea")
-table.insert(f, "Script/CSV/resourceType")
 table.insert(f, "Script/CSV/item")
+table.insert(f, "Script/CSV/resourcePickArea")
+table.insert(f, "Script/CSV/resourcePickType")
+table.insert(f, "Script/CSV/resourceTerrainType")
 
 
 
@@ -78,9 +79,11 @@ table.insert(f, "Script/Games/SandRock/Room/login")
 table.insert(f, "Script/Games/SandRock/Room/location")
 table.insert(f, "Script/Games/SandRock/Room/resourcePoint")
 table.insert(f, "Script/Games/SandRock/Room/weather")
+
 table.insert(f, "Script/Games/SandRock/Excel/generatorItem")
 table.insert(f, "Script/Games/SandRock/Excel/item")
-table.insert(f, "Script/Games/SandRock/Excel/resourceGenerator")
+table.insert(f, "Script/Games/SandRock/Excel/resourcePick")
+table.insert(f, "Script/Games/SandRock/Excel/resourceTerrain")
 
 table.insert(f, "Script/Games/SandRock/DataBase/loginServer")
 

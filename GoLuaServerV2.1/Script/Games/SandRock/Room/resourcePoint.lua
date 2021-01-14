@@ -5,7 +5,7 @@
 
 -- 获取没有被占用的资源点列表
 local function _getEmpty(areaName, resourcePoint)
-    local number_max = CSV_resourceArea.GetValue(areaName, 'Points')
+    local number_max = CSV_resourcePickArea.GetValue(areaName, 'Points')
     if number_max == 0 then
         return 1
     end
@@ -40,29 +40,27 @@ function SandRockRoom:ResourcePointUpdate()
     end
     -- 开始刷新新东西
     --local areaList = CSV_resourceArea.Get()
-    for areaName,_ in pairs(CSV_resourceArea.Get()) do
+    for areaName,_ in pairs(CSV_resourcePickArea.Get()) do
         --print("areaName"..areaName)
         if self.resourcePoint[areaName] == nil then
             self.resourcePoint[areaName] = {}           -- 初始化生成点列表
         end
 
-        local countMin = CSV_resourceArea.GetValue(areaName, 'Min')
-        local countMax = CSV_resourceArea.GetValue(areaName, 'Max')
-        local num = ZRandom.GetRandom(countMin, countMax)
         --print("随机获取本次更新资源数量num ："..num)
+        local num = SandRockResourcePick.GetNum(areaName)
         local number_now = ZTable.Len(self.resourcePoint[areaName])        -- 已经包含多少个点
         --print("number_now"..number_now)
         if num > number_now then
             for i = 1, num - number_now do
                 --print('生成一个point, 下面是point的结构')
-                local resourceTypeRandom = SandRockResourceGenerator.GetType(areaName)           -- 获取一个生成类型，根据权重
+                local resourceTypeRandom = SandRockResourcePick.GetType(areaName)           -- 获取一个生成类型，根据权重
                 if resourceTypeRandom == "0" then
                     break
                 end
                 local element = {}
                 local areaPoint = _getEmpty(areaName, self.resourcePoint)   -- 获取一个空的位置
                 element.resourceType = tonumber(resourceTypeRandom)
-                element.live = CSV_resourceType.GetValue(resourceTypeRandom, "LifeCycle")
+                element.live = CSV_resourcePickType.GetValue(resourceTypeRandom, "LifeCycle")
                 --print("保存到房间的资源列表里面")
                 self.resourcePoint[areaName][areaPoint] = element
                 --printTable(self.resourcePoint[areaName])
@@ -91,8 +89,8 @@ function SandRockRoom:GetResource(userId, areaName, pointIndex, resourceType)
     end
     local player = GameServer.GetPlayerByUID(userId)
     -- 采集
-    local spCost = CSV_resourceType.GetValue(resourceType, "SpCost")
-    local exp = CSV_resourceType.GetValue(resourceType, "Exp")
+    local spCost = CSV_resourcePickType.GetValue(resourceType, "SpCost")
+    local exp = CSV_resourcePickType.GetValue(resourceType, "Exp")
 
     Player.ExpAdd(player, exp)
     Player.SpAdd(player, -spCost)
@@ -100,7 +98,7 @@ function SandRockRoom:GetResource(userId, areaName, pointIndex, resourceType)
     -- 销毁采集点
     self.resourcePoint[areaName][pointIndex] = nil
     -- 获得物品
-    local generatorGroup = CSV_resourceType.GetValue(resourceType, "GeneratorGroup")
+    local generatorGroup = CSV_resourcePickType.GetValue(resourceType, "GeneratorGroup")
     local itemList = SandRockGeneratorItem.GetItems(generatorGroup)
     -- 保存到背包
 

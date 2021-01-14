@@ -125,7 +125,7 @@ function GameServer.GetGameByUserId(userId)
             ZLog.Logger("GetGameByID 游戏为空" .. player.gameId)
         end
     else
-        ZLog.Logger("GetPlayerByUID 玩家为空" .. userId)
+        ZLog.Logger("GetGameByUserId  GetPlayerByUID 玩家为空" .. userId)
     end
     return nil
 end
@@ -146,7 +146,7 @@ function GameServer.GetRoomByUserId(userId)
             ZLog.Logger("GetGameByID 游戏为空" .. player.gameId)
         end
     else
-        ZLog.Logger("GetPlayerByUID 玩家为空" .. userId)
+        ZLog.Logger("GetRoomByUserId GetPlayerByUID 玩家为空" .. userId)
     end
     return nil
 end

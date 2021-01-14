@@ -13,6 +13,7 @@ function SandRockRoom:New(roomId, gameId)
 
     self.locationList = {}          -- uid  player's location
     self.resourcePoint = {}         -- 资源点列表 key 是 区域的名字  value是point的map   , key是点的index， value是资源和生命周期
+    self.resourceTerrain = {}         -- 资源点列表 key    value是
     self.weather = 1           -- 天气
 end
 

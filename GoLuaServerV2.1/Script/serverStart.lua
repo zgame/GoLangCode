@@ -28,7 +28,7 @@ function Main.GoCallLuaStartAllServers()
     end
 
     print("------------------   服务器启动初始化  ---------------------------")
-    SandRockResourceGenerator.Init()
+    SandRockResourcePick.Init()
     SandRockGeneratorItem.Init()
     SandRockItem.Init()
     print("------------------   数据初始化完成  ---------------------------")

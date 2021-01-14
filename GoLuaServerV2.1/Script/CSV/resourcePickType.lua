@@ -1,4 +1,4 @@
-local resourceType = {
+local resourcePickType = {
 ["1"] = {  GeneratorGroup = 20900008,  Weather = "1,2,4",  DeleteWeather = -1,  LifeCycle = 5,  Exp = 10,  SpCost = 2,  },
 ["2"] = {  GeneratorGroup = 20900009,  Weather = "1,2,4",  DeleteWeather = 5,  LifeCycle = 5,  Exp = 10,  SpCost = 2,  },
 ["3"] = {  GeneratorGroup = 20900040,  Weather = "-1",  DeleteWeather = -1,  LifeCycle = 3,  Exp = 10,  SpCost = 2,  },
@@ -82,31 +82,31 @@ local resourceType = {
 ["1035"] = {  GeneratorGroup = 20500123,  Weather = "-1",  DeleteWeather = -1,  LifeCycle = 1,  Exp = 50,  SpCost = 2,  },
 ["1036"] = {  GeneratorGroup = 20500124,  Weather = "-1",  DeleteWeather = -1,  LifeCycle = -1,  Exp = 10,  SpCost = 2,  },
 } 
- CSV_resourceType = {}
+ CSV_resourcePickType = {}
 
-function CSV_resourceType.GetValue(index, key)
+function CSV_resourcePickType.GetValue(index, key)
 	index = tostring(index)
 	key = tostring(key)
-    if resourceType[index] == nil then
-        ZLog.Logger("Excel 获取表:resourceType  主键:".. index .." key:".. key.."出错!")
+    if resourcePickType[index] == nil then
+        ZLog.Logger("Excel 获取表:resourcePickType  主键:".. index .." key:".. key.."出错!")
         return nil
     end
-    if resourceType[index][key] == nil then
-        ZLog.Logger("Excel 获取表: resourceType  主键:".. index .." key:".. key.."出错!")
+    if resourcePickType[index][key] == nil then
+        ZLog.Logger("Excel 获取表: resourcePickType  主键:".. index .." key:".. key.."出错!")
         return nil
     end
 
-    return resourceType[index][key]
+    return resourcePickType[index][key]
 end
 
 
-function CSV_resourceType.Get()
-    return resourceType
+function CSV_resourcePickType.Get()
+    return resourcePickType
 end
 
-function CSV_resourceType.GetAllKeys()
+function CSV_resourcePickType.GetAllKeys()
     local keys = {}
-    for k in pairs(resourceType) do
+    for k in pairs(resourcePickType) do
         keys[#keys + 1] = k
     end
     if #keys == 0 then

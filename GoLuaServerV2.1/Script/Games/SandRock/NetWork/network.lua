@@ -11,6 +11,7 @@ function SandRockNetwork.Receive(serverId, userId, mainSgId, subMsgId, buf, toke
     switch[CMD_SAND_ROCK.SUB_LOCATION] = SandRockLocation.Location
     switch[CMD_SAND_ROCK.SUB_SLEEP] = SandRockSleep.Sleep
     switch[CMD_SAND_ROCK.SUB_RESOURCE_GET] = SandRockResourcePoint.GetResource
+    switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET] = SandRockResourceTerrain.GetResource
 
 
     switch[subMsgId](serverId, userId, buf)

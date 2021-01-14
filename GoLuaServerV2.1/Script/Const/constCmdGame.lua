@@ -11,5 +11,7 @@ CMD_SAND_ROCK = {
     SUB_SLEEP = 9 ,         -- 睡觉Sleep()
     SUB_RESOURCE_POINT = 10 ,   -- 刷新资源ResourceUpdate()
     SUB_RESOURCE_GET = 11 ,   -- 采集资源ResourceGet()  , 获得结果ItemGet()
+    SUB_RESOURCE_TERRAIN = 12 ,   -- 刷新资源ResourceTerrainUpdate()
+    SUB_RESOURCE_TERRAIN_GET = 13 ,   -- 采集资源ResourceTerrainGet()  , 获得结果ItemGet()
 }
 

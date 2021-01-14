@@ -1,4 +1,4 @@
-local resourceArea = {
+local resourcePickArea = {
 ["ResourceArea_Herb_1"] = {  Min = 1,  Max = 3,  Resource = "1",  Weight = "100",  Points = 8,  },
 ["ResourceArea_Herb_11"] = {  Min = 1,  Max = 3,  Resource = "1",  Weight = "100",  Points = 10,  },
 ["ResourceArea_Herb_12"] = {  Min = 0,  Max = 2,  Resource = "1",  Weight = "100",  Points = 4,  },
@@ -100,31 +100,31 @@ local resourceArea = {
 ["ResourceArea_Wood_8"] = {  Min = 1,  Max = 1,  Resource = "6",  Weight = "20",  Points = 6,  },
 ["ResourceArea_Wood_9"] = {  Min = 0,  Max = 0,  Resource = "1025",  Weight = "20",  Points = 1,  },
 } 
- CSV_resourceArea = {}
+ CSV_resourcePickArea = {}
 
-function CSV_resourceArea.GetValue(index, key)
+function CSV_resourcePickArea.GetValue(index, key)
 	index = tostring(index)
 	key = tostring(key)
-    if resourceArea[index] == nil then
-        ZLog.Logger("Excel 获取表:resourceArea  主键:".. index .." key:".. key.."出错!")
+    if resourcePickArea[index] == nil then
+        ZLog.Logger("Excel 获取表:resourcePickArea  主键:".. index .." key:".. key.."出错!")
         return nil
     end
-    if resourceArea[index][key] == nil then
-        ZLog.Logger("Excel 获取表: resourceArea  主键:".. index .." key:".. key.."出错!")
+    if resourcePickArea[index][key] == nil then
+        ZLog.Logger("Excel 获取表: resourcePickArea  主键:".. index .." key:".. key.."出错!")
         return nil
     end
 
-    return resourceArea[index][key]
+    return resourcePickArea[index][key]
 end
 
 
-function CSV_resourceArea.Get()
-    return resourceArea
+function CSV_resourcePickArea.Get()
+    return resourcePickArea
 end
 
-function CSV_resourceArea.GetAllKeys()
+function CSV_resourcePickArea.GetAllKeys()
     local keys = {}
-    for k in pairs(resourceArea) do
+    for k in pairs(resourcePickArea) do
         keys[#keys + 1] = k
     end
     if #keys == 0 then
