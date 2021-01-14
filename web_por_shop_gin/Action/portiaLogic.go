@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"strings"
 	"time"
 	"web_gin/GlobalVar"
 	"web_gin/MiddleWare/zLog"
@@ -23,6 +24,7 @@ func SaveDataBase(insertData *MySql.Recharge) string {
 	return GiveItemToUser(insertData.Openid, insertData.ItemId)
 
 }
+
 
 //道具发放
 func GiveItemToUser(Openid string, ItemId int) string {
@@ -47,9 +49,24 @@ func GiveItemToUser(Openid string, ItemId int) string {
 			zLog.PrintfLogger("GiveItemToUser   Id: %s 发放道具解析已有数据出错 %s \n", Openid, err)
 			return ""
 		}
+
 		// 加上新的数据
 		arrItem = append(arrItem, arrDB...)
-		arrItem = append(arrItem, ItemId)
+
+		// 发放道具
+		var ItemInfo *MySql.Shopmall
+		ItemInfo = MySql.GetMallItemInfo(ItemId)
+		if ItemInfo.Gift == "" || ItemInfo.Gift == "-1" {
+			arrItem = append(arrItem, ItemId)		// 发放单一道具
+		}else {
+			//	发放礼包道具
+			list:= GiftGetList(ItemInfo.Gift)
+			for _,v := range list{
+				item,_ := strconv.Atoi(v)
+				arrItem = append(arrItem, item)		// 发放多个道具的礼包
+			}
+		}
+
 		//数据排重
 		var strMap map[int]string = make(map[int]string, 0)
 		for _, v := range arrItem {
@@ -75,8 +92,29 @@ func GiveItemToUser(Openid string, ItemId int) string {
 	}
 }
 
+// 获取礼包的道具列表
+func GiftGetList(gift string) []string {
+	list := strings.Split(gift,"#")
+	return list
+}
+
 // 道具是否已经购买
-func ItemCanBuy(Openid string, itemId int) bool {
+func ItemCanBuy(Openid string, ItemId int) bool {
+	var arrBuyItem []int = make([]int, 0) // 这里保存要购买的所有的道具
+	var ItemInfo *MySql.Shopmall
+	ItemInfo = MySql.GetMallItemInfo(ItemId)
+	if ItemInfo.Gift == "" || ItemInfo.Gift == "-1" {
+		arrBuyItem = append(arrBuyItem, ItemId) // 发放单一道具
+	}else {
+		// 礼包道具
+		list:= GiftGetList(ItemInfo.Gift)
+		for _,v := range list{
+			item,_ := strconv.Atoi(v)
+			arrBuyItem = append(arrBuyItem, item)
+		}
+	}
+
+
 	ShopList := MySql.GetUserShopList(Openid)
 	if ShopList == ""{
 		return true			// 没有玩家数据
@@ -87,13 +125,21 @@ func ItemCanBuy(Openid string, itemId int) bool {
 		zLog.PrintfLogger("GiveItemToUser   Id: %s 已有道具解析数据出错 %s \n", Openid, err)
 		return false
 	}
+	have := false
 	// 判断是否重复购买
-	for _, v := range arrDB {
-		if v == itemId {
-			return false
+	for _, item := range arrBuyItem {
+		for _, v := range arrDB {
+			if v == item {
+				have = true		//已经有了这个道具，那么break循环
+				// 已经有了就break
+				break
+			}
+		}
+		if have == false{
+			return true		// 只要一个道具还没有，就可以购买了
 		}
 	}
-	return true
+	return false
 }
 
 // 获取道具的价格

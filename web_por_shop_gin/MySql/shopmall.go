@@ -14,6 +14,7 @@ type Shopmall struct {
 	Discountprice     float64 `xorm:"double"`
 	Starttime         string  `xorm:"varchar(20)"`
 	Endtime           string  `xorm:"varchar(20)"`
+	Gift           string  `xorm:"varchar(200)"`
 }
 
 // 同步表结构
