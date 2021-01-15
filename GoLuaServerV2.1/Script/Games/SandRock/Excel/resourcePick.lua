@@ -11,17 +11,15 @@ SandRockResourcePick = {}
 local function _setType(areaName)
     SandRockResourcePick[areaName] ={}
     local area = SandRockResourcePick[areaName]
-    local resourceType = CSV_resourcePickArea.GetValue(areaName, "Resource")
-    local weight = CSV_resourcePickArea.GetValue(areaName, "Weight")
 
-    local resourceList = ZString.Split(resourceType,",")
+    local resourceList = CSV_resourcePickArea.GetValue(areaName, "Resource")
     if #resourceList == 1 then
-        area.resourceType = resourceType        -- 赋值数值
+        area.resourceType = resourceList[1]        -- 赋值数值
         return
     else
         area.resourceList = resourceList        -- 赋值list
     end
-    local weightList = ZString.Split(weight,",")
+    local weightList = CSV_resourcePickArea.GetValue(areaName, "Weight")
     area.weightList = weightList
 
 end
@@ -45,7 +43,7 @@ function SandRockResourcePick.GetType(areaName)
     end
 
     local index = ZRandom.GetList(area.weightList)
-    return  ZString.Trim(area.resourceList[index])
+    return  area.resourceList[index]
 end
 
 

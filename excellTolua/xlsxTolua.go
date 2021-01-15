@@ -178,6 +178,8 @@ func getString(RowIndex int, ListIndex int, rows []*xlsx.Row) string {
 			data = "false"
 		}
 		strOut = fmt.Sprintf(" %s = %s, ", ListName, data)
+	}else if ListType == "array" {
+		strOut = fmt.Sprintf(" %s = {%s}, ", ListName, data)
 	}
 	return strOut
 }

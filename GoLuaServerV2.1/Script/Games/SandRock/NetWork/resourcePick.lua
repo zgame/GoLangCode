@@ -1,8 +1,8 @@
-SandRockResourcePoint = {}
+SandRockResourcePick = {}
 
 
 -- 同步资源列表
-function SandRockResourcePoint.SendPointList(userId)
+function SandRockResourcePick.SendPickList(userId)
     local sendCmd = ProtoGameSandRock.ResourceUpdate()
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then
@@ -26,7 +26,7 @@ function SandRockResourcePoint.SendPointList(userId)
 end
 
 -- 采集资源
-function SandRockResourcePoint.GetResource(serverId, userId, buf)
+function SandRockResourcePick.GetPickResource(serverId, userId, buf)
     --print("客户端开始采集资源")
     local msg = ProtoGameSandRock.ResourceGet()
     msg:ParseFromString(buf)
@@ -41,7 +41,7 @@ function SandRockResourcePoint.GetResource(serverId, userId, buf)
     local areaPoint = msg.info.areaPoint
     local resourceType = msg.info.resourceType
 
-    local itemList = SandRockRoom.GetResource(room, userId, areaName, areaPoint, resourceType)
+    local itemList = SandRockRoom.GetPickResource(room, userId, areaName, areaPoint, resourceType)
     if itemList == nil then
         ZLog.Logger("资源采集失败")
         return

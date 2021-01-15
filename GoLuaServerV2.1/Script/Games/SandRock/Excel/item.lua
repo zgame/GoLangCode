@@ -1,8 +1,8 @@
 SandRockItem = {}
 
+--  把几率计算成百分比
 local function _setItem(itemId)
-    local QualitySceneSlot = CSV_item.GetValue(itemId,"QualitySceneSlot")
-    local list = ZString.Split(QualitySceneSlot,",")
+    local list = CSV_item.GetValue(itemId,"QualitySceneSlot")
     SandRockItem[itemId] = {}
     local all = 0
     for i,v in ipairs(list)do

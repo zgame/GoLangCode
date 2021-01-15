@@ -25,6 +25,7 @@ table.insert(f, "Script/CSV/generateItem")
 table.insert(f, "Script/CSV/item")
 table.insert(f, "Script/CSV/resourcePickArea")
 table.insert(f, "Script/CSV/resourcePickType")
+table.insert(f, "Script/CSV/resourceTerrainArea")
 table.insert(f, "Script/CSV/resourceTerrainType")
 
 
@@ -77,7 +78,8 @@ f = LuaFiles.Games
 table.insert(f, "Script/Games/SandRock/Room/sandRockRoom")
 table.insert(f, "Script/Games/SandRock/Room/login")
 table.insert(f, "Script/Games/SandRock/Room/location")
-table.insert(f, "Script/Games/SandRock/Room/resourcePoint")
+table.insert(f, "Script/Games/SandRock/Room/resourcePick")
+table.insert(f, "Script/Games/SandRock/Room/resourceTerrain")
 table.insert(f, "Script/Games/SandRock/Room/weather")
 
 table.insert(f, "Script/Games/SandRock/Excel/generatorItem")
@@ -97,7 +99,7 @@ table.insert(f, "Script/network")       -- 网络分发入口点n
 table.insert(f, "Script/Games/SandRock/NetWork/loginServer")
 table.insert(f, "Script/Games/SandRock/NetWork/location")
 table.insert(f, "Script/Games/SandRock/NetWork/sleep")
-table.insert(f, "Script/Games/SandRock/NetWork/resourcePoint")
+table.insert(f, "Script/Games/SandRock/NetWork/resourcePick")
 table.insert(f, "Script/Games/SandRock/NetWork/network")
 
 

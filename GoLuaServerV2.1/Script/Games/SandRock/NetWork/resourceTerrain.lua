@@ -24,7 +24,7 @@ function SandRockResourceTerrain.SendPointList(userId)
 end
 
 -- 采集资源
-function SandRockResourceTerrain.GetResource(serverId, userId, buf)
+function SandRockResourceTerrain.GetTerrainResource(serverId, userId, buf)
     --print("客户端开始开采资源")
 
 end

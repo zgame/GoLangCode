@@ -1,31 +1,13 @@
 ----------------------------------------------------------------
---- 资源刷新， 每天刷新一次， 到生命周期就删掉  ， 不足上限数量就补充，但是不一定非要补充，是随机的
+--- 地形树和石头资源刷新
 ----------------------------------------------------------------
 
 
--- 获取没有被占用的资源点列表
-local function _getEmpty(areaName, resourcePoint)
-    local number_max = CSV_resourcePickArea.GetValue(areaName, 'Points')
-    if number_max == 0 then
-        return 1
-    end
-    local pointList = {}            --没有占用的列表
-    for j = 1, number_max do
-        table.insert(pointList, j)           -- 生成全数组
-    end
-    for pointIndex, point in pairs(resourcePoint[areaName]) do
-        table.remove(pointList, pointIndex)         -- 把已经占用的删掉
-    end
-    -- 剩下的就是没有被占用的了
-    local ran = ZRandom.GetRandom(1, #pointList)
-    return pointList[ran]
-end
 
 
-
------------------------------------刷新------------------------------------------
+-----------------------------------地形树 刷新------------------------------------------
 -- 资源点刷新
-function SandRockRoom:ResourcePointUpdate()
+function SandRockRoom:ResourceTerrainUpdate()
     -- 判断生命周期， 到期的给删除掉
     for areaName, pointList in pairs(self.resourcePoint) do
         --print(areaName)
@@ -72,8 +54,8 @@ function SandRockRoom:ResourcePointUpdate()
     --printTable(self.resourcePoint)
 end
 
------------------------------------采集------------------------------------------
-function SandRockRoom:GetResource(userId, areaName, pointIndex, resourceType)
+-----------------------------------地形树 采集------------------------------------------
+function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceType)
     if self.resourcePoint[areaName] == nil then
         ZLog.Logger("GetResource  areaName 生成区域出错 " .. areaName)
         return

@@ -84,16 +84,26 @@ message _resourcePoint{
 	string areaName =1;   // 区域的名字
 	uint32 areaPoint =2;  // 区域中第几个point
 	uint32 resourceType= 3;  // 生成了什么东西
-
-
 }
 message ResourceUpdate{
 	repeated _resourcePoint points=1;   //刷新点列表
 	uint32 weather =2;          // 天气变化
 }
-
 message ResourceGet{
 	_resourcePoint info = 1;    // 资源点采集
+}
+
+//---------------------------------------树木和石头资源刷新和采集----------------------------------
+message _resourceTerrain{
+	string areaName =1;   // 区域的名字
+	uint32 areaPoint =2;  // 区域中第几个point
+	uint32 resourceType= 3;  // 生成了什么东西
+}
+message ResourceTerrainUpdate{
+	repeated _resourceTerrain points=1;   //刷新点列表
+}
+message ResourceTerrainGet{
+	_resourceTerrain info = 1;    // 资源点采集
 }
 
 //----------------------------------------道具----------------------------------------------
