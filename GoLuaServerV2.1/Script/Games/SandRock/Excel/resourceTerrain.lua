@@ -15,3 +15,13 @@ function SandRockResourceTerrain.CantKick(resourceId)
     return false
 end
 
+function SandRockResourceTerrain.GetType()
+
+end
+
+-- 获取树的生命值
+function SandRockResourceTerrain.GetHp(treeId)
+    local TrunkHealth= CSV_resourceTerrainType.GetValue(treeId,"TrunkHealth")
+    local StumpHealth= CSV_resourceTerrainType.GetValue(treeId,"StumpHealth")
+    return TrunkHealth,StumpHealth
+end

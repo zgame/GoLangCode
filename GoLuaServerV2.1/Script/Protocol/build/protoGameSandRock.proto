@@ -97,13 +97,16 @@ message ResourceGet{
 message _resourceTerrain{
 	string areaName =1;   // 区域的名字
 	uint32 areaPoint =2;  // 区域中第几个point
-	uint32 resourceType= 3;  // 生成了什么东西
+	uint32 resourceType= 3;  // 生成了什么东西  TrunkHealth,StumpHealth
+	uint32 trunkHealth= 4;  // TrunkHealth
+	uint32 stumpHealth= 5;  // StumpHealth
 }
 message ResourceTerrainUpdate{
 	repeated _resourceTerrain points=1;   //刷新点列表
 }
 message ResourceTerrainGet{
 	_resourceTerrain info = 1;    // 资源点采集
+	uint32 toolId = 2;            // 使用工具的id , 如果工具id是0， 说明是徒手的
 }
 
 //----------------------------------------道具----------------------------------------------

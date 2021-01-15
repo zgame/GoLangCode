@@ -2,90 +2,135 @@
 --- 地形树和石头资源刷新
 ----------------------------------------------------------------
 
+-- 生成地形资源树和石头的结构
+function SandRockRoom:ResourceTerrainInit()
+    for areaName, _ in pairs(CSV_resourceTerrainArea.Get()) do
+        --print(areaName)
+        self.resourceTerrain[areaName] = {}
+        local TreeIndexList = CSV_resourceTerrainArea.GetValue(areaName, "TreeIndex")
+        local TreeIDList = CSV_resourceTerrainArea.GetValue(areaName, "TreeID")
+        for index, treeId in pairs(TreeIDList) do
+            local element = {}
+            element.areaName = areaName
+            element.areaPoint = TreeIndexList[index]        -- 第几个位置
+            element.resourceType = treeId
+            element.trunkHealth, element.stumpHealth = SandRockResourceTerrain.GetHp(treeId)
+            element.kickCountLimit = CSV_resourceTerrainType.GetValue(treeId, "KickCountLimit")
+
+            self.resourceTerrain[areaName][TreeIndexList[index]] = element
+        end
+    end
+    printTable(self.resourceTerrain)
+end
 
 
 
 -----------------------------------地形树 刷新------------------------------------------
 -- 资源点刷新
 function SandRockRoom:ResourceTerrainUpdate()
-    -- 判断生命周期， 到期的给删除掉
-    for areaName, pointList in pairs(self.resourcePoint) do
-        --print(areaName)
-        --printTable(pointList)
-        for index, point in pairs(pointList) do
-            if point.live <= 1 then
-                pointList[index] = nil              -- 删掉生命周期已经到了的点
-            else
-                point.live = point.live - 1
-            end
-        end
-    end
-    -- 开始刷新新东西
-    --local areaList = CSV_resourceArea.Get()
-    for areaName,_ in pairs(CSV_resourcePickArea.Get()) do
-        --print("areaName"..areaName)
-        if self.resourcePoint[areaName] == nil then
-            self.resourcePoint[areaName] = {}           -- 初始化生成点列表
-        end
+    local reliveList = {}
+    -- 判断重生的时间
+    for areaName, pointList in pairs(self.resourceTerrain) do
+        for index, element in pairs(pointList) do
+            local treeId = element.resourceType
+            -- 刷新踢树上限
+            element.kickCountLimit = CSV_resourceTerrainType.GetValue(treeId, "KickCountLimit")
 
-        --print("随机获取本次更新资源数量num ："..num)
-        local num = SandRockResourcePick.GetNum(areaName)
-        local number_now = ZTable.Len(self.resourcePoint[areaName])        -- 已经包含多少个点
-        --print("number_now"..number_now)
-        if num > number_now then
-            for i = 1, num - number_now do
-                --print('生成一个point, 下面是point的结构')
-                local resourceTypeRandom = SandRockResourcePick.GetType(areaName)           -- 获取一个生成类型，根据权重
-                if resourceTypeRandom == "0" then
-                    break
+            -- 如果死亡，刷新
+            if element.trunkHealth + element.stumpHealth <= 0 then
+                if element.relive <= 0 then
+                    -- 重生
+                    element.trunkHealth, element.stumpHealth = SandRockResourceTerrain.GetHp(treeId)
+                    table.insert(reliveList, element)
+                else
+                    element.relive = element.relive - 1
                 end
-                local element = {}
-                local areaPoint = _getEmpty(areaName, self.resourcePoint)   -- 获取一个空的位置
-                element.resourceType = tonumber(resourceTypeRandom)
-                element.live = CSV_resourcePickType.GetValue(resourceTypeRandom, "LifeCycle")
-                --print("保存到房间的资源列表里面")
-                self.resourcePoint[areaName][areaPoint] = element
-                --printTable(self.resourcePoint[areaName])
             end
+            --local  RespawnDays = CSV_resourceTerrainType.GetValue(treeId, "RespawnDays")
         end
-
     end
-
     --printTable(self.resourcePoint)
+    return reliveList
 end
 
 -----------------------------------地形树 采集------------------------------------------
-function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceType)
-    if self.resourcePoint[areaName] == nil then
-        ZLog.Logger("GetResource  areaName 生成区域出错 " .. areaName)
+local function _treeDamage(element, damage)
+
+end
+
+function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceType, toolId)
+    if self.resourceTerrain[areaName] == nil then
+        ZLog.Logger("GetTerrainResource  areaName 生成区域出错 " .. areaName)
         return
     end
 
-    local point = self.resourcePoint[areaName][pointIndex]
+    local point = self.resourceTerrain[areaName][pointIndex]
     if point == nil then
-        ZLog.Logger("GetResource pointIndex 生成点index出错" .. pointIndex)
+        ZLog.Logger("GetTerrainResource pointIndex 生成点index出错" .. pointIndex)
         return
     end
     if point.resourceType ~= resourceType then
-        ZLog.Logger("GetResource resourceType 生成资源类型出错" .. resourceType)
+        ZLog.Logger("GetTerrainResource resourceType 生成资源类型出错" .. resourceType)
     end
     local player = GameServer.GetPlayerByUID(userId)
-    -- 采集
-    local spCost = CSV_resourcePickType.GetValue(resourceType, "SpCost")
-    local exp = CSV_resourcePickType.GetValue(resourceType, "Exp")
+    -- 地形树采集
 
-    Player.ExpAdd(player, exp)
-    Player.SpAdd(player, -spCost)
+    if toolId == 0 then
+        -- 踢树
+        local CantKick = CSV_resourceTerrainType.GetValue(resourceType, "Tags")
+        if CantKick == "" then
+            ZLog.Logger("这颗树不能踢")
+            return nil, nil
+        end
+        local spCost = CSV_itemFunctions.GetValue(toolId, "SpCost1")
+        local exp = CSV_resourceTerrainType.GetValue(resourceType, "KickExp")
+        Player.ExpAdd(player, exp)
+        for _, v in ipairs(spCost) do
+            Player.SpAdd(player, -v)
+        end
+        -- 获得物品
+        local KickDropId = CSV_resourceTerrainType.GetValue(resourceType, "KickDropId")
+        local KickDropChance = CSV_resourceTerrainType.GetValue(resourceType, "KickDropChance")
+        if ZRandom.PercentRate(KickDropChance) == false then
+            return nil,nil                  -- 没有掉落
+        end
+        local KickAllDropChance = CSV_resourceTerrainType.GetValue(resourceType, "KickAllDropChance")
+        if ZRandom.PercentRate(KickAllDropChance)  then
+              print("踢树暴击， 但是不知道怎么掉")                                               -- 踢树暴击
+        end
+        local itemList = SandRockGeneratorItem.GetItems(KickDropId)
 
-    -- 销毁采集点
-    self.resourcePoint[areaName][pointIndex] = nil
-    -- 获得物品
-    local generatorGroup = CSV_resourcePickType.GetValue(resourceType, "GeneratorGroup")
-    local itemList = SandRockGeneratorItem.GetItems(generatorGroup)
-    -- 保存到背包
+        -- 保存到背包
+
+        return itemList, nil
+    else
 
 
-    -- 保存完毕
-    return itemList
+        local spCost = CSV_itemFunctions.GetValue(toolId, "SpCost1")
+        local exp = CSV_resourceTerrainType.GetValue(resourceType, "ChopTrunkExp")
+        Player.ExpAdd(player, exp)
+        for _, v in ipairs(spCost) do
+            Player.SpAdd(player, -v)
+        end
 
+
+        -- 树的伤害
+        self.resourcePoint[areaName][pointIndex] = nil
+        -- 获得物品
+        local ChopTrunkDropId = CSV_resourceTerrainType.GetValue(resourceType, "ChopTrunkDropId")
+        local ChopStumpDropId = CSV_resourceTerrainType.GetValue(resourceType, "ChopStumpDropId")
+        local itemList = SandRockGeneratorItem.GetItems(ChopTrunkDropId)
+
+        -- 保存到背包
+
+
+
+        -- 把树的变化更新一下
+        local reliveList = {}
+
+        -- 保存完毕
+        return itemList, reliveList
+
+    end
 end
+

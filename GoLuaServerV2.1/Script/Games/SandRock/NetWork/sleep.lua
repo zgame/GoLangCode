@@ -5,8 +5,13 @@ function SandRockSleep.Sleep(serverId, userId, buf)
     if room == nil then
         return
     end
+    -- refresh
     SandRockRoom.ResourcePointUpdate(room)      -- 刷新资源列表
+    local reliveList = SandRockRoom.ResourceTerrainUpdate(room)      -- 刷新地形树和石头资源列表
     SandRockRoom.UpdateWeather(room)
+
+    -- send
     SandRockResourcePick.SendPickList(userId)       -- 发送资源刷新
+    SandRockResourceTerrain.SendTreeRelive(userId, reliveList)      -- 发送地形树的重生
 
 end

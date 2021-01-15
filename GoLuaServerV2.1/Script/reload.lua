@@ -23,6 +23,7 @@ f = LuaFiles.CSV
 table.insert(f, "Script/CSV/generateGroup")
 table.insert(f, "Script/CSV/generateItem")
 table.insert(f, "Script/CSV/item")
+table.insert(f, "Script/CSV/itemFunctions")
 table.insert(f, "Script/CSV/resourcePickArea")
 table.insert(f, "Script/CSV/resourcePickType")
 table.insert(f, "Script/CSV/resourceTerrainArea")
