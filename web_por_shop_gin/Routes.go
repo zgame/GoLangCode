@@ -43,6 +43,7 @@ func Routes(r *gin.Engine) {
 
 
 	r.POST("/portia_shop/zswpay", Action.ZswPay)
+	//r.GET("/portia_shop/zswpay", Action.ZswPay)
 
 
 }

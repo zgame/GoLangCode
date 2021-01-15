@@ -37,7 +37,6 @@ func GetUserList(c *gin.Context) {
 		return
 	}
 
-
 	c.JSON(200, gin.H{"Uid": user.Uid})
 }
 
@@ -70,7 +69,9 @@ func GetUserBuyList(c *gin.Context) {
 
 // 获取商城列表
 func GetUserMallList(c *gin.Context) {
+	//ResetMallTime()			// 处理一下过期时间
 	mallList := MySql.GetMallInfoData()
+
 	list,err := json.Marshal(mallList)
 	if err!= nil{
 		zLog.PrintfLogger("获取商城列表错误 %s \n",err.Error())
@@ -109,11 +110,17 @@ func GetControlMallList(c *gin.Context) {
 // 默认充值成功的接口
 func ZswPay(c * gin.Context)  {
 	OpenId := c.PostForm("OpenId") // 获取post的参数
-	ItemId ,_ := strconv.Atoi(c.PostForm("ItemId"))
+	itemId  := c.PostForm("ItemId")
+	if OpenId == "" {
+		OpenId = c.Query("OpenId") // 获取get的参数
+		itemId = c.Query("ItemId") // 获取get的参数
+	}
 	_, _, err := CheckItemId(c)
 	if err {
 		return
 	}
+	ItemId ,_ := strconv.Atoi(itemId)
+
 	// 然后保存数据库并发放道具
 	SaveDataBase(&MySql.Recharge{Openid: OpenId, Payno: "假的订单，测试用"+ strconv.FormatInt(time.Now().UnixNano(), 10), RechargeTime: time.Now().String(), Rmb: "0", ItemId: ItemId, Channel: "测试"})
 

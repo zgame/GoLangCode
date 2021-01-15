@@ -61,7 +61,8 @@ func InsertUserItemData(insertData *Useritem) bool{
 }
 
 // 更新数据   &Userinfo{Uid:1111}
-func UpdateUserItemData(updateData *Useritem, condition *Useritem)bool {
+func UpdateUserItemData(updateData *Useritem, Openid string)bool {
+	condition := &Useritem{Openid: Openid}
 	_, err := DataBaseEngine.Update(updateData, condition)
 	if err != nil {
 		zLog.PrintfLogger("玩家道具 数据库更新出错！  %s", err)

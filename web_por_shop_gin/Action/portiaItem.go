@@ -25,47 +25,46 @@ func SaveDataBase(insertData *MySql.Recharge) string {
 
 }
 
-
 //道具发放
 func GiveItemToUser(Openid string, ItemId int) string {
 	// 道具发放
+	var arrItem []int = make([]int, 0)
+	var ItemInfo *MySql.Shopmall
+	ItemInfo = MySql.GetMallItemInfo(ItemId)
+	if ItemInfo.Gift == "" || ItemInfo.Gift == "-1" {
+		arrItem = append(arrItem, ItemId) // 发放单一道具
+	} else {
+		//	发放礼包道具
+		list := GiftGetList(ItemInfo.Gift)
+		for _, v := range list {
+			item, _ := strconv.Atoi(v)
+			arrItem = append(arrItem, item) // 发放多个道具的礼包
+		}
+	}
+
 	ShopList := MySql.GetUserShopList(Openid)
 	if ShopList == "" {
 		// 说明是新增一条玩家数据
-		str := fmt.Sprintf("[%d]", ItemId)
-		uItem := &MySql.Useritem{Openid: Openid, ShopList: str}
+		// 转换成字符串
+		str, _ := json.Marshal(arrItem)
+		//str := fmt.Sprintf("[%d]", ItemId)
+		uItem := &MySql.Useritem{Openid: Openid, ShopList: string(str)}
 		if MySql.InsertUserItemData(uItem) {
 			zLog.PrintLogger("道具发放成功")
-			return str
+			return string(str)
 		} else {
 			return ""
 		}
 	} else {
 		// 取出老的数据
-		var arrItem []int = make([]int, 0)
 		var arrDB []int
 		err := json.Unmarshal([]byte(ShopList), &arrDB)
 		if err != nil {
 			zLog.PrintfLogger("GiveItemToUser   Id: %s 发放道具解析已有数据出错 %s \n", Openid, err)
 			return ""
 		}
-
-		// 加上新的数据
+		// 加上老的数据
 		arrItem = append(arrItem, arrDB...)
-
-		// 发放道具
-		var ItemInfo *MySql.Shopmall
-		ItemInfo = MySql.GetMallItemInfo(ItemId)
-		if ItemInfo.Gift == "" || ItemInfo.Gift == "-1" {
-			arrItem = append(arrItem, ItemId)		// 发放单一道具
-		}else {
-			//	发放礼包道具
-			list:= GiftGetList(ItemInfo.Gift)
-			for _,v := range list{
-				item,_ := strconv.Atoi(v)
-				arrItem = append(arrItem, item)		// 发放多个道具的礼包
-			}
-		}
 
 		//数据排重
 		var strMap map[int]string = make(map[int]string, 0)
@@ -81,20 +80,18 @@ func GiveItemToUser(Openid string, ItemId int) string {
 		str, _ := json.Marshal(shopList)
 		// 保存
 		userItem := &MySql.Useritem{Openid: Openid, ShopList: string(str)}
-		user := &MySql.Useritem{Openid: Openid}
-		if MySql.UpdateUserItemData(userItem, user) {
+		if MySql.UpdateUserItemData(userItem, Openid) {
 			zLog.PrintLogger("道具发放成功")
 			return string(str)
 		} else {
 			return ""
 		}
-
 	}
 }
 
 // 获取礼包的道具列表
 func GiftGetList(gift string) []string {
-	list := strings.Split(gift,"#")
+	list := strings.Split(gift, "#")
 	return list
 }
 
@@ -105,19 +102,20 @@ func ItemCanBuy(Openid string, ItemId int) bool {
 	ItemInfo = MySql.GetMallItemInfo(ItemId)
 	if ItemInfo.Gift == "" || ItemInfo.Gift == "-1" {
 		arrBuyItem = append(arrBuyItem, ItemId) // 发放单一道具
-	}else {
+		fmt.Println("单一道具")
+	} else {
 		// 礼包道具
-		list:= GiftGetList(ItemInfo.Gift)
-		for _,v := range list{
-			item,_ := strconv.Atoi(v)
+		list := GiftGetList(ItemInfo.Gift)
+		for _, v := range list {
+			item, _ := strconv.Atoi(v)
 			arrBuyItem = append(arrBuyItem, item)
 		}
+		fmt.Println("礼包道具")
 	}
 
-
 	ShopList := MySql.GetUserShopList(Openid)
-	if ShopList == ""{
-		return true			// 没有玩家数据
+	if ShopList == "" {
+		return true // 没有玩家数据
 	}
 	var arrDB []int
 	err := json.Unmarshal([]byte(ShopList), &arrDB)
@@ -130,13 +128,13 @@ func ItemCanBuy(Openid string, ItemId int) bool {
 	for _, item := range arrBuyItem {
 		for _, v := range arrDB {
 			if v == item {
-				have = true		//已经有了这个道具，那么break循环
+				have = true //已经有了这个道具，那么break循环
 				// 已经有了就break
 				break
 			}
 		}
-		if have == false{
-			return true		// 只要一个道具还没有，就可以购买了
+		if have == false {
+			return true // 只要一个道具还没有，就可以购买了
 		}
 	}
 	return false

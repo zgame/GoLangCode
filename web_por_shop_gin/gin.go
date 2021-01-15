@@ -6,10 +6,12 @@ import (
 	"github.com/go-ini/ini"
 	"log"
 	"os"
+	"web_gin/Action"
 	"web_gin/MiddleWare"
 	"web_gin/MiddleWare/aliPay"
 	"web_gin/MiddleWare/wxPay"
 	"web_gin/MiddleWare/zLog"
+	"web_gin/MiddleWare/zTimer"
 	"web_gin/MySql"
 )
 
@@ -35,6 +37,10 @@ func main() {
 
 	wxPay.Init()
 	aliPay.Init()
+
+
+	//-----------------创建一个定时器----------------
+	zTimer.TimerMillisecondCheckUpdate( Action.ResetMallTime , 1000 * 60)  // 1个小时触发一次   // 处理一下过期时间
 
 
 	//fmt.Println("------------------首先读取命令行参数---------------------------")

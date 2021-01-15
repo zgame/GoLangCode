@@ -59,7 +59,7 @@ func UpdateAllItems(openId string) {
 	updata := new(Useritem)
 	updata.Openid = openId
 	updata.ShopList = string(data)
-	UpdateUserItemData(updata, &Useritem{Openid: openId})
+	UpdateUserItemData(updata, openId)
 }
 
 

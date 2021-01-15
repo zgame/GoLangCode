@@ -56,16 +56,15 @@ func GetMallItemInfo(itemId int) *Shopmall {
 }
 
 //
-//// 更新数据   &Userinfo{Uid:1111}
-//func UpdateUserInfoData(updateData *Userinfo, condition *Userinfo) {
-//
-//	_, err := DataBaseEngine.Update(updateData, condition)
-//	if err != nil {
-//		zLog.PrintfLogger("数据库更新出错！  %s", err)
-//		return
-//	}
-//
-//}
+// 更新数据
+func UpdateMallInfoData(updateData *Shopmall, id int) {
+	condition := &Shopmall{Id: id}
+	_, err := DataBaseEngine.Update(updateData, condition)
+	if err != nil {
+		zLog.PrintfLogger("数据库更新出错！  %s", err)
+		return
+	}
+}
 
 // 插入单行数据
 func InsertMallInfoData(insertData *Shopmall) {
