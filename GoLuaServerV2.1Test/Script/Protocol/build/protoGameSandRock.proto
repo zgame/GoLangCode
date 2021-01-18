@@ -107,6 +107,7 @@ message ResourceTerrainUpdate{
 message ResourceTerrainGet{
 	_resourceTerrain info = 1;    // 资源点采集
 	uint32 toolId = 2;            // 使用工具的id , 如果工具id是0， 说明是徒手的
+	uint32 damage = 3;            // 伤害
 }
 
 //----------------------------------------道具----------------------------------------------
