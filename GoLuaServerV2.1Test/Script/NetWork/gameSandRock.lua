@@ -7,6 +7,14 @@ function GameSandRock.RunGame(serverId)
     --print("Run game")
     --Location.SendLocation(serverId)
 
-    Sleep.Sleep(serverId)
+
+    --Sleep.Sleep(serverId)     -- 睡觉
+
+
+    -- 采集地形资源
+    ResourceTerrain.Action(serverId,'Terrain_2_2',
+            0,4,
+            0 , 0 )
+
 
 end

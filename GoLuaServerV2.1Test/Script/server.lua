@@ -52,7 +52,8 @@ require("loginServer")
 require("location")
 require("gameSandRock")
 require("network")
-require("resource")
+require("resourcePick")
+require("resourceTerrain")
 require("sleep")
 
 -------------------------------------GameManager----------------------------------------

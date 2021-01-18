@@ -42,6 +42,7 @@ table.insert(f, "Script/Protocol/build/proto")
 LuaFiles.Const = {}
 f = LuaFiles.Const
 table.insert(f, "Script/Const/const")
+table.insert(f, "Script/Const/constSandRock")
 table.insert(f, "Script/Const/constCmd")
 table.insert(f, "Script/Const/constCmdGame")
 table.insert(f, "Script/Const/constCmdServer")
@@ -101,6 +102,7 @@ table.insert(f, "Script/Games/SandRock/NetWork/loginServer")
 table.insert(f, "Script/Games/SandRock/NetWork/location")
 table.insert(f, "Script/Games/SandRock/NetWork/sleep")
 table.insert(f, "Script/Games/SandRock/NetWork/resourcePick")
+table.insert(f, "Script/Games/SandRock/NetWork/resourceTerrain")
 table.insert(f, "Script/Games/SandRock/NetWork/network")
 
 

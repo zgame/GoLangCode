@@ -31,10 +31,12 @@ function SandRockRoom:ResourcePointUpdate()
         --print(areaName)
         --printTable(pointList)
         for index, point in pairs(pointList) do
-            if point.live <= 1 then
-                pointList[index] = nil              -- 删掉生命周期已经到了的点
-            else
-                point.live = point.live - 1
+            if point.live ~= nil then
+                if point.live <= 1 then
+                    pointList[index] = nil              -- 删掉生命周期已经到了的点
+                else
+                    point.live = point.live - 1
+                end
             end
         end
     end
@@ -54,7 +56,8 @@ function SandRockRoom:ResourcePointUpdate()
             for i = 1, num - number_now do
                 --print('生成一个point, 下面是point的结构')
                 local resourceTypeRandom = SandRockResourcePick.GetType(areaName)           -- 获取一个生成类型，根据权重
-                if resourceTypeRandom == "0" then
+                --print("调试看看生成类型".. resourceTypeRandom)
+                if resourceTypeRandom == 0 then
                     break
                 end
                 local element = {}

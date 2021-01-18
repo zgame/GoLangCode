@@ -106,7 +106,7 @@ function Game:PlayerLoginGame(oldPlayer)
         local chairId = room:GetEmptySeatInTable()
         if chairId > 0 then
             --print("有空座位")
-            room:InitRoom()    -- 看看是不是空房间，如果是，需要初始化
+            --room:InitRoom()    -- 看看是不是空房间，如果是，需要初始化
             return room:PlayerSeat(chairId,player)
         end
     end

@@ -20,7 +20,7 @@ function SandRockRoom:ResourceTerrainInit()
             self.resourceTerrain[areaName][TreeIndexList[index]] = element
         end
     end
-    printTable(self.resourceTerrain)
+    --printTable(self.resourceTerrain)
 end
 
 
@@ -82,12 +82,10 @@ function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceT
             ZLog.Logger("这颗树不能踢")
             return nil, nil
         end
-        local spCost = CSV_itemFunctions.GetValue(toolId, "SpCost1")
+        local spCost = ConstSandRock.TickCostSp   -- 踢树消耗体力固定
         local exp = CSV_resourceTerrainType.GetValue(resourceType, "KickExp")
         Player.ExpAdd(player, exp)
-        for _, v in ipairs(spCost) do
-            Player.SpAdd(player, -v)
-        end
+        Player.SpAdd(player, -spCost)
         -- 获得物品
         local KickDropId = CSV_resourceTerrainType.GetValue(resourceType, "KickDropId")
         local KickDropChance = CSV_resourceTerrainType.GetValue(resourceType, "KickDropChance")

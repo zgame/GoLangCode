@@ -73,8 +73,10 @@ function Network.Msg(serverId, userId, msgId, subMsgId, buf)
         switch[CMD_SAND_ROCK.SUB_OTHER_LOGON] = LoginServer.OtherLogin
         switch[CMD_SAND_ROCK.SUB_OTHER_LOGOUT] = LoginServer.OtherLogout
         switch[CMD_SAND_ROCK.SUB_OTHER_LOCATION] = Location.OtherLocation
-        switch[CMD_SAND_ROCK.SUB_RESOURCE_POINT] = Sleep.UpdateResource
-        switch[CMD_SAND_ROCK.SUB_RESOURCE_GET] = Resource.Get
+        switch[CMD_SAND_ROCK.SUB_RESOURCE_POINT] = Sleep.UpdateResourcePick
+        switch[CMD_SAND_ROCK.SUB_RESOURCE_GET] = ResourcePick.Get
+        switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN] = Sleep.UpdateResourceTerrain
+        switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET] = ResourceTerrain.GetItem
 
         switch[subMsgId](serverId,userId, buf)
 
