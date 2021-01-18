@@ -51,12 +51,12 @@ namespace GameSandRock {
             "aW50GAIgASgNEhQKDHJlc291cmNlVHlwZRgDIAEoDRITCgt0cnVua0hlYWx0",
             "aBgEIAEoDRITCgtzdHVtcEhlYWx0aBgFIAEoDSJHChVSZXNvdXJjZVRlcnJh",
             "aW5VcGRhdGUSLgoGcG9pbnRzGAEgAygLMh4uR2FtZVNhbmRSb2NrLl9yZXNv",
-            "dXJjZVRlcnJhaW4iUgoSUmVzb3VyY2VUZXJyYWluR2V0EiwKBGluZm8YASAB",
+            "dXJjZVRlcnJhaW4iYgoSUmVzb3VyY2VUZXJyYWluR2V0EiwKBGluZm8YASAB",
             "KAsyHi5HYW1lU2FuZFJvY2suX3Jlc291cmNlVGVycmFpbhIOCgZ0b29sSWQY",
-            "AiABKA0iKAoFX2l0ZW0SDgoGaXRlbUlkGAEgASgNEg8KB2l0ZW1OdW0YAiAB",
-            "KA0iVAoHSXRlbUdldBIhCgRpdGVtGAEgAygLMhMuR2FtZVNhbmRSb2NrLl9p",
-            "dGVtEg0KBWxldmVsGAIgASgNEgsKA2V4cBgDIAEoDRIKCgJzcBgEIAEoDWIG",
-            "cHJvdG8z"));
+            "AiABKA0SDgoGZGFtYWdlGAMgASgNIigKBV9pdGVtEg4KBml0ZW1JZBgBIAEo",
+            "DRIPCgdpdGVtTnVtGAIgASgNIlQKB0l0ZW1HZXQSIQoEaXRlbRgBIAMoCzIT",
+            "LkdhbWVTYW5kUm9jay5faXRlbRINCgVsZXZlbBgCIAEoDRILCgNleHAYAyAB",
+            "KA0SCgoCc3AYBCABKA1iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -76,7 +76,7 @@ namespace GameSandRock {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceGet), global::GameSandRock.ResourceGet.Parser, new[]{ "Info" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._resourceTerrain), global::GameSandRock._resourceTerrain.Parser, new[]{ "AreaName", "AreaPoint", "ResourceType", "TrunkHealth", "StumpHealth" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceTerrainUpdate), global::GameSandRock.ResourceTerrainUpdate.Parser, new[]{ "Points" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceTerrainGet), global::GameSandRock.ResourceTerrainGet.Parser, new[]{ "Info", "ToolId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceTerrainGet), global::GameSandRock.ResourceTerrainGet.Parser, new[]{ "Info", "ToolId", "Damage" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._item), global::GameSandRock._item.Parser, new[]{ "ItemId", "ItemNum" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ItemGet), global::GameSandRock.ItemGet.Parser, new[]{ "Item", "Level", "Exp", "Sp" }, null, null, null)
           }));
@@ -3172,6 +3172,7 @@ namespace GameSandRock {
     public ResourceTerrainGet(ResourceTerrainGet other) : this() {
       Info = other.info_ != null ? other.Info.Clone() : null;
       toolId_ = other.toolId_;
+      damage_ = other.damage_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3208,6 +3209,20 @@ namespace GameSandRock {
       }
     }
 
+    /// <summary>Field number for the "damage" field.</summary>
+    public const int DamageFieldNumber = 3;
+    private uint damage_;
+    /// <summary>
+    /// 伤害
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Damage {
+      get { return damage_; }
+      set {
+        damage_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as ResourceTerrainGet);
@@ -3223,6 +3238,7 @@ namespace GameSandRock {
       }
       if (!object.Equals(Info, other.Info)) return false;
       if (ToolId != other.ToolId) return false;
+      if (Damage != other.Damage) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3231,6 +3247,7 @@ namespace GameSandRock {
       int hash = 1;
       if (info_ != null) hash ^= Info.GetHashCode();
       if (ToolId != 0) hash ^= ToolId.GetHashCode();
+      if (Damage != 0) hash ^= Damage.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3252,6 +3269,10 @@ namespace GameSandRock {
         output.WriteRawTag(16);
         output.WriteUInt32(ToolId);
       }
+      if (Damage != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(Damage);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3265,6 +3286,9 @@ namespace GameSandRock {
       }
       if (ToolId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ToolId);
+      }
+      if (Damage != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Damage);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3286,6 +3310,9 @@ namespace GameSandRock {
       if (other.ToolId != 0) {
         ToolId = other.ToolId;
       }
+      if (other.Damage != 0) {
+        Damage = other.Damage;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -3306,6 +3333,10 @@ namespace GameSandRock {
           }
           case 16: {
             ToolId = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            Damage = input.ReadUInt32();
             break;
           }
         }
