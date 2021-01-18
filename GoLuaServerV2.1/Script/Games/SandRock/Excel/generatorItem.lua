@@ -2,7 +2,7 @@
 SandRockGeneratorItem = {}
 
 
--- 处理一下几率， 处理完之后，计算的时候方便
+-- 处理一下几率变成总数是100， 每个是几率阶梯， 处理完之后，计算的时候方便
 local function _setRateList(list)
     local total = 0
     for i,v in ipairs(list) do      -- 计算总和
@@ -29,7 +29,7 @@ end
 
 
 -- 初始化道具生成组的数据
-local function _setGroup(groupId)
+local function _setGroupInit(groupId)
     SandRockGeneratorItem[groupId] = {}
     local generator = SandRockGeneratorItem[groupId]
 
@@ -61,9 +61,9 @@ end
 
 function SandRockGeneratorItem.Init()
     for  groupId,_ in pairs(CSV_generateGroup.Get()) do
-        _setGroup(groupId)
+        _setGroupInit(groupId)
     end
-    --_setGroup("20900008")
+    --_setGroupInit("20900008")
 end
 
 -- 根据生成规则获取道具的数量
@@ -91,25 +91,35 @@ local function _getGroupItemNum(groupId)
     end
 end
 
+local function _setGroupNum(generator, groupList,index,subIndex)
+    if groupList[generator[index][subIndex].id] == nil then
+        groupList[generator[index][subIndex].id] = 1                 -- 如果没有，那么发一个
+    else
+        groupList[generator[index][subIndex].id] = groupList[generator[index][subIndex].id] + 1       -- 如果已经有了，那么数量增加
+    end
+end
+
 
 --  道具掉落 ，正常返回 hash  key是itemId， value是数量
-function SandRockGeneratorItem.GetItems(groupId)
+function SandRockGeneratorItem.GetItems(groupId, all)
     local groupList = {}
 
     local GenSceneType = CSV_generateGroup.GetValue(groupId, "GenSceneType")
     if GenSceneType == "Item" then
         -- 走道具掉落规则
-        local generator = SandRockGeneratorItem[tostring(groupId)]
+        local generator = SandRockGeneratorItem[tostring(groupId)]                  -- 一组生成器，用|分割的是每样一个
         for index, allType in pairs(generator) do
-            local subIndex = 1                    -- 如果只有一个元素，那么就是这个
+            local subIndex = 1                    -- 用；分割的取其中一个
             if #generator[index] > 1 then
-                subIndex = ZRandom.GetList(generator[index].rateList)       -- 多个元素就随机一个
+                subIndex = ZRandom.GetList(generator[index].rateList)       -- 多个元素就随机一个 ，这里是用；分割的取其中一个，除非都要
             end
 
-            if groupList[generator[index][subIndex].id] == nil then
-                groupList[generator[index][subIndex].id] = 1                 -- 如果没有，那么发一个
-            else
-                groupList[generator[index][subIndex].id] = groupList[generator[index][subIndex].id] + 1       -- 如果已经有了，那么数量增加
+            _setGroupNum(generator, groupList,index,subIndex)
+            -- 这里是全部掉落，不再使用生成组的；只取一个的规则，而是全部都要，用于踢树暴击
+            if all~=nil and all == true then
+                for i,v in pairs(generator[index]) do
+                    _setGroupNum(generator, groupList,index,i)
+                end
             end
         end
     end

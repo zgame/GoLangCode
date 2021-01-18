@@ -25,12 +25,12 @@ function User.New(userId, openId, machineId)
         --hairColor2 = 0,
         customPlayer = "",  -- 玩家自定义捏脸
 
-        level = 0, --   等级
+        level = 1, --   等级
         exp = 0, --   经验
-        HP = 0 ,
-        HPMax = 0,
-        SP = 0,
-        SPMax = 0,
+        HP = 100 ,
+        HPMax = 100,
+        SP = 100,
+        SPMax = 100,
 
         payTotal = 0, --   充值总金额
         offLineTime = 0, --   离线时间

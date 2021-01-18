@@ -105,6 +105,7 @@ function SandRockRoom:GetPickResource(userId, areaName, pointIndex, resourceType
     local itemList = SandRockGeneratorItem.GetItems(generatorGroup)
     -- 保存到背包
 
+    Player.ItemAdd(player,itemList)
 
     -- 保存完毕
     return itemList

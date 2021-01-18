@@ -19,7 +19,7 @@ end
 
 -- 采集资源
 function SandRockResourceTerrainNet.GetTerrainResource(serverId, userId, buf)
-    --print("客户端开始开采资源")
+    print("客户端开始开采资源")
     local msg = ProtoGameSandRock.ResourceTerrainGet()
     msg:ParseFromString(buf)
     print(msg)
@@ -33,12 +33,7 @@ function SandRockResourceTerrainNet.GetTerrainResource(serverId, userId, buf)
         return
     end
 
-    local areaName = msg.info.areaName
-    local areaPoint = msg.info.areaPoint
-    local resourceType = msg.info.resourceType
-    local toolId = msg.toolId
-
-    local itemList,reliveList = SandRockRoom.GetTerrainResource(room, userId, areaName, areaPoint, resourceType, toolId)
+    local itemList,reliveList = SandRockRoom.GetTerrainResource(room, userId, msg.info.areaName, msg.info.areaPoint, msg.info.resourceType, msg.toolId, msg.damage)
     if itemList ~= nil then
         -- 获得了道具
         local sendCmd = ProtoGameSandRock.ItemGet()
