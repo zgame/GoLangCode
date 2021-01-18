@@ -1,6 +1,6 @@
 
 
-SandRockLogin = {}
+SandRockLoginNet = {}
 
 
 local function newUser(openId,machineId)
@@ -46,7 +46,7 @@ end
 
 
 --游客登录申请,获取玩家的数据， 判断是否已经登录，
-function SandRockLogin.Login(serverId, uId, buf)
+function SandRockLoginNet.Login(serverId, uId, buf)
     local msg = ProtoGameSandRock.GameLogin()
     msg:ParseFromString(buf)
 
@@ -74,14 +74,14 @@ function SandRockLogin.Login(serverId, uId, buf)
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_LOGON, sendCmd, nil)
 
     -- 给该玩家下发其他玩家信息
-    SandRockLogin.SendPlayersInfo(userId)
+    SandRockLoginNet.SendPlayersInfo(userId)
     -- 同步场景信息给登录的玩家
-    SandRockLogin.SendEnterSceneInfo(userId)
+    SandRockLoginNet.SendEnterSceneInfo(userId)
 end
 
 
 -- 给该玩家下发其他玩家信息
-function SandRockLogin.SendPlayersInfo(userId)
+function SandRockLoginNet.SendPlayersInfo(userId)
     local sendCmd = ProtoGameSandRock.UserList()
     local room = GameServer.GetRoomByUserId(userId)
     for i, player in pairs(room.userSeatArray) do
@@ -98,7 +98,7 @@ end
 
 
 -- 同步场景信息给登录的玩家
-function SandRockLogin.SendEnterSceneInfo(userId)
+function SandRockLoginNet.SendEnterSceneInfo(userId)
     local sendCmd = ProtoGameSandRock.GameInfo()
     sendCmd.npcList = 1
     NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_ROOM_INFO, sendCmd, nil, nil)
@@ -108,7 +108,7 @@ end
 
 
 --登出申请
-function SandRockLogin.Logout(serverId, uId, buf)
+function SandRockLoginNet.Logout(serverId, uId, buf)
     local msg = ProtoGameSandRock.GameLogout()
     msg:ParseFromString(buf)
 

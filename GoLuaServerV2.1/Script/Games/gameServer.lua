@@ -84,7 +84,11 @@ end
 
 -- 根据user uid 返回user的句柄
 function GameServer.GetPlayerByUID(uId)
-    return GlobalVar.AllPlayerList[tostring(uId)]
+    local player = GlobalVar.AllPlayerList[tostring(uId)]
+    if player == nil then
+        ZLog.Logger("GetPlayerByUID 找不到".. uId)
+    end
+    return player
 end
 
 function GameServer.SetAllPlayerList(userId, value)

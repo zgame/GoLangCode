@@ -116,4 +116,8 @@ message _item{
 }
 message ItemGet{
 	repeated _item item = 1;
+	uint32 level = 2;           // 等级是否变动
+	uint32 exp = 3;           // 经验是否增加
+	uint32 sp = 4;            // sp是否变化
+
 }

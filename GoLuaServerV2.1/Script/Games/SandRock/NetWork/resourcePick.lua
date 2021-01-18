@@ -1,8 +1,8 @@
-SandRockResourcePick = {}
+SandRockResourcePickNet = {}
 
 
 -- 同步资源列表
-function SandRockResourcePick.SendPickList(userId)
+function SandRockResourcePickNet.SendPickList(userId)
     local sendCmd = ProtoGameSandRock.ResourceUpdate()
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then
@@ -26,7 +26,7 @@ function SandRockResourcePick.SendPickList(userId)
 end
 
 -- 采集资源
-function SandRockResourcePick.GetPickResource(serverId, userId, buf)
+function SandRockResourcePickNet.GetPickResource(serverId, userId, buf)
     --print("客户端开始采集资源")
     local msg = ProtoGameSandRock.ResourceGet()
     msg:ParseFromString(buf)
@@ -34,6 +34,10 @@ function SandRockResourcePick.GetPickResource(serverId, userId, buf)
 
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then
+        return
+    end
+    local player = GameServer.GetPlayerByUID(userId)
+    if player == nil then
         return
     end
 
@@ -52,6 +56,9 @@ function SandRockResourcePick.GetPickResource(serverId, userId, buf)
         item.itemId = itemId
         item.itemNum = num
     end
+    sendCmd.exp = Player.ExpGet(player)
+    sendCmd.level = Player.LevelGet(player)
+    sendCmd.sp = Player.SpGet(player)
     --print(sendCmd)
     --print("发送客户端采集结果")
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_GET, sendCmd, nil)

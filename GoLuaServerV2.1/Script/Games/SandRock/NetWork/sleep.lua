@@ -1,6 +1,6 @@
-SandRockSleep ={}
+SandRockSleepNet ={}
 
-function SandRockSleep.Sleep(serverId, userId, buf)
+function SandRockSleepNet.Sleep(serverId, userId, buf)
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then
         return
@@ -11,7 +11,7 @@ function SandRockSleep.Sleep(serverId, userId, buf)
     SandRockRoom.UpdateWeather(room)
 
     -- send
-    SandRockResourcePick.SendPickList(userId)       -- 发送资源刷新
-    SandRockResourceTerrain.SendTreeRelive(userId, reliveList)      -- 发送地形树的重生
+    SandRockResourcePickNet.SendPickList(userId)       -- 发送资源刷新
+    SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList)      -- 发送地形树的重生
 
 end

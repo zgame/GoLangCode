@@ -46,10 +46,17 @@ namespace GameSandRock {
             "YXJlYVBvaW50GAIgASgNEhQKDHJlc291cmNlVHlwZRgDIAEoDSJPCg5SZXNv",
             "dXJjZVVwZGF0ZRIsCgZwb2ludHMYASADKAsyHC5HYW1lU2FuZFJvY2suX3Jl",
             "c291cmNlUG9pbnQSDwoHd2VhdGhlchgCIAEoDSI5CgtSZXNvdXJjZUdldBIq",
-            "CgRpbmZvGAEgASgLMhwuR2FtZVNhbmRSb2NrLl9yZXNvdXJjZVBvaW50IigK",
-            "BV9pdGVtEg4KBml0ZW1JZBgBIAEoDRIPCgdpdGVtTnVtGAIgASgNIiwKB0l0",
-            "ZW1HZXQSIQoEaXRlbRgBIAMoCzITLkdhbWVTYW5kUm9jay5faXRlbWIGcHJv",
-            "dG8z"));
+            "CgRpbmZvGAEgASgLMhwuR2FtZVNhbmRSb2NrLl9yZXNvdXJjZVBvaW50IncK",
+            "EF9yZXNvdXJjZVRlcnJhaW4SEAoIYXJlYU5hbWUYASABKAkSEQoJYXJlYVBv",
+            "aW50GAIgASgNEhQKDHJlc291cmNlVHlwZRgDIAEoDRITCgt0cnVua0hlYWx0",
+            "aBgEIAEoDRITCgtzdHVtcEhlYWx0aBgFIAEoDSJHChVSZXNvdXJjZVRlcnJh",
+            "aW5VcGRhdGUSLgoGcG9pbnRzGAEgAygLMh4uR2FtZVNhbmRSb2NrLl9yZXNv",
+            "dXJjZVRlcnJhaW4iUgoSUmVzb3VyY2VUZXJyYWluR2V0EiwKBGluZm8YASAB",
+            "KAsyHi5HYW1lU2FuZFJvY2suX3Jlc291cmNlVGVycmFpbhIOCgZ0b29sSWQY",
+            "AiABKA0iKAoFX2l0ZW0SDgoGaXRlbUlkGAEgASgNEg8KB2l0ZW1OdW0YAiAB",
+            "KA0iVAoHSXRlbUdldBIhCgRpdGVtGAEgAygLMhMuR2FtZVNhbmRSb2NrLl9p",
+            "dGVtEg0KBWxldmVsGAIgASgNEgsKA2V4cBgDIAEoDRIKCgJzcBgEIAEoDWIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -67,8 +74,11 @@ namespace GameSandRock {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._resourcePoint), global::GameSandRock._resourcePoint.Parser, new[]{ "AreaName", "AreaPoint", "ResourceType" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceUpdate), global::GameSandRock.ResourceUpdate.Parser, new[]{ "Points", "Weather" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceGet), global::GameSandRock.ResourceGet.Parser, new[]{ "Info" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._resourceTerrain), global::GameSandRock._resourceTerrain.Parser, new[]{ "AreaName", "AreaPoint", "ResourceType", "TrunkHealth", "StumpHealth" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceTerrainUpdate), global::GameSandRock.ResourceTerrainUpdate.Parser, new[]{ "Points" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceTerrainGet), global::GameSandRock.ResourceTerrainGet.Parser, new[]{ "Info", "ToolId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._item), global::GameSandRock._item.Parser, new[]{ "ItemId", "ItemNum" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ItemGet), global::GameSandRock.ItemGet.Parser, new[]{ "Item" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ItemGet), global::GameSandRock.ItemGet.Parser, new[]{ "Item", "Level", "Exp", "Sp" }, null, null, null)
           }));
     }
     #endregion
@@ -2753,6 +2763,558 @@ namespace GameSandRock {
   }
 
   /// <summary>
+  ///---------------------------------------树木和石头资源刷新和采集----------------------------------
+  /// </summary>
+  public sealed partial class _resourceTerrain : pb::IMessage<_resourceTerrain> {
+    private static readonly pb::MessageParser<_resourceTerrain> _parser = new pb::MessageParser<_resourceTerrain>(() => new _resourceTerrain());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<_resourceTerrain> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[14]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _resourceTerrain() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _resourceTerrain(_resourceTerrain other) : this() {
+      areaName_ = other.areaName_;
+      areaPoint_ = other.areaPoint_;
+      resourceType_ = other.resourceType_;
+      trunkHealth_ = other.trunkHealth_;
+      stumpHealth_ = other.stumpHealth_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _resourceTerrain Clone() {
+      return new _resourceTerrain(this);
+    }
+
+    /// <summary>Field number for the "areaName" field.</summary>
+    public const int AreaNameFieldNumber = 1;
+    private string areaName_ = "";
+    /// <summary>
+    /// 区域的名字
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string AreaName {
+      get { return areaName_; }
+      set {
+        areaName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "areaPoint" field.</summary>
+    public const int AreaPointFieldNumber = 2;
+    private uint areaPoint_;
+    /// <summary>
+    /// 区域中第几个point
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint AreaPoint {
+      get { return areaPoint_; }
+      set {
+        areaPoint_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "resourceType" field.</summary>
+    public const int ResourceTypeFieldNumber = 3;
+    private uint resourceType_;
+    /// <summary>
+    /// 生成了什么东西  TrunkHealth,StumpHealth
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint ResourceType {
+      get { return resourceType_; }
+      set {
+        resourceType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "trunkHealth" field.</summary>
+    public const int TrunkHealthFieldNumber = 4;
+    private uint trunkHealth_;
+    /// <summary>
+    /// TrunkHealth
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint TrunkHealth {
+      get { return trunkHealth_; }
+      set {
+        trunkHealth_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "stumpHealth" field.</summary>
+    public const int StumpHealthFieldNumber = 5;
+    private uint stumpHealth_;
+    /// <summary>
+    /// StumpHealth
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint StumpHealth {
+      get { return stumpHealth_; }
+      set {
+        stumpHealth_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as _resourceTerrain);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(_resourceTerrain other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (AreaName != other.AreaName) return false;
+      if (AreaPoint != other.AreaPoint) return false;
+      if (ResourceType != other.ResourceType) return false;
+      if (TrunkHealth != other.TrunkHealth) return false;
+      if (StumpHealth != other.StumpHealth) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (AreaName.Length != 0) hash ^= AreaName.GetHashCode();
+      if (AreaPoint != 0) hash ^= AreaPoint.GetHashCode();
+      if (ResourceType != 0) hash ^= ResourceType.GetHashCode();
+      if (TrunkHealth != 0) hash ^= TrunkHealth.GetHashCode();
+      if (StumpHealth != 0) hash ^= StumpHealth.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (AreaName.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(AreaName);
+      }
+      if (AreaPoint != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(AreaPoint);
+      }
+      if (ResourceType != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(ResourceType);
+      }
+      if (TrunkHealth != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(TrunkHealth);
+      }
+      if (StumpHealth != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(StumpHealth);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (AreaName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AreaName);
+      }
+      if (AreaPoint != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(AreaPoint);
+      }
+      if (ResourceType != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ResourceType);
+      }
+      if (TrunkHealth != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(TrunkHealth);
+      }
+      if (StumpHealth != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(StumpHealth);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(_resourceTerrain other) {
+      if (other == null) {
+        return;
+      }
+      if (other.AreaName.Length != 0) {
+        AreaName = other.AreaName;
+      }
+      if (other.AreaPoint != 0) {
+        AreaPoint = other.AreaPoint;
+      }
+      if (other.ResourceType != 0) {
+        ResourceType = other.ResourceType;
+      }
+      if (other.TrunkHealth != 0) {
+        TrunkHealth = other.TrunkHealth;
+      }
+      if (other.StumpHealth != 0) {
+        StumpHealth = other.StumpHealth;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            AreaName = input.ReadString();
+            break;
+          }
+          case 16: {
+            AreaPoint = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            ResourceType = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            TrunkHealth = input.ReadUInt32();
+            break;
+          }
+          case 40: {
+            StumpHealth = input.ReadUInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class ResourceTerrainUpdate : pb::IMessage<ResourceTerrainUpdate> {
+    private static readonly pb::MessageParser<ResourceTerrainUpdate> _parser = new pb::MessageParser<ResourceTerrainUpdate>(() => new ResourceTerrainUpdate());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ResourceTerrainUpdate> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[15]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ResourceTerrainUpdate() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ResourceTerrainUpdate(ResourceTerrainUpdate other) : this() {
+      points_ = other.points_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ResourceTerrainUpdate Clone() {
+      return new ResourceTerrainUpdate(this);
+    }
+
+    /// <summary>Field number for the "points" field.</summary>
+    public const int PointsFieldNumber = 1;
+    private static readonly pb::FieldCodec<global::GameSandRock._resourceTerrain> _repeated_points_codec
+        = pb::FieldCodec.ForMessage(10, global::GameSandRock._resourceTerrain.Parser);
+    private readonly pbc::RepeatedField<global::GameSandRock._resourceTerrain> points_ = new pbc::RepeatedField<global::GameSandRock._resourceTerrain>();
+    /// <summary>
+    ///刷新点列表
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::GameSandRock._resourceTerrain> Points {
+      get { return points_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ResourceTerrainUpdate);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ResourceTerrainUpdate other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!points_.Equals(other.points_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= points_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      points_.WriteTo(output, _repeated_points_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      size += points_.CalculateSize(_repeated_points_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ResourceTerrainUpdate other) {
+      if (other == null) {
+        return;
+      }
+      points_.Add(other.points_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            points_.AddEntriesFrom(input, _repeated_points_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class ResourceTerrainGet : pb::IMessage<ResourceTerrainGet> {
+    private static readonly pb::MessageParser<ResourceTerrainGet> _parser = new pb::MessageParser<ResourceTerrainGet>(() => new ResourceTerrainGet());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<ResourceTerrainGet> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[16]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ResourceTerrainGet() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ResourceTerrainGet(ResourceTerrainGet other) : this() {
+      Info = other.info_ != null ? other.Info.Clone() : null;
+      toolId_ = other.toolId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ResourceTerrainGet Clone() {
+      return new ResourceTerrainGet(this);
+    }
+
+    /// <summary>Field number for the "info" field.</summary>
+    public const int InfoFieldNumber = 1;
+    private global::GameSandRock._resourceTerrain info_;
+    /// <summary>
+    /// 资源点采集
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::GameSandRock._resourceTerrain Info {
+      get { return info_; }
+      set {
+        info_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "toolId" field.</summary>
+    public const int ToolIdFieldNumber = 2;
+    private uint toolId_;
+    /// <summary>
+    /// 使用工具的id , 如果工具id是0， 说明是徒手的
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint ToolId {
+      get { return toolId_; }
+      set {
+        toolId_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as ResourceTerrainGet);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(ResourceTerrainGet other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Info, other.Info)) return false;
+      if (ToolId != other.ToolId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (info_ != null) hash ^= Info.GetHashCode();
+      if (ToolId != 0) hash ^= ToolId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (info_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Info);
+      }
+      if (ToolId != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(ToolId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (info_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Info);
+      }
+      if (ToolId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ToolId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(ResourceTerrainGet other) {
+      if (other == null) {
+        return;
+      }
+      if (other.info_ != null) {
+        if (info_ == null) {
+          info_ = new global::GameSandRock._resourceTerrain();
+        }
+        Info.MergeFrom(other.Info);
+      }
+      if (other.ToolId != 0) {
+        ToolId = other.ToolId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (info_ == null) {
+              info_ = new global::GameSandRock._resourceTerrain();
+            }
+            input.ReadMessage(info_);
+            break;
+          }
+          case 16: {
+            ToolId = input.ReadUInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
   ///----------------------------------------道具----------------------------------------------
   /// </summary>
   public sealed partial class _item : pb::IMessage<_item> {
@@ -2763,7 +3325,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[14]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2920,7 +3482,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[15]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2938,6 +3500,9 @@ namespace GameSandRock {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ItemGet(ItemGet other) : this() {
       item_ = other.item_.Clone();
+      level_ = other.level_;
+      exp_ = other.exp_;
+      sp_ = other.sp_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2956,6 +3521,48 @@ namespace GameSandRock {
       get { return item_; }
     }
 
+    /// <summary>Field number for the "level" field.</summary>
+    public const int LevelFieldNumber = 2;
+    private uint level_;
+    /// <summary>
+    /// 等级是否变动
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Level {
+      get { return level_; }
+      set {
+        level_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "exp" field.</summary>
+    public const int ExpFieldNumber = 3;
+    private uint exp_;
+    /// <summary>
+    /// 经验是否增加
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Exp {
+      get { return exp_; }
+      set {
+        exp_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "sp" field.</summary>
+    public const int SpFieldNumber = 4;
+    private uint sp_;
+    /// <summary>
+    /// sp是否变化
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Sp {
+      get { return sp_; }
+      set {
+        sp_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as ItemGet);
@@ -2970,6 +3577,9 @@ namespace GameSandRock {
         return true;
       }
       if(!item_.Equals(other.item_)) return false;
+      if (Level != other.Level) return false;
+      if (Exp != other.Exp) return false;
+      if (Sp != other.Sp) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2977,6 +3587,9 @@ namespace GameSandRock {
     public override int GetHashCode() {
       int hash = 1;
       hash ^= item_.GetHashCode();
+      if (Level != 0) hash ^= Level.GetHashCode();
+      if (Exp != 0) hash ^= Exp.GetHashCode();
+      if (Sp != 0) hash ^= Sp.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2991,6 +3604,18 @@ namespace GameSandRock {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
       item_.WriteTo(output, _repeated_item_codec);
+      if (Level != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(Level);
+      }
+      if (Exp != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(Exp);
+      }
+      if (Sp != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(Sp);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3000,6 +3625,15 @@ namespace GameSandRock {
     public int CalculateSize() {
       int size = 0;
       size += item_.CalculateSize(_repeated_item_codec);
+      if (Level != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Level);
+      }
+      if (Exp != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Exp);
+      }
+      if (Sp != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Sp);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -3012,6 +3646,15 @@ namespace GameSandRock {
         return;
       }
       item_.Add(other.item_);
+      if (other.Level != 0) {
+        Level = other.Level;
+      }
+      if (other.Exp != 0) {
+        Exp = other.Exp;
+      }
+      if (other.Sp != 0) {
+        Sp = other.Sp;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -3025,6 +3668,18 @@ namespace GameSandRock {
             break;
           case 10: {
             item_.AddEntriesFrom(input, _repeated_item_codec);
+            break;
+          }
+          case 16: {
+            Level = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            Exp = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            Sp = input.ReadUInt32();
             break;
           }
         }

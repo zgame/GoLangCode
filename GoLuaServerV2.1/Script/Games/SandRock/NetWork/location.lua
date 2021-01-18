@@ -1,7 +1,7 @@
-SandRockLocation = {}
+SandRockLocationNet = {}
 
 -- 上报位置
-function SandRockLocation.Location(serverId, userId, buf)
+function SandRockLocationNet.Location(serverId, userId, buf)
     local msg = ProtoGameSandRock.PlayerLocation()
     msg:ParseFromString(buf)
     --print("上报位置---------------------------------------")
@@ -12,13 +12,13 @@ function SandRockLocation.Location(serverId, userId, buf)
         return
     end
     local location = {}
-    location = SandRockLocation.Copy(msg.location[1],location)
+    location = SandRockLocationNet.Copy(msg.location[1],location)
     SandRockRoom.LocationPlayerSet(room, userId, location)
 
 end
 
 --
-function SandRockLocation.Copy(source, dec)
+function SandRockLocationNet.Copy(source, dec)
     dec.userId = source.userId
     dec.x = source.x
     dec.y = source.y

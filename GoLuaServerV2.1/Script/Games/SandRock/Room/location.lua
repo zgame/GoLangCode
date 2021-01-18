@@ -23,7 +23,7 @@ function SandRockRoom:LocationOther()
     local lens = 0
     for key, value in pairs(self.locationList)do
         local location = sendCmd.location:add()
-        location = SandRockLocation.Copy(value, location)
+        location = SandRockLocationNet.Copy(value, location)
         lens = lens + 1
     end
     if lens == 0 then

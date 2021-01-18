@@ -1,7 +1,7 @@
-SandRockResourceTerrain = {}
+SandRockResourceTerrainNet = {}
 
 -- 同步资源列表
-function SandRockResourceTerrain.SendTreeRelive(userId,reliveList)
+function SandRockResourceTerrainNet.SendTreeRelive(userId,reliveList)
     local sendCmd = ProtoGameSandRock.ResourceTerrainUpdate()
 
     for _, element in ipairs(reliveList) do
@@ -18,7 +18,7 @@ function SandRockResourceTerrain.SendTreeRelive(userId,reliveList)
 end
 
 -- 采集资源
-function SandRockResourceTerrain.GetTerrainResource(serverId, userId, buf)
+function SandRockResourceTerrainNet.GetTerrainResource(serverId, userId, buf)
     --print("客户端开始开采资源")
     local msg = ProtoGameSandRock.ResourceTerrainGet()
     msg:ParseFromString(buf)
@@ -26,6 +26,10 @@ function SandRockResourceTerrain.GetTerrainResource(serverId, userId, buf)
 
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then
+        return
+    end
+    local player = GameServer.GetPlayerByUID(userId)
+    if player == nil then
         return
     end
 
@@ -43,12 +47,15 @@ function SandRockResourceTerrain.GetTerrainResource(serverId, userId, buf)
             item.itemId = itemId
             item.itemNum = num
         end
+        sendCmd.exp = Player.ExpGet(player)
+        sendCmd.level = Player.LevelGet(player)
+        sendCmd.sp = Player.SpGet(player)
         --print(sendCmd)
         --print("发送客户端采集结果")
         NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET, sendCmd, nil)
     end
     -- 发送一下这颗树的情况
     if reliveList~=nil then
-        SandRockResourceTerrain.SendTreeRelive(userId,reliveList)
+        SandRockResourceTerrainNet.SendTreeRelive(userId,reliveList)
     end
 end

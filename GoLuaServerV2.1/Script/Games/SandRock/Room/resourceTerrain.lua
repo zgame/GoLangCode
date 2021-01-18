@@ -104,12 +104,12 @@ function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceT
 
         return itemList, nil
     else
+        -- 工具砍树，或者砸石头
 
-
-        local spCost = CSV_itemFunctions.GetValue(toolId, "SpCost1")
+        local spCostList = CSV_itemFunctions.GetValue(toolId, "SpCost1")
         local exp = CSV_resourceTerrainType.GetValue(resourceType, "ChopTrunkExp")
         Player.ExpAdd(player, exp)
-        for _, v in ipairs(spCost) do
+        for _, v in ipairs(spCostList) do
             Player.SpAdd(player, -v)
         end
 

@@ -6,12 +6,12 @@ SandRockNetwork = {}
 
 function SandRockNetwork.Receive(serverId, userId, mainSgId, subMsgId, buf, token)
     local switch={}
-    switch[CMD_SAND_ROCK.SUB_LOGON] = SandRockLogin.Login
-    switch[CMD_SAND_ROCK.SUB_LOGOUT] = SandRockLogin.Logout
-    switch[CMD_SAND_ROCK.SUB_LOCATION] = SandRockLocation.Location
-    switch[CMD_SAND_ROCK.SUB_SLEEP] = SandRockSleep.Sleep
-    switch[CMD_SAND_ROCK.SUB_RESOURCE_GET] = SandRockResourcePick.GetPickResource
-    switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET] = SandRockResourceTerrain.GetTerrainResource
+    switch[CMD_SAND_ROCK.SUB_LOGON] = SandRockLoginNet.Login
+    switch[CMD_SAND_ROCK.SUB_LOGOUT] = SandRockLoginNet.Logout
+    switch[CMD_SAND_ROCK.SUB_LOCATION] = SandRockLocationNet.Location
+    switch[CMD_SAND_ROCK.SUB_SLEEP] = SandRockSleepNet.Sleep
+    switch[CMD_SAND_ROCK.SUB_RESOURCE_GET] = SandRockResourcePickNet.GetPickResource
+    switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET] = SandRockResourceTerrainNet.GetTerrainResource
 
 
     switch[subMsgId](serverId, userId, buf)
