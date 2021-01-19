@@ -20,10 +20,16 @@ function Player:HpGet()
 end
 function Player:HpAdd(hp)
     self.user.HP = self.user.HP + hp
+    if self.user.HP < 0 then
+        self.user.HP = 0
+    end
 end
 function Player:SpGet()
     return self.user.SP
 end
 function Player:SpAdd(hp)
     self.user.SP = self.user.SP + hp
+    if self.user.SP < 0 then
+        self.user.SP = 0
+    end
 end
