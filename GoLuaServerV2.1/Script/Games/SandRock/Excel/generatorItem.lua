@@ -91,11 +91,12 @@ local function _getGroupItemNum(groupId)
     end
 end
 
-local function _setGroupNum(generator, groupList,index,subIndex)
-    if groupList[generator[index][subIndex].id] == nil then
-        groupList[generator[index][subIndex].id] = 1                 -- 如果没有，那么发一个
+local function _setGroupNum(groupList,Index)
+    --print("---------------_setGroupNum--------------------")
+    if groupList[Index] == nil then
+        groupList[Index] = 1                 -- 如果没有，那么发一个
     else
-        groupList[generator[index][subIndex].id] = groupList[generator[index][subIndex].id] + 1       -- 如果已经有了，那么数量增加
+        groupList[Index] = groupList[Index] + 1       -- 如果已经有了，那么数量增加
     end
 end
 
@@ -114,11 +115,11 @@ function SandRockGeneratorItem.GetItems(groupId, all)
                 subIndex = ZRandom.GetList(generator[index].rateList)       -- 多个元素就随机一个 ，这里是用；分割的取其中一个，除非都要
             end
 
-            _setGroupNum(generator, groupList,index,subIndex)
+            _setGroupNum(groupList,generator[index][subIndex].id)
             -- 这里是全部掉落，不再使用生成组的；只取一个的规则，而是全部都要，用于踢树暴击
             if all~=nil and all == true then
-                for i,v in pairs(generator[index]) do
-                    _setGroupNum(generator, groupList,index,i)
+                for i,v in ipairs(generator[index]) do
+                    _setGroupNum(groupList,v.id)
                 end
             end
         end

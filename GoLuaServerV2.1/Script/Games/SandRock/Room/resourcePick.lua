@@ -102,7 +102,7 @@ function SandRockRoom:GetPickResource(userId, areaName, pointIndex, resourceType
     self.resourcePoint[areaName][pointIndex] = nil
     -- 获得物品
     local generatorGroup = CSV_resourcePickType.GetValue(resourceType, "GeneratorGroup")
-    local itemList = SandRockGeneratorItem.GetItems(generatorGroup)
+    local itemList = SandRockGeneratorItem.GetItems(generatorGroup)             -- pick采集
     -- 保存到背包
 
     Player.ItemAdd(player,itemList)

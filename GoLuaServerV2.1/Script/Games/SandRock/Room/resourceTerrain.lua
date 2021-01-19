@@ -61,7 +61,7 @@ end
 
 -----------------------------------地形树 采集------------------------------------------
 local function _treeDamage(element, damage)
-    --local reliveList = {}
+    local reliveList = {}
     local trunkKill = false
     local stumpKill = false
 
@@ -80,7 +80,8 @@ local function _treeDamage(element, damage)
             end
         end
     end
-   return element, trunkKill, stumpKill
+    table.insert(reliveList, element)
+   return reliveList, trunkKill, stumpKill
 end
 
 function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceType, toolId ,damage)
@@ -103,7 +104,7 @@ function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceT
     if toolId == 0 then
         -- 踢树
         local CantKick = CSV_resourceTerrainType.GetValue(resourceType, "Tags")
-        if CantKick == "" then
+        if CantKick == "CantKick" then
             ZLog.Logger("这颗树不能踢")
             return nil, nil
         end
@@ -133,7 +134,7 @@ function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceT
         if ZRandom.PercentRate(KickAllDropChance)  then
             itemList = SandRockGeneratorItem.GetItems(KickDropId,true)              -- 踢树暴击
         else
-            itemList = SandRockGeneratorItem.GetItems(KickDropId)                           -- 不暴击
+            itemList = SandRockGeneratorItem.GetItems(KickDropId )                           -- 踢树不暴击
         end
 
         -- 保存到背包
@@ -153,21 +154,26 @@ function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceT
 
         -- 树的伤害
         local reliveList,trunkKill, stumpKill = _treeDamage(point,damage)
+        print("树的伤害")
+        printTable(reliveList)
+        print(trunkKill)
+        print(stumpKill)
 
         -- 获得物品
         local itemList
         if  trunkKill then
             local ChopTrunkDropId = CSV_resourceTerrainType.GetValue(resourceType, "ChopTrunkDropId")
-            itemList = SandRockGeneratorItem.GetItems(ChopTrunkDropId)
+            itemList = SandRockGeneratorItem.GetItems(ChopTrunkDropId)                          -- 砍树干
         end
         if stumpKill then
             local ChopStumpDropId = CSV_resourceTerrainType.GetValue(resourceType, "ChopStumpDropId")
-            itemList = SandRockGeneratorItem.GetItems(ChopStumpDropId)
+            itemList = SandRockGeneratorItem.GetItems(ChopStumpDropId)                  -- 砍树根
         end
 
 
         -- 保存到背包
         Player.ItemAdd(player,itemList)
+
 
         -- 保存完毕
         return itemList, reliveList
