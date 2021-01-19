@@ -15,7 +15,7 @@ function SandRockRoom:ResourceTerrainInit()
                 element.areaName = areaName
                 element.areaPoint = index        -- 第几个位置
                 element.resourceType = treeId
-                element.scale = TreeScale[index]                   -- 缩放比例
+                element.scale = SandRockResourceTerrain.GetScaleFactor(TreeScale[index], 0.25)                    -- 缩放比例
                 element.trunkHealth, element.stumpHealth = SandRockResourceTerrain.GetHp(treeId, element.scale)
                 element.kickCountLimit = CSV_resourceTerrainType.GetValue(treeId, "KickCountLimit")
                 element.relive = CSV_resourceTerrainType.GetValue(treeId, "RespawnDays")
