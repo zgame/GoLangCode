@@ -77,6 +77,8 @@ function SandRockLoginNet.Login(serverId, uId, buf)
     SandRockLoginNet.SendPlayersInfo(userId)
     -- 同步场景信息给登录的玩家
     SandRockLoginNet.SendEnterSceneInfo(userId)
+    -- 同步场景树信息给玩家
+    SandRockLoginNet.SendTerrainInfo(userId)
 end
 
 
@@ -104,7 +106,12 @@ function SandRockLoginNet.SendEnterSceneInfo(userId)
     NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_ROOM_INFO, sendCmd, nil, nil)
 end
 
-
+-- 同步场景树信息给登录的玩家
+function SandRockLoginNet.SendTerrainInfo(userId)
+    local room = GameServer.GetRoomByUserId(userId)
+    local reliveList = SandRockRoom.ResourceTerrainSync(room)
+    SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList)
+end
 
 
 --登出申请

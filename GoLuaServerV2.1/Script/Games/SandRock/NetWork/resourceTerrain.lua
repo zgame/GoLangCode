@@ -22,7 +22,7 @@ function SandRockResourceTerrainNet.SendItemList(serverId, player, itemList, nil
 end
 
 
--- 同步资源列表
+-- 同步地形资源列表
 function SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList)
     local sendCmd = ProtoGameSandRock.ResourceTerrainUpdate()
 
@@ -35,7 +35,7 @@ function SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList)
         points.stumpHealth = element.stumpHealth
     end
 
-    print("发送树的状态")
+    print("发送地形树的状态")
     print(sendCmd)
     NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN, sendCmd, nil)
 end
@@ -45,7 +45,7 @@ function SandRockResourceTerrainNet.GetTerrainResource(serverId, userId, buf)
     print("客户端开始开采资源")
     local msg = ProtoGameSandRock.ResourceTerrainGet()
     msg:ParseFromString(buf)
-    print(msg)
+    --print(msg)
 
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then

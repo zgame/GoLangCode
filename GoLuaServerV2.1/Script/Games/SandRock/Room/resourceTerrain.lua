@@ -27,7 +27,21 @@ function SandRockRoom:ResourceTerrainInit()
     --printTable(self.resourceTerrain)
 end
 
-
+-----------------------------------地形树 同步------------------------------------------
+function SandRockRoom:ResourceTerrainSync()
+    local treeList = {}
+    for areaName, pointList in pairs(self.resourceTerrain) do
+        for index, element in pairs(pointList) do
+            local treeId = element.resourceType
+            local trunkHealth, stumpHealth = SandRockResourceTerrain.GetHp(treeId, element.scale)
+            if element.trunkHealth < trunkHealth then
+                -- 说明这棵树被伤害过，要同步
+                table.insert(treeList, element)
+            end
+        end
+    end
+    return treeList
+end
 
 -----------------------------------地形树 刷新------------------------------------------
 -- 资源点刷新
@@ -116,10 +130,10 @@ function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceT
 
     -- 树的伤害
     local reliveList, trunkKill, stumpKill = _treeDamage(point, damage)
-    print("树的伤害")
-    printTable(reliveList)
-    print(trunkKill)
-    print(stumpKill)
+    --print("树的伤害")
+    --printTable(reliveList)
+    --print(trunkKill)
+    --print(stumpKill)
 
     -- 获得物品
     local itemList

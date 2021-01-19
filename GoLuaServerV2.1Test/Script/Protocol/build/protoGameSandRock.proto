@@ -13,6 +13,10 @@ message _user{
 	uint32 gender = 7;              //
 	uint32 roomId = 8;          //房间ID
 	uint32 chairId = 9;          //位置ID
+	uint32 hp = 10;
+	uint32 hpMax = 11;
+	uint32 sp = 12;
+	uint32 spMax = 13;
 }
 
 //---------------------------------------登录-------------------------------
