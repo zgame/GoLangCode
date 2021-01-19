@@ -23,7 +23,7 @@ end
 
 
 -- 同步资源列表
-function SandRockResourceTerrainNet.SendTreeRelive(userId,reliveList)
+function SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList)
     local sendCmd = ProtoGameSandRock.ResourceTerrainUpdate()
 
     for _, element in ipairs(reliveList) do
@@ -56,17 +56,19 @@ function SandRockResourceTerrainNet.GetTerrainResource(serverId, userId, buf)
         return
     end
 
-    local itemList,reliveList = SandRockRoom.GetTerrainResource(room, userId, msg.info.areaName, msg.info.areaPoint, msg.info.resourceType, msg.toolId, msg.damage)
-
     if msg.toolId == 0 then
+        -- 踢树处理
+        local itemList = SandRockRoom.GetTerrainKick(room, userId, msg.info.areaName, msg.info.areaPoint, msg.info.resourceType)
         SandRockResourceTerrainNet.SendItemList(serverId, player, itemList, true)        -- 踢树处理
     else
+        -- 砍树，砍石头处理
+        local itemList, reliveList = SandRockRoom.GetTerrainResource(room, userId, msg.info.areaName, msg.info.areaPoint, msg.info.resourceType, msg.toolId, msg.damage)
         SandRockResourceTerrainNet.SendItemList(serverId, player, itemList)        -- 砍树
+        -- 发送一下这颗树的情况
+        if reliveList ~= nil then
+            SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList)
+        end
     end
 
 
-    -- 发送一下这颗树的情况
-    if reliveList~=nil then
-        SandRockResourceTerrainNet.SendTreeRelive(userId,reliveList)
-    end
 end

@@ -102,8 +102,11 @@ end
 
 
 --  道具掉落 ，正常返回 hash  key是itemId， value是数量
-function SandRockGeneratorItem.GetItems(groupId, all)
+function SandRockGeneratorItem.GetItems(groupId ,scale, all)
     local groupList = {}
+    if scale == nil then
+        scale = 1               -- 这里要计算一下根据缩放进行的掉落放面的影响
+    end
 
     local GenSceneType = CSV_generateGroup.GetValue(groupId, "GenSceneType")
     if GenSceneType == "Item" then
@@ -129,7 +132,7 @@ function SandRockGeneratorItem.GetItems(groupId, all)
     for groupId,num in pairs(groupList) do
         groupId = tostring(groupId)
         local itemId = CSV_generateItem.GetValue(groupId, "GenObjectId")
-        local itemNum  = _getGroupItemNum(groupId)
+        local itemNum  = math.floor( _getGroupItemNum(groupId) * scale)
         itemList[itemId] = num * itemNum
 
         if num * itemNum == 0 then
