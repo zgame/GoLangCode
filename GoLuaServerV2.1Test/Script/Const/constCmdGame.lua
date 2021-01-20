@@ -13,5 +13,8 @@ CMD_SAND_ROCK = {
     SUB_RESOURCE_GET = 11 ,   -- 采集资源ResourceGet()  , 获得结果ItemGet()
     SUB_RESOURCE_TERRAIN = 12 ,   -- 刷新资源ResourceTerrainUpdate()
     SUB_RESOURCE_TERRAIN_GET = 13 ,   -- 采集资源ResourceTerrainGet()  , 获得结果ItemGet()
+
+    SUB_CREATION_MACHINE = 14,     --  组装机器  CreationMachine() ,  获得结果ItemGet()
+    SUB_CREATION_ITEM = 15,     --  合成道具  CreationItem() ,  获得结果ItemGet()
 }
 
