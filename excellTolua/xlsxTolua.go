@@ -180,6 +180,13 @@ func getString(RowIndex int, ListIndex int, rows []*xlsx.Row) string {
 		strOut = fmt.Sprintf(" %s = %s, ", ListName, data)
 	}else if ListType == "array" {
 		strOut = fmt.Sprintf(" %s = {%s}, ", ListName, data)
+	}else if ListType ==  strings.ToLower("doubleArray") {
+		strList:= strings.Split(data,";")
+		for i,v := range strList {
+			strList[i] = "{"+v+"}"
+		}
+		strTmp := strings.Join(strList,",")
+		strOut = fmt.Sprintf(" %s = {%s}, ", ListName, strTmp)
 	}
 	return strOut
 }

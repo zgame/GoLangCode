@@ -12,6 +12,7 @@ function SandRockNetwork.Receive(serverId, userId, mainSgId, subMsgId, buf, toke
     switch[CMD_SAND_ROCK.SUB_SLEEP] = SandRockSleepNet.Sleep
     switch[CMD_SAND_ROCK.SUB_RESOURCE_GET] = SandRockResourcePickNet.GetPickResource
     switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET] = SandRockResourceTerrainNet.GetTerrainResource
+    switch[CMD_SAND_ROCK.SUB_CREATION_MACHINE] = SandRockCreationMachineNet.Create
 
 
     switch[subMsgId](serverId, userId, buf)

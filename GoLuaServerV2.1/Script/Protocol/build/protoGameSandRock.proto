@@ -117,11 +117,15 @@ message ResourceTerrainGet{
 //----------------------------------------道具----------------------------------------------
 message _item{
 	uint32 itemId = 1;
-	uint32 itemNum = 2;
+	int32 itemNum = 2;          // 道具数量为负就是减少
 }
 message ItemGet{
 	repeated _item item = 1;
 	uint32 level = 2;           // 等级是否变动
 	uint32 exp = 3;           // 经验是否增加
 	uint32 sp = 4;            // sp是否变化
+}
+//----------------------------------------机器组装----------------------------------------------
+message CreationMachine{
+	uint32 creatId = 1;         // 要组装什么机器
 }

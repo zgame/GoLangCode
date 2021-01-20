@@ -16,3 +16,20 @@ function SandRockSleepNet.Sleep(serverId, userId, buf)
 
 end
 
+function SandRockSleepNet.SendItemList(player, itemList)
+    local sendCmd = nil
+    if itemList ~= nil then
+        sendCmd = ProtoGameSandRock.ItemGet()
+        for itemId, num in pairs(itemList) do
+            local item = sendCmd.item:add()
+            item.itemId = itemId
+            item.itemNum = num
+        end
+        sendCmd.exp = Player.ExpGet(player)
+        sendCmd.level = Player.LevelGet(player)
+        sendCmd.sp = Player.SpGet(player)
+        --print(sendCmd)
+        --print("发送客户端获得道具结果")
+    end
+    return sendCmd
+end

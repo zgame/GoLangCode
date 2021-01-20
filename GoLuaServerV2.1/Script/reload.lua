@@ -20,6 +20,9 @@ table.insert(f, "Script/Games/SandRock/DataBase/sqlStatistic")
 -- CSV
 LuaFiles.CSV = {}
 f = LuaFiles.CSV
+table.insert(f, "Script/CSV/creationItem")
+table.insert(f, "Script/CSV/creationMachine")
+table.insert(f, "Script/CSV/creationMachinePart")
 table.insert(f, "Script/CSV/generateGroup")
 table.insert(f, "Script/CSV/generateItem")
 table.insert(f, "Script/CSV/item")
@@ -98,7 +101,7 @@ LuaFiles.NetWork = {}
 f = LuaFiles.NetWork
 table.insert(f, "Script/network")       -- 网络分发入口点n
 -- table.insert(f, "Script/Games/SandRock/NetWork/gameEnter")
--- table.insert(f, "Script/Games/SandRock/NetWork/gameFire")
+table.insert(f, "Script/Games/SandRock/NetWork/creationMachine")
 table.insert(f, "Script/Games/SandRock/NetWork/loginServer")
 table.insert(f, "Script/Games/SandRock/NetWork/location")
 table.insert(f, "Script/Games/SandRock/NetWork/sleep")
