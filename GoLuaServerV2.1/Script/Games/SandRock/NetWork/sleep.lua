@@ -7,7 +7,7 @@ function SandRockSleepNet.Sleep(serverId, userId, buf)
     end
     -- refresh
     SandRockRoom.ResourcePointUpdate(room)      -- 刷新资源列表
-    local reliveList = SandRockRoom.ResourceTerrainUpdate(room)      -- 刷新地形树和石头资源列表
+    local reliveList = SandRockRoom.ResourceTerrainUpdate(room)      -- 刷新地形树和石头资源列表，获取的是刷新的树
     SandRockRoom.UpdateWeather(room)
 
     -- send

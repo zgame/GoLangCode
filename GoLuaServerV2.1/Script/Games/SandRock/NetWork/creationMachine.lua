@@ -1,15 +1,20 @@
 SandRockCreationMachineNet = {}
 
 -- 组装机器
-function SandRockCreationMachineNet.Create(serverId, userId, buf)
+function SandRockCreationMachineNet.CreateMachine(serverId, userId, buf)
     local msg = ProtoGameSandRock.CreationMachine()
     msg:ParseFromString(buf)
-    --print(msg.creatId)
+    --print(msg.createId)
+    local createId = msg.createId
     local itemList = {}
     local player = GameServer.GetPlayerByUID(userId)
-    local MachineLevel = CSV_creationMachine.GetValue(msg.creatId, "MachineLevel")
-    local MachineItemId = CSV_creationMachine.GetValue(msg.creatId, "ItemId")
-    local PartIdList = CSV_creationMachine.GetValue(msg.creatId, "PartIds")
+    local MachineItemId = CSV_creationMachine.GetValue(createId, "ItemId")
+    if MachineItemId == nil then
+        ZLog.Logger("找不到MachineItemId".. createId)
+        return
+    end
+    local PartIdList = CSV_creationMachine.GetValue(createId, "PartIds")
+    local MachineLevel = CSV_creationMachine.GetValue(createId, "MachineLevel")
 
     -- 遍历所有的零件
     -- 先检查数量
@@ -42,7 +47,17 @@ function SandRockCreationMachineNet.Create(serverId, userId, buf)
 
 end
 
-
-function SandRockCreationMachineNet.Create(serverId, userId, buf)
-
+-- 道具合成
+function SandRockCreationMachineNet.CreateItem(serverId, userId, buf)
+    local msg = ProtoGameSandRock.CreationItem()
+    msg:ParseFromString(buf)
+    --print(msg.createId)
+    local createId = msg.createId
+    local itemList = {}
+    local player = GameServer.GetPlayerByUID(userId)
+    local CreateItemId = CSV_creationItem.GetValue(createId, "ItemId")
+    if CreateItemId == nil then
+        ZLog.Logger("找不到CreateItemId".. createId)
+        return
+    end
 end
