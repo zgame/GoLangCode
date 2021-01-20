@@ -62,5 +62,5 @@ function SandRockResourcePickNet.GetPickResource(serverId, userId, buf)
     --print(sendCmd)
     --print("发送客户端采集结果")
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_GET, sendCmd, nil)
-
 end
+

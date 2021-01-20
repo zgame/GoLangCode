@@ -7,28 +7,21 @@
 SandRockResourcePick = {}
 
 
--- 根据权重随机生成类型
-local function _setType(areaName)
-    SandRockResourcePick[areaName] ={}
-    local area = SandRockResourcePick[areaName]
-
-    local resourceList = CSV_resourcePickArea.GetValue(areaName, "Resource")
-    if #resourceList == 1 then
-        area.resourceType = resourceList[1]        -- 赋值数值
-        return
-    else
-        area.resourceList = resourceList        -- 赋值list
-    end
-    local weightList = CSV_resourcePickArea.GetValue(areaName, "Weight")
-    area.weightList = weightList
-
-end
-
-
 -- 为了效率，初始化的时候生成一下数据
 function SandRockResourcePick.Init()
     for  areaName,_ in pairs(CSV_resourcePickArea.Get()) do
-        _setType(areaName)
+        SandRockResourcePick[areaName] ={}
+        local area = SandRockResourcePick[areaName]
+
+        local resourceList = CSV_resourcePickArea.GetValue(areaName, "Resource")
+        if #resourceList == 1 then
+            area.resourceType = resourceList[1]        -- 赋值数值
+            return
+        else
+            area.resourceList = resourceList        -- 赋值list
+        end
+        local weightList = CSV_resourcePickArea.GetValue(areaName, "Weight")
+        area.weightList = weightList
     end
 end
 

@@ -1,20 +1,17 @@
 SandRockItem = {}
 
---  把几率计算成百分比
-local function _setItem(itemId)
-    local list = CSV_item.GetValue(itemId,"QualitySceneSlot")
-    SandRockItem[itemId] = {}
-    local all = 0
-    for i,v in ipairs(list)do
-        local rate = v + all
-        all = all + v
-        table.insert(SandRockItem[itemId],rate)
-    end
-end
--- 把几率计算好
+
+-- 把几率计算成百分比
 function SandRockItem.Init()
     for itemId,_ in pairs(CSV_item.Get()) do
-        _setItem(itemId)
+        local list = CSV_item.GetValue(itemId,"QualitySceneSlot")
+        SandRockItem[itemId] = {}
+        local all = 0
+        for i,v in ipairs(list)do
+            local rate = v + all
+            all = all + v
+            table.insert(SandRockItem[itemId],rate)
+        end
     end
 end
 

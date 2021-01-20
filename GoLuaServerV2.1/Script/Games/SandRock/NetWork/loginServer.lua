@@ -2,7 +2,7 @@
 
 SandRockLoginNet = {}
 
-
+----------------------------------------登录----------------------------------
 local function newUser(openId,machineId)
     local userId = GameServer.GetLastUserID()
     if userId == nil then
@@ -10,8 +10,8 @@ local function newUser(openId,machineId)
         return nil
     end
     local user = User.New(userId,openId,machineId)
-    CCCLoginDB.UserInsert(user)
-    CCCLoginDB.OpenIdInsert(openId,user.userId)
+    SandRockLoginDB.UserInsert(user)
+    SandRockLoginDB.OpenIdInsert(openId,user.userId)
     return user
 end
 
@@ -24,7 +24,7 @@ local function getUserDB(msg)
 
     local user
     if userId ~= nil then
-        user =  CCCLoginDB.User(userId)
+        user =  SandRockLoginDB.User(userId)
     end
 
     if machineId ~= nil then
@@ -33,8 +33,8 @@ local function getUserDB(msg)
 
     -- 注意如果客户端， 同时发mac 和 openid， 会使用mac，忽略openid
     if openId ~= nil then
-        userId = CCCLoginDB.UId(openId)
-        user = CCCLoginDB.User(userId)
+        userId = SandRockLoginDB.UId(openId)
+        user = SandRockLoginDB.User(userId)
     end
 
     if user == nil then
@@ -81,7 +81,7 @@ function SandRockLoginNet.Login(serverId, uId, buf)
     SandRockLoginNet.SendTerrainInfo(userId)
 end
 
-
+----------------------------------------同步----------------------------------
 -- 给该玩家下发其他玩家信息
 function SandRockLoginNet.SendPlayersInfo(userId)
     local sendCmd = ProtoGameSandRock.UserList()
@@ -113,7 +113,7 @@ function SandRockLoginNet.SendTerrainInfo(userId)
     SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList)
 end
 
-
+----------------------------------------登出----------------------------------
 --登出申请
 function SandRockLoginNet.Logout(serverId, uId, buf)
     local msg = ProtoGameSandRock.GameLogout()

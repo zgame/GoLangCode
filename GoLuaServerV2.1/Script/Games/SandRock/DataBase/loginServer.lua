@@ -1,14 +1,14 @@
-CCCLoginDB = {}
+SandRockLoginDB = {}
 
 ---------------- openId 和 uId 对应关系---------------
-function CCCLoginDB.OpenIdInsert(openId,uId)
+function SandRockLoginDB.OpenIdInsert(openId, uId)
     local t={}
     t.openId = openId
     t.uerId = uId
     MongoDB.Insert('OpenId',t)
 end
 
-function CCCLoginDB.UId(openId)
+function SandRockLoginDB.UId(openId)
     local t = {}
     t.openId = openId
     local result = MongoDB.Find('OpenId',t)
@@ -20,7 +20,7 @@ function CCCLoginDB.UId(openId)
 end
 
 ----------------- User 数据---------------------------------
-function CCCLoginDB.User(userId)
+function SandRockLoginDB.User(userId)
     if userId == nil then
         return nil
     end
@@ -29,11 +29,11 @@ function CCCLoginDB.User(userId)
     return MongoDB.Find('User',t)
 end
 
-function CCCLoginDB.UserInsert(user)
+function SandRockLoginDB.UserInsert(user)
     MongoDB.Insert('User',user)
 end
 
-function CCCLoginDB.UserUpdate(userId,user)
+function SandRockLoginDB.UserUpdate(userId, user)
     local t = {}
     t.userId = userId
     MongoDB.Update('User',t,user)

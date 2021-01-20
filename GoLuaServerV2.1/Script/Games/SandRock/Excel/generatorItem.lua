@@ -1,7 +1,7 @@
 -- 道具生成组
 SandRockGeneratorItem = {}
 
-
+--------------------------------------------初始化 道具生成组----------------------------------------------------
 -- 处理一下几率变成总数是100， 每个是几率阶梯， 处理完之后，计算的时候方便
 local function _setRateList(list)
     local total = 0
@@ -66,7 +66,11 @@ function SandRockGeneratorItem.Init()
     --_setGroupInit("20900008")
 end
 
--- 根据生成规则获取道具的数量
+
+--------------------------------------------道具生成组----------------------------------------------------
+
+
+-- 根据不同生成规则获取道具的数量
 local function _getGroupItemNum(groupId)
     local GenDistType = CSV_generateItem.GetValue(groupId,"GenDistType")
     local GenDistParams = CSV_generateItem.GetValue(groupId,"GenDistParams")
@@ -91,6 +95,8 @@ local function _getGroupItemNum(groupId)
     end
 end
 
+
+-- 道具数量
 local function _setGroupNum(groupList,Index)
     --print("---------------_setGroupNum--------------------")
     if groupList[Index] == nil then
@@ -100,7 +106,7 @@ local function _setGroupNum(groupList,Index)
     end
 end
 
-
+--  根据生成组，生成道具和道具的数量
 --  道具掉落 ，正常返回 hash  key是itemId， value是数量
 function SandRockGeneratorItem.GetItems(groupId ,scale, all)
     local groupList = {}
