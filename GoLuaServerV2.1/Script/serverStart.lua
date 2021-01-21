@@ -42,7 +42,7 @@ function Main.GoCallLuaStartAllServers()
     switch[GlobalVar.ServerTypeName]()
 
 
-    print("ServerIP_Port:"..GlobalVar.ServerIP_Port.."用来做日志")
+    --print("ServerIP_Port:"..GlobalVar.ServerIP_Port.."用来做日志")
 
 
 
