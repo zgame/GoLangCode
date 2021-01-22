@@ -13,7 +13,8 @@ function SandRockNetwork.Receive(serverId, userId, mainSgId, subMsgId, buf, toke
     switch[CMD_SAND_ROCK.SUB_RESOURCE_GET] = SandRockResourcePickNet.GetPickResource
     switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET] = SandRockResourceTerrainNet.GetTerrainResource
     switch[CMD_SAND_ROCK.SUB_CREATION_MACHINE] = SandRockCreationMachineNet.CreateMachine
-    switch[CMD_SAND_ROCK.SUB_CREATION_ITEM] = SandRockCreationMachineNet.CreateItem
+    switch[CMD_SAND_ROCK.SUB_CREATION_ITEM] = SandRockCreationItemNet.CreateItem
+    switch[CMD_SAND_ROCK.SUB_CREATION_RECYCLE] = SandRockCreationRecycleNet.CreateRecycle
 
 
     switch[subMsgId](serverId, userId, buf)
