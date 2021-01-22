@@ -59,7 +59,9 @@ namespace GameSandRock {
             "bRgBIAMoCzITLkdhbWVTYW5kUm9jay5faXRlbRINCgVsZXZlbBgCIAEoDRIL",
             "CgNleHAYAyABKA0SCgoCc3AYBCABKA0iIwoPQ3JlYXRpb25NYWNoaW5lEhAK",
             "CGNyZWF0ZUlkGAEgASgNIiAKDENyZWF0aW9uSXRlbRIQCghjcmVhdGVJZBgB",
-            "IAEoDWIGcHJvdG8z"));
+            "IAEoDSIjCg9DcmVhdGlvblJlY3ljbGUSEAoIY3JlYXRlSWQYASABKA0iOAoP",
+            "Q3JlYXRpb25Db29raW5nEhAKCGNyZWF0ZUlkGAEgASgNEhMKC01hdGVyaWFs",
+            "c0lEGAIgASgNYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -83,7 +85,9 @@ namespace GameSandRock {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._item), global::GameSandRock._item.Parser, new[]{ "ItemId", "ItemNum" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ItemGet), global::GameSandRock.ItemGet.Parser, new[]{ "Item", "Level", "Exp", "Sp" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.CreationMachine), global::GameSandRock.CreationMachine.Parser, new[]{ "CreateId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.CreationItem), global::GameSandRock.CreationItem.Parser, new[]{ "CreateId" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.CreationItem), global::GameSandRock.CreationItem.Parser, new[]{ "CreateId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.CreationRecycle), global::GameSandRock.CreationRecycle.Parser, new[]{ "CreateId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.CreationCooking), global::GameSandRock.CreationCooking.Parser, new[]{ "CreateId", "MaterialsID" }, null, null, null)
           }));
     }
     #endregion
@@ -3840,7 +3844,7 @@ namespace GameSandRock {
   }
 
   /// <summary>
-  ///----------------------------------------机器组装 和 道具合成----------------------------------------------
+  ///----------------------------------------机器组装 和 道具合成 回收 烹饪----------------------------------------------
   /// </summary>
   public sealed partial class CreationMachine : pb::IMessage<CreationMachine> {
     private static readonly pb::MessageParser<CreationMachine> _parser = new pb::MessageParser<CreationMachine>(() => new CreationMachine());
@@ -4098,6 +4102,301 @@ namespace GameSandRock {
             break;
           case 8: {
             CreateId = input.ReadUInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class CreationRecycle : pb::IMessage<CreationRecycle> {
+    private static readonly pb::MessageParser<CreationRecycle> _parser = new pb::MessageParser<CreationRecycle>(() => new CreationRecycle());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<CreationRecycle> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[21]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CreationRecycle() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CreationRecycle(CreationRecycle other) : this() {
+      createId_ = other.createId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CreationRecycle Clone() {
+      return new CreationRecycle(this);
+    }
+
+    /// <summary>Field number for the "createId" field.</summary>
+    public const int CreateIdFieldNumber = 1;
+    private uint createId_;
+    /// <summary>
+    /// 回收什么道具
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint CreateId {
+      get { return createId_; }
+      set {
+        createId_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as CreationRecycle);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(CreationRecycle other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (CreateId != other.CreateId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (CreateId != 0) hash ^= CreateId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (CreateId != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(CreateId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (CreateId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(CreateId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(CreationRecycle other) {
+      if (other == null) {
+        return;
+      }
+      if (other.CreateId != 0) {
+        CreateId = other.CreateId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            CreateId = input.ReadUInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class CreationCooking : pb::IMessage<CreationCooking> {
+    private static readonly pb::MessageParser<CreationCooking> _parser = new pb::MessageParser<CreationCooking>(() => new CreationCooking());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<CreationCooking> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[22]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CreationCooking() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CreationCooking(CreationCooking other) : this() {
+      createId_ = other.createId_;
+      materialsID_ = other.materialsID_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CreationCooking Clone() {
+      return new CreationCooking(this);
+    }
+
+    /// <summary>Field number for the "createId" field.</summary>
+    public const int CreateIdFieldNumber = 1;
+    private uint createId_;
+    /// <summary>
+    /// 烹饪什么
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint CreateId {
+      get { return createId_; }
+      set {
+        createId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "MaterialsID" field.</summary>
+    public const int MaterialsIDFieldNumber = 2;
+    private uint materialsID_;
+    /// <summary>
+    /// 烹饪的拆料
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint MaterialsID {
+      get { return materialsID_; }
+      set {
+        materialsID_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as CreationCooking);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(CreationCooking other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (CreateId != other.CreateId) return false;
+      if (MaterialsID != other.MaterialsID) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (CreateId != 0) hash ^= CreateId.GetHashCode();
+      if (MaterialsID != 0) hash ^= MaterialsID.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (CreateId != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(CreateId);
+      }
+      if (MaterialsID != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(MaterialsID);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (CreateId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(CreateId);
+      }
+      if (MaterialsID != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(MaterialsID);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(CreationCooking other) {
+      if (other == null) {
+        return;
+      }
+      if (other.CreateId != 0) {
+        CreateId = other.CreateId;
+      }
+      if (other.MaterialsID != 0) {
+        MaterialsID = other.MaterialsID;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            CreateId = input.ReadUInt32();
+            break;
+          }
+          case 16: {
+            MaterialsID = input.ReadUInt32();
             break;
           }
         }

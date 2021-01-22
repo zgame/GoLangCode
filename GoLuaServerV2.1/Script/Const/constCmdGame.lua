@@ -16,6 +16,7 @@ CMD_SAND_ROCK = {
 
     SUB_CREATION_MACHINE = 14,     --  组装机器  CreationMachine() ,  获得结果ItemGet()
     SUB_CREATION_ITEM = 15,     --  合成道具  CreationItem() ,  获得结果ItemGet()
-    SUB_CREATION_RECYCLE = 16,     --  回收道具  CreationItem() ,  获得结果ItemGet()
+    SUB_CREATION_RECYCLE = 16,     --  回收道具  CreationRecycle() ,  获得结果ItemGet()
+    SUB_CREATION_COOKING = 17,     --  回收道具  CreationCooking() ,  获得结果ItemGet()
 }
 

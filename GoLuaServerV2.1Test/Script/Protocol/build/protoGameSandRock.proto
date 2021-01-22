@@ -125,10 +125,17 @@ message ItemGet{
 	uint32 exp = 3;           // 经验是否增加
 	uint32 sp = 4;            // sp是否变化
 }
-//----------------------------------------机器组装 和 道具合成----------------------------------------------
+//----------------------------------------机器组装 和 道具合成 回收 烹饪----------------------------------------------
 message CreationMachine{
 	uint32 createId = 1;         // 要组装什么机器
 }
 message CreationItem{
 	uint32 createId = 1;        // 合成什么道具
+}
+message CreationRecycle{
+	uint32 createId = 1;        // 回收什么道具
+}
+message CreationCooking{
+	uint32 createId = 1;        // 烹饪什么
+	uint32 MaterialsID = 2;        // 烹饪的拆料
 }
