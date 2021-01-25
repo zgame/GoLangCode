@@ -56,7 +56,8 @@ local function _setGroupInit(groupId)
         table.insert(generator, sub)
     end
 
-    --printTable(generator)
+
+    --printTable(SandRockGeneratorItem[groupId])
 end
 
 function SandRockGeneratorItem.Init()

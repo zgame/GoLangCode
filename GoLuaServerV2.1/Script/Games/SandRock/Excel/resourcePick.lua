@@ -9,19 +9,12 @@ SandRockResourcePick = {}
 
 -- 为了效率，初始化的时候生成一下数据
 function SandRockResourcePick.Init()
-    for  areaName,_ in pairs(CSV_resourcePickArea.Get()) do
-        SandRockResourcePick[areaName] ={}
+    for areaName, _ in pairs(CSV_resourcePickArea.Get()) do
+        SandRockResourcePick[areaName] = {}
         local area = SandRockResourcePick[areaName]
 
-        local resourceList = CSV_resourcePickArea.GetValue(areaName, "Resource")
-        if #resourceList == 1 then
-            area.resourceType = resourceList[1]        -- 赋值数值
-            return
-        else
-            area.resourceList = resourceList        -- 赋值list
-        end
-        local weightList = CSV_resourcePickArea.GetValue(areaName, "Weight")
-        area.weightList = weightList
+        area.resourceList = CSV_resourcePickArea.GetValue(areaName, "Resource")
+        area.weightList = CSV_resourcePickArea.GetValue(areaName, "Weight")
     end
 end
 
@@ -31,12 +24,12 @@ function SandRockResourcePick.GetType(areaName)
     local area = SandRockResourcePick[areaName]
 
     -- 如果没有数组， 那么就直接返回数值
-    if area.resourceList == nil then
-        return area.resourceType
+    if #area.resourceList == 1 then
+        return area.resourceList[1]
     end
 
     local index = ZRandom.GetList(area.weightList)
-    return  area.resourceList[index]
+    return area.resourceList[index]
 end
 
 
