@@ -119,6 +119,11 @@ function SandRockGeneratorItem.GetItems(groupId ,scale, all)
     if GenSceneType == "Item" then
         -- 走道具掉落规则
         local generator = SandRockGeneratorItem[tostring(groupId)]                  -- 一组生成器，用|分割的是每样一个
+        if generator == nil then
+            ZLog.Logger("GetItems 生成组报错，" .. groupId)
+            return nil
+        end
+
         for index, allType in pairs(generator) do
             local subIndex = 1                    -- 用；分割的取其中一个
             if #generator[index] > 1 then

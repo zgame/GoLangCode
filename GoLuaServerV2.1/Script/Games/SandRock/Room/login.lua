@@ -23,7 +23,12 @@ end
 --玩家坐到椅子上
 function SandRockRoom:PlayerSeat(chairId, player)
     self.userSeatArray[chairId] = player
-    self.userSeatArrayNumber = self.userSeatArrayNumber + 1   -- 房间上玩家数量增加
+    self.userSeatArrayNumber = ZTable.Len(self.userSeatArray)
+    --local oldPlayer = GameServer.GetPlayerByUID(Player.UId(player)) -- 把之前的玩家数据取出来
+    --if oldPlayer == nil then
+    --    self.userSeatArrayNumber = self.userSeatArrayNumber + 1   -- 房间上玩家数量增加
+    --end
+
     player.roomId = self.roomId
     player.chairId = chairId
 

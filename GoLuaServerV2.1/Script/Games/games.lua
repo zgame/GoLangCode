@@ -13,9 +13,9 @@ function Game:New(name, gameId)
     self.allRoomNumber = 0                  -- 所有该游戏的房间数量
 end
 
-function Game:Reload(self)
-    --setmetatable(c, self)
-    --self.__index = self
+function Game:Reload(c)
+    setmetatable(c, self)
+    self.__index = self
     -- 如果热更新有改动成员变量的定义的话， 下面需要进行成员变量的处理
     -- 比如 1 增加了字段， 那么你需要将老数据进行， 新字段的初始化
     -- 比如 2 删除了字段， 那么你需要将老数据进行， 老字段=nil
@@ -90,6 +90,9 @@ function Game:PlayerLoginGame(oldPlayer)
             --player.NetWorkState = true                      -- 网络恢复正常
             --player.NetWorkCloseTimer = 0
             print("把断线重连的player返回去， 玩家本来就坐在这里，不用同步信息给其他玩家， 就是反应他傻了一会后继续游戏了")
+            printTable(player)
+            print(player.roomId)
+            print(player.chairId)
             return player
         else
             -- 不是同一个游戏，或者有玩家在里面玩呢

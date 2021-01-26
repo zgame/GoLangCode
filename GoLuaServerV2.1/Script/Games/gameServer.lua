@@ -89,11 +89,13 @@ end
 
 function GameServer.SetAllPlayerList(userId, value)
     GlobalVar.AllPlayerList[tostring(userId)] = value
-    if value == nil then
-        GlobalVar.AllPlayerListNumber = GlobalVar.AllPlayerListNumber - 1   -- 玩家人数减少
-    else
-        GlobalVar.AllPlayerListNumber = GlobalVar.AllPlayerListNumber + 1   -- 玩家人数增加
-    end
+    --if value == nil then
+    --    GlobalVar.AllPlayerListNumber = GlobalVar.AllPlayerListNumber - 1   -- 玩家人数减少
+    --else
+    --    GlobalVar.AllPlayerListNumber = GlobalVar.AllPlayerListNumber + 1   -- 玩家人数增加
+    --end
+
+    GlobalVar.AllPlayerListNumber = ZTable.Len(GlobalVar.AllPlayerList)
     ZLog.Logger("在线玩家数量" .. tostring(GlobalVar.AllPlayerListNumber))
 end
 
@@ -158,7 +160,7 @@ function GameServer.Login(gameId,player)
         return false
     end
     player.gameId = gameId
-    Game.PlayerLoginGame(game,player)
+    player = Game.PlayerLoginGame(game, player)
     return true
 end
 

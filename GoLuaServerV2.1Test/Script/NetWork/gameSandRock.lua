@@ -12,9 +12,7 @@ function GameSandRock.RunGame(serverId)
 
 
     -- 采集地形资源
-    ResourceTerrain.Action(serverId,'Terrain_3_4',
-            27,109,
-            0 , 0 )
+    --ResourceTerrain.Action(serverId,'Terrain_3_4',            27,109,            0 , 0 )
 
 
 end

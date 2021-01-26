@@ -159,17 +159,17 @@ end
 -- 踢树
 function SandRockRoom:GetTerrainKick(userId, areaName, pointIndex, resourceType)
     if self.resourceTerrain[areaName] == nil then
-        ZLog.Logger("GetTerrainResource  areaName 生成区域出错 " .. areaName)
+        ZLog.Logger("GetTerrainKick  areaName 生成区域出错 " .. areaName)
         return
     end
 
     local point = self.resourceTerrain[areaName][pointIndex]
     if point == nil then
-        ZLog.Logger("GetTerrainResource pointIndex 生成点index出错" .. pointIndex)
+        ZLog.Logger("GetTerrainKick pointIndex 生成点index出错" .. pointIndex)
         return
     end
     if point.resourceType ~= resourceType then
-        ZLog.Logger("GetTerrainResource resourceType 生成资源类型出错" .. resourceType)
+        ZLog.Logger("GetTerrainKick resourceType 生成资源类型出错" .. resourceType)
         return
     end
     local player = GameServer.GetPlayerByUID(userId)

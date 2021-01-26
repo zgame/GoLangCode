@@ -35,6 +35,11 @@ table.insert(f, "Script/CSV/resourcePickType")
 table.insert(f, "Script/CSV/resourceTerrainArea")
 table.insert(f, "Script/CSV/resourceTerrainType")
 
+table.insert(f, "Script/Games/SandRock/Excel/generatorItem")
+table.insert(f, "Script/Games/SandRock/Excel/item")
+table.insert(f, "Script/Games/SandRock/Excel/resourcePick")
+table.insert(f, "Script/Games/SandRock/Excel/resourceTerrain")
+
 
 
 -- Protocol
@@ -91,10 +96,6 @@ table.insert(f, "Script/Games/SandRock/Room/resourcePick")
 table.insert(f, "Script/Games/SandRock/Room/resourceTerrain")
 table.insert(f, "Script/Games/SandRock/Room/weather")
 
-table.insert(f, "Script/Games/SandRock/Excel/generatorItem")
-table.insert(f, "Script/Games/SandRock/Excel/item")
-table.insert(f, "Script/Games/SandRock/Excel/resourcePick")
-table.insert(f, "Script/Games/SandRock/Excel/resourceTerrain")
 
 table.insert(f, "Script/Games/SandRock/DataBase/loginServer")
 
@@ -135,6 +136,13 @@ function ReloadAll()
     --end
     --for _,fileName in ipairs(LuaFiles.NetWork) do
     --    ReloadFile(fileName)
+    --end
+    --
+    --for _,fileName in ipairs(LuaFiles.Manager) do
+    --    ReloadFile(fileName)
+    --end
+    --for _, game in pairs(GlobalVar.AllGamesList) do
+    --    Game:Reload(game)
     --end
 
     ---- 所有玩家的数据刷新（如果结构定义有修改的话）

@@ -2,7 +2,7 @@ SandRockResourcePickNet = {}
 
 
 -- 同步资源列表
-function SandRockResourcePickNet.SendPickList(userId)
+function SandRockResourcePickNet.SendSleepPickList(userId)
     local sendCmd = ProtoGameSandRock.ResourceUpdate()
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then
@@ -20,7 +20,8 @@ function SandRockResourcePickNet.SendPickList(userId)
     end
     sendCmd.weather = SandRockRoom.GetWeather(room)
     --print(sendCmd)
-    NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd, nil)
+    --NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd, nil)
+    SandRockRoom.SendMsgToAllUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd)
 
 
 end
@@ -52,5 +53,16 @@ function SandRockResourcePickNet.GetPickResource(serverId, userId, buf)
     end
     local sendCmd = SandRockSleepNet.SendItemList(player, itemList)
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_GET, sendCmd, nil)
+
+    -- 同步一下资源点刷新
+    local sendCmd = ProtoGameSandRock.ResourceUpdate()
+    local points = sendCmd.points:add()
+    points.areaName = areaName
+    points.areaPoint = areaPoint
+    points.resourceType = 0  -- 清理掉
+
+    SandRockRoom.SendMsgToAllUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd)
+
+
 end
 

@@ -20,8 +20,8 @@ function Location.SendLocation(serverId)
 end
 -- 其他玩家的同步
 function Location.OtherLocation(serverId,userId,buf)
-    print("所有玩家同步位置")
+    --print("所有玩家同步位置")
     local msg = ProtoGameSandRock.PlayerLocation()
     msg:ParseFromString(buf)
-    print(msg)
+    --print(msg)
 end
