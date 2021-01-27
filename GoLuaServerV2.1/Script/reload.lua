@@ -137,6 +137,9 @@ function ReloadAll()
     --for _,fileName in ipairs(LuaFiles.NetWork) do
     --    ReloadFile(fileName)
     --end
+    --for _,fileName in ipairs(LuaFiles.DataBase) do
+    --    ReloadFile(fileName)
+    --end
     --
     --for _,fileName in ipairs(LuaFiles.Manager) do
     --    ReloadFile(fileName)

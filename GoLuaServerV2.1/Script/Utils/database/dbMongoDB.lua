@@ -35,15 +35,23 @@ end
 
 -- 执行find语句
 function MongoDB.Find(collection, table, handle)
+    --printTable(table)
+    local startTime = ZTime.GetOsTimeMillisecond()
     if handle == nil then
         handle = GlobalVar.MongoMainConnect
     end
     local result = handle:find(collection, table)
+    local endTime = ZTime.GetOsTimeMillisecond()
+    print("mongo db find cost:".. endTime - startTime)
+    if endTime-startTime > 100 then
+        printTable(table)
+    end
     return result
 end
 
 -- 执行finds语句  查询多条记录  sort里面是列名 负的表示从高到低排序
 function MongoDB.Finds(collection, table, sort, handle)
+    local startTime = ZTime.GetOsTimeMillisecond()
     if handle == nil then
         handle = GlobalVar.MongoMainConnect
     end
@@ -52,6 +60,8 @@ function MongoDB.Finds(collection, table, sort, handle)
     end
 
     local result = handle:finds(collection, table, sort)
+    local endTime = ZTime.GetOsTimeMillisecond()
+    print("mongo db finds cost:".. endTime - startTime)
     return result
 end
 
@@ -60,11 +70,7 @@ function MongoDB.Insert(collection, table, handle)
     if handle == nil then
         handle = GlobalVar.MongoMainConnect
     end
-    local err = handle:insert(collection, table)
-    if err ~= nil then
-        ZLog.Logger(err)
-    end
-    return err
+    handle:insert(collection, table)
 end
 
 
@@ -73,26 +79,19 @@ function MongoDB.Del(collection, table, handle)
     if handle == nil then
         handle = GlobalVar.MongoMainConnect
     end
-    local err = handle:del(collection, table)
-    if err ~= nil then
-        ZLog.Logger(err)
-    end
-    return err
+    handle:del(collection, table)
 end
 
 
 -- 执行update语句  selectTable为条件  updateTable为更新的内容
 function MongoDB.Update(collection, selectTable, updateTable, cmd, handle )
+
     if handle == nil then
         handle = GlobalVar.MongoMainConnect
     end
     if cmd == nil then
         cmd = "$set"        -- 默认是更新命令
     end
-    local err = handle:update(collection, selectTable, updateTable, cmd)
-    if err ~= nil then
-        ZLog.Logger(err)
-    end
-    return err
+    handle:update(collection, selectTable, updateTable, cmd)
 end
 

@@ -31,7 +31,10 @@ LoginServer={}
 function LoginServer.SendLogin(serverId)
     print("-----申请登录serverId:----------",serverId)
     local sendCmd = ProtoGameSandRock.GameLogin()
-    sendCmd.machineId = build_mac_addr(serverId)
+    --sendCmd.machineId = build_mac_addr(serverId)
+
+    sendCmd.openId = "sandRockMac74-D4-36-AD-00-01"
+    --sendCmd.openId = "sandRockMacffbd8b4d121a2156ec122bfcc4303a4440519b94Enter-ZSW"
     sendCmd.gameId = Const.GameTypeCCC
     Network.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_LOGON,sendCmd,nil)
 end

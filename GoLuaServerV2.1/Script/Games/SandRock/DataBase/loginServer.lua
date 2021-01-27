@@ -26,7 +26,9 @@ function SandRockLoginDB.User(userId)
     end
     local t = {}
     t.userId = userId
-    return MongoDB.Find('User',t)
+
+    local re =  MongoDB.Find('User',t)
+    return re
 end
 
 function SandRockLoginDB.UserInsert(user)

@@ -129,7 +129,9 @@ func main() {
 		//	zLog.PrintfLogger("--------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!![ 警告 ] 房间循环 消耗时间过长: %d", int(ztimer.GetOsTimeMillisecond()-startTime))
 		//}
 		runtime.GC()
-		time.Sleep(time.Millisecond * 1000 * 10)                                //给其他协程让出10秒的时间， 这个可以后期调整
+		time.Sleep(time.Millisecond * 1000)                                //给其他协程让出10秒的时间， 这个可以后期调整
+
+		//fmt.Printf("go run  %d \n" , ztimer.GetOsTimeMillisecond() )
 		//end:= ztimer.GetOsTimeMillisecond()
 		//if end - start > 120 {
 			//fmt.Println("一个循环用时", end-start)

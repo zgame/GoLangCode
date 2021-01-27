@@ -60,6 +60,7 @@ end
 
 -- 房间的主循环
 function SandRockRoom:RunRoom()
+    --print("lua run ".. os.time())
     if self:CheckTableEmpty() then
         --print("这是一个空房间" .. self.gameId)
 

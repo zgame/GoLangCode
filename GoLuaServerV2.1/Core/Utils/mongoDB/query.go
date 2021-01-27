@@ -16,7 +16,7 @@ func clientInsertMethod(L *lua.LState) int {
 	collection := L.ToString(2)
 
 	s := client.MongoSession.Copy()
-	defer s.Close()
+
 	Collection := s.DB("").C(collection)
 	//fmt.Println("----------------insert--------------")
 
@@ -30,12 +30,13 @@ func clientInsertMethod(L *lua.LState) int {
 
 	}
 
-	err := Collection.Insert(options)
-	if err != nil {
-		zLog.PrintLogger("mongo db insert error "+err.Error())
-		L.Push(lua.LString(err.Error()))
-		return 1
-	}
+	go func() {
+		err := Collection.Insert(options)
+		if err != nil {
+			zLog.PrintLogger("mongo db insert error "+err.Error())
+		}
+		s.Close()
+	}()
 
 	return 0 // 执行成功
 }
@@ -46,7 +47,7 @@ func clientDelMethod(L *lua.LState) int {
 	collection := L.ToString(2)
 
 	s := client.MongoSession.Copy()
-	defer s.Close()
+	//defer s.Close()
 	Collection := s.DB("").C(collection)
 	//fmt.Println("----------------Del--------------")
 
@@ -58,12 +59,16 @@ func clientDelMethod(L *lua.LState) int {
 		return 0
 	}
 
-	err := Collection.Remove(options)
-	if err != nil {
-		zLog.PrintLogger("mongo db del error "+err.Error())
-		L.Push(lua.LString(err.Error()))
-		return 1
-	}
+	go func() {
+		err := Collection.Remove(options)
+		if err != nil {
+			zLog.PrintLogger("mongo db del error "+err.Error())
+			//L.Push(lua.LString(err.Error()))
+			//return 1
+		}
+		s.Close()
+	}()
+
 
 	return 0 // 执行成功
 }
@@ -74,7 +79,7 @@ func clientUpdateMethod(L *lua.LState) int {
 	collection := L.ToString(2)
 
 	s := client.MongoSession.Copy()
-	defer s.Close()
+	//defer s.Close()
 	Collection := s.DB("").C(collection)
 	//fmt.Println("----------------update--------------")
 
@@ -95,12 +100,15 @@ func clientUpdateMethod(L *lua.LState) int {
 
 	cmd := L.ToString(5)
 
-	err := Collection.Update(options, bson.M{cmd: updateO})
-	if err != nil {
-		zLog.PrintLogger("mongo db update error "+err.Error())
-		L.Push(lua.LString(err.Error()))
-		return 1
-	}
+	go func() {
+		err := Collection.Update(options, bson.M{cmd: updateO})
+		if err != nil {
+			zLog.PrintLogger("mongo db update error "+err.Error())
+			//L.Push(lua.LString(err.Error()))
+			//return 1
+		}
+		s.Close()
+	}()
 
 	return 0 // 执行成功
 }

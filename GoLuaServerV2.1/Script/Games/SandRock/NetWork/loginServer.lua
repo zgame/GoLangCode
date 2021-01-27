@@ -21,14 +21,17 @@ local function getUserDB(msg)
     local userId = msg.userId
     local openId = msg.openId
     local machineId = msg.machineId
-
     local user
-    if userId ~= nil then
+
+    if userId ~= 0 then     -- 说明输入了userId，优先处理userId
         user =  SandRockLoginDB.User(userId)
+        if user ~= nil then
+            return user
+        end
     end
 
-    if machineId ~= nil then
-        openId = 'cccmac'..machineId
+    if machineId ~= "" then     -- 输入了machineId ，忽略openid
+        openId = 'sandRockMac'..machineId
     end
 
     -- 注意如果客户端， 同时发mac 和 openid， 会使用mac，忽略openid
@@ -37,6 +40,7 @@ local function getUserDB(msg)
         user = SandRockLoginDB.User(userId)
     end
 
+    -- 最后看一下如果数据库没有数据，那么新建
     if user == nil then
         return newUser(openId,machineId)
     end
@@ -52,9 +56,6 @@ function SandRockLoginNet.Login(serverId, uId, buf)
 
     -- 加载玩家数据
     local user = getUserDB(msg)
-    if user == nil then
-        return
-    end
     local player = Player(user)
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
     local userId = Player.UId(player)
