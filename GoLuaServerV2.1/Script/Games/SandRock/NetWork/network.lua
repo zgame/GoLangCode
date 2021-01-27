@@ -18,8 +18,14 @@ function SandRockNetwork.Receive(serverId, userId, mainSgId, subMsgId, buf, toke
     switch[CMD_SAND_ROCK.SUB_CREATION_COOKING] = SandRockCreationCookingNet.CreateCooking
 
 
+    --print("消息 ".. subMsgId.. " start ： "  .. ZTime.GetOsTimeMillisecond())
+    local startTime = ZTime.GetOsTimeMillisecond()
     switch[subMsgId](serverId, userId, buf)
-
+    --print("消息 ".. subMsgId.. "  end  ： "  .. ZTime.GetOsTimeMillisecond())
+    local endTime = ZTime.GetOsTimeMillisecond()
+    if endTime - startTime > 100 then
+        print("消息 ".. subMsgId.. "  cost time  ： "  .. endTime - startTime)
+    end
 
 
 
