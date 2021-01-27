@@ -28,7 +28,7 @@ function Main.GoCallLuaStartAllServers()
     end
 
     print("------------------   服务器启动初始化  ---------------------------")
-    SandRockResourcePick.Init()
+    --SandRockResourcePick.Init()
     SandRockGeneratorItem.Init()
     SandRockItem.Init()
     print("------------------   数据初始化完成  ---------------------------")
@@ -76,7 +76,7 @@ function Main.GoCallLuaStartAllServers()
     --printTable(CSV_resourceType.GetAllKeys())
 
 
-
+    --local itemList = SandRockGeneratorItem.GetItems("20923003")             -- pick采集
 
 end
 

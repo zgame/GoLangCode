@@ -4,7 +4,7 @@ SandRockItem = {}
 -- 把几率计算成百分比
 function SandRockItem.Init()
     for itemId,_ in pairs(CSV_item.Get()) do
-        local list = CSV_item.GetValue(itemId,"QualitySceneSlot")
+        local list = CSV_item.GetValue(itemId,"QualitySceneSlot")       -- 这里只处理品质的几率， 以后让策划把表改了， 可以节省程序代码
         SandRockItem[itemId] = {}
         local all = 0
         for i,v in ipairs(list)do

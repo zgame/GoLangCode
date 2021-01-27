@@ -22,7 +22,7 @@ function SandRockSleepNet.SendItemList(player, itemList)
         sendCmd = ProtoGameSandRock.ItemGet()
         for itemId, num in pairs(itemList) do
             local item = sendCmd.item:add()
-            item.itemId = itemId
+            item.itemId = tonumber(itemId)
             item.itemNum = num
         end
         sendCmd.exp = Player.ExpGet(player)

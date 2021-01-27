@@ -43,7 +43,7 @@ local function _setGroupInit(groupId)
         for i, subDrop in ipairs(subList) do
             local element = {}
             local subStr = ZString.Split(subDrop, ",")
-            element.id = tonumber(subStr[1])
+            element.generateId = subStr[1]
             --element.rate = tonumber(subStr[2])
             element.lucky = tonumber(subStr[3])                                         -- 幸运值以后再处理
             table.insert(sub, element)                  -- 把每个元素添加进去
@@ -84,16 +84,20 @@ local function _getGroupItemNum(groupId)
         end
         return a
     elseif  GenDistType == "Uniform" then      -- 随机区间
-        return ZRandom.GetRandom(GenDistParams,GenDistParams2)
+        local a = ZRandom.GetRandom(GenDistParams,GenDistParams2)
+        return a
     elseif  GenDistType == "UniformFloat" then      -- 随机区间
-        return ZRandom.GetFloat(GenDistParams,GenDistParams2,3)
+        local a = ZRandom.GetFloat(GenDistParams,GenDistParams2,3)
+        return a
     elseif  GenDistType == "Normal" then      -- 正态分布区间
         local normal = ZRandom.Normal()
         if normal > 1 or normal < -1 then       -- 如果落到了一倍方差之外，那么进行均匀的概率分布，策划设计如此
             normal = math.random()*2-1
         end
-        return GenDistParams + GenDistParams2 * normal
+        local a = GenDistParams + GenDistParams2 * normal
+        return a
     end
+
 end
 
 
@@ -123,18 +127,16 @@ function SandRockGeneratorItem.GetItems(groupId ,scale, all)
             ZLog.Logger("GetItems 生成组报错，" .. groupId)
             return nil
         end
-
         for index, allType in pairs(generator) do
             local subIndex = 1                    -- 用；分割的取其中一个
             if #generator[index] > 1 then
                 subIndex = ZRandom.GetList(generator[index].rateList)       -- 多个元素就随机一个 ，这里是用；分割的取其中一个，除非都要
             end
-
-            _setGroupNum(groupList,generator[index][subIndex].id)
+            _setGroupNum(groupList,generator[index][subIndex].generateId)
             -- 这里是全部掉落，不再使用生成组的；只取一个的规则，而是全部都要，用于踢树暴击
             if all~=nil and all == true then
                 for i,v in ipairs(generator[index]) do
-                    _setGroupNum(groupList,v.id)
+                    _setGroupNum(groupList,v.generateId)
                 end
             end
         end
@@ -151,7 +153,6 @@ function SandRockGeneratorItem.GetItems(groupId ,scale, all)
             itemList[itemId] = nil   -- 这是因为表格里面配置有数量为0， 不掉， 那配置它干啥呢， 理解不了，闲的蛋疼 ，害的我代码都乱了
         end
     end
-
 
     --printTable(itemList)
     return itemList

@@ -4,7 +4,7 @@ SandRockLocationNet = {}
 function SandRockLocationNet.Location(serverId, userId, buf)
     local msg = ProtoGameSandRock.PlayerLocation()
     msg:ParseFromString(buf)
-    --print("上报位置---------------------------------------")
+    --print("上报位置和动作---------------------------------------"..os.time())
     --print(msg)
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then

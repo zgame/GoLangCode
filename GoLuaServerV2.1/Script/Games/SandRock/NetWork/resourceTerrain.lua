@@ -22,19 +22,21 @@ function SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList,allPlayer)
         points.stumpHealth = element.stumpHealth
     end
 
-    --print("发送地形树的状态")
+    --print("发送地形树的状态"..os.time())
     --print(sendCmd)
-    NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN, sendCmd, nil)
-    if allPlayer~= nil then
-        -- 给其他玩家也同步一下消息
+
+    if allPlayer == nil then
+        NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN, sendCmd, nil)
+    else
+        -- 给所有玩家同步
         local room = GameServer.GetRoomByUserId(userId)
-        SandRockRoom.SendMsgToOtherUsers(room, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN, sendCmd, userId)
+        SandRockRoom.SendMsgToAllUsers(room, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN, sendCmd, userId)
     end
 end
 
 -- 采集资源
 function SandRockResourceTerrainNet.GetTerrainResource(serverId, userId, buf)
-
+    --print("资源砍树开始"..ZTime.GetOsTimeMillisecond())
     local msg = ProtoGameSandRock.ResourceTerrainGet()
     msg:ParseFromString(buf)
     --print("客户端开始 砍树")
@@ -64,5 +66,5 @@ function SandRockResourceTerrainNet.GetTerrainResource(serverId, userId, buf)
         end
     end
 
-
+    --print("资源砍树结束"..ZTime.GetOsTimeMillisecond())
 end
