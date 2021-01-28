@@ -4,7 +4,7 @@
 GameNetwork = {}
 
 function GameNetwork.Init(serverId)
-    print("创建了新链接"..tostring(serverId))
+    print("创建了链接, serverId:"..tostring(serverId))
 end
 
 

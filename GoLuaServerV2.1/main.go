@@ -357,7 +357,7 @@ func GetAllConnectMsg() (string,int,int,int)  {
 	//}
 	//GlobalVar.RWMutex.RUnlock()
 	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerSendWriteChannelNum", WriteChan)                       // 发送缓冲区大小
-	GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError) // 把数据头尾错误发送给lua
+	//GameManagerLua.GoCallLuaSetIntVar("GlobalVar","ServerDataHeadErrorNum", Lua.StaticDataPackageHeadFlagError) // 把数据头尾错误发送给lua
 	str:=fmt.Sprintf(" 发送连接数量 %d  接收连接数量  %d 每秒发送 %d  每秒接收 %d    发送缓存WriteChan %d  消息队列长度 %d ",   successSendClients, successRecClients, successSendMsg , successRecMsg, WriteChan, Lua.QueueGetLen())
 	return "所有连接数量："+ strconv.Itoa(AllConnect) + str , successSendMsg , successRecMsg, WriteChan
 }

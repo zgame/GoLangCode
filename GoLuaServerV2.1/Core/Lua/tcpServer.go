@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"math"
 	"net"
-	"sync/atomic"
+	"sync"
 	"time"
 )
 
@@ -14,16 +14,17 @@ import (
 // TcpServer其实是一个个连接单独处理的模块
 //-----------------------------------------------------------------------------------
 
-var TcpServerUUID int32 = 1            // 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
-var StaticDataPackageHeadLess = 0      // 统计信息，数据包 头部数据不全
-var StaticDataPackageProtoDataLess = 0 // 统计信息，数据包 pb数据不全
-var StaticDataPackagePasteNum = 0      // 统计信息，拼接次数
-var StaticDataPackagePasteSuccess = 0  // 统计信息，成功拼接后，解析成功
-var StaticDataPackageHeadFlagError = 0 // 统计信息，数据包头部标识不正确
-
-var StaticNetWorkReceiveToSendCostTime = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
-var StaticNetWorkReceiveToSendCostTimeAll = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
-var StaticNetWorkReceiveToSendCostTimeNum = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
+var ConnectMyTcpServer sync.Map      //[int]*MyTcpServer      // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
+var ConnectMyTcpServerByUid sync.Map //[int]*MyTcpServer // 将uid跟连接句柄进行哈希
+//var TcpServerUUID int32 = 0            // 自定义玩家连接的临时编号，用来传给lua，这样lua就知道消息给谁返回
+//var StaticDataPackageHeadLess = 0      // 统计信息，数据包 头部数据不全
+//var StaticDataPackageProtoDataLess = 0 // 统计信息，数据包 pb数据不全
+//var StaticDataPackagePasteNum = 0      // 统计信息，拼接次数
+//var StaticDataPackagePasteSuccess = 0  // 统计信息，成功拼接后，解析成功
+//var StaticDataPackageHeadFlagError = 0 // 统计信息，数据包头部标识不正确
+//var StaticNetWorkReceiveToSendCostTime = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
+//var StaticNetWorkReceiveToSendCostTimeAll = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
+//var StaticNetWorkReceiveToSendCostTimeNum = 0   // 统计信息，接收客户端消息到发送回该消息所消耗的时间
 
 
 
@@ -65,21 +66,28 @@ func GetMyServerByUID(uid int) *MyTcpServer {
 
 // 获取唯一的ServerId
 func GetServerUid() int {
-retry:
-	TcpServerUUID = atomic.AddInt32(&TcpServerUUID, 1)
-
-	if TcpServerUUID > math.MaxInt32/2 {
-		TcpServerUUID = 1 // 如果越界了， 那么重头来过
+	for i := 1; i < math.MaxInt32; i++ {
+		if  GetMyServerByServerId(i) == nil{
+			return i
+		}
 	}
-	ServerId := int(TcpServerUUID)
-	if  GetMyServerByServerId(ServerId) != nil {
-		// 如果被占用了， 那么尝试下一个
-		goto retry
-		fmt.Printf("serverId  %d 被占用", TcpServerUUID)
-	}
-	//fmt.Println("连接创建了ServerId ： ",ServerId)
-
-	return ServerId
+	return 0
+//
+//retry:
+//	TcpServerUUID = atomic.AddInt32(&TcpServerUUID, 1)
+//
+//	if TcpServerUUID > math.MaxInt32/2 {
+//		TcpServerUUID = 1 // 如果越界了， 那么重头来过
+//	}
+//	ServerId := int(TcpServerUUID)
+//	if  GetMyServerByServerId(ServerId) != nil {
+//		// 如果被占用了， 那么尝试下一个
+//		goto retry
+//		fmt.Printf("serverId  %d 被占用", TcpServerUUID)
+//	}
+//	//fmt.Println("连接创建了ServerId ： ",ServerId)
+//
+//	return ServerId
 }
 
 // 分配一个玩家处理逻辑模块的内存

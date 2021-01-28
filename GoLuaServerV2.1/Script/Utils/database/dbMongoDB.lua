@@ -37,13 +37,15 @@ end
 function MongoDB.Find(collection, table, handle)
     --printTable(table)
     local startTime = ZTime.GetOsTimeMillisecond()
+
     if handle == nil then
         handle = GlobalVar.MongoMainConnect
     end
     local result = handle:find(collection, table)
+
     local endTime = ZTime.GetOsTimeMillisecond()
-    print("mongo db find cost:".. endTime - startTime)
-    if endTime-startTime > 100 then
+    if endTime-startTime > 10 then
+        print("mongo db find cost: " .. endTime - startTime)
         printTable(table)
     end
     return result

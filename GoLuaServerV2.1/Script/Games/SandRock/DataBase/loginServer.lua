@@ -2,17 +2,17 @@ SandRockLoginDB = {}
 
 ---------------- openId 和 uId 对应关系---------------
 function SandRockLoginDB.OpenIdInsert(openId, uId)
-    local startTime = ZTime.GetOsTimeMillisecond()
+    --local startTime = ZTime.GetOsTimeMillisecond()
     Redis.SaveString(RedisDirAllPlayersOpenID,openId, uId)
-    local endTime = ZTime.GetOsTimeMillisecond()
-    print("redis db save UId cost:".. endTime - startTime)
+    --local endTime = ZTime.GetOsTimeMillisecond()
+    --print("redis db save UId cost:".. endTime - startTime)
 end
 
 function SandRockLoginDB.UId(openId)
-    local startTime = ZTime.GetOsTimeMillisecond()
+    --local startTime = ZTime.GetOsTimeMillisecond()
     local userId = Redis.GetString(RedisDirAllPlayersOpenID,openId)
-    local endTime = ZTime.GetOsTimeMillisecond()
-    print("redis db get UId cost:".. endTime - startTime .. ":" .. userId .. ";")
+    --local endTime = ZTime.GetOsTimeMillisecond()
+    --print("redis db get UId cost:".. endTime - startTime .. ":" .. userId .. ";")
     return userId
 end
 

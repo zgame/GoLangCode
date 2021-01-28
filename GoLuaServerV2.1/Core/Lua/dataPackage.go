@@ -27,7 +27,7 @@ func ReadDataPackage( buf []byte, Uid int) (int,int,int,string) {
 	//-----------------------------proto buffer 内容不完整----------------------------
 	if len(buf) < BufAllSize{
 		//str:= fmt.Sprintf("%d数据包格式不正确buflen%d,bufferSize%d,%x  \n", a.UserId,len(buf),int(bufferSize),buf)
-		StaticDataPackageProtoDataLess++
+		//StaticDataPackageProtoDataLess++
 		return  0, 0,0,"" //int(bufferSize) + offset
 	}
 

@@ -3,15 +3,12 @@ package Lua
 import (
 	"fmt"
 	"github.com/yuin/gopher-lua"
-	"sync"
 )
 //--------------------------------------------------------------------------------
 // lua的接口，包含热更新
 //--------------------------------------------------------------------------------
 
 var GameManagerLuaHandle *MyLua      // 主线程的lua句柄
-var ConnectMyTcpServer sync.Map      //[int]*MyTcpServer      // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
-var ConnectMyTcpServerByUid sync.Map //[int]*MyTcpServer // 将uid跟连接句柄进行哈希
 
 //var ConnectMyUdpServer sync.Map   // [int]*MyUdpServer      // 将lua的句柄跟对应的服务器句柄进行一个哈希，方便以后的lua发送时候回调
 
