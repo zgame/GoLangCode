@@ -32,6 +32,7 @@ var clientMethods = map[string]lua.LGFunction{
 	"update": clientUpdateMethod,
 	"find":   clientFindMethod,
 	"finds":  clientFindsMethod,
+	"ping":  clientPing,
 }
 
 func checkClient(L *lua.LState) *Client {

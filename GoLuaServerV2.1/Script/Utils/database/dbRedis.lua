@@ -19,12 +19,16 @@ local function cmdForRedis(cmd, handle, ...)
     if handle == nil then
         handle = GlobalVar.RedisConnect
     end
+    if handle == nil then
+        return
+    end
     --local arg = { ... }
     --local slice = {}
     --for i, v in ipairs(arg) do
     --    slice[i] = v
     --end
     --printTable(slice)
+    --local string, number = handle:cmd(cmd, { ... })
     local string, number = handle:cmd(cmd, { ... })
     return string, number
 end
@@ -100,6 +104,11 @@ function Redis.Init(handle, RedisAddress, RedisPass)
         test()
     end
     return ok, err
+end
+
+function Redis.Close(handle)
+    handle:close()
+    handle = nil
 end
 
 ----------------------------key是否存在判定-----------------------------

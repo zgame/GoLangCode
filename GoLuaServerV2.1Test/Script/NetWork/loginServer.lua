@@ -51,7 +51,7 @@ function LoginServer.Login(serverId, uId,buf)
     local player = Player:New(user)
     GameClient.AddPlayer(serverId,player)
 
-    --print( msg)
+    print( msg)
     --luaCallGoResisterUID(uid,serverId)
     ZTimer.SetNewTimer("GameSandRock", "RunGame", 2000, serverId, GameSandRock.RunGame)
 end

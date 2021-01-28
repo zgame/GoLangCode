@@ -97,3 +97,11 @@ function MongoDB.Update(collection, selectTable, updateTable, cmd, handle )
     handle:update(collection, selectTable, updateTable, cmd)
 end
 
+
+-- 执行ping语句
+function MongoDB.Ping(handle)
+    if handle == nil then
+        handle = GlobalVar.MongoMainConnect
+    end
+    return handle:ping()
+end

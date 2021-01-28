@@ -33,6 +33,7 @@ function GameServer.Start()
 
     print("-------------------  添加主循环  ------------------------------")
     ZTimer.SetNewTimer("GameServer", "RunGamesRooms", 500, GameServer.RunGamesRooms)
+
     --ZTimer.SetNewTimer("GameServer", "RunGamesRooms1", 1, GameServer.RunGamesRooms1)
 
     print("-------------------  添加游戏  ------------------------------")
@@ -174,7 +175,3 @@ function GameServer.RunGamesRooms()
         end
     end
 end
---
---function GameServer.RunGamesRooms1()
---    print("now:".. ZTime.GetOsTimeMillisecond())
---end

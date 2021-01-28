@@ -57,6 +57,10 @@ function SandRockLoginNet.Login(serverId, uId, buf)
 
     -- 加载玩家数据
     local user = getUserDB(msg)
+    if user == nil then
+        ZLog.Logger("数据库获取玩家数据出错")
+        return
+    end
     local player = Player(user)
     -- 将玩家的uid跟my server进行关联 ，方便以后发送消息
     local userId = Player.UId(player)

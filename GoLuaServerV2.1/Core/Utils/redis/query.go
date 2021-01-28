@@ -25,6 +25,9 @@ func CmdForRedis(L *lua.LState ) int {
 		return 0
 	}
 	//fmt.Printf("%v \n",args)
+	if client.redis == nil {
+		return 0
+	}
 	ret, err := client.redis.Do(cmd, args...)
 	if err != nil {
 		zLog.PrintfLogger("=======redis  CmdForRedis ========= %s  %s   出错了: %s", cmd, args, err.Error())

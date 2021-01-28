@@ -134,7 +134,7 @@ func clientFindMethod(L *lua.LState) int {
 	err := Collection.Find(findTb).Select(bson.M{"_id":0}).One(&result)
 	//err := Collection.Find(  findTb, bson.M{"title":1,"_id":0}).One(&result)
 	if err != nil {
-		zLog.PrintLogger("mongo db error ："+ err.Error())
+		//zLog.PrintLogger("mongo db error ："+ err.Error())
 		return 0
 	}
 	//result["_id"] = nil
@@ -176,4 +176,23 @@ func clientFindsMethod(L *lua.LState) int {
 	L.Push(returnTb)
 
 	return 1 // 执行成功
+}
+
+// ping
+func clientPing(L *lua.LState) int {
+	client := checkClient(L)
+
+	s := client.MongoSession.Copy()
+	defer s.Close()
+
+	err:= s.Ping()
+	if err!= nil {
+		L.Push( lua.LString(err.Error()))
+		return 1
+	}
+	//returnTb := toTableFromSlice(L, reflect.ValueOf(result))
+	//returnTb := zLua.LuaSetValue(L, result)
+	//L.Push()
+
+	return 0 // 执行成功
 }
