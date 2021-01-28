@@ -17,16 +17,14 @@ import (
 func CmdForRedis(L *lua.LState ) int {
 	client := checkClient(L)
 	cmd := L.ToString(2)
-	args,ok := zLua.LuaGetValue(L, 3).([]interface{}) //强转为数组
+
+	array := zLua.LuaGetValue(L, 3)
+	args,ok := array.([]interface{}) //强转为数组
 	if !ok {
 		zLog.PrintfLogger("redis cmd :%s 参数转换成数组出错 ",cmd )
 		return 0
 	}
-
-	//args := make([]interface{},0)
-	//luaScript := L.ToString(1)
-	//name := L.ToString(2)
-
+	//fmt.Printf("%v \n",args)
 	ret, err := client.redis.Do(cmd, args...)
 	if err != nil {
 		zLog.PrintfLogger("=======redis  CmdForRedis ========= %s  %s   出错了: %s", cmd, args, err.Error())
@@ -36,11 +34,6 @@ func CmdForRedis(L *lua.LState ) int {
 	re1,_ := redis.String(ret,err)
 	re2,_ := redis.Int64(ret,err)
 
-	//if re1 != "" {
-	//	fmt.Printf("redes do : %s  %v   result: %s \n", cmd, args, re1)
-	//}else{
-	//	fmt.Printf("redes do : %s  %v   result: %d \n", cmd, args, re2)
-	//}
 	L.Push(lua.LString(re1))
 	L.Push(lua.LNumber(re2))
 
@@ -57,24 +50,17 @@ func GetStringListFromRedis(L *lua.LState ) int {
 		return 0
 	}
 
+
 	ret, err := redis.Values(client.redis.Do(cmd, args...))
 	if err != nil {
 		zLog.PrintfLogger("=======redis  GetStringListFromRedis =========  出错了 %s %v : %s", cmd,args, err.Error())
 		return 0
-		//panic("redis list 读取出错 " + cmd + "  " + err.Error())
 	}
-	//result := ""
 	tb := L.NewTable()
 	if ret != nil {
-		//var str []string
 		for _ , v := range ret {
 			tb.Append(lua.LString(string(v.([]byte))))
-			//fmt.Println("",string(v.([]byte)))
-			//str = append(str, string(v.([]byte)))
 		}
-		//data, _ := json.MarshalIndent(str, "", " ")
-		//fmt.Printf("redes do : %s  %v   result: %s \n", cmd, args, string(data))
-		//result =  string(data)
 	}
 
 	L.Push(tb)

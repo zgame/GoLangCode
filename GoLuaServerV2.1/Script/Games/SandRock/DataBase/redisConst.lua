@@ -13,3 +13,5 @@
 -- RedisDirNickFindUserID          = "BY_Nick_Find_UserID"                     -- 所有玩家Nick对应的UserID映射关系
 -- RedisDirGameIDFindUserID        = "BY_GameID_Find_UserID"                   -- 所有玩家GameID对应的UserID映射关系
 
+RedisDirAllPlayersUUID = "SandRock:AllUer_UUID"                         -- 所有玩家UUID
+RedisDirAllPlayersOpenID = "SandRock:AllUer_OpenID"                         -- 所有玩家OpenID跟UserId的映射

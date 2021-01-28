@@ -19,12 +19,13 @@ local function cmdForRedis(cmd, handle, ...)
     if handle == nil then
         handle = GlobalVar.RedisConnect
     end
-    local arg = { ... }
-    local slice = {}
-    for i, v in ipairs(arg) do
-        slice[i] = v
-    end
-    local string, number = handle:cmd(cmd, slice)
+    --local arg = { ... }
+    --local slice = {}
+    --for i, v in ipairs(arg) do
+    --    slice[i] = v
+    --end
+    --printTable(slice)
+    local string, number = handle:cmd(cmd, { ... })
     return string, number
 end
 
@@ -33,12 +34,12 @@ local function getStringListFromRedis(cmd, handle, ...)
     if handle == nil then
         handle = GlobalVar.RedisConnect
     end
-    local arg = { ... }
-    local slice = {}
-    for i, v in ipairs(arg) do
-        slice[i] = v
-    end
-    local list = handle:stringList(cmd, slice)
+    --local arg = { ... }
+    --local slice = {}
+    --for i, v in ipairs(arg) do
+    --    slice[i] = v
+    --end
+    local list = handle:stringList(cmd, { ... })
     return list
 end
 
@@ -47,10 +48,10 @@ local function test()
     --print("-------string and hash---------")
     ----print(RedisExistKey("test:name"))
     --print(RedisSaveString("test:keyt",nil,"ss"))
-    --print(RedisSaveString("test:hash","name","ss1"))
+    --print(Redis.SaveString("test:hash","name","ss1"))
     ----print(RedisExistKey("test:hash","name"))
     --
-    --print(RedisGetString("test:keyt"))
+    --print(Redis.GetString("test:hash","name"))
     --print(RedisGetString("test:hash","name"))
     --
     --print("-------list---------")
@@ -96,7 +97,7 @@ function Redis.Init(handle, RedisAddress, RedisPass)
     local ok, err = handle:connect({ host = RedisAddress, password = RedisPass })
     if ok then
         print(" redis  数据库 ok!")
-        --test()
+        test()
     end
     return ok, err
 end

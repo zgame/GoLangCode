@@ -134,6 +134,7 @@ func clientFindMethod(L *lua.LState) int {
 	err := Collection.Find(findTb).Select(bson.M{"_id":0}).One(&result)
 	//err := Collection.Find(  findTb, bson.M{"title":1,"_id":0}).One(&result)
 	if err != nil {
+		zLog.PrintLogger("mongo db error ："+ err.Error())
 		return 0
 	}
 	//result["_id"] = nil

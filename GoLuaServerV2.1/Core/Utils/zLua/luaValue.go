@@ -53,9 +53,10 @@ func getArbitraryValue(l *lua.LState, v lua.LValue) interface{} {
 		})
 
 		if arrSize >= 0 {
-			ms := make([]string, arrSize)
+			ms := make([]interface{}, arrSize)
 			for i := 0; i < arrSize; i++ {
-				ms[i] = m[strconv.Itoa(i+1)].(string)
+				ms[i] = m[strconv.Itoa(i+1)]
+				//ms[i] = m[strconv.Itoa(i+1)].(string)
 			}
 			return ms
 		}

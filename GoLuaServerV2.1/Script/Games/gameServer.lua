@@ -55,10 +55,10 @@ function GameServer.Start()
 end
 
 -----------------------------------玩家列表管理-------------------------------------
-local RedisDirAllPlayersUUID = "SandRock:AllUer_UUID:"                         -- 所有玩家UUID
+
 local function GetAllPlayersUUID(num)
     --return RedisAddNumber(RedisDirAllPlayersUUID.."BY_UUID" ,"BY_UUID",num)
-    local dir = RedisDirAllPlayersUUID .. "CCC_UUID"
+    local dir = RedisDirAllPlayersUUID
     local key = "CCC_UUID"
     local redis_lua_str = [[
     local r = redis.call('hget',"%s","%s")

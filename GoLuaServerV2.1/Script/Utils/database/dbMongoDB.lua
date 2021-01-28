@@ -16,9 +16,10 @@ function MongoDB.Init(handle, h, d, u, ps)
         --
         --
         --local user2 = {}
-        --user2["name"] = 889
-        --local ss = MongoFind("people",user)
+        --user2["userId"] = 1000000004
+        --local ss = MongoDB.Find("User", user2 )
         ----local ss = MongoFinds("people",user2,"-key")
+        --print("dddddddddddddddddddddddd")
         --printTable(ss)
         --
         ----print(MongoUpdate("people",user,user2))
@@ -30,7 +31,6 @@ function MongoDB.Init(handle, h, d, u, ps)
     return ok, err
 
 end
-
 
 
 -- 执行find语句

@@ -12,11 +12,12 @@ Setting = {
     -- 数据库地址的定义
     -----------------------------------------------------------------
     ---------------------- redis -------------------
-    RedisAddress = "47.92.150.31:6379"  , -- redis 服务器地址
+    --RedisAddress = "47.92.150.31:6379"  , -- redis 服务器地址远程
+    RedisAddress = "10.96.8.209:6379"  , -- redis 服务器地址 局域网
     RedisPass = "LncDnQaR502NWaFdCVXMeKacglgnf3"     ,           -- redis 密码
     ---------------------- mongodb -------------------
-    MongoAddress = "47.92.150.31:27017",
-    MongoDatabase = "sandrock",
+    MongoAddress = "10.96.8.209:27017",
+    MongoDatabase = "SandRock",
     MongoUser = "patheaDev",
     MongoPass = "LncDnQaR502NWaFdCVXMeKacglgnf3",
     ---------------------- mySql -------------------
@@ -34,6 +35,8 @@ Setting = {
 
 
 
-
+    -- mongo db init
+    -- use SandRock
+    -- db.createCollection("User")
 
 }
