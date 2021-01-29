@@ -81,29 +81,29 @@ end
 
 --- 有玩家登陆游戏
 function Game:PlayerLoginGame(oldPlayer)
-    local player = GameServer.GetPlayerByUID(Player.UId(oldPlayer)) -- 把之前的玩家数据取出来
-    -- 如果玩家是断线重连的
-    if player ~= nil then
-        --找到之前有玩家在线
-        if oldPlayer.gameId == player.gameId then
-            -- 同一个游戏， 并且玩家状态是等待断线重连
-            --player.NetWorkState = true                      -- 网络恢复正常
-            --player.NetWorkCloseTimer = 0
-            print("把断线重连的player返回去， 玩家本来就坐在这里，不用同步信息给其他玩家， 就是反应他傻了一会后继续游戏了")
-            printTable(player)
-            print(player.roomId)
-            print(player.chairId)
-            return player
-        else
-            -- 不是同一个游戏，或者有玩家在里面玩呢
-            -- player会被替换掉，那么之前的连接也到t掉才可以
-
-            -- 这里以后增加，t掉玩家的连接的功能
-        end
-    end
+    --local player = GameServer.GetPlayerByUID(Player.UId(oldPlayer)) -- 把之前的玩家数据取出来
+    ---- 如果玩家是断线重连的
+    --if player ~= nil then
+    --    --找到之前有玩家在线
+    --    if oldPlayer.gameId == player.gameId then
+    --        -- 同一个游戏， 并且玩家状态是等待断线重连
+    --        --player.NetWorkState = true                      -- 网络恢复正常
+    --        --player.NetWorkCloseTimer = 0
+    --        print("把断线重连的player返回去， 玩家本来就坐在这里，不用同步信息给其他玩家， 就是反应他傻了一会后继续游戏了")
+    --        printTable(player)
+    --        print(player.roomId)
+    --        print(player.chairId)
+    --        return player
+    --    else
+    --        -- 不是同一个游戏，或者有玩家在里面玩呢
+    --        -- player会被替换掉，那么之前的连接也到t掉才可以
+    --
+    --        -- 这里以后增加，t掉玩家的连接的功能
+    --    end
+    --end
 
     -- 不是断线重连的就重新建一个玩家数据
-    player = oldPlayer
+    local player = oldPlayer
     --然后找一个有空位的房间让玩家加入游戏
     for _, room in pairs(self.allRoomList) do
         local chairId = room:GetEmptySeatInTable()
