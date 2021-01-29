@@ -4,7 +4,7 @@ SandRockLoginNet = {}
 
 ----------------------------------------登录----------------------------------
 local function newUser(openId,machineId)
-    print("创建用户")
+    --print("创建用户")
     local userId = GameServer.GetLastUserID()
     if userId == nil then
         ZLog.Logger("redis 出问题 没有获取到userId")
