@@ -10,7 +10,8 @@ end
 
 -- 根据命令进行分支处理
 function GameNetwork.Receive(serverId, userId, mainSgId, subMsgId, data, token)
-    --print("msgId",msgId, "subMsgId",subMsgId)
+    --print("serverId",serverId, "userId",userId,"msgId",mainSgId, "subMsgId",subMsgId)
+    --print("msgId",mainSgId, "subMsgId",subMsgId)
     --UserToken = token           -- 保存到全局里面，发送的时候取出来GameMessage
 
     local switch = {}

@@ -181,10 +181,10 @@ function SandRockRoom:GetTerrainKick(userId, areaName, pointIndex, resourceType)
         ZLog.Logger("这颗树不能踢")
         return nil
     end
-    if Player.SpGet(player) <= ConstSandRock.TickCostSp then
-        ZLog.Logger("没有体力踢树")
-        return nil
-    end
+    --if Player.SpGet(player) <= ConstSandRock.TickCostSp then
+    --    ZLog.Logger("没有体力踢树")
+    --    return nil
+    --end
 
     local exp = CSV_resourceTerrainType.GetValue(resourceType, "KickExp")
     Player.ExpAdd(player, exp)

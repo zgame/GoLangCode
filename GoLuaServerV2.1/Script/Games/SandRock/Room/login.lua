@@ -4,7 +4,7 @@
 -- 发消息给同房间的其他玩家，告诉他们你登录了
 local function sendLoginToOthers(room, player)
     local userId =  Player.UId(player)
-    print("玩家登录", userId, "房间", room.roomId,"椅子",player.chairId)
+    --print("玩家登录", userId, "房间", room.roomId,"椅子",player.chairId)
     local sendCmd = ProtoGameSandRock.UserList()
     local uu = sendCmd.user:add()
     Player.Copy(player,uu)

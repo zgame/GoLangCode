@@ -4,7 +4,9 @@ SandRockResourceTerrainNet = {}
 function SandRockResourceTerrainNet.SendItemList(serverId, player, itemList, nilSend)
     local sendCmd = SandRockSleepNet.SendItemList(player, itemList)
     if itemList ~= nil or nilSend then
-        NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET, sendCmd, nil)
+        --print("发送踢树发道具".. serverId .. " uid  ".. Player.UId(player))
+        --NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET, sendCmd, nil)
+        NetWork.SendToUser(Player.UId(player),CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET, sendCmd,nil,nil)
     end
 end
 
@@ -39,8 +41,7 @@ function SandRockResourceTerrainNet.GetTerrainResource(serverId, userId, buf)
     --print("资源砍树开始"..ZTime.GetOsTimeMillisecond())
     local msg = ProtoGameSandRock.ResourceTerrainGet()
     msg:ParseFromString(buf)
-    --print("客户端开始 砍树")
-    --print(msg)
+
 
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then
@@ -52,10 +53,14 @@ function SandRockResourceTerrainNet.GetTerrainResource(serverId, userId, buf)
     end
 
     if msg.toolId == 0 then
+        --print("客户端开始 踢树".. userId)
+        --print(msg)
         -- 踢树处理
         local itemList = SandRockRoom.GetTerrainKick(room, userId, msg.info.areaName, msg.info.areaPoint, msg.info.resourceType)
         SandRockResourceTerrainNet.SendItemList(serverId, player, itemList, true)        -- 踢树处理
     else
+        --print("客户端开始 砍树".. userId)
+        --print(msg)
         -- 砍树，砍石头处理
         local itemList, reliveList = SandRockRoom.GetTerrainResource(room, userId, msg.info.areaName, msg.info.areaPoint, msg.info.resourceType, msg.toolId, msg.damage)
         SandRockResourceTerrainNet.SendItemList(serverId, player, itemList)        -- 砍树
