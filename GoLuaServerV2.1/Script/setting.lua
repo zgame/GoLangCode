@@ -34,12 +34,5 @@ Setting = {
 
 
 
-    -------------------------------数据库初始结构-------------------------------
-    -- mongo db init
-    -- use SandRock
-    -- db.createCollection("User")
-
-    -- redis db init
-    -- set Ping Pong
 
 }

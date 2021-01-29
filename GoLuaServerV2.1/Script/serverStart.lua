@@ -20,6 +20,8 @@ function Main.GoCallLuaStartAllServers()
         os.exit()
         return
     end
+    -- 开启redis监控
+    Redis.SaveString("Ping","Pong")
     print("-------------------  启动 mySql      ---------------------------")
     GlobalVar.MySqlMainConnect = MySql.new()
     ok, err = MySql.Init(GlobalVar.MySqlMainConnect, Setting.MySqlServerIP, Setting.MySqlServerPort, Setting.MySqlDatabase, Setting.MySqlUid, Setting.MySqlPwd)
@@ -102,7 +104,7 @@ function Main.RunGamesDB()
         if result == nil then
             GlobalVar.RedisConnect = nil
         else
-            print("redis db result:" .. result)
+            --print("redis db result:" .. result)
         end
     end
 end

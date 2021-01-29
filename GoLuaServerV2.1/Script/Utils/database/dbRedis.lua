@@ -125,7 +125,7 @@ end
 
 ----------------------------string  and  hash---------------------------------------
 --保存
-function Redis.SaveString(dir, hashKey, value)
+function Redis.SaveString(dir, value, hashKey)
     local string, number
     if hashKey == nil then
         string = cmdForRedis("set", nil, dir, value)   -- 成功返回OK
