@@ -92,7 +92,7 @@ end
 function SandRockLoginNet.SendPlayersInfo(userId)
     local sendCmd = ProtoGameSandRock.UserList()
     local room = GameServer.GetRoomByUserId(userId)
-    for i, player in pairs(room.userSeatArray) do
+    for _, player in pairs(room.userSeatArray) do
         if player ~= nil and Player.UId(player)~= userId then
             local uu = sendCmd.user:add()
             Player.Copy(player,uu)

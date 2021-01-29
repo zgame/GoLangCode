@@ -166,7 +166,7 @@ end
 --- 将旧表替换成新表
 function OldModuleReloadByNew(module_name)
     --- 先把旧的模块保存
-    local oldmodule = package.loaded[module_name] or {}
+    local oldModule = package.loaded[module_name] or {}
     --- 清空模块
     package.loaded[module_name] = nil
     --- 加载新文件
@@ -175,8 +175,8 @@ function OldModuleReloadByNew(module_name)
     local newModule = package.loaded[module_name]
     ---将新模块的内容附加,旧模块原来存在的key不清除
     for k, v in pairs(newModule) do
-        oldmodule[k] = v
+        oldModule[k] = v
     end
-    package.loaded[module_name] = oldmodule
-    return oldmodule
+    package.loaded[module_name] = oldModule
+    return oldModule
 end

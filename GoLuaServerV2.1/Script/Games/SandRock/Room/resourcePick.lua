@@ -13,7 +13,7 @@ local function _getEmpty(areaName, resourcePoint)
     for j = 1, number_max do
         table.insert(pointList, j)           -- 生成全数组
     end
-    for pointIndex, point in pairs(resourcePoint[areaName]) do
+    for pointIndex, _ in pairs(resourcePoint[areaName]) do
         table.remove(pointList, pointIndex)         -- 把已经占用的删掉
     end
     -- 剩下的就是没有被占用的了
@@ -27,7 +27,7 @@ end
 -- 资源点刷新
 function SandRockRoom:ResourcePointUpdate()
     -- 判断生命周期， 到期的给删除掉
-    for areaName, pointList in pairs(self.resourcePoint) do
+    for _, pointList in pairs(self.resourcePoint) do
         --print(areaName)
         --printTable(pointList)
         for index, point in pairs(pointList) do

@@ -30,8 +30,8 @@ end
 -----------------------------------地形树 同步------------------------------------------
 function SandRockRoom:ResourceTerrainSync()
     local treeList = {}
-    for areaName, pointList in pairs(self.resourceTerrain) do
-        for index, element in pairs(pointList) do
+    for _, pointList in pairs(self.resourceTerrain) do
+        for _, element in pairs(pointList) do
             local treeId = element.resourceType
             local trunkHealth, stumpHealth = SandRockResourceTerrain.GetHp(treeId, element.scale)
             if element.trunkHealth < trunkHealth then
@@ -48,8 +48,8 @@ end
 function SandRockRoom:ResourceTerrainUpdate()
     local reliveList = {}
     -- 判断重生的时间
-    for areaName, pointList in pairs(self.resourceTerrain) do
-        for index, element in pairs(pointList) do
+    for _, pointList in pairs(self.resourceTerrain) do
+        for _, element in pairs(pointList) do
             local treeId = element.resourceType
             -- 刷新踢树上限
             element.kickCountLimit = CSV_resourceTerrainType.GetValue(treeId, "KickCountLimit")

@@ -98,7 +98,7 @@ function Main.RunGamesDB()
     if GlobalVar.RedisConnect == nil then
         print("重连redis")
         GlobalVar.RedisConnect = Redis.new()
-        local ok, err =  Redis.Init(GlobalVar.RedisConnect, Setting.RedisAddress, Setting.RedisPass)
+        Redis.Init(GlobalVar.RedisConnect, Setting.RedisAddress, Setting.RedisPass)
     else
         local result = Redis.GetString("Ping")
         if result == nil then

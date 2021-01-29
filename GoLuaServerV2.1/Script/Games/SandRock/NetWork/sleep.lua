@@ -17,7 +17,7 @@ function SandRockSleepNet.Sleep(serverId, userId, buf)
 end
 
 function SandRockSleepNet.SendItemList(player, itemList)
-    local sendCmd = nil
+    local sendCmd
     if itemList ~= nil then
         sendCmd = ProtoGameSandRock.ItemGet()
         for itemId, num in pairs(itemList) do

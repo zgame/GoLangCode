@@ -21,7 +21,7 @@ function SandRockRoom:LocationOther()
     --print("************************同步所有玩家位置*****************")
     local sendCmd = ProtoGameSandRock.PlayerLocation()
     local lens = 0
-    for key, value in pairs(self.locationList)do
+    for _, value in pairs(self.locationList)do
         local location = sendCmd.location:add()
         location = SandRockLocationNet.Copy(value, location)
         lens = lens + 1

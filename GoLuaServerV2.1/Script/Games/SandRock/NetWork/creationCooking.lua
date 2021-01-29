@@ -31,7 +31,7 @@ function SandRockCreationCookingNet.CreateCooking(serverId, userId, buf)
 
 
     -- 先检查数量， 这里要小心重复的材料
-    for i,itemId in ipairs(MaterialsList) do
+    for _,itemId in ipairs(MaterialsList) do
         if Player.ItemHave(player, itemId) < 1 then
             ZLog.Logger("道具数量不足" .. itemId .. "   " .. 1)
             return
@@ -39,7 +39,7 @@ function SandRockCreationCookingNet.CreateCooking(serverId, userId, buf)
     end
 
     -- 道具减少
-    for i,itemId in ipairs(MaterialsList) do
+    for _,itemId in ipairs(MaterialsList) do
         Player.ItemReduce(player, itemId, 1)
         itemList[itemId] = -1                     -- 减少的道具同步给客户端
     end

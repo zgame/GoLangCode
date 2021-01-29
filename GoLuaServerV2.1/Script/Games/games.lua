@@ -9,7 +9,7 @@ function Game:New(name, gameId)
     self.gameId = gameId
     self.switch = true              -- 游戏是否开启
 
-    self.allRoomList = {}                  -- 所有房间列表       key tableUid  ,value table          --- 要注意， key 不能用数字，因为占用内存太大， goperlua的问题
+    self.allRoomList = {}                  -- 所有房间列表       key tableUid  ,value table          --- 要注意， key 不能用数字，因为占用内存太大， go per lua的问题
     self.allRoomNumber = 0                  -- 所有该游戏的房间数量
 end
 
@@ -105,7 +105,7 @@ function Game:PlayerLoginGame(oldPlayer)
     -- 不是断线重连的就重新建一个玩家数据
     player = oldPlayer
     --然后找一个有空位的房间让玩家加入游戏
-    for k, room in pairs(self.allRoomList) do
+    for _, room in pairs(self.allRoomList) do
         local chairId = room:GetEmptySeatInTable()
         if chairId > 0 then
             --print("有空座位")

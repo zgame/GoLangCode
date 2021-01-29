@@ -7,7 +7,7 @@ function SandRockItem.Init()
         local list = CSV_item.GetValue(itemId,"QualitySceneSlot")       -- 这里只处理品质的几率， 以后让策划把表改了， 可以节省程序代码
         SandRockItem[itemId] = {}
         local all = 0
-        for i,v in ipairs(list)do
+        for _,v in ipairs(list)do
             local rate = v + all
             all = all + v
             table.insert(SandRockItem[itemId],rate)
@@ -36,7 +36,7 @@ end
 -- 获取道具的卖出价格
 function SandRockItem.GetSellPrice(itemId)
     local sell = CSV_item.GetValue(tostring(itemId),"SellPrice")
-    local sellChange = CSV_item.GetValue(tostring(itemId),"SellPriceChange")     -- 卖出道具价格浮动 ？
+    --local sellChange = CSV_item.GetValue(tostring(itemId),"SellPriceChange")     -- 卖出道具价格浮动 ？
     return sell
 end
 

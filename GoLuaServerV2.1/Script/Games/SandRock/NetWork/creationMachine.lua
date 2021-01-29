@@ -18,7 +18,7 @@ function SandRockCreationMachineNet.CreateMachine(serverId, userId, buf)
 
     -- 遍历所有的零件
     -- 先检查数量
-    for i, partId in ipairs(PartIdList) do
+    for _, partId in ipairs(PartIdList) do
         local Material = CSV_creationMachinePart.GetValue(partId, "Material")
         local ItemId = Material[1]
         local ItemNum = Material[2]
@@ -28,7 +28,7 @@ function SandRockCreationMachineNet.CreateMachine(serverId, userId, buf)
         end
     end
     -- 再做处理
-    for i, partId in ipairs(PartIdList) do
+    for _, partId in ipairs(PartIdList) do
         local Material = CSV_creationMachinePart.GetValue(partId, "Material")
         local ItemId = Material[1]
         local ItemNum = Material[2]

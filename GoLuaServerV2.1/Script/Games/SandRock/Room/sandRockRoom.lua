@@ -83,18 +83,18 @@ function SandRockRoom:RunRoom()
 
         --clear  Global Map hash element
         --for i,_ in pairs(GlobalMap)do
-        --    GlobalMap[tostring(i)] = nil        -- memery leak
+        --    GlobalMap[tostring(i)] = nil        -- memory leak
         --end
         --
         --
 
-        ---- if you clear all data, it's ok, but,  if you clear some data,  memery leak
+        ---- if you clear all data, it's ok, but,  if you clear some data,  memory leak
         ----GlobalMap = {}
         --collectgarbage()
 
         --self.LastRunTime = ZTime.GetOsTimeMillisecond()
     else
-        local now = ZTime.GetOsTimeMillisecond()
+        --local now = ZTime.GetOsTimeMillisecond()
 
         self:LocationOther()
         --self:SetPlayerLocation(nil,nil)      -- 清空

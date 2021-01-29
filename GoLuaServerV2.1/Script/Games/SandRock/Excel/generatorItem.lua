@@ -5,12 +5,12 @@ SandRockGeneratorItem = {}
 -- 处理一下几率变成总数是100， 每个是几率阶梯， 处理完之后，计算的时候方便
 local function _setRateList(list)
     local total = 0
-    for i,v in ipairs(list) do      -- 计算总和
+    for _,v in ipairs(list) do      -- 计算总和
         total = total + v
     end
 
     local newList = {}
-    for i,v in ipairs(list) do
+    for _,v in ipairs(list) do
         local rate =  math.floor( v * 100 / total )         -- 计算几率
         table.insert(newList,rate)
     end
@@ -35,12 +35,12 @@ local function _setGroupInit(groupId)
 
     local GeneratorList = CSV_generateGroup.GetValue(groupId, "GeneratorList")
     local allDropList = ZString.Split(GeneratorList, "|")
-    for i, mainDrop in ipairs(allDropList) do
+    for _, mainDrop in ipairs(allDropList) do
         local sub = {}
         sub.rateList = {}
         local rateList = {}
         local subList = ZString.Split(mainDrop, ";")
-        for i, subDrop in ipairs(subList) do
+        for _, subDrop in ipairs(subList) do
             local element = {}
             local subStr = ZString.Split(subDrop, ",")
             element.generateId = subStr[1]
@@ -127,7 +127,7 @@ function SandRockGeneratorItem.GetItems(groupId ,scale, all)
             ZLog.Logger("GetItems 生成组报错，" .. groupId)
             return nil
         end
-        for index, allType in pairs(generator) do
+        for index, _ in pairs(generator) do
             local subIndex = 1                    -- 用；分割的取其中一个
             if #generator[index] > 1 then
                 subIndex = ZRandom.GetList(generator[index].rateList)       -- 多个元素就随机一个 ，这里是用；分割的取其中一个，除非都要
@@ -135,7 +135,7 @@ function SandRockGeneratorItem.GetItems(groupId ,scale, all)
             _setGroupNum(groupList,generator[index][subIndex].generateId)
             -- 这里是全部掉落，不再使用生成组的；只取一个的规则，而是全部都要，用于踢树暴击
             if all~=nil and all == true then
-                for i,v in ipairs(generator[index]) do
+                for _,v in ipairs(generator[index]) do
                     _setGroupNum(groupList,v.generateId)
                 end
             end
@@ -143,10 +143,10 @@ function SandRockGeneratorItem.GetItems(groupId ,scale, all)
     end
 
     local itemList = {}
-    for groupId,num in pairs(groupList) do
-        groupId = tostring(groupId)
-        local itemId = CSV_generateItem.GetValue(groupId, "GenObjectId")
-        local itemNum  = math.floor( _getGroupItemNum(groupId) * scale)
+    for groupId2,num in pairs(groupList) do
+        --groupId = tostring(groupId)
+        local itemId = CSV_generateItem.GetValue(groupId2, "GenObjectId")
+        local itemNum  = math.floor( _getGroupItemNum(groupId2) * scale)
         itemList[itemId] = num * itemNum
 
         if num * itemNum == 0 then
