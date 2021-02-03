@@ -18,6 +18,10 @@ end
 -- 同步其他玩家位置和状态
 -- 这个地方为了节省cpu和内存，我就统一形成一次发送数据， 每个玩家都一样的发送，不然我要针对每个玩家单独处理数据，要费一些
 function SandRockRoom:LocationOther()
+    if self.userSeatArrayNumber == 1 then  -- 如果房间只有一个人，那么就不用同步了
+        return
+    end
+
     --print("************************同步所有玩家位置*****************")
     local sendCmd = ProtoGameSandRock.PlayerLocation()
     local lens = 0
