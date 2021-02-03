@@ -5,7 +5,7 @@ SandRockCreationItemNet ={}
 function SandRockCreationItemNet.CreateItem(serverId, userId, buf)
     local msg = ProtoGameSandRock.CreationItem()
     msg:ParseFromString(buf)
-    --print(msg.createId)
+    print(msg)
     local createId = msg.createId
     local itemList = {}
     local player = GameServer.GetPlayerByUID(userId)

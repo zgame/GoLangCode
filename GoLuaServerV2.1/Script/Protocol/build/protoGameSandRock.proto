@@ -139,10 +139,13 @@ message CreationMachine{
 message CreationItem{
 	uint32 createId = 1;        // 合成什么道具
 }
+message CreationItemExperiment{
+	uint32 createId = 1;        //  实验台，先不管
+}
 message CreationRecycle{
 	uint32 createId = 1;        // 回收什么道具
 }
 message CreationCooking{
 	uint32 createId = 1;        // 烹饪什么
-	uint32 MaterialsID = 2;        // 烹饪的拆料
+	uint32 MaterialsID = 2;        // 烹饪的材料
 }

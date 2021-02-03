@@ -4,7 +4,7 @@ SandRockCreationCookingNet = {}
 function SandRockCreationCookingNet.CreateCooking(serverId, userId, buf)
     local msg = ProtoGameSandRock.CreationCooking()
     msg:ParseFromString(buf)
-    --print(msg.createId)
+    print(msg.createId)
     local createId = msg.createId
     local MaterialsID = msg.MaterialsID
     local itemList = {}

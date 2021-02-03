@@ -23,6 +23,7 @@ f = LuaFiles.CSV
 table.insert(f, "Script/CSV/creationCooking")
 table.insert(f, "Script/CSV/creationCookingPart")
 table.insert(f, "Script/CSV/creationItem")
+table.insert(f, "Script/CSV/creationItemExperiment")
 table.insert(f, "Script/CSV/creationMachine")
 table.insert(f, "Script/CSV/creationMachinePart")
 table.insert(f, "Script/CSV/creationRecycle")
