@@ -44,6 +44,7 @@ function SandRockLocationNet.PlayerHold(serverId, userId, buf)
     end
     local sendCmd = ProtoGameSandRock.PlayerHold()
     sendCmd.item = item
+    sendCmd.userId = userId
     -- 给该玩家下发
     SandRockRoom.SendMsgToOtherUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_PLAYER_HOLD,sendCmd,userId)
 
