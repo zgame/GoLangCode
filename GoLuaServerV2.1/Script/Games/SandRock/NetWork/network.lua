@@ -16,7 +16,7 @@ function SandRockNetwork.Receive(serverId, userId, mainSgId, subMsgId, buf, toke
     switch[CMD_SAND_ROCK.SUB_CREATION_ITEM] = SandRockCreationItemNet.CreateItem
     switch[CMD_SAND_ROCK.SUB_CREATION_RECYCLE] = SandRockCreationRecycleNet.CreateRecycle
     switch[CMD_SAND_ROCK.SUB_CREATION_COOKING] = SandRockCreationCookingNet.CreateCooking
-    switch[CMD_SAND_ROCK.SUB_PLAYER_HOLD] = SandRockLocationNet.PlayerHold
+    --switch[CMD_SAND_ROCK.SUB_PLAYER_HOLD] = SandRockLocationNet.PlayerHold
 
 
     --print("消息 ".. subMsgId.. " start ： "  .. ZTime.GetOsTimeMillisecond())
