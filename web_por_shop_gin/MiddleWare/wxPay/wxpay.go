@@ -49,7 +49,7 @@ func GetPayInfo(c *gin.Context)  {
 
 	fmt.Println("========== Get wxPay Info ==========")
 	var p = wxpay.UnifiedOrderParam{}
-	p.Body = "测试充值"
+	p.Body = "购买道具"
 	p.NotifyURL = GlobalVar.MyUrl + "portia_shop/wxpay"
 	p.TradeType = wxpay.K_TRADE_TYPE_APP
 	p.SpbillCreateIP = c.ClientIP()

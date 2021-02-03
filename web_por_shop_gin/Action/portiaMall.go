@@ -14,7 +14,7 @@ func ResetMallTime(){
 		if element.Endtime == "" || element.Endtime == "-1"{
 			continue
 		}
-		endTime,err := time.ParseInLocation("2006-01-02", element.Endtime, time.Local)
+		endTime,err := time.ParseInLocation("2006-01-02 15:04:05", element.Endtime, time.Local)
 		if err!= nil {
 			zLog.PrintLogger("商城过期时间有问题  "+err.Error() + "   " + element.Endtime)
 			return

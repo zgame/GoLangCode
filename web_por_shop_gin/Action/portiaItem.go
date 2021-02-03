@@ -123,10 +123,11 @@ func ItemCanBuy(Openid string, ItemId int) bool {
 		zLog.PrintfLogger("GiveItemToUser   Id: %s 已有道具解析数据出错 %s \n", Openid, err)
 		return false
 	}
-	have := false
+
 	// 判断是否重复购买
-	for _, item := range arrBuyItem {
-		for _, v := range arrDB {
+	for _, item := range arrBuyItem {		//遍历礼包或单一道具
+		have := false
+		for _, v := range arrDB {			// 遍历已有列表
 			if v == item {
 				have = true //已经有了这个道具，那么break循环
 				// 已经有了就break
@@ -153,8 +154,8 @@ func GetItemPrice(item *MySql.Shopmall) float64 {
 	}
 
 	// 字符串变时间
-	startTime, _ := time.ParseInLocation("2006-01-02", start, time.Local)
-	endTime, _ := time.ParseInLocation("2006-01-02", end, time.Local)
+	startTime, _ := time.ParseInLocation("2006-01-02 15:04:05", start, time.Local)
+	endTime, _ := time.ParseInLocation("2006-01-02 15:04:05", end, time.Local)
 	if startTime.Before(time.Now()) && endTime.After(time.Now()) {
 		// 活动时间内
 		return outPrice
