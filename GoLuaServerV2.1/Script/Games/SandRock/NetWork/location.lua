@@ -28,3 +28,21 @@ function SandRockLocationNet.Copy(source, dec)
     dec.param = source.param
     return dec
 end
+
+
+-- 手持道具同步
+function SandRockLocationNet.PlayerHold(serverId, userId, buf)
+    local msg = ProtoGameSandRock.PlayerHold()
+    msg:ParseFromString(buf)
+    local item = msg.item
+    local room = GameServer.GetRoomByUserId(userId)
+    if room == nil then
+        ZLog.Logger("没有获取到房间".. tostring(userId))
+        return
+    end
+    local sendCmd = ProtoGameSandRock.PlayerHold()
+    sendCmd.item = item
+    -- 给该玩家下发
+    SandRockRoom.SendMsgToOtherUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_PLAYER_HOLD,sendCmd,userId)
+
+end
