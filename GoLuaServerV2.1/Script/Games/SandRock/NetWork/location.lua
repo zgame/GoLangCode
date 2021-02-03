@@ -34,6 +34,8 @@ end
 function SandRockLocationNet.PlayerHold(serverId, userId, buf)
     local msg = ProtoGameSandRock.PlayerHold()
     msg:ParseFromString(buf)
+    print("手持道具同步")
+    print(msg)
     local item = msg.item
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then
