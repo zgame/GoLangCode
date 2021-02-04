@@ -46,7 +46,7 @@ function MongoDB.Find(collection, table, handle)
     local endTime = ZTime.GetOsTimeMillisecond()
     if endTime-startTime > 2 then
         print("mongo db find 花费时间: " .. endTime - startTime .. "毫秒")
-        printTable(table)
+        --printTable(table)
     end
     return result
 end
