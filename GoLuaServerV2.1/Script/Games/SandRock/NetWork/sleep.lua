@@ -28,8 +28,8 @@ function SandRockSleepNet.SendItemList(player, itemList)
         sendCmd.exp = Player.ExpGet(player)
         sendCmd.level = Player.LevelGet(player)
         sendCmd.sp = Player.SpGet(player)
-        print(sendCmd)
-        print("发送客户端获得道具结果")
+        --print(sendCmd)
+        --print("发送客户端获得道具结果")
     end
     return sendCmd
 end
