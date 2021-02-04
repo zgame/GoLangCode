@@ -85,6 +85,8 @@ function SandRockLoginNet.Login(serverId, uId, buf)
     SandRockLoginNet.SendEnterSceneInfo(userId)
     -- 同步场景树信息给玩家
     SandRockLoginNet.SendTerrainInfo(userId)
+    -- 同步采集资源点信息给玩家
+    SandRockResourcePickNet.SendSleepPickList(userId)
 end
 
 ----------------------------------------同步----------------------------------

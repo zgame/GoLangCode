@@ -11,7 +11,7 @@ function SandRockSleepNet.Sleep(serverId, userId, buf)
     SandRockRoom.UpdateWeather(room)
 
     -- send
-    SandRockResourcePickNet.SendSleepPickList(userId)       -- 发送资源刷新
+    SandRockResourcePickNet.SendSleepPickList(userId, true)       -- 发送资源刷新
     SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList, true)      -- 发送地形树的重生
 
 end

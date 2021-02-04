@@ -2,7 +2,7 @@ SandRockResourcePickNet = {}
 
 
 -- 同步资源列表
-function SandRockResourcePickNet.SendSleepPickList(userId)
+function SandRockResourcePickNet.SendSleepPickList(userId, allPlayer)
     local sendCmd = ProtoGameSandRock.ResourceUpdate()
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then
@@ -20,8 +20,13 @@ function SandRockResourcePickNet.SendSleepPickList(userId)
     end
     sendCmd.weather = SandRockRoom.GetWeather(room)
     --print(sendCmd)
-    --NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd, nil)
-    SandRockRoom.SendMsgToAllUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd)
+    if allPlayer == nil then
+        NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd, nil)
+    else
+        SandRockRoom.SendMsgToAllUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd)
+    end
+
+
 
 
 end
