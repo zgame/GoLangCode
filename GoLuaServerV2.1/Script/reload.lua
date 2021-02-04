@@ -108,6 +108,7 @@ table.insert(f, "Script/network")       -- 网络分发入口点n
 -- table.insert(f, "Script/Games/SandRock/NetWork/gameEnter")
 table.insert(f, "Script/Games/SandRock/NetWork/creationCooking")
 table.insert(f, "Script/Games/SandRock/NetWork/creationItem")
+table.insert(f, "Script/Games/SandRock/NetWork/creationItemExperiment")
 table.insert(f, "Script/Games/SandRock/NetWork/creationMachine")
 table.insert(f, "Script/Games/SandRock/NetWork/creationRecycle")
 table.insert(f, "Script/Games/SandRock/NetWork/loginServer")
