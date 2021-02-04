@@ -18,6 +18,7 @@ CMD_SAND_ROCK = {
     SUB_CREATION_ITEM = 15,     --  合成道具  CreationItem() ,  获得结果ItemGet()
     SUB_CREATION_RECYCLE = 16,     --  回收道具  CreationRecycle() ,  获得结果ItemGet()
     SUB_CREATION_COOKING = 17,     --  回收道具  CreationCooking() ,  获得结果ItemGet()
+    SUB_CREATION_ITEM_EXPERIMENT = 18,      --  实验台   CreationItemExperiment() ,  获得结果ItemGet()
 
     --SUB_PLAYER_HOLD = 18,     --  手持同步  PlayerHold()
 

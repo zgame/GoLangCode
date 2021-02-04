@@ -26,7 +26,7 @@ function SandRockNetwork.Receive(serverId, userId, mainSgId, subMsgId, buf, toke
     --print("消息 ".. subMsgId.. "  end  ： "  .. ZTime.GetOsTimeMillisecond())
     local endTime = ZTime.GetOsTimeMillisecond()
     if endTime - startTime > 1 then
-        print(" 网络消息编号： ".. subMsgId.. "  处理花费时间  ： "  .. endTime - startTime)
+        print(" 网络消息编号： ".. subMsgId.. "  处理花费时间  ： "  .. endTime - startTime  .. "毫秒")
     end
 
 
