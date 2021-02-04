@@ -41,13 +41,13 @@ function SandRockCreationCookingNet.CreateCooking(serverId, userId, buf)
     -- 道具减少
     for _,itemId in ipairs(MaterialsList) do
         Player.ItemReduce(player, itemId, 1)
-        itemList[itemId] = -1                     -- 减少的道具同步给客户端
+        itemList[tostring(itemId)] = -1                     -- 减少的道具同步给客户端
     end
 
     -- 道具增加
     Player.ItemAdd(player, {CookingOutId = 1})
     --Player.ExpAdd(player, Exp)
-    itemList[CookingOutId] = 1
+    itemList[tostring(CookingOutId)] = 1
 
 
     local sendCmd = SandRockSleepNet.SendItemList(player, itemList)

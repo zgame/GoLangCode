@@ -125,7 +125,9 @@ function ReloadAll()
     --HotReload
     ReloadFile("Script/reload")
     --ZLog.Logger("------------------***** start reload all ****---------------------------")
-
+    --for _,fileName in ipairs(LuaFiles.NetWork) do
+    --    ReloadFile(fileName)
+    --end
     --for _,fileName in ipairs(LuaFiles.Games) do
     --    ReloadFile(fileName)
     --end
@@ -136,9 +138,7 @@ function ReloadAll()
     --        roomClass:Reload(room)
     --    end
     --end
-    --for _,fileName in ipairs(LuaFiles.NetWork) do
-    --    ReloadFile(fileName)
-    --end
+
     --for _,fileName in ipairs(LuaFiles.DataBase) do
     --    ReloadFile(fileName)
     --end

@@ -34,7 +34,7 @@ function SandRockCreationItemNet.CreateItem(serverId, userId, buf)
     switch["Tailor"] = {}                       -- 裁缝
     switch["Equipments"] = {}                   -- 装备
     switch["Weapons"] = {}                      -- 武器
-    switch[FromMachineType]()
+    --switch[FromMachineType]()
 
     -- 判断机器的等级
 
@@ -56,12 +56,12 @@ function SandRockCreationItemNet.CreateItem(serverId, userId, buf)
         local ItemId = part[1]
         local ItemNum = part[2]
         Player.ItemReduce(player, ItemId, ItemNum)
-        itemList[ItemId] = -ItemNum
+        itemList[tostring(ItemId)] = -ItemNum
     end
     Player.ItemAdd(player, { CreateItemId = CreateItemNum })
     Player.ExpAdd(player, Exp)
 
-    itemList[CreateItemId] = CreateItemNum
+    itemList[tostring(CreateItemId)] = CreateItemNum
 
     local sendCmd = SandRockSleepNet.SendItemList(player, itemList)
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_CREATION_ITEM, sendCmd, nil)

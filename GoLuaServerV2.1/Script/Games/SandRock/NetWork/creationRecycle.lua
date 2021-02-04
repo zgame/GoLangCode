@@ -43,7 +43,7 @@ function SandRockCreationRecycleNet.CreateRecycle(serverId, userId, buf)
     Player.ItemAdd(player, itemList)
     Player.ExpAdd(player, Exp)
 
-    itemList[createId] = -1                     -- 减少的道具同步给客户端
+    itemList[tostring(createId)] = -1                     -- 减少的道具同步给客户端
 
     local sendCmd = SandRockSleepNet.SendItemList(player, itemList)
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_CREATION_RECYCLE, sendCmd, nil)

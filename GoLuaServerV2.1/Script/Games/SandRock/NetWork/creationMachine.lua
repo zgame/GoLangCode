@@ -33,12 +33,12 @@ function SandRockCreationMachineNet.CreateMachine(serverId, userId, buf)
         local ItemId = Material[1]
         local ItemNum = Material[2]
         Player.ItemReduce(player, ItemId, ItemNum)
-        itemList[ItemId] = -ItemNum
+        itemList[tostring(ItemId)] = -ItemNum
     end
 
     -- 发放机器道具
     Player.ItemAdd(player, { MachineItemId = 1 })
-    itemList[MachineItemId] = 1
+    itemList[tostring(MachineItemId)] = 1
     -- 玩家的机器处理
 
     local sendCmd = SandRockSleepNet.SendItemList(player, itemList)
