@@ -32,8 +32,22 @@ function User.New(userId, openId, machineId)
         SP = 100,
         SPMax = 100,
 
-        payTotal = 0, --   充值总金额
+        payTotal = 0,    --  充值总金额
         offLineTime = 0, --   离线时间
+
+        --- 玩家家园信息
+        workPlatform = 1,  --  等级几的工作台
+        workSkillBook = {} ,   --  解锁的技能书
+        operationPlatform = 1,  -- 几级操作台
+        operationSkillBook = {},  -- 解锁的机器
+        waterStorage = 1,       -- 蓄水罐
+        recycleMachine ={} ,    -- 垃圾回收
+        -- 熔炉
+        -- 其他机器
+
+        --- 玩家背包信息
+        package = {} ,     -- 背包道具
+
 
     }
     return c

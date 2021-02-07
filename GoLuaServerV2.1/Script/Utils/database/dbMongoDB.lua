@@ -12,16 +12,25 @@ function MongoDB.Init(handle, h, d, u, ps)
         --user["ss"] = 22
         --user["name"] = 889
         --user["ss2"] = '223'
-        ----print(MongoInsert("people",user))
+        --user["list"] = {}
+        --table.insert( user["list"], "list")
+        --table.insert( user["list"], "list2")
+        --user["map"] = {}
+        --user["map"]["sss"] = 33
+        --user["map"]["name"] = "nn"
+        --user["map222"] = {}
         --
         --
+        --print(MongoDB.Insert("people",user))
+        ----
+        ----
         --local user2 = {}
-        --user2["userId"] = 1000000004
-        --local ss = MongoDB.Find("User", user2 )
-        ----local ss = MongoFinds("people",user2,"-key")
-        --print("dddddddddddddddddddddddd")
+        --user2["name"] = 889
+        ----local ss = MongoDB.Find("people", user2 )
+        --local ss = MongoDB.Finds("people",user2,"-key")
+        ----print("dddddddddddddddddddddddd")
         --printTable(ss)
-        --
+        ----
         ----print(MongoUpdate("people",user,user2))
         --user2["name"] = 1
         --print(MongoUpdate("people",user,user2,"$inc"))
