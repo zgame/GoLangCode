@@ -77,6 +77,7 @@ function Network.Msg(serverId, userId, msgId, subMsgId, buf)
         switch[CMD_SAND_ROCK.SUB_RESOURCE_GET] = ResourcePick.Get
         switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN] = Sleep.UpdateResourceTerrain
         switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET] = ResourceTerrain.GetItem
+        switch[CMD_SAND_ROCK.SUB_PLAYER_INFO] = UserInfo.GetUserInfo
 
         switch[subMsgId](serverId,userId, buf)
 

@@ -15,4 +15,7 @@ function GameSandRock.RunGame(serverId)
     --ResourceTerrain.Action(serverId,'Terrain_3_4',            27,109,            0 , 0 )
 
 
+    UserInfo.SendUserInfo(serverId)
+
 end
+

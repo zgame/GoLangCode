@@ -12,6 +12,7 @@ function SandRockUserInfoNet.PlayerInfo(serverId, userId, buf)
 
     local player = GameServer.GetPlayerByUID(userId)
     Player.NickNameSet(player, nickName)
+    SandRockUserDB.NickNameUpdate(userId, nickName)     -- 保存到db
 
     local sendCmd = ProtoGameSandRock.PlayerInfo()
     sendCmd.nickName = Player.NickNameGet(player)

@@ -13,9 +13,11 @@ local f
 LuaFiles.DataBase = {}
 f = LuaFiles.DataBase
 table.insert(f, "Script/Games/SandRock/DataBase/redisConst")
-table.insert(f, "Script/Games/SandRock/DataBase/redisGame")
-table.insert(f, "Script/Games/SandRock/DataBase/redisPlayer")
+--table.insert(f, "Script/Games/SandRock/DataBase/redisGame")
+--table.insert(f, "Script/Games/SandRock/DataBase/redisPlayer")
 table.insert(f, "Script/Games/SandRock/DataBase/sqlStatistic")
+table.insert(f, "Script/Games/SandRock/DataBase/loginServer")
+table.insert(f, "Script/Games/SandRock/DataBase/userInfo")
 
 -- CSV
 LuaFiles.CSV = {}
@@ -99,7 +101,6 @@ table.insert(f, "Script/Games/SandRock/Room/resourceTerrain")
 table.insert(f, "Script/Games/SandRock/Room/weather")
 
 
-table.insert(f, "Script/Games/SandRock/DataBase/loginServer")
 
 
 -- network

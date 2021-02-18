@@ -43,27 +43,27 @@ namespace GameSandRock {
             "AhIPCgdmYWNlRGlyGAUgASgCEg4KBmFjdGlvbhgGIAEoBBINCgVwYXJhbRgH",
             "IAEoBRIMCgRpdGVtGAggASgNIkkKDlBsYXllckxvY2F0aW9uEikKCGxvY2F0",
             "aW9uGAEgAygLMhcuR2FtZVNhbmRSb2NrLl9sb2NhdGlvbhIMCgR0aW1lGAIg",
-            "ASgEIh4KClBsYXllckluZm8SEAoIbmlja05hbWUYASABKAkiFwoFU2xlZXAS",
-            "DgoGdXNlcklkGAEgASgNIksKDl9yZXNvdXJjZVBvaW50EhAKCGFyZWFOYW1l",
-            "GAEgASgJEhEKCWFyZWFQb2ludBgCIAEoDRIUCgxyZXNvdXJjZVR5cGUYAyAB",
-            "KA0iTwoOUmVzb3VyY2VVcGRhdGUSLAoGcG9pbnRzGAEgAygLMhwuR2FtZVNh",
-            "bmRSb2NrLl9yZXNvdXJjZVBvaW50Eg8KB3dlYXRoZXIYAiABKA0iOQoLUmVz",
-            "b3VyY2VHZXQSKgoEaW5mbxgBIAEoCzIcLkdhbWVTYW5kUm9jay5fcmVzb3Vy",
-            "Y2VQb2ludCJ3ChBfcmVzb3VyY2VUZXJyYWluEhAKCGFyZWFOYW1lGAEgASgJ",
-            "EhEKCWFyZWFQb2ludBgCIAEoDRIUCgxyZXNvdXJjZVR5cGUYAyABKA0SEwoL",
-            "dHJ1bmtIZWFsdGgYBCABKA0SEwoLc3R1bXBIZWFsdGgYBSABKA0iRwoVUmVz",
-            "b3VyY2VUZXJyYWluVXBkYXRlEi4KBnBvaW50cxgBIAMoCzIeLkdhbWVTYW5k",
-            "Um9jay5fcmVzb3VyY2VUZXJyYWluImIKElJlc291cmNlVGVycmFpbkdldBIs",
-            "CgRpbmZvGAEgASgLMh4uR2FtZVNhbmRSb2NrLl9yZXNvdXJjZVRlcnJhaW4S",
-            "DgoGdG9vbElkGAIgASgNEg4KBmRhbWFnZRgDIAEoDSIoCgVfaXRlbRIOCgZp",
-            "dGVtSWQYASABKA0SDwoHaXRlbU51bRgCIAEoBSJUCgdJdGVtR2V0EiEKBGl0",
-            "ZW0YASADKAsyEy5HYW1lU2FuZFJvY2suX2l0ZW0SDQoFbGV2ZWwYAiABKA0S",
-            "CwoDZXhwGAMgASgNEgoKAnNwGAQgASgNIiMKD0NyZWF0aW9uTWFjaGluZRIQ",
-            "CghjcmVhdGVJZBgBIAEoDSIgCgxDcmVhdGlvbkl0ZW0SEAoIY3JlYXRlSWQY",
-            "ASABKA0iKgoWQ3JlYXRpb25JdGVtRXhwZXJpbWVudBIQCghjcmVhdGVJZBgB",
-            "IAEoDSIjCg9DcmVhdGlvblJlY3ljbGUSEAoIY3JlYXRlSWQYASABKA0iOAoP",
-            "Q3JlYXRpb25Db29raW5nEhAKCGNyZWF0ZUlkGAEgASgNEhMKC01hdGVyaWFs",
-            "c0lEGAIgASgNYgZwcm90bzM="));
+            "ASgEIi4KClBsYXllckluZm8SDgoGdXNlcklkGAEgASgNEhAKCG5pY2tOYW1l",
+            "GAIgASgJIhcKBVNsZWVwEg4KBnVzZXJJZBgBIAEoDSJLCg5fcmVzb3VyY2VQ",
+            "b2ludBIQCghhcmVhTmFtZRgBIAEoCRIRCglhcmVhUG9pbnQYAiABKA0SFAoM",
+            "cmVzb3VyY2VUeXBlGAMgASgNIk8KDlJlc291cmNlVXBkYXRlEiwKBnBvaW50",
+            "cxgBIAMoCzIcLkdhbWVTYW5kUm9jay5fcmVzb3VyY2VQb2ludBIPCgd3ZWF0",
+            "aGVyGAIgASgNIjkKC1Jlc291cmNlR2V0EioKBGluZm8YASABKAsyHC5HYW1l",
+            "U2FuZFJvY2suX3Jlc291cmNlUG9pbnQidwoQX3Jlc291cmNlVGVycmFpbhIQ",
+            "CghhcmVhTmFtZRgBIAEoCRIRCglhcmVhUG9pbnQYAiABKA0SFAoMcmVzb3Vy",
+            "Y2VUeXBlGAMgASgNEhMKC3RydW5rSGVhbHRoGAQgASgNEhMKC3N0dW1wSGVh",
+            "bHRoGAUgASgNIkcKFVJlc291cmNlVGVycmFpblVwZGF0ZRIuCgZwb2ludHMY",
+            "ASADKAsyHi5HYW1lU2FuZFJvY2suX3Jlc291cmNlVGVycmFpbiJiChJSZXNv",
+            "dXJjZVRlcnJhaW5HZXQSLAoEaW5mbxgBIAEoCzIeLkdhbWVTYW5kUm9jay5f",
+            "cmVzb3VyY2VUZXJyYWluEg4KBnRvb2xJZBgCIAEoDRIOCgZkYW1hZ2UYAyAB",
+            "KA0iKAoFX2l0ZW0SDgoGaXRlbUlkGAEgASgNEg8KB2l0ZW1OdW0YAiABKAUi",
+            "VAoHSXRlbUdldBIhCgRpdGVtGAEgAygLMhMuR2FtZVNhbmRSb2NrLl9pdGVt",
+            "Eg0KBWxldmVsGAIgASgNEgsKA2V4cBgDIAEoDRIKCgJzcBgEIAEoDSIjCg9D",
+            "cmVhdGlvbk1hY2hpbmUSEAoIY3JlYXRlSWQYASABKA0iIAoMQ3JlYXRpb25J",
+            "dGVtEhAKCGNyZWF0ZUlkGAEgASgNIioKFkNyZWF0aW9uSXRlbUV4cGVyaW1l",
+            "bnQSEAoIY3JlYXRlSWQYASABKA0iIwoPQ3JlYXRpb25SZWN5Y2xlEhAKCGNy",
+            "ZWF0ZUlkGAEgASgNIjgKD0NyZWF0aW9uQ29va2luZxIQCghjcmVhdGVJZBgB",
+            "IAEoDRITCgtNYXRlcmlhbHNJRBgCIAEoDWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -77,7 +77,7 @@ namespace GameSandRock {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.OtherLeaveRoom), global::GameSandRock.OtherLeaveRoom.Parser, new[]{ "UserId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._location), global::GameSandRock._location.Parser, new[]{ "UserId", "X", "Y", "Z", "FaceDir", "Action", "Param", "Item" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.PlayerLocation), global::GameSandRock.PlayerLocation.Parser, new[]{ "Location", "Time" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.PlayerInfo), global::GameSandRock.PlayerInfo.Parser, new[]{ "NickName" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.PlayerInfo), global::GameSandRock.PlayerInfo.Parser, new[]{ "UserId", "NickName" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.Sleep), global::GameSandRock.Sleep.Parser, new[]{ "UserId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._resourcePoint), global::GameSandRock._resourcePoint.Parser, new[]{ "AreaName", "AreaPoint", "ResourceType" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceUpdate), global::GameSandRock.ResourceUpdate.Parser, new[]{ "Points", "Weather" }, null, null, null),
@@ -2324,6 +2324,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public PlayerInfo(PlayerInfo other) : this() {
+      userId_ = other.userId_;
       nickName_ = other.nickName_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -2333,8 +2334,22 @@ namespace GameSandRock {
       return new PlayerInfo(this);
     }
 
+    /// <summary>Field number for the "userId" field.</summary>
+    public const int UserIdFieldNumber = 1;
+    private uint userId_;
+    /// <summary>
+    ///用户 I D
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint UserId {
+      get { return userId_; }
+      set {
+        userId_ = value;
+      }
+    }
+
     /// <summary>Field number for the "nickName" field.</summary>
-    public const int NickNameFieldNumber = 1;
+    public const int NickNameFieldNumber = 2;
     private string nickName_ = "";
     /// <summary>
     /// 修改昵称
@@ -2360,6 +2375,7 @@ namespace GameSandRock {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (UserId != other.UserId) return false;
       if (NickName != other.NickName) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -2367,6 +2383,7 @@ namespace GameSandRock {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
+      if (UserId != 0) hash ^= UserId.GetHashCode();
       if (NickName.Length != 0) hash ^= NickName.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -2381,8 +2398,12 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+      if (UserId != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(UserId);
+      }
       if (NickName.Length != 0) {
-        output.WriteRawTag(10);
+        output.WriteRawTag(18);
         output.WriteString(NickName);
       }
       if (_unknownFields != null) {
@@ -2393,6 +2414,9 @@ namespace GameSandRock {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
+      if (UserId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(UserId);
+      }
       if (NickName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(NickName);
       }
@@ -2406,6 +2430,9 @@ namespace GameSandRock {
     public void MergeFrom(PlayerInfo other) {
       if (other == null) {
         return;
+      }
+      if (other.UserId != 0) {
+        UserId = other.UserId;
       }
       if (other.NickName.Length != 0) {
         NickName = other.NickName;
@@ -2421,7 +2448,11 @@ namespace GameSandRock {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 10: {
+          case 8: {
+            UserId = input.ReadUInt32();
+            break;
+          }
+          case 18: {
             NickName = input.ReadString();
             break;
           }

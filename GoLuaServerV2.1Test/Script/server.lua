@@ -55,6 +55,7 @@ require("network")
 require("resourcePick")
 require("resourceTerrain")
 require("sleep")
+require("userInfo")
 
 -------------------------------------GameManager----------------------------------------
 
