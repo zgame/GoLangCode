@@ -114,11 +114,11 @@ table.insert(f, "Script/Games/SandRock/NetWork/creationMachine")
 table.insert(f, "Script/Games/SandRock/NetWork/creationRecycle")
 table.insert(f, "Script/Games/SandRock/NetWork/loginServer")
 table.insert(f, "Script/Games/SandRock/NetWork/location")
-table.insert(f, "Script/Games/SandRock/NetWork/sleep")
 table.insert(f, "Script/Games/SandRock/NetWork/resourcePick")
 table.insert(f, "Script/Games/SandRock/NetWork/resourceTerrain")
 table.insert(f, "Script/Games/SandRock/NetWork/network")
-
+table.insert(f, "Script/Games/SandRock/NetWork/sleep")
+table.insert(f, "Script/Games/SandRock/NetWork/userInfo")
 
 
 -- 热更新全部的逻辑代码，需要自己控制， 切记玩家数据部分不要加进去，不然会重置玩家数据，如果你是保存型代码，容易导致玩家清档

@@ -1,3 +1,10 @@
+--------------------------------昵称---------------------------------------
+function Player:NickNameGet()
+    return self.user.nickName
+end
+function Player:NickNameSet(name)
+    self.user.nickName = name
+end
 
 --------------------------------等级和经验---------------------------------------
 function Player:LevelGet()
