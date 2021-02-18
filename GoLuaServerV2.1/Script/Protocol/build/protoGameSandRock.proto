@@ -82,6 +82,7 @@ message PlayerLocation{
 message PlayerInfo{
 	uint32 userId = 1;              //用户 I D
 	string nickName = 2;          // 修改昵称
+	uint32 gender = 3;            //性别
 
 }
 
