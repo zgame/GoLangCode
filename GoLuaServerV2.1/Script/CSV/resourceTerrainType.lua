@@ -43,8 +43,8 @@ local resourceTerrainType = {
  CSV_resourceTerrainType = {}
 
 function CSV_resourceTerrainType.GetValue(index, key)
-	index = tostring(index)
-	key = tostring(key)
+        index = tostring(index)
+        key = tostring(key)
     if resourceTerrainType[index] == nil then
         ZLog.Logger("Excel 获取表:resourceTerrainType  主键:".. index .." key:".. key.."出错!")
         return nil

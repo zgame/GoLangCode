@@ -81,12 +81,17 @@ function SandRockLoginNet.Login(serverId, uId, buf)
 
     -- 给该玩家下发其他玩家信息
     SandRockLoginNet.SendPlayersInfo(userId)
+
     -- 同步场景信息给登录的玩家
     SandRockLoginNet.SendEnterSceneInfo(userId)
+
     -- 同步场景树信息给玩家
     SandRockLoginNet.SendTerrainInfo(userId)
+
     -- 同步采集资源点信息给玩家
-    SandRockResourcePickNet.SendSleepPickList(userId)
+    local room = GameServer.GetRoomByUserId(userId)
+    SandRockResourcePickNet.SendPickList(userId, nil, room.resourcePoint, nil)
+
 end
 
 ----------------------------------------同步----------------------------------

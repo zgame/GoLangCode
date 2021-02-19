@@ -25,3 +25,8 @@ end
 function ZLog.printTable2(table)
     MySerpent.block(table)
 end
+
+
+function ZLog.printTime(tag)
+    print(tag .. " :" .. ZTime.GetOsTimeMillisecond())
+end

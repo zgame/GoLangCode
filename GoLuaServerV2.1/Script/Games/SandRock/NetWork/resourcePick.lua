@@ -1,24 +1,36 @@
 SandRockResourcePickNet = {}
 
 
--- 同步资源列表
-function SandRockResourcePickNet.SendSleepPickList(userId, allPlayer)
+-- 同步采集资源列表
+function SandRockResourcePickNet.SendPickList(userId, allPlayer, all, list)
     local sendCmd = ProtoGameSandRock.ResourceUpdate()
     local room = GameServer.GetRoomByUserId(userId)
     if room == nil then
         return
     end
 
-    --printTable(room.resourcePoint)
-    for areaName, pointList in pairs(room.resourcePoint) do
-        for pointIndex, point in pairs(pointList) do
-            local points = sendCmd.points:add()
-            points.areaName = areaName
-            points.areaPoint = pointIndex
-            points.resourceType = point.resourceType
+    --printTable(list)
+    if all ~= nil then          -- 发送登录全同步
+        for areaName, pointList in pairs(all) do
+            for pointIndex, point in pairs(pointList) do
+                local points = sendCmd.points:add()
+                points.areaName = areaName
+                points.areaPoint = pointIndex
+                points.resourceType = point.resourceType
+            end
         end
     end
+
+    if list ~= nil then             -- 发送增量同步
+            for _, point in pairs(list) do
+                local points = sendCmd.points:add()
+                points.areaName = point.areaName
+                points.areaPoint = point.areaPoint
+                points.resourceType = point.resourceType
+            end
+    end
     sendCmd.weather = SandRockRoom.GetWeather(room)
+    --print("发送 采集资源列表")
     --print(sendCmd)
     if allPlayer == nil then
         NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd, nil)
@@ -59,14 +71,14 @@ function SandRockResourcePickNet.GetPickResource(serverId, userId, buf)
     local sendCmd = SandRockSleepNet.SendItemList(player, itemList)
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_GET, sendCmd, nil)
 
-    -- 同步一下资源点刷新
-    local sendCmd = ProtoGameSandRock.ResourceUpdate()
-    local points = sendCmd.points:add()
+    -- 给其他玩家同步 采集资源点的刷新
+    local sendCmd2 = ProtoGameSandRock.ResourceUpdate()
+    local points = sendCmd2.points:add()
     points.areaName = areaName
     points.areaPoint = areaPoint
     points.resourceType = 0  -- 清理掉
 
-    SandRockRoom.SendMsgToAllUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd)
+    SandRockRoom.SendMsgToAllUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd2)
 
 
 end

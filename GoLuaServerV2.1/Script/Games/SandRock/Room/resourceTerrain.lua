@@ -7,6 +7,8 @@ function SandRockRoom:ResourceTerrainInit()
     for areaName, _ in pairs(CSV_resourceTerrainArea.Get()) do
         --print(areaName)
         self.resourceTerrain[areaName] = {}
+        self.resourceTerrainChange[areaName] = {}
+
         local TreeIDList = CSV_resourceTerrainArea.GetValue(areaName, "TreeID")
         local TreeScale = CSV_resourceTerrainArea.GetValue(areaName, "TreeScale")
         for index, treeId in pairs(TreeIDList) do
@@ -17,30 +19,36 @@ function SandRockRoom:ResourceTerrainInit()
                 element.resourceType = treeId
                 element.scale = SandRockResourceTerrain.GetScaleFactor(TreeScale[index], 0.25)                    -- 缩放比例
                 element.trunkHealth, element.stumpHealth = SandRockResourceTerrain.GetHp(treeId, element.scale)
+                element.trunkHealthMax = element.trunkHealth
+                element.stumpHealthMax = element.stumpHealth
                 element.kickCountLimit = CSV_resourceTerrainType.GetValue(treeId, "KickCountLimit")
+                element.cantKick = SandRockResourceTerrain.CantKick(treeId)
                 element.relive = CSV_resourceTerrainType.GetValue(treeId, "RespawnDays")
 
                 self.resourceTerrain[areaName][index] = element
             end
         end
     end
+
     --printTable(self.resourceTerrain)
+
 end
 
 -----------------------------------地形树 同步------------------------------------------
 function SandRockRoom:ResourceTerrainSync()
     local treeList = {}
-    for _, pointList in pairs(self.resourceTerrain) do
+    for _, pointList in pairs(self.resourceTerrainChange) do
         for _, element in pairs(pointList) do
-            local treeId = element.resourceType
-            local trunkHealth, stumpHealth = SandRockResourceTerrain.GetHp(treeId, element.scale)
-            if element.trunkHealth < trunkHealth then
+            --local treeId = element.resourceType
+            --local trunkHealth, stumpHealth = SandRockResourceTerrain.GetHp(treeId, element.scale)
+            --if element.trunkHealth < element.trunkHealthMax then
                 -- 说明这棵树被伤害过，要同步
                 table.insert(treeList, element)
-            end
+            --end
         end
     end
     return treeList
+    --return self.resourceTerrainChange
 end
 
 -----------------------------------地形树 刷新------------------------------------------
@@ -50,17 +58,21 @@ function SandRockRoom:ResourceTerrainUpdate()
     -- 判断重生的时间
     for _, pointList in pairs(self.resourceTerrain) do
         for _, element in pairs(pointList) do
-            local treeId = element.resourceType
-            -- 刷新踢树上限
-            element.kickCountLimit = CSV_resourceTerrainType.GetValue(treeId, "KickCountLimit")
+            if element.cantKick == false then
+                -- 刷新踢树上限
+                element.kickCountLimit = CSV_resourceTerrainType.GetValue(element.resourceType, "KickCountLimit")
+            end
 
             -- 如果死亡，刷新
-            if element.trunkHealth + element.stumpHealth <= 0 then
+            if element.trunkHealth <=0 and element.stumpHealth <= 0 then
                 if element.relive <= 0 then
                     -- 重生
-                    element.trunkHealth, element.stumpHealth = SandRockResourceTerrain.GetHp(treeId, element.scale)
-                    element.relive = CSV_resourceTerrainType.GetValue(treeId, "RespawnDays")
-                    table.insert(reliveList, element)
+                    element.trunkHealth = element.trunkHealthMax
+                    element.stumpHealth = element.stumpHealthMax
+                    element.relive = CSV_resourceTerrainType.GetValue(element.resourceType, "RespawnDays")
+                    table.insert(reliveList, element)           -- 同步给客户端树重生
+
+                    self.resourceTerrainChange[element.areaName][element.areaPoint] = nil           -- 变化同步的列表要去掉，因为树重置了之后没有变化
                 else
                     element.relive = element.relive - 1
                 end
@@ -96,11 +108,21 @@ local function _treeDamage(element, damage)
         end
     end
     table.insert(reliveList, element)
+
+    -- 树有变化了，增加到变化列表里面去
+    self.resourceTerrainChange[element.areaName][element.areaPoint] = element           -- 变化同步的列表要去掉，因为树重置了之后没有变化
+
+
     return reliveList, trunkKill, stumpKill
 end
 
 -- 砍树
 function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceType, toolId, damage)
+    if damage <= 0 then
+        ZLog.Logger(userId.. "砍树伤害不正确 " .. damage)
+        return
+    end
+
     if self.resourceTerrain[areaName] == nil then
         ZLog.Logger("GetTerrainResource  areaName 生成区域出错 " .. areaName)
         return

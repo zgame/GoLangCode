@@ -6,12 +6,15 @@ function SandRockSleepNet.Sleep(serverId, userId, buf)
         return
     end
     -- refresh
-    SandRockRoom.ResourcePointUpdate(room)      -- 刷新资源列表
-    local reliveList = SandRockRoom.ResourceTerrainUpdate(room)      -- 刷新地形树和石头资源列表，获取的是刷新的树
+    ZLog.printTime(1)
+    local pickList = SandRockRoom.ResourcePickPointUpdate(room)      -- 刷新采集类资源点列表   3
+    ZLog.printTime(2)
+    local reliveList = SandRockRoom.ResourceTerrainUpdate(room)      -- 刷新地形树和石头资源列表，获取的是刷新的树  1
+    ZLog.printTime(3)
     SandRockRoom.UpdateWeather(room)
-
     -- send
-    SandRockResourcePickNet.SendSleepPickList(userId, true)       -- 发送资源刷新
+    SandRockResourcePickNet.SendPickList(userId, true, nil,  pickList)       -- 发送资源刷新  3
+    ZLog.printTime(5)
     SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList, true)      -- 发送地形树的重生
 
 end

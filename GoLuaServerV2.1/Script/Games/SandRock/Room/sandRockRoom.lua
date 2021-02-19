@@ -12,8 +12,9 @@ function SandRockRoom:New(roomId, gameId)
     self.userSeatArrayNumber = 0         -- 房间上有几个玩家， 记住，这里不能用#UserSeatArray, 因为有可能中间有椅子是空的，不连续的不能用#， 本质UserSeatArray是map ；  也不能遍历， 慢
 
     self.locationList = {}          -- uid  player's location
-    self.resourcePoint = {}         -- 资源点列表 key 是 区域的名字  value是point的map   , key是点的index， value是资源和生命周期
-    self.resourceTerrain = {}         -- 资源点列表 key    是 区域的名字   value是 是point的map   , key是点的index， value是资源和生命周期
+    self.resourcePoint = {}         -- 采集资源点列表 key 是 区域的名字  value是point的map   , key是点的index， value是资源和生命周期
+    self.resourceTerrain = {}         -- 地形资源点列表 key    是 区域的名字   value是 是point的map   , key是点的index， value是资源和生命周期等数值
+    self.resourceTerrainChange = {}   -- 地形资源点变化了的map，   key是index，  value是每个地形资源和生命周期等数值
     self.weather = 1           -- 天气
 end
 
@@ -30,6 +31,7 @@ end
 ----------------------- 房间操作 ---------------------------------
 function SandRockRoom:InitRoom()
     self:ResourceTerrainInit()
+    self:ResourcePickPointInit()
     if self:CheckTableEmpty() then
         -- 如果房间是空的， 那么需要初始化一下
         --self:InitDistributeInfo()
