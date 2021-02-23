@@ -119,6 +119,10 @@ function SandRockGeneratorItem.GetItems(groupId ,scale, all)
         scale = 1               -- 这里要计算一下根据缩放进行的掉落放面的影响
     end
 
+    --print(groupId)
+    --print(scale)
+    --print(all)
+
     local GenSceneType = CSV_generateGroup.GetValue(groupId, "GenSceneType")
     if GenSceneType == "Item" then
         -- 走道具掉落规则
@@ -142,11 +146,16 @@ function SandRockGeneratorItem.GetItems(groupId ,scale, all)
         end
     end
 
+    --printTable(groupList)
+
     local itemList = {}
     for groupId2,num in pairs(groupList) do
         --groupId = tostring(groupId)
         local itemId = CSV_generateItem.GetValue(groupId2, "GenObjectId")
-        local itemNum  = math.floor( _getGroupItemNum(groupId2) * scale)
+        --print("itemId: " .. itemId)
+        local itemNum  = math.ceil( _getGroupItemNum(groupId2) * scale)
+
+        --print("num * itemNum".. num * itemNum)
         itemList[itemId] = num * itemNum
 
         if num * itemNum == 0 then

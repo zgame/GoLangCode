@@ -47,6 +47,8 @@ function User.New(userId, openId, machineId)
 
         --- 玩家背包信息
         package = {} ,     -- 背包道具
+        slotMax = 50,        -- 背包格子最多
+        slotNow = 0,        -- 背包格子当前占用
 
 
     }

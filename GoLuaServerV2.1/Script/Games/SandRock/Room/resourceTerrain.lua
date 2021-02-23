@@ -228,8 +228,10 @@ function SandRockRoom:GetTerrainKick(userId, areaName, pointIndex, resourceType)
     local KickAllDropChance = CSV_resourceTerrainType.GetValue(resourceType, "KickAllDropChance")
     if ZRandom.PercentRate(KickAllDropChance) then
         itemList = SandRockGeneratorItem.GetItems(KickDropId, point.scale, true)              -- 踢树暴击
+        --print("踢树暴击")
     else
         itemList = SandRockGeneratorItem.GetItems(KickDropId, point.scale)                           -- 踢树不暴击
+        --print("普通踢树")
     end
 
     -- 保存到背包

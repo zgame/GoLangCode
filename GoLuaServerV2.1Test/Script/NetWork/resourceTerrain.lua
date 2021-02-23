@@ -8,7 +8,7 @@ function ResourceTerrain.Action(serverId, areaName, areaPoint, resourceType ,tru
     sendCmd.info.resourceType  = resourceType
     sendCmd.info.trunkHealth  = trunkHealth
     sendCmd.info.stumpHealth  = stumpHealth
-    sendCmd.toolId = 11000006    -- 砍树
+    sendCmd.toolId = 0    -- 砍树
     sendCmd.damage = 10
 
     Network.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET,sendCmd,nil)

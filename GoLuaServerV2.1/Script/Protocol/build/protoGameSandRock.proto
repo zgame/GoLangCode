@@ -17,7 +17,19 @@ message _user{
 	uint32 hpMax = 11;
 	uint32 sp = 12;
 	uint32 spMax = 13;
+
 }
+// 用户背包
+message _userPackage{
+	uint32 slotMax = 1;        //道具的
+	uint32 slotNow = 2;
+
+}
+// 用户家园信息
+message _userHome{
+
+}
+
 
 //---------------------------------------登录-------------------------------
 //游戏服务器登录申请,  客户端登录最快的方式是发userId，  其次是openId，  最后是machineId ,  注意如果发送了machineId，那么openId会被忽略
@@ -127,7 +139,8 @@ message ResourceTerrainGet{
 message _item{
 	uint32 itemId = 1;
 	int32 itemNum = 2;          // 道具数量为负就是减少
-	int32 itemNumTotal = 3;          // 道具总数量，用来同步
+	int32 itemNumTotal = 3;     // 道具总数量，用来同步
+	int32 itemUId = 4;          // 不能堆叠的道具具有唯一id
 }
 message ItemGet{
 	repeated _item item = 1;

@@ -15,3 +15,11 @@ function SandRockUserDB.InfoUpdate(userId, nickName, gender)
     end
     MongoDB.Update('User', c,u)
 end
+
+
+
+function SandRockUserDB.UserUpdate(userId, user)
+    local t = {}
+    t.userId = userId
+    MongoDB.Update('User',t,user)
+end
