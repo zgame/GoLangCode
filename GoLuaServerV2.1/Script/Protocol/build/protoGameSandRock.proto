@@ -127,6 +127,7 @@ message ResourceTerrainGet{
 message _item{
 	uint32 itemId = 1;
 	int32 itemNum = 2;          // 道具数量为负就是减少
+	int32 itemNumTotal = 3;          // 道具总数量，用来同步
 }
 message ItemGet{
 	repeated _item item = 1;

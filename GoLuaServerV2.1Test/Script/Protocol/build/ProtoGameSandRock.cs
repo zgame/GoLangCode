@@ -56,15 +56,15 @@ namespace GameSandRock {
             "cGRhdGUSLgoGcG9pbnRzGAEgAygLMh4uR2FtZVNhbmRSb2NrLl9yZXNvdXJj",
             "ZVRlcnJhaW4iYgoSUmVzb3VyY2VUZXJyYWluR2V0EiwKBGluZm8YASABKAsy",
             "Hi5HYW1lU2FuZFJvY2suX3Jlc291cmNlVGVycmFpbhIOCgZ0b29sSWQYAiAB",
-            "KA0SDgoGZGFtYWdlGAMgASgNIigKBV9pdGVtEg4KBml0ZW1JZBgBIAEoDRIP",
-            "CgdpdGVtTnVtGAIgASgFIlQKB0l0ZW1HZXQSIQoEaXRlbRgBIAMoCzITLkdh",
-            "bWVTYW5kUm9jay5faXRlbRINCgVsZXZlbBgCIAEoDRILCgNleHAYAyABKA0S",
-            "CgoCc3AYBCABKA0iIwoPQ3JlYXRpb25NYWNoaW5lEhAKCGNyZWF0ZUlkGAEg",
-            "ASgNIiAKDENyZWF0aW9uSXRlbRIQCghjcmVhdGVJZBgBIAEoDSIqChZDcmVh",
-            "dGlvbkl0ZW1FeHBlcmltZW50EhAKCGNyZWF0ZUlkGAEgASgNIiMKD0NyZWF0",
-            "aW9uUmVjeWNsZRIQCghjcmVhdGVJZBgBIAEoDSI4Cg9DcmVhdGlvbkNvb2tp",
-            "bmcSEAoIY3JlYXRlSWQYASABKA0SEwoLTWF0ZXJpYWxzSUQYAiABKA1iBnBy",
-            "b3RvMw=="));
+            "KA0SDgoGZGFtYWdlGAMgASgNIj4KBV9pdGVtEg4KBml0ZW1JZBgBIAEoDRIP",
+            "CgdpdGVtTnVtGAIgASgFEhQKDGl0ZW1OdW1Ub3RhbBgDIAEoBSJUCgdJdGVt",
+            "R2V0EiEKBGl0ZW0YASADKAsyEy5HYW1lU2FuZFJvY2suX2l0ZW0SDQoFbGV2",
+            "ZWwYAiABKA0SCwoDZXhwGAMgASgNEgoKAnNwGAQgASgNIiMKD0NyZWF0aW9u",
+            "TWFjaGluZRIQCghjcmVhdGVJZBgBIAEoDSIgCgxDcmVhdGlvbkl0ZW0SEAoI",
+            "Y3JlYXRlSWQYASABKA0iKgoWQ3JlYXRpb25JdGVtRXhwZXJpbWVudBIQCghj",
+            "cmVhdGVJZBgBIAEoDSIjCg9DcmVhdGlvblJlY3ljbGUSEAoIY3JlYXRlSWQY",
+            "ASABKA0iOAoPQ3JlYXRpb25Db29raW5nEhAKCGNyZWF0ZUlkGAEgASgNEhMK",
+            "C01hdGVyaWFsc0lEGAIgASgNYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -86,7 +86,7 @@ namespace GameSandRock {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._resourceTerrain), global::GameSandRock._resourceTerrain.Parser, new[]{ "AreaName", "AreaPoint", "ResourceType", "TrunkHealth", "StumpHealth" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceTerrainUpdate), global::GameSandRock.ResourceTerrainUpdate.Parser, new[]{ "Points" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceTerrainGet), global::GameSandRock.ResourceTerrainGet.Parser, new[]{ "Info", "ToolId", "Damage" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._item), global::GameSandRock._item.Parser, new[]{ "ItemId", "ItemNum" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._item), global::GameSandRock._item.Parser, new[]{ "ItemId", "ItemNum", "ItemNumTotal" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ItemGet), global::GameSandRock.ItemGet.Parser, new[]{ "Item", "Level", "Exp", "Sp" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.CreationMachine), global::GameSandRock.CreationMachine.Parser, new[]{ "CreateId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.CreationItem), global::GameSandRock.CreationItem.Parser, new[]{ "CreateId" }, null, null, null),
@@ -3729,6 +3729,7 @@ namespace GameSandRock {
     public _item(_item other) : this() {
       itemId_ = other.itemId_;
       itemNum_ = other.itemNum_;
+      itemNumTotal_ = other.itemNumTotal_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3762,6 +3763,20 @@ namespace GameSandRock {
       }
     }
 
+    /// <summary>Field number for the "itemNumTotal" field.</summary>
+    public const int ItemNumTotalFieldNumber = 3;
+    private int itemNumTotal_;
+    /// <summary>
+    /// 道具总数量，用来同步
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int ItemNumTotal {
+      get { return itemNumTotal_; }
+      set {
+        itemNumTotal_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as _item);
@@ -3777,6 +3792,7 @@ namespace GameSandRock {
       }
       if (ItemId != other.ItemId) return false;
       if (ItemNum != other.ItemNum) return false;
+      if (ItemNumTotal != other.ItemNumTotal) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3785,6 +3801,7 @@ namespace GameSandRock {
       int hash = 1;
       if (ItemId != 0) hash ^= ItemId.GetHashCode();
       if (ItemNum != 0) hash ^= ItemNum.GetHashCode();
+      if (ItemNumTotal != 0) hash ^= ItemNumTotal.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3806,6 +3823,10 @@ namespace GameSandRock {
         output.WriteRawTag(16);
         output.WriteInt32(ItemNum);
       }
+      if (ItemNumTotal != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(ItemNumTotal);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3819,6 +3840,9 @@ namespace GameSandRock {
       }
       if (ItemNum != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(ItemNum);
+      }
+      if (ItemNumTotal != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ItemNumTotal);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3837,6 +3861,9 @@ namespace GameSandRock {
       if (other.ItemNum != 0) {
         ItemNum = other.ItemNum;
       }
+      if (other.ItemNumTotal != 0) {
+        ItemNumTotal = other.ItemNumTotal;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -3854,6 +3881,10 @@ namespace GameSandRock {
           }
           case 16: {
             ItemNum = input.ReadInt32();
+            break;
+          }
+          case 24: {
+            ItemNumTotal = input.ReadInt32();
             break;
           }
         }
