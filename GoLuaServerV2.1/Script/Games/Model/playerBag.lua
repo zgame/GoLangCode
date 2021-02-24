@@ -6,10 +6,33 @@ function Player:ItemHave(itemId)
     return 100
 end
 
+-- 获得道具的唯一id
+function Player:GetSpeItemUId()
+    self.user.itemUUId = self.user.itemUUId + 1
+    return self.user.itemUUId
+end
+--
+---- 获得特殊道具
+--function Player:ItemSpeAdd(itemId)
+--
+--    local stack = SandRockItem.GetStack(itemId)
+--    local slotSuccess = self:SlotEnough(itemId, stack, 1)
+--    if slotSuccess then
+--        -- 格子够的话，道具增加
+--        self:SaveToPackage(itemId, stack, 1 , itemUId, nil)
+--    else
+--        -- 格子不够， 道具要临时保存一下
+--        print("格子不够了， 道具已满")
+--    end
+--
+--end
+
+
+
 -- 获得道具
 function Player:ItemAdd(itemList)
-    print("获得道具")
-    printTable(itemList)
+    --print("获得道具")
+    --printTable(itemList)
     if itemList == nil then
         return
     end
@@ -88,23 +111,26 @@ function Player:PackageItemNum(itemId)
 
 -- 获得不可以堆叠的道具的信息
 function Player:PackageItemGet(itemId, itemUId)
-    if self.user.package[tostring(itemId)] == nil then
+    itemId = tostring(itemId)
+    if self.user.package[itemId] == nil then
         return nil
     end
-    return self.user.package[tostring(itemId)][tostring(itemUId)]    -- 不可堆叠记录道具hash表
+    return self.user.package[itemId][tostring(itemUId)]    -- 不可堆叠记录道具hash表
 end
 
 -- 保存到背包里面
 function Player:SaveToPackage(itemId, stack, itemNum)
+    itemId = tostring(itemId)
     if  stack > 1 then
         -- 可堆叠
-        self.user.package[tostring(itemId)] = self:PackageItemNum(itemId) + itemNum
+        self.user.package[itemId] = self:PackageItemNum(itemId) + itemNum
     else
-        if self.user.package[tostring(itemId)] == nil then
-            self.user.package[tostring(itemId)] = {}
+        if self.user.package[itemId] == nil then
+            self.user.package[itemId] = {}
         end
-        -- 不能堆叠需要item uid ，后续需要处理
-        --self.package[tostring(itemId)][tostring(itemUId)] = itemNum
+        -- 不能堆叠需要item uid
+        local itemUId = self:GetSpeItemUId()
+        self.package[itemId][tostring(itemUId)] = {}
     end
 
     -- 保存到数据库

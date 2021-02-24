@@ -49,6 +49,7 @@ function User.New(userId, openId, machineId)
         package = {} ,     -- 背包道具
         slotMax = 50,        -- 背包格子最多
         slotNow = 0,        -- 背包格子当前占用
+        itemUUId = 10000,   --  特殊道具的UUID
 
 
     }
