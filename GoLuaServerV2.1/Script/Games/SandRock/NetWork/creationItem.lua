@@ -58,7 +58,10 @@ function SandRockCreationItemNet.CreateItem(serverId, userId, buf)
         Player.ItemReduce(player, ItemId, ItemNum)
         itemList[tostring(ItemId)] = -ItemNum
     end
-    Player.ItemAdd(player, { CreateItemId = CreateItemNum })
+
+    local item ={}
+    item[tostring(CreateItemId)] = CreateItemNum
+    Player.ItemAdd(player, item)
     Player.ExpAdd(player, Exp)
 
     itemList[tostring(CreateItemId)] = CreateItemNum

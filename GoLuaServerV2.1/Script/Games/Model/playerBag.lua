@@ -130,7 +130,7 @@ function Player:SaveToPackage(itemId, stack, itemNum)
         end
         -- 不能堆叠需要item uid
         local itemUId = self:GetSpeItemUId()
-        self.package[itemId][tostring(itemUId)] = {}
+        self.user.package[itemId][tostring(itemUId)] = {}
     end
 
     -- 保存到数据库

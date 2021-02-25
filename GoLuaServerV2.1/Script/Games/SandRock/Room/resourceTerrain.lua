@@ -85,7 +85,7 @@ function SandRockRoom:ResourceTerrainUpdate()
 end
 
 -----------------------------------地形树 采集------------------------------------------
-local function _treeDamage(element, damage)
+local function _treeDamage(room,element, damage)
     local reliveList = {}
     local trunkKill = false
     local stumpKill = false
@@ -110,7 +110,7 @@ local function _treeDamage(element, damage)
     table.insert(reliveList, element)
 
     -- 树有变化了，增加到变化列表里面去
-    self.resourceTerrainChange[element.areaName][element.areaPoint] = element           -- 变化同步的列表要去掉，因为树重置了之后没有变化
+    room.resourceTerrainChange[element.areaName][element.areaPoint] = element           -- 变化同步的列表要去掉，因为树重置了之后没有变化
 
 
     return reliveList, trunkKill, stumpKill
@@ -151,7 +151,7 @@ function SandRockRoom:GetTerrainResource(userId, areaName, pointIndex, resourceT
     end
 
     -- 树的伤害
-    local reliveList, trunkKill, stumpKill = _treeDamage(point, damage)
+    local reliveList, trunkKill, stumpKill = _treeDamage(self, point, damage)
     --print("树的伤害")
     --printTable(reliveList)
     --print(trunkKill)
