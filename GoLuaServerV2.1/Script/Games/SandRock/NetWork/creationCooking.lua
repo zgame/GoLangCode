@@ -45,7 +45,9 @@ function SandRockCreationCookingNet.CreateCooking(serverId, userId, buf)
     end
 
     -- 道具增加
-    Player.ItemAdd(player, {CookingOutId = 1})
+    local item={}
+    item[tostring(CookingOutId)] =1
+    Player.ItemAdd(player, item)
     --Player.ExpAdd(player, Exp)
     itemList[tostring(CookingOutId)] = 1
 

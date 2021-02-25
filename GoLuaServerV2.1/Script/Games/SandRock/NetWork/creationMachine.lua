@@ -37,7 +37,9 @@ function SandRockCreationMachineNet.CreateMachine(serverId, userId, buf)
     end
 
     -- 发放机器道具
-    Player.ItemAdd(player, { MachineItemId = 1 })
+    local item ={}
+    item[tostring(MachineItemId)] = 1
+    Player.ItemAdd(player, item)
     itemList[tostring(MachineItemId)] = 1
     -- 玩家的机器处理
 
