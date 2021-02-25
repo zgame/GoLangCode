@@ -40,33 +40,33 @@ namespace GameSandRock {
             "Z291dFJlc3VsdBIPCgdzdWNjZXNzGAEgASgIIhsKCEdhbWVJbmZvEg8KB25w",
             "Y0xpc3QYASABKA0iLQoIVXNlckxpc3QSIQoEdXNlchgBIAMoCzITLkdhbWVT",
             "YW5kUm9jay5fdXNlciIgCg5PdGhlckxlYXZlUm9vbRIOCgZ1c2VySWQYASAB",
-            "KA0iegoJX2xvY2F0aW9uEg4KBnVzZXJJZBgBIAEoDRIJCgF4GAIgASgCEgkK",
-            "AXkYAyABKAISCQoBehgEIAEoAhIPCgdmYWNlRGlyGAUgASgCEg4KBmFjdGlv",
-            "bhgGIAEoBBINCgVwYXJhbRgHIAEoBRIMCgRpdGVtGAggASgNIkkKDlBsYXll",
-            "ckxvY2F0aW9uEikKCGxvY2F0aW9uGAEgAygLMhcuR2FtZVNhbmRSb2NrLl9s",
-            "b2NhdGlvbhIMCgR0aW1lGAIgASgEIj4KClBsYXllckluZm8SDgoGdXNlcklk",
-            "GAEgASgNEhAKCG5pY2tOYW1lGAIgASgJEg4KBmdlbmRlchgDIAEoDSIXCgVT",
-            "bGVlcBIOCgZ1c2VySWQYASABKA0iSwoOX3Jlc291cmNlUG9pbnQSEAoIYXJl",
-            "YU5hbWUYASABKAkSEQoJYXJlYVBvaW50GAIgASgNEhQKDHJlc291cmNlVHlw",
-            "ZRgDIAEoDSJPCg5SZXNvdXJjZVVwZGF0ZRIsCgZwb2ludHMYASADKAsyHC5H",
-            "YW1lU2FuZFJvY2suX3Jlc291cmNlUG9pbnQSDwoHd2VhdGhlchgCIAEoDSI5",
-            "CgtSZXNvdXJjZUdldBIqCgRpbmZvGAEgASgLMhwuR2FtZVNhbmRSb2NrLl9y",
-            "ZXNvdXJjZVBvaW50IncKEF9yZXNvdXJjZVRlcnJhaW4SEAoIYXJlYU5hbWUY",
-            "ASABKAkSEQoJYXJlYVBvaW50GAIgASgNEhQKDHJlc291cmNlVHlwZRgDIAEo",
-            "DRITCgt0cnVua0hlYWx0aBgEIAEoDRITCgtzdHVtcEhlYWx0aBgFIAEoDSJH",
-            "ChVSZXNvdXJjZVRlcnJhaW5VcGRhdGUSLgoGcG9pbnRzGAEgAygLMh4uR2Ft",
-            "ZVNhbmRSb2NrLl9yZXNvdXJjZVRlcnJhaW4iYgoSUmVzb3VyY2VUZXJyYWlu",
-            "R2V0EiwKBGluZm8YASABKAsyHi5HYW1lU2FuZFJvY2suX3Jlc291cmNlVGVy",
-            "cmFpbhIOCgZ0b29sSWQYAiABKA0SDgoGZGFtYWdlGAMgASgNIk8KBV9pdGVt",
-            "Eg4KBml0ZW1JZBgBIAEoDRIPCgdpdGVtTnVtGAIgASgFEhQKDGl0ZW1OdW1U",
-            "b3RhbBgDIAEoBRIPCgdpdGVtVUlkGAQgASgFIlQKB0l0ZW1HZXQSIQoEaXRl",
-            "bRgBIAMoCzITLkdhbWVTYW5kUm9jay5faXRlbRINCgVsZXZlbBgCIAEoDRIL",
-            "CgNleHAYAyABKA0SCgoCc3AYBCABKA0iIwoPQ3JlYXRpb25NYWNoaW5lEhAK",
-            "CGNyZWF0ZUlkGAEgASgNIiAKDENyZWF0aW9uSXRlbRIQCghjcmVhdGVJZBgB",
-            "IAEoDSIqChZDcmVhdGlvbkl0ZW1FeHBlcmltZW50EhAKCGNyZWF0ZUlkGAEg",
-            "ASgNIiMKD0NyZWF0aW9uUmVjeWNsZRIQCghjcmVhdGVJZBgBIAEoDSI4Cg9D",
-            "cmVhdGlvbkNvb2tpbmcSEAoIY3JlYXRlSWQYASABKA0SEwoLTWF0ZXJpYWxz",
-            "SUQYAiABKA1iBnByb3RvMw=="));
+            "KA0iiQEKCV9sb2NhdGlvbhIOCgZ1c2VySWQYASABKA0SCQoBeBgCIAEoAhIJ",
+            "CgF5GAMgASgCEgkKAXoYBCABKAISDwoHZmFjZURpchgFIAEoAhIOCgZhY3Rp",
+            "b24YBiABKAQSDQoFcGFyYW0YByABKAUSDAoEaXRlbRgIIAEoDRINCgVzY2Vu",
+            "ZRgJIAEoDSJJCg5QbGF5ZXJMb2NhdGlvbhIpCghsb2NhdGlvbhgBIAMoCzIX",
+            "LkdhbWVTYW5kUm9jay5fbG9jYXRpb24SDAoEdGltZRgCIAEoBCI+CgpQbGF5",
+            "ZXJJbmZvEg4KBnVzZXJJZBgBIAEoDRIQCghuaWNrTmFtZRgCIAEoCRIOCgZn",
+            "ZW5kZXIYAyABKA0iFwoFU2xlZXASDgoGdXNlcklkGAEgASgNIksKDl9yZXNv",
+            "dXJjZVBvaW50EhAKCGFyZWFOYW1lGAEgASgJEhEKCWFyZWFQb2ludBgCIAEo",
+            "DRIUCgxyZXNvdXJjZVR5cGUYAyABKA0iTwoOUmVzb3VyY2VVcGRhdGUSLAoG",
+            "cG9pbnRzGAEgAygLMhwuR2FtZVNhbmRSb2NrLl9yZXNvdXJjZVBvaW50Eg8K",
+            "B3dlYXRoZXIYAiABKA0iOQoLUmVzb3VyY2VHZXQSKgoEaW5mbxgBIAEoCzIc",
+            "LkdhbWVTYW5kUm9jay5fcmVzb3VyY2VQb2ludCJ3ChBfcmVzb3VyY2VUZXJy",
+            "YWluEhAKCGFyZWFOYW1lGAEgASgJEhEKCWFyZWFQb2ludBgCIAEoDRIUCgxy",
+            "ZXNvdXJjZVR5cGUYAyABKA0SEwoLdHJ1bmtIZWFsdGgYBCABKA0SEwoLc3R1",
+            "bXBIZWFsdGgYBSABKA0iRwoVUmVzb3VyY2VUZXJyYWluVXBkYXRlEi4KBnBv",
+            "aW50cxgBIAMoCzIeLkdhbWVTYW5kUm9jay5fcmVzb3VyY2VUZXJyYWluImIK",
+            "ElJlc291cmNlVGVycmFpbkdldBIsCgRpbmZvGAEgASgLMh4uR2FtZVNhbmRS",
+            "b2NrLl9yZXNvdXJjZVRlcnJhaW4SDgoGdG9vbElkGAIgASgNEg4KBmRhbWFn",
+            "ZRgDIAEoDSJPCgVfaXRlbRIOCgZpdGVtSWQYASABKA0SDwoHaXRlbU51bRgC",
+            "IAEoBRIUCgxpdGVtTnVtVG90YWwYAyABKAUSDwoHaXRlbVVJZBgEIAEoBSJU",
+            "CgdJdGVtR2V0EiEKBGl0ZW0YASADKAsyEy5HYW1lU2FuZFJvY2suX2l0ZW0S",
+            "DQoFbGV2ZWwYAiABKA0SCwoDZXhwGAMgASgNEgoKAnNwGAQgASgNIiMKD0Ny",
+            "ZWF0aW9uTWFjaGluZRIQCghjcmVhdGVJZBgBIAEoDSIgCgxDcmVhdGlvbkl0",
+            "ZW0SEAoIY3JlYXRlSWQYASABKA0iKgoWQ3JlYXRpb25JdGVtRXhwZXJpbWVu",
+            "dBIQCghjcmVhdGVJZBgBIAEoDSIjCg9DcmVhdGlvblJlY3ljbGUSEAoIY3Jl",
+            "YXRlSWQYASABKA0iOAoPQ3JlYXRpb25Db29raW5nEhAKCGNyZWF0ZUlkGAEg",
+            "ASgNEhMKC01hdGVyaWFsc0lEGAIgASgNYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -80,7 +80,7 @@ namespace GameSandRock {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.GameInfo), global::GameSandRock.GameInfo.Parser, new[]{ "NpcList" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.UserList), global::GameSandRock.UserList.Parser, new[]{ "User" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.OtherLeaveRoom), global::GameSandRock.OtherLeaveRoom.Parser, new[]{ "UserId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._location), global::GameSandRock._location.Parser, new[]{ "UserId", "X", "Y", "Z", "FaceDir", "Action", "Param", "Item" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._location), global::GameSandRock._location.Parser, new[]{ "UserId", "X", "Y", "Z", "FaceDir", "Action", "Param", "Item", "Scene" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.PlayerLocation), global::GameSandRock.PlayerLocation.Parser, new[]{ "Location", "Time" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.PlayerInfo), global::GameSandRock.PlayerInfo.Parser, new[]{ "UserId", "NickName", "Gender" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.Sleep), global::GameSandRock.Sleep.Parser, new[]{ "UserId" }, null, null, null),
@@ -2109,6 +2109,7 @@ namespace GameSandRock {
       action_ = other.action_;
       param_ = other.param_;
       item_ = other.item_;
+      scene_ = other.scene_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2217,6 +2218,20 @@ namespace GameSandRock {
       }
     }
 
+    /// <summary>Field number for the "scene" field.</summary>
+    public const int SceneFieldNumber = 9;
+    private uint scene_;
+    /// <summary>
+    /// 场景编号
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Scene {
+      get { return scene_; }
+      set {
+        scene_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as _location);
@@ -2238,6 +2253,7 @@ namespace GameSandRock {
       if (Action != other.Action) return false;
       if (Param != other.Param) return false;
       if (Item != other.Item) return false;
+      if (Scene != other.Scene) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2252,6 +2268,7 @@ namespace GameSandRock {
       if (Action != 0UL) hash ^= Action.GetHashCode();
       if (Param != 0) hash ^= Param.GetHashCode();
       if (Item != 0) hash ^= Item.GetHashCode();
+      if (Scene != 0) hash ^= Scene.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2297,6 +2314,10 @@ namespace GameSandRock {
         output.WriteRawTag(64);
         output.WriteUInt32(Item);
       }
+      if (Scene != 0) {
+        output.WriteRawTag(72);
+        output.WriteUInt32(Scene);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2328,6 +2349,9 @@ namespace GameSandRock {
       }
       if (Item != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Item);
+      }
+      if (Scene != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Scene);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2363,6 +2387,9 @@ namespace GameSandRock {
       }
       if (other.Item != 0) {
         Item = other.Item;
+      }
+      if (other.Scene != 0) {
+        Scene = other.Scene;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2405,6 +2432,10 @@ namespace GameSandRock {
           }
           case 64: {
             Item = input.ReadUInt32();
+            break;
+          }
+          case 72: {
+            Scene = input.ReadUInt32();
             break;
           }
         }

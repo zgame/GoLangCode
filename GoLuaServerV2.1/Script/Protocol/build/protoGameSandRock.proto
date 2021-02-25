@@ -83,6 +83,7 @@ message _location{
 	uint64 action = 6 ;     //玩家当前行为
 	int32  param = 7  ;     //行为的参数
 	uint32 item = 8 ;       // 手持道具
+	uint32 scene = 9 ; 			// 场景编号
 }
 //位置信息同步
 message PlayerLocation{

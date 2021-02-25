@@ -18,6 +18,7 @@ function SandRockLocationNet.Location(serverId, userId, buf)
 end
 
 --
+-- 用来copy数据， 必须要有dec，因为格式需要提前初始化
 function SandRockLocationNet.Copy(source, dec)
     dec.userId = source.userId
     dec.x = source.x
@@ -27,6 +28,7 @@ function SandRockLocationNet.Copy(source, dec)
     dec.action = source.action
     dec.param = source.param
     dec.item = source.item
+    dec.scene = source.scene
     return dec
 end
 

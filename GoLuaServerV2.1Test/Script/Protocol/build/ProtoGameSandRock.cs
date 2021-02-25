@@ -29,46 +29,50 @@ namespace GameSandRock {
             "YW1lGAMgASgJEg0KBWxldmVsGAQgASgNEgsKA2V4cBgFIAEoDRIOCgZmYWNl",
             "SWQYBiABKA0SDgoGZ2VuZGVyGAcgASgNEg4KBnJvb21JZBgIIAEoDRIPCgdj",
             "aGFpcklkGAkgASgNEgoKAmhwGAogASgNEg0KBWhwTWF4GAsgASgNEgoKAnNw",
-            "GAwgASgNEg0KBXNwTWF4GA0gASgNIpUBCglHYW1lTG9naW4SEQoJbWFjaGlu",
-            "ZUlkGAEgASgJEg4KBm9wZW5JZBgCIAEoCRIOCgZ1c2VySWQYAyABKA0SEAoI",
-            "cGFzc3dvcmQYBCABKAkSDgoGaXBBZGRyGAUgASgJEg8KB2NoYW5uZWwYBiAB",
-            "KA0SEgoKZGV2aWNlVHlwZRgHIAEoCRIOCgZnYW1lSWQYCCABKA0iUgoPR2Ft",
-            "ZUxvZ2luUmVzdWx0Eg8KB3N1Y2Nlc3MYASABKAgSIQoEdXNlchgCIAEoCzIT",
-            "LkdhbWVTYW5kUm9jay5fdXNlchILCgNlcnIYAyABKAkiHAoKR2FtZUxvZ291",
-            "dBIOCgZ1c2VySWQYASABKA0iIwoQR2FtZUxvZ291dFJlc3VsdBIPCgdzdWNj",
-            "ZXNzGAEgASgIIhsKCEdhbWVJbmZvEg8KB25wY0xpc3QYASABKA0iLQoIVXNl",
-            "ckxpc3QSIQoEdXNlchgBIAMoCzITLkdhbWVTYW5kUm9jay5fdXNlciIgCg5P",
-            "dGhlckxlYXZlUm9vbRIOCgZ1c2VySWQYASABKA0iegoJX2xvY2F0aW9uEg4K",
-            "BnVzZXJJZBgBIAEoDRIJCgF4GAIgASgCEgkKAXkYAyABKAISCQoBehgEIAEo",
-            "AhIPCgdmYWNlRGlyGAUgASgCEg4KBmFjdGlvbhgGIAEoBBINCgVwYXJhbRgH",
-            "IAEoBRIMCgRpdGVtGAggASgNIkkKDlBsYXllckxvY2F0aW9uEikKCGxvY2F0",
-            "aW9uGAEgAygLMhcuR2FtZVNhbmRSb2NrLl9sb2NhdGlvbhIMCgR0aW1lGAIg",
-            "ASgEIj4KClBsYXllckluZm8SDgoGdXNlcklkGAEgASgNEhAKCG5pY2tOYW1l",
-            "GAIgASgJEg4KBmdlbmRlchgDIAEoDSIXCgVTbGVlcBIOCgZ1c2VySWQYASAB",
-            "KA0iSwoOX3Jlc291cmNlUG9pbnQSEAoIYXJlYU5hbWUYASABKAkSEQoJYXJl",
-            "YVBvaW50GAIgASgNEhQKDHJlc291cmNlVHlwZRgDIAEoDSJPCg5SZXNvdXJj",
-            "ZVVwZGF0ZRIsCgZwb2ludHMYASADKAsyHC5HYW1lU2FuZFJvY2suX3Jlc291",
-            "cmNlUG9pbnQSDwoHd2VhdGhlchgCIAEoDSI5CgtSZXNvdXJjZUdldBIqCgRp",
-            "bmZvGAEgASgLMhwuR2FtZVNhbmRSb2NrLl9yZXNvdXJjZVBvaW50IncKEF9y",
-            "ZXNvdXJjZVRlcnJhaW4SEAoIYXJlYU5hbWUYASABKAkSEQoJYXJlYVBvaW50",
-            "GAIgASgNEhQKDHJlc291cmNlVHlwZRgDIAEoDRITCgt0cnVua0hlYWx0aBgE",
-            "IAEoDRITCgtzdHVtcEhlYWx0aBgFIAEoDSJHChVSZXNvdXJjZVRlcnJhaW5V",
-            "cGRhdGUSLgoGcG9pbnRzGAEgAygLMh4uR2FtZVNhbmRSb2NrLl9yZXNvdXJj",
-            "ZVRlcnJhaW4iYgoSUmVzb3VyY2VUZXJyYWluR2V0EiwKBGluZm8YASABKAsy",
-            "Hi5HYW1lU2FuZFJvY2suX3Jlc291cmNlVGVycmFpbhIOCgZ0b29sSWQYAiAB",
-            "KA0SDgoGZGFtYWdlGAMgASgNIj4KBV9pdGVtEg4KBml0ZW1JZBgBIAEoDRIP",
-            "CgdpdGVtTnVtGAIgASgFEhQKDGl0ZW1OdW1Ub3RhbBgDIAEoBSJUCgdJdGVt",
-            "R2V0EiEKBGl0ZW0YASADKAsyEy5HYW1lU2FuZFJvY2suX2l0ZW0SDQoFbGV2",
-            "ZWwYAiABKA0SCwoDZXhwGAMgASgNEgoKAnNwGAQgASgNIiMKD0NyZWF0aW9u",
-            "TWFjaGluZRIQCghjcmVhdGVJZBgBIAEoDSIgCgxDcmVhdGlvbkl0ZW0SEAoI",
-            "Y3JlYXRlSWQYASABKA0iKgoWQ3JlYXRpb25JdGVtRXhwZXJpbWVudBIQCghj",
-            "cmVhdGVJZBgBIAEoDSIjCg9DcmVhdGlvblJlY3ljbGUSEAoIY3JlYXRlSWQY",
-            "ASABKA0iOAoPQ3JlYXRpb25Db29raW5nEhAKCGNyZWF0ZUlkGAEgASgNEhMK",
-            "C01hdGVyaWFsc0lEGAIgASgNYgZwcm90bzM="));
+            "GAwgASgNEg0KBXNwTWF4GA0gASgNIjAKDF91c2VyUGFja2FnZRIPCgdzbG90",
+            "TWF4GAEgASgNEg8KB3Nsb3ROb3cYAiABKA0iCwoJX3VzZXJIb21lIpUBCglH",
+            "YW1lTG9naW4SEQoJbWFjaGluZUlkGAEgASgJEg4KBm9wZW5JZBgCIAEoCRIO",
+            "CgZ1c2VySWQYAyABKA0SEAoIcGFzc3dvcmQYBCABKAkSDgoGaXBBZGRyGAUg",
+            "ASgJEg8KB2NoYW5uZWwYBiABKA0SEgoKZGV2aWNlVHlwZRgHIAEoCRIOCgZn",
+            "YW1lSWQYCCABKA0iUgoPR2FtZUxvZ2luUmVzdWx0Eg8KB3N1Y2Nlc3MYASAB",
+            "KAgSIQoEdXNlchgCIAEoCzITLkdhbWVTYW5kUm9jay5fdXNlchILCgNlcnIY",
+            "AyABKAkiHAoKR2FtZUxvZ291dBIOCgZ1c2VySWQYASABKA0iIwoQR2FtZUxv",
+            "Z291dFJlc3VsdBIPCgdzdWNjZXNzGAEgASgIIhsKCEdhbWVJbmZvEg8KB25w",
+            "Y0xpc3QYASABKA0iLQoIVXNlckxpc3QSIQoEdXNlchgBIAMoCzITLkdhbWVT",
+            "YW5kUm9jay5fdXNlciIgCg5PdGhlckxlYXZlUm9vbRIOCgZ1c2VySWQYASAB",
+            "KA0iiQEKCV9sb2NhdGlvbhIOCgZ1c2VySWQYASABKA0SCQoBeBgCIAEoAhIJ",
+            "CgF5GAMgASgCEgkKAXoYBCABKAISDwoHZmFjZURpchgFIAEoAhIOCgZhY3Rp",
+            "b24YBiABKAQSDQoFcGFyYW0YByABKAUSDAoEaXRlbRgIIAEoDRINCgVzY2Vu",
+            "ZRgJIAEoDSJJCg5QbGF5ZXJMb2NhdGlvbhIpCghsb2NhdGlvbhgBIAMoCzIX",
+            "LkdhbWVTYW5kUm9jay5fbG9jYXRpb24SDAoEdGltZRgCIAEoBCI+CgpQbGF5",
+            "ZXJJbmZvEg4KBnVzZXJJZBgBIAEoDRIQCghuaWNrTmFtZRgCIAEoCRIOCgZn",
+            "ZW5kZXIYAyABKA0iFwoFU2xlZXASDgoGdXNlcklkGAEgASgNIksKDl9yZXNv",
+            "dXJjZVBvaW50EhAKCGFyZWFOYW1lGAEgASgJEhEKCWFyZWFQb2ludBgCIAEo",
+            "DRIUCgxyZXNvdXJjZVR5cGUYAyABKA0iTwoOUmVzb3VyY2VVcGRhdGUSLAoG",
+            "cG9pbnRzGAEgAygLMhwuR2FtZVNhbmRSb2NrLl9yZXNvdXJjZVBvaW50Eg8K",
+            "B3dlYXRoZXIYAiABKA0iOQoLUmVzb3VyY2VHZXQSKgoEaW5mbxgBIAEoCzIc",
+            "LkdhbWVTYW5kUm9jay5fcmVzb3VyY2VQb2ludCJ3ChBfcmVzb3VyY2VUZXJy",
+            "YWluEhAKCGFyZWFOYW1lGAEgASgJEhEKCWFyZWFQb2ludBgCIAEoDRIUCgxy",
+            "ZXNvdXJjZVR5cGUYAyABKA0SEwoLdHJ1bmtIZWFsdGgYBCABKA0SEwoLc3R1",
+            "bXBIZWFsdGgYBSABKA0iRwoVUmVzb3VyY2VUZXJyYWluVXBkYXRlEi4KBnBv",
+            "aW50cxgBIAMoCzIeLkdhbWVTYW5kUm9jay5fcmVzb3VyY2VUZXJyYWluImIK",
+            "ElJlc291cmNlVGVycmFpbkdldBIsCgRpbmZvGAEgASgLMh4uR2FtZVNhbmRS",
+            "b2NrLl9yZXNvdXJjZVRlcnJhaW4SDgoGdG9vbElkGAIgASgNEg4KBmRhbWFn",
+            "ZRgDIAEoDSJPCgVfaXRlbRIOCgZpdGVtSWQYASABKA0SDwoHaXRlbU51bRgC",
+            "IAEoBRIUCgxpdGVtTnVtVG90YWwYAyABKAUSDwoHaXRlbVVJZBgEIAEoBSJU",
+            "CgdJdGVtR2V0EiEKBGl0ZW0YASADKAsyEy5HYW1lU2FuZFJvY2suX2l0ZW0S",
+            "DQoFbGV2ZWwYAiABKA0SCwoDZXhwGAMgASgNEgoKAnNwGAQgASgNIiMKD0Ny",
+            "ZWF0aW9uTWFjaGluZRIQCghjcmVhdGVJZBgBIAEoDSIgCgxDcmVhdGlvbkl0",
+            "ZW0SEAoIY3JlYXRlSWQYASABKA0iKgoWQ3JlYXRpb25JdGVtRXhwZXJpbWVu",
+            "dBIQCghjcmVhdGVJZBgBIAEoDSIjCg9DcmVhdGlvblJlY3ljbGUSEAoIY3Jl",
+            "YXRlSWQYASABKA0iOAoPQ3JlYXRpb25Db29raW5nEhAKCGNyZWF0ZUlkGAEg",
+            "ASgNEhMKC01hdGVyaWFsc0lEGAIgASgNYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._user), global::GameSandRock._user.Parser, new[]{ "UserId", "OpenId", "NickName", "Level", "Exp", "FaceId", "Gender", "RoomId", "ChairId", "Hp", "HpMax", "Sp", "SpMax" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._userPackage), global::GameSandRock._userPackage.Parser, new[]{ "SlotMax", "SlotNow" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._userHome), global::GameSandRock._userHome.Parser, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.GameLogin), global::GameSandRock.GameLogin.Parser, new[]{ "MachineId", "OpenId", "UserId", "Password", "IpAddr", "Channel", "DeviceType", "GameId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.GameLoginResult), global::GameSandRock.GameLoginResult.Parser, new[]{ "Success", "User", "Err" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.GameLogout), global::GameSandRock.GameLogout.Parser, new[]{ "UserId" }, null, null, null),
@@ -76,7 +80,7 @@ namespace GameSandRock {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.GameInfo), global::GameSandRock.GameInfo.Parser, new[]{ "NpcList" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.UserList), global::GameSandRock.UserList.Parser, new[]{ "User" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.OtherLeaveRoom), global::GameSandRock.OtherLeaveRoom.Parser, new[]{ "UserId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._location), global::GameSandRock._location.Parser, new[]{ "UserId", "X", "Y", "Z", "FaceDir", "Action", "Param", "Item" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._location), global::GameSandRock._location.Parser, new[]{ "UserId", "X", "Y", "Z", "FaceDir", "Action", "Param", "Item", "Scene" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.PlayerLocation), global::GameSandRock.PlayerLocation.Parser, new[]{ "Location", "Time" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.PlayerInfo), global::GameSandRock.PlayerInfo.Parser, new[]{ "UserId", "NickName", "Gender" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.Sleep), global::GameSandRock.Sleep.Parser, new[]{ "UserId" }, null, null, null),
@@ -86,7 +90,7 @@ namespace GameSandRock {
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._resourceTerrain), global::GameSandRock._resourceTerrain.Parser, new[]{ "AreaName", "AreaPoint", "ResourceType", "TrunkHealth", "StumpHealth" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceTerrainUpdate), global::GameSandRock.ResourceTerrainUpdate.Parser, new[]{ "Points" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ResourceTerrainGet), global::GameSandRock.ResourceTerrainGet.Parser, new[]{ "Info", "ToolId", "Damage" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._item), global::GameSandRock._item.Parser, new[]{ "ItemId", "ItemNum", "ItemNumTotal" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock._item), global::GameSandRock._item.Parser, new[]{ "ItemId", "ItemNum", "ItemNumTotal", "ItemUId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.ItemGet), global::GameSandRock.ItemGet.Parser, new[]{ "Item", "Level", "Exp", "Sp" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.CreationMachine), global::GameSandRock.CreationMachine.Parser, new[]{ "CreateId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::GameSandRock.CreationItem), global::GameSandRock.CreationItem.Parser, new[]{ "CreateId" }, null, null, null),
@@ -592,6 +596,273 @@ namespace GameSandRock {
   }
 
   /// <summary>
+  /// 用户背包
+  /// </summary>
+  public sealed partial class _userPackage : pb::IMessage<_userPackage> {
+    private static readonly pb::MessageParser<_userPackage> _parser = new pb::MessageParser<_userPackage>(() => new _userPackage());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<_userPackage> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _userPackage() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _userPackage(_userPackage other) : this() {
+      slotMax_ = other.slotMax_;
+      slotNow_ = other.slotNow_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _userPackage Clone() {
+      return new _userPackage(this);
+    }
+
+    /// <summary>Field number for the "slotMax" field.</summary>
+    public const int SlotMaxFieldNumber = 1;
+    private uint slotMax_;
+    /// <summary>
+    ///道具的
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint SlotMax {
+      get { return slotMax_; }
+      set {
+        slotMax_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "slotNow" field.</summary>
+    public const int SlotNowFieldNumber = 2;
+    private uint slotNow_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint SlotNow {
+      get { return slotNow_; }
+      set {
+        slotNow_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as _userPackage);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(_userPackage other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (SlotMax != other.SlotMax) return false;
+      if (SlotNow != other.SlotNow) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (SlotMax != 0) hash ^= SlotMax.GetHashCode();
+      if (SlotNow != 0) hash ^= SlotNow.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (SlotMax != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(SlotMax);
+      }
+      if (SlotNow != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(SlotNow);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (SlotMax != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SlotMax);
+      }
+      if (SlotNow != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SlotNow);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(_userPackage other) {
+      if (other == null) {
+        return;
+      }
+      if (other.SlotMax != 0) {
+        SlotMax = other.SlotMax;
+      }
+      if (other.SlotNow != 0) {
+        SlotNow = other.SlotNow;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            SlotMax = input.ReadUInt32();
+            break;
+          }
+          case 16: {
+            SlotNow = input.ReadUInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  /// 用户家园信息
+  /// </summary>
+  public sealed partial class _userHome : pb::IMessage<_userHome> {
+    private static readonly pb::MessageParser<_userHome> _parser = new pb::MessageParser<_userHome>(() => new _userHome());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<_userHome> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _userHome() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _userHome(_userHome other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public _userHome Clone() {
+      return new _userHome(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as _userHome);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(_userHome other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(_userHome other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
   ///---------------------------------------登录-------------------------------
   ///游戏服务器登录申请,  客户端登录最快的方式是发userId，  其次是openId，  最后是machineId ,  注意如果发送了machineId，那么openId会被忽略
   /// </summary>
@@ -603,7 +874,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[1]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -955,7 +1226,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[2]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1155,7 +1426,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[3]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1287,7 +1558,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[4]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1422,7 +1693,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[5]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1554,7 +1825,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[6]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1681,7 +1952,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[7]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1813,7 +2084,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[8]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1838,6 +2109,7 @@ namespace GameSandRock {
       action_ = other.action_;
       param_ = other.param_;
       item_ = other.item_;
+      scene_ = other.scene_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1946,6 +2218,20 @@ namespace GameSandRock {
       }
     }
 
+    /// <summary>Field number for the "scene" field.</summary>
+    public const int SceneFieldNumber = 9;
+    private uint scene_;
+    /// <summary>
+    /// 场景编号
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint Scene {
+      get { return scene_; }
+      set {
+        scene_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as _location);
@@ -1967,6 +2253,7 @@ namespace GameSandRock {
       if (Action != other.Action) return false;
       if (Param != other.Param) return false;
       if (Item != other.Item) return false;
+      if (Scene != other.Scene) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1981,6 +2268,7 @@ namespace GameSandRock {
       if (Action != 0UL) hash ^= Action.GetHashCode();
       if (Param != 0) hash ^= Param.GetHashCode();
       if (Item != 0) hash ^= Item.GetHashCode();
+      if (Scene != 0) hash ^= Scene.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2026,6 +2314,10 @@ namespace GameSandRock {
         output.WriteRawTag(64);
         output.WriteUInt32(Item);
       }
+      if (Scene != 0) {
+        output.WriteRawTag(72);
+        output.WriteUInt32(Scene);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2057,6 +2349,9 @@ namespace GameSandRock {
       }
       if (Item != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Item);
+      }
+      if (Scene != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Scene);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2092,6 +2387,9 @@ namespace GameSandRock {
       }
       if (other.Item != 0) {
         Item = other.Item;
+      }
+      if (other.Scene != 0) {
+        Scene = other.Scene;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2136,6 +2434,10 @@ namespace GameSandRock {
             Item = input.ReadUInt32();
             break;
           }
+          case 72: {
+            Scene = input.ReadUInt32();
+            break;
+          }
         }
       }
     }
@@ -2153,7 +2455,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[9]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2308,7 +2610,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[10]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2505,7 +2807,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[11]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2637,7 +2939,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[12]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2831,7 +3133,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[13]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2986,7 +3288,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[14]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3127,7 +3429,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[15]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3383,7 +3685,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[16]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3507,7 +3809,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[17]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3710,7 +4012,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[18]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3730,6 +4032,7 @@ namespace GameSandRock {
       itemId_ = other.itemId_;
       itemNum_ = other.itemNum_;
       itemNumTotal_ = other.itemNumTotal_;
+      itemUId_ = other.itemUId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3777,6 +4080,20 @@ namespace GameSandRock {
       }
     }
 
+    /// <summary>Field number for the "itemUId" field.</summary>
+    public const int ItemUIdFieldNumber = 4;
+    private int itemUId_;
+    /// <summary>
+    /// 不能堆叠的道具具有唯一id
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int ItemUId {
+      get { return itemUId_; }
+      set {
+        itemUId_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as _item);
@@ -3793,6 +4110,7 @@ namespace GameSandRock {
       if (ItemId != other.ItemId) return false;
       if (ItemNum != other.ItemNum) return false;
       if (ItemNumTotal != other.ItemNumTotal) return false;
+      if (ItemUId != other.ItemUId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3802,6 +4120,7 @@ namespace GameSandRock {
       if (ItemId != 0) hash ^= ItemId.GetHashCode();
       if (ItemNum != 0) hash ^= ItemNum.GetHashCode();
       if (ItemNumTotal != 0) hash ^= ItemNumTotal.GetHashCode();
+      if (ItemUId != 0) hash ^= ItemUId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3827,6 +4146,10 @@ namespace GameSandRock {
         output.WriteRawTag(24);
         output.WriteInt32(ItemNumTotal);
       }
+      if (ItemUId != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(ItemUId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3843,6 +4166,9 @@ namespace GameSandRock {
       }
       if (ItemNumTotal != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(ItemNumTotal);
+      }
+      if (ItemUId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ItemUId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3863,6 +4189,9 @@ namespace GameSandRock {
       }
       if (other.ItemNumTotal != 0) {
         ItemNumTotal = other.ItemNumTotal;
+      }
+      if (other.ItemUId != 0) {
+        ItemUId = other.ItemUId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -3887,6 +4216,10 @@ namespace GameSandRock {
             ItemNumTotal = input.ReadInt32();
             break;
           }
+          case 32: {
+            ItemUId = input.ReadInt32();
+            break;
+          }
         }
       }
     }
@@ -3901,7 +4234,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[19]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4118,7 +4451,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[20]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4250,7 +4583,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[21]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[23]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4382,7 +4715,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[22]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[24]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4514,7 +4847,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[23]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[25]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4646,7 +4979,7 @@ namespace GameSandRock {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[24]; }
+      get { return global::GameSandRock.ProtoGameSandRockReflection.Descriptor.MessageTypes[26]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
