@@ -57,6 +57,9 @@ function SandRockLoginNet.Login(serverId, uId, buf)
 
     -- 加载玩家数据
     local user = getUserDB(msg)
+    --print("-------------获取玩家数据-----------")
+    --printTable(user)
+    --print("---------------------------------")
     if user == nil then
         ZLog.Logger("数据库获取玩家数据出错")
         return

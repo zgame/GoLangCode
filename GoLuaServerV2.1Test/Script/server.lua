@@ -48,6 +48,7 @@ require("zTable")
 -------------------------------------NetWork----------------------------------------
 
 
+require("createItem")
 require("loginServer")
 require("location")
 require("gameSandRock")
@@ -56,6 +57,7 @@ require("resourcePick")
 require("resourceTerrain")
 require("sleep")
 require("userInfo")
+
 
 -------------------------------------GameManager----------------------------------------
 

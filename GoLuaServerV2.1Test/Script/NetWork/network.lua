@@ -78,6 +78,10 @@ function Network.Msg(serverId, userId, msgId, subMsgId, buf)
         switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN] = Sleep.UpdateResourceTerrain
         switch[CMD_SAND_ROCK.SUB_RESOURCE_TERRAIN_GET] = ResourceTerrain.GetItem
         switch[CMD_SAND_ROCK.SUB_PLAYER_INFO] = UserInfo.GetUserInfo
+        switch[CMD_SAND_ROCK.SUB_CREATION_MACHINE] = CreateItem.CreateItem
+        switch[CMD_SAND_ROCK.SUB_CREATION_ITEM] = CreateItem.CreateItem
+        switch[CMD_SAND_ROCK.SUB_CREATION_RECYCLE] = CreateItem.CreateItem
+        switch[CMD_SAND_ROCK.SUB_CREATION_COOKING] = CreateItem.CreateItem
 
         switch[subMsgId](serverId,userId, buf)
 

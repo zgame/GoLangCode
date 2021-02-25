@@ -2,31 +2,32 @@
 
 
 --------------------------------道具---------------------------------------
-function Player:ItemHave(itemId)
-    return 100
-end
-
 -- 获得道具的唯一id
 function Player:GetSpeItemUId()
     self.user.itemUUId = self.user.itemUUId + 1
     return self.user.itemUUId
 end
---
----- 获得特殊道具
---function Player:ItemSpeAdd(itemId)
---
---    local stack = SandRockItem.GetStack(itemId)
---    local slotSuccess = self:SlotEnough(itemId, stack, 1)
---    if slotSuccess then
---        -- 格子够的话，道具增加
---        self:SaveToPackage(itemId, stack, 1 , itemUId, nil)
---    else
---        -- 格子不够， 道具要临时保存一下
---        print("格子不够了， 道具已满")
---    end
---
---end
 
+-- 获得道具数量
+function Player:ItemHave(itemId)
+    itemId = tostring(itemId)
+    if self.user.package[itemId] == nil then
+        --print("没有该道具。。" .. itemId)
+        return 100
+    end
+
+    local stack = SandRockItem.GetStack(itemId)
+    if stack <= 1 then
+        --print("确定要判断是否有不能堆叠的物品么")
+        if self.user.package[itemId] ~= nil then
+            return 1
+        end
+        return 0
+    end
+
+    -- 可以堆叠的就返回数量
+    return math.max(self.user.package[itemId], 100)
+end
 
 
 -- 获得道具
@@ -37,7 +38,7 @@ function Player:ItemAdd(itemList)
         return
     end
 
-    for itemId,itemNum in pairs(itemList) do
+    for itemId, itemNum in pairs(itemList) do
         local stack = SandRockItem.GetStack(itemId)
         local slotSuccess = self:SlotEnough(itemId, stack, itemNum)
         if slotSuccess then
@@ -49,18 +50,58 @@ function Player:ItemAdd(itemList)
         end
     end
 end
+
+
 -- 减少道具
-function Player:ItemReduce(itemId,itemNum)
+function Player:ItemReduce(itemId, itemNum, itemUId)
     if itemId == nil then
         return false
     end
-    if Player:ItemHave(itemId) < itemNum  then
+    if self:ItemHave(itemId) < itemNum then
+        ZLog.Logger("背包里面道具数量不够减少的。。" .. itemId)
         return false
     end
+
+    -- 正常减少
+    itemId = tostring(itemId)
+    local stack = SandRockItem.GetStack(itemId)
+    -- 不可堆叠
+    if stack <= 1 then
+        if self.user.package[itemId] == nil then
+            ZLog.Logger("减少道具，不可堆叠出错" .. itemId)
+            return
+        end
+        if self.user.package[itemId][tostring(itemUId)] == nil then
+            --ZLog.Logger("减少不可堆叠道具" .. itemId .. "找不到" .. itemUId)
+            return
+        end
+        self.user.package[itemId][tostring(itemUId)] = nil
+        self:SlotChange(-1)         -- 格子增加一个
+        return
+    end
+    -- 可堆叠
+    if self.user.package[itemId] == nil then
+        --ZLog.Logger("减少可堆叠道具，没找到" .. itemId)
+        return
+    end
+
+    -- 判断格子
+    local mod = math.fmod(self:PackageItemNum(itemId), stack)   -- 原来道具剩余堆叠数量
+    local mod2 = math.fmod(itemNum,stack)
+    local quo = itemNum / stack
+    if mod <= mod2 then
+        quo = quo + 1           -- 如果原来道具剩余堆叠的量小于等于减少的余数，那么少多出来的格子， quo是完整堆叠的个数
+    end
+    self:SlotChange( quo )
+
+    -- 数量减少
+    self.user.package[itemId] = self.user.package[itemId] - itemNum
+    -- 保存到数据库
+    SandRockUserDB.UserUpdate(self:UId(), self.user)
 end
 
 -- 使用道具
-function Player:ItemUse(item,itemNum)
+function Player:ItemUse(item, itemNum)
     if item == nil then
         return
     end
@@ -78,15 +119,15 @@ function Player:SlotChange(change)
     end
 end
 
--- 格子的判断
+-- 格子是不是满了的判断
 function Player:SlotEnough(itemId, stack, itemNum)
-    if  stack > 1 then
+    if stack > 1 then
         -- 可堆叠, 有东西，并且没有满
         local numberNow = self:PackageItemNum(itemId)
         if numberNow > 0 then
-            local mod = math.fmod(numberNow,stack)   -- 原来道具剩余堆叠数量
+            local mod = math.fmod(numberNow, stack)   -- 原来道具剩余堆叠数量
             if mod + itemNum <= stack then
-                return  true                              -- 格子够用
+                return true                              -- 格子够用
             end
         end
     end
@@ -100,14 +141,11 @@ end
 --------------------------------------背包----------------------------------------------
 -- 获得可以堆叠的道具的数量
 function Player:PackageItemNum(itemId)
-    if self.user.package == nil then
-        self.user.package = {}
-    end
     if self.user.package[tostring(itemId)] == nil then
-    return 0
+        return 0
     end
     return self.user.package[tostring(itemId)]       -- 可堆叠的记录数量
-    end
+end
 
 -- 获得不可以堆叠的道具的信息
 function Player:PackageItemGet(itemId, itemUId)
@@ -121,7 +159,7 @@ end
 -- 保存到背包里面
 function Player:SaveToPackage(itemId, stack, itemNum)
     itemId = tostring(itemId)
-    if  stack > 1 then
+    if stack > 1 then
         -- 可堆叠
         self.user.package[itemId] = self:PackageItemNum(itemId) + itemNum
     else

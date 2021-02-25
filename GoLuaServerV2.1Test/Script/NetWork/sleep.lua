@@ -9,10 +9,10 @@ end
 
 
 function Sleep.UpdateResourcePick(serverId, userId, buf)
-    print("拾取资源刷新列表")
+    --print("拾取资源刷新列表")
     local msg = ProtoGameSandRock.ResourceUpdate()
     msg:ParseFromString(buf)
-    print(msg)
+    --print(msg)
     --print(msg.points[1].areaName)
     --print(msg.points[1].areaPoint)
     --print(msg.points[1].resourceType)
