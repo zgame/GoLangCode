@@ -10,7 +10,8 @@ function SandRockResourcePickNet.SendPickList(userId, allPlayer, all, list)
     end
 
     --printTable(list)
-    if all ~= nil then          -- 发送登录全同步
+    if all ~= nil then
+        -- 发送登录全同步
         for areaName, pointList in pairs(all) do
             for pointIndex, point in pairs(pointList) do
                 local points = sendCmd.points:add()
@@ -21,13 +22,14 @@ function SandRockResourcePickNet.SendPickList(userId, allPlayer, all, list)
         end
     end
 
-    if list ~= nil then             -- 发送增量同步
-            for _, point in pairs(list) do
-                local points = sendCmd.points:add()
-                points.areaName = point.areaName
-                points.areaPoint = point.areaPoint
-                points.resourceType = point.resourceType
-            end
+    if list ~= nil then
+        -- 发送增量同步
+        for _, point in pairs(list) do
+            local points = sendCmd.points:add()
+            points.areaName = point.areaName
+            points.areaPoint = point.areaPoint
+            points.resourceType = point.resourceType
+        end
     end
     sendCmd.weather = SandRockRoom.GetWeather(room)
     --print("发送 采集资源列表")
@@ -35,10 +37,8 @@ function SandRockResourcePickNet.SendPickList(userId, allPlayer, all, list)
     if allPlayer == nil then
         NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd, nil)
     else
-        SandRockRoom.SendMsgToAllUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd)
+        SandRockRoom.SendMsgToAllUsers(room, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd)
     end
-
-
 
 
 end
@@ -78,7 +78,7 @@ function SandRockResourcePickNet.GetPickResource(serverId, userId, buf)
     points.areaPoint = areaPoint
     points.resourceType = 0  -- 清理掉
 
-    SandRockRoom.SendMsgToAllUsers(room,CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd2)
+    SandRockRoom.SendMsgToAllUsers(room, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_RESOURCE_POINT, sendCmd2)
 
 
 end
