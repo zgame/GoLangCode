@@ -11,6 +11,9 @@ function SandRockLocationNet.Location(serverId, userId, buf)
         ZLog.Logger("没有获取到房间".. tostring(userId))
         return
     end
+    local player = GameServer.GetPlayerByUID(userId)
+    player.scene = msg.location[1].scene        -- 记录一下该玩家所在场景
+
     local location = {}
     location = SandRockLocationNet.Copy(msg.location[1],location)
     SandRockRoom.LocationPlayerSet(room, userId, location)

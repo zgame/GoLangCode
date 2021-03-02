@@ -14,6 +14,8 @@ function Player:New(user)
     self.roomId = Const.ROOM_CHAIR_NOBODY   -- 房间id
     self.chairId = Const.ROOM_CHAIR_NOBODY   -- 椅子id
 
+    self.scene = nil            -- 玩家所在场景,  同步的时候用来判断的
+
     self.netWorkState = true            -- 网络状态正常
     self.netWorkCloseTimer = 0         -- 等待玩家断线重连的时间倒计时
 
