@@ -5,8 +5,9 @@
 
 --print("start lua")
 
-local dbg = require('emmy_core')
-dbg.tcpConnect('localhost', 9966)
+-------------------------------------调试开关----------------------------------------
+--local dbg = require('emmy_core')
+--dbg.tcpConnect('localhost', 9966)
 
 -------------------------------------Logger----------------------------------------
 --package.path = "Script/Logger/?.lua;"..package.path
