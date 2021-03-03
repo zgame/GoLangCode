@@ -96,6 +96,10 @@ function Player:ItemReduce(itemId, itemNum, itemUId)
 
     -- 数量减少
     self.user.package[itemId] = self.user.package[itemId] - itemNum
+    if self.user.package[itemId] < 0 then
+        self.user.package[itemId] = nil
+    end
+
     -- 保存到数据库
     SandRockUserDB.UserUpdate(self:UId(), self.user)
 end

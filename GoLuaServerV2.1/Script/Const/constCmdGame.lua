@@ -21,6 +21,7 @@ CMD_SAND_ROCK = {
     SUB_CREATION_ITEM_EXPERIMENT = 18,      --  实验台   CreationItemExperiment() ,  获得结果ItemGet()
 
     SUB_PLAYER_INFO = 19,     --  修改玩家信息  PlayerInfo() , PlayerInfo()
+    SUB_PLAYER_ITEM_INFO = 20,     --  玩家道具信息  获得结果ItemGet()
 
 
 }

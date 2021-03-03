@@ -1,17 +1,15 @@
-
-
 SandRockLoginNet = {}
 
 ----------------------------------------登录----------------------------------
-local function newUser(openId,machineId)
+local function newUser(openId, machineId)
     --print("创建用户")
     local userId = GameServer.GetLastUserID()
     if userId == nil then
         ZLog.Logger("redis 出问题 没有获取到userId")
         return nil
     end
-    local user = User.New(userId,openId,machineId)
-    SandRockLoginDB.OpenIdInsert(openId,user.userId)
+    local user = User.New(userId, openId, machineId)
+    SandRockLoginDB.OpenIdInsert(openId, user.userId)
     SandRockLoginDB.UserInsert(user)
     return user
 end
@@ -24,15 +22,17 @@ local function getUserDB(msg)
     local machineId = msg.machineId
     local user
 
-    if userId ~= 0 then     -- 说明输入了userId，优先处理userId
-        user =  SandRockLoginDB.User(userId)
+    if userId ~= 0 then
+        -- 说明输入了userId，优先处理userId
+        user = SandRockLoginDB.User(userId)
         if user ~= nil then
             return user
         end
     end
 
-    if machineId ~= "" then     -- 输入了machineId ，忽略openid
-        openId = 'sandRockMac'..machineId
+    if machineId ~= "" then
+        -- 输入了machineId ，忽略openid
+        openId = 'sandRockMac' .. machineId
     end
 
     -- 注意如果客户端， 同时发mac 和 openid， 会使用mac，忽略openid
@@ -43,7 +43,7 @@ local function getUserDB(msg)
 
     -- 最后看一下如果数据库没有数据，那么新建
     if user == nil then
-        return newUser(openId,machineId)
+        return newUser(openId, machineId)
     end
 
     return user
@@ -70,14 +70,14 @@ function SandRockLoginNet.Login(serverId, uId, buf)
     luaCallGoResisterUID(userId, serverId)
 
     --玩家登录游戏
-    if GameServer.Login(msg.gameId,player) == false then
+    if GameServer.Login(msg.gameId, player) == false then
         return
     end
 
     -- 发送消息
     local sendCmd = ProtoGameSandRock.GameLoginResult()
     sendCmd.success = true
-    Player.Copy(player,sendCmd.user)
+    Player.Copy(player, sendCmd.user)
     --print(sendCmd)
 
     NetWork.Send(serverId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_LOGON, sendCmd, nil)
@@ -91,6 +91,9 @@ function SandRockLoginNet.Login(serverId, uId, buf)
     -- 同步场景树信息给玩家
     SandRockLoginNet.SendTerrainInfo(userId)
 
+    --下发该玩家道具信息
+    SandRockLoginNet.SendItemInfo(userId)
+
     -- 同步采集资源点信息给玩家
     local room = GameServer.GetRoomByUserId(userId)
     SandRockResourcePickNet.SendPickList(userId, nil, room.resourcePoint, nil)
@@ -103,9 +106,9 @@ function SandRockLoginNet.SendPlayersInfo(userId)
     local sendCmd = ProtoGameSandRock.UserList()
     local room = GameServer.GetRoomByUserId(userId)
     for _, player in pairs(room.userSeatArray) do
-        if player ~= nil and Player.UId(player)~= userId then
+        if player ~= nil and Player.UId(player) ~= userId then
             local uu = sendCmd.user:add()
-            Player.Copy(player,uu)
+            Player.Copy(player, uu)
         end
     end
     --print("下发其他玩家数据")
@@ -127,6 +130,32 @@ function SandRockLoginNet.SendTerrainInfo(userId)
     local room = GameServer.GetRoomByUserId(userId)
     local reliveList = SandRockRoom.ResourceTerrainSync(room)
     SandRockResourceTerrainNet.SendTreeRelive(userId, reliveList)
+end
+
+-- 下发该玩家道具信息
+function SandRockLoginNet.SendItemInfo(userId)
+    local player = GameServer.GetPlayerByUID(userId)
+    local sendCmd = ProtoGameSandRock.ItemGet()
+    for itemId, info in pairs(player.user.package) do
+        if type(info) == "number" then
+            -- 可堆叠道具
+            local item = sendCmd.item:add()
+            item.itemId = tonumber(itemId)
+            item.itemNum = info
+            item.itemNumTotal = info
+        else
+            for key, value in pairs(info) do
+                local item = sendCmd.item:add()
+                item.itemId = tonumber(itemId)
+                item.itemNum = 1
+                item.itemNumTotal = 1
+                item.itemUId = tonumber(key)
+            end
+        end
+    end
+    --print("-----下发道具信息-----")
+    --print(sendCmd)
+    NetWork.SendToUser(userId, CMD_MAIN.MDM_GAME_SAND_ROCK, CMD_SAND_ROCK.SUB_PLAYER_ITEM_INFO, sendCmd, nil, nil)
 end
 
 ----------------------------------------登出----------------------------------

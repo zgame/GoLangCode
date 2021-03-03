@@ -23,7 +23,7 @@ function GameSandRock.RunGame(serverId)
     --CreateItem.SendCreationItem(serverId)
     --CreateItem.SendCreationMachine(serverId)
     --CreateItem.SendCreationRecycle(serverId)
-    CreateItem.SendCreationCooking(serverId)
+    --CreateItem.SendCreationCooking(serverId)
 
 end
 
