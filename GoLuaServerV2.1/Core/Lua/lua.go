@@ -2,6 +2,7 @@ package Lua
 
 import (
 	"fmt"
+	lua_debugger "github.com/edolphin-ydf/gopherlua-debugger"
 	"github.com/yuin/gopher-lua"
 )
 //--------------------------------------------------------------------------------
@@ -19,6 +20,7 @@ type MyLua struct {
 
 func NewMyLua() *MyLua {
 	l := lua.NewState()
+	lua_debugger.Preload(l)
 	return &MyLua{L: l}
 }
 
