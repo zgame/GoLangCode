@@ -101,7 +101,7 @@ function Player:ItemReduce(itemId, itemNum, itemUId)
     end
 
     -- 保存到数据库
-    SandRockUserDB.UserUpdate(self:UId(), self.user)
+    SandRockUserDB.PackageUpdate(self:UId(), self.user)
 end
 
 -- 使用道具
@@ -176,5 +176,5 @@ function Player:SaveToPackage(itemId, stack, itemNum)
     end
 
     -- 保存到数据库
-    SandRockUserDB.UserUpdate(self:UId(), self.user)
+    SandRockUserDB.PackageUpdate(self:UId(), self.user)
 end
