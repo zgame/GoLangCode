@@ -152,12 +152,14 @@ end
 --给桌上的其他玩家同步消息
 function SandRockRoom:SendMsgToOtherUsers(mainCmd, subCmd, sendCmd, userId)
     for _, player in pairs(self.userSeatArray) do
-        local uId = Player.UId(player)
-        if player ~= nil and userId ~= uId then
-            local result = NetWork.SendToUser(uId, mainCmd, subCmd, sendCmd, nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
-            if not result then
-                -- 发送失败了，玩家网络中断了
-                self:PlayerStandUp(uId)
+        if player ~= nil then
+            local uId = Player.UId(player)
+            if userId ~= uId then
+                local result = NetWork.SendToUser(uId, mainCmd, subCmd, sendCmd, nil, 0)       -- 注意，这里因为是群发，所以token标记是0，就是不需要
+                if not result then
+                    -- 发送失败了，玩家网络中断了
+                    self:PlayerStandUp(uId)
+                end
             end
         end
     end
